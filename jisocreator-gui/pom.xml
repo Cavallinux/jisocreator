@@ -5,7 +5,13 @@
     <artifactId>jisocreator</artifactId>
     <version>0.0.1</version>
   </parent>
-  <artifactId>jisocreator-model-api</artifactId>
-  <name>JISOCreator Model API</name>
-  <description>Base API for main project</description>
+  <artifactId>jisocreator-gui</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>cl.cavallinux</groupId>
+			<artifactId>jisocreator-model</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>

@@ -11,22 +11,22 @@ public class TreeNode extends TreeNodeAdapter {
     protected List<ITreeNode> children;
 
     public TreeNode(ITreeNode parent) {
-	this.parent = parent;
-	children = new ArrayList<ITreeNode>();
+        this.parent = parent;
+        children = new ArrayList<ITreeNode>();
     }
 
     @Override
     public Object[] getChildren() {
-	return children.toArray();
+        return children.toArray();
     }
 
     @Override
     public ITreeNode getParent() {
-	return parent;
+        return parent;
     }
 
     @Override
     public boolean hasChildren() {
-	return !children.isEmpty();
+        return !children.isEmpty();
     }
 }

@@ -14,94 +14,94 @@ public class IsoFileSystem {
     private long isoLength;
 
     public IsoFileSystem(String volumeID, String applicationID) {
-	root = new IsoTreeNode();
-	this.isoPaths = null;
-	this.volumeID = volumeID;
-	this.applicationID = applicationID;
-	setIsoLength();
+        root = new IsoTreeNode();
+        this.isoPaths = null;
+        this.volumeID = volumeID;
+        this.applicationID = applicationID;
+        setIsoLength();
     }
 
     public IsoFileSystem() {
-	this("volumeID", "applicationID");
+        this("volumeID", "applicationID");
     }
 
     public ITreeNode[] toArray() {
-	return new ITreeNode[] { root };
+        return new ITreeNode[] { root };
     }
 
     public ITreeNode getRoot() {
-	return root;
+        return root;
     }
 
     public String getVolumeID() {
-	return volumeID;
+        return volumeID;
     }
 
     public void setVolumeID(String volumeID) {
-	this.volumeID = volumeID;
+        this.volumeID = volumeID;
     }
 
     public String getApplicationID() {
-	return applicationID;
+        return applicationID;
     }
 
     public void setApplicationID(String applicationID) {
-	this.applicationID = applicationID;
+        this.applicationID = applicationID;
     }
 
     public long getIsoLength() {
-	return isoLength;
+        return isoLength;
     }
 
     public void setIsoLength(long isoLength) {
-	this.isoLength = isoLength;
+        this.isoLength = isoLength;
     }
 
     public void setIsoLength() {
-	isoLength = calculateIsoSize(root);
+        isoLength = calculateIsoSize(root);
     }
 
     public List<String> getPaths() {
-	return isoPaths;
+        return isoPaths;
     }
 
     public void setIsoPaths(List<String> isoPaths) {
-	this.isoPaths = isoPaths;
+        this.isoPaths = isoPaths;
     }
 
     /**
      * Parsing since root
      */
     public void parse() {
-	isoPaths = new ArrayList<String>();
-	for (Object child : root.getChildren()) {
-	    parse((ITreeNode) child);
-	}
+        isoPaths = new ArrayList<String>();
+        for (Object child : root.getChildren()) {
+            parse((ITreeNode) child);
+        }
     }
 
     /**
      * Parsing since any node
      */
     private void parse(ITreeNode node) {
-	if (node.hasChildren()) {
-	    for (Object child : node.getChildren()) {
-		parse((ITreeNode) child);
-	    }
-	} else {
-	    String isoPath = node.getIsoName().concat("=").concat(node.getExtendedName());
-	    isoPaths.add(isoPath);
-	}
+        if (node.hasChildren()) {
+            for (Object child : node.getChildren()) {
+                parse((ITreeNode) child);
+            }
+        } else {
+            String isoPath = node.getIsoName().concat("=").concat(node.getExtendedName());
+            isoPaths.add(isoPath);
+        }
     }
 
     private long calculateIsoSize(ITreeNode node) {
-	long size = 0;
-	if (node.isRoot() || node.hasChildren()) {
-	    for (Object child : node.getChildren()) {
-		size += calculateIsoSize((ITreeNode) child);
-	    }
-	} else {
-	    size += ((File) node.getElement()).length();
-	}
-	return size;
+        long size = 0;
+        if (node.isRoot() || node.hasChildren()) {
+            for (Object child : node.getChildren()) {
+                size += calculateIsoSize((ITreeNode) child);
+            }
+        } else {
+            size += ((File) node.getElement()).length();
+        }
+        return size;
     }
 }

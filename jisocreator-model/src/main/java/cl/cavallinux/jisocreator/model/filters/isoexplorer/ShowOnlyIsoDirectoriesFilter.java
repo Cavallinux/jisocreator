@@ -11,12 +11,12 @@ public class ShowOnlyIsoDirectoriesFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
-	ITreeNode node = (ITreeNode) arg2;
-	if (node.isRoot()) {
-	    return true;
-	} else {
-	    File file = (File) node.getElement();
-	    return file.isDirectory();
-	}
+        ITreeNode node = (ITreeNode) arg2;
+        if (node.isRoot()) {
+            return true;
+        } else {
+            File file = (File) node.getElement();
+            return file.isDirectory();
+        }
     }
 }

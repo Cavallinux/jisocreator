@@ -12,32 +12,32 @@ public class ExitApplicationAction extends Action {
     private static ExitApplicationAction instance;
 
     private ExitApplicationAction() {
-	super("Exit");
-	setToolTipText("Create new iso layout");
-	setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("exit.png"));
+        super("Exit");
+        setToolTipText("Create new iso layout");
+        setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("exit.png"));
     }
 
     @Override
     public void run() {
-	MessageBox exitMessage = new MessageBox(MainWindow.getInstance().getShell(),
-		SWT.YES | SWT.NO | SWT.ICON_QUESTION);
-	exitMessage.setText("JIsoCreator");
-	exitMessage.setMessage("Are you sure to exit JIsocreator?");
-	switch (exitMessage.open()) {
-	case SWT.YES:
-	    MainWindow.getInstance().getShell().setVisible(false);
-	    MainWindow.getInstance().close();
-	    Display.getCurrent().dispose();
-	    System.exit(0);
-	default:
-	    return;
-	}
+        MessageBox exitMessage = new MessageBox(MainWindow.getInstance().getShell(),
+                SWT.YES | SWT.NO | SWT.ICON_QUESTION);
+        exitMessage.setText("JIsoCreator");
+        exitMessage.setMessage("Are you sure to exit JIsocreator?");
+        switch (exitMessage.open()) {
+        case SWT.YES:
+            MainWindow.getInstance().getShell().setVisible(false);
+            MainWindow.getInstance().close();
+            Display.getCurrent().dispose();
+            System.exit(0);
+        default:
+            return;
+        }
     }
 
     public static ExitApplicationAction getInstance() {
-	if (instance == null) {
-	    instance = new ExitApplicationAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new ExitApplicationAction();
+        }
+        return instance;
     }
 }

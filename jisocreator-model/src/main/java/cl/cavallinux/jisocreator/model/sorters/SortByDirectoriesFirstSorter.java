@@ -7,6 +7,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 public class SortByDirectoriesFirstSorter extends ViewerSorter {
     @Override
     public int category(Object element) {
-	return ((File) element).isDirectory() ? 0 : 1;
+        return ((File) element).isDirectory() ? 0 : 1;
     }
 }

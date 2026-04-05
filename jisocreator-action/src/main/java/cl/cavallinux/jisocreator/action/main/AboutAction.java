@@ -6,27 +6,26 @@ import cl.cavallinux.jisocreator.gui.dialog.AboutDialog;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
-
 public class AboutAction extends Action {
     private static AboutAction instance;
 
     static {
-	instance = new AboutAction();
+        instance = new AboutAction();
     }
 
     public AboutAction() {
-	super("About JIsoCreator", ImageUtils.getInstance().loadImageDescriptor("about.png"));
-	setToolTipText("Open about dialog");
+        super("About JIsoCreator", ImageUtils.getInstance().loadImageDescriptor("about.png"));
+        setToolTipText("Open about dialog");
     }
 
     @Override
     public void run() {
-	AboutDialog dialog = new AboutDialog(MainWindow.getInstance().getShell());
-	dialog.open();
-	dialog.close();
+        AboutDialog dialog = new AboutDialog(MainWindow.getInstance().getShell());
+        dialog.open();
+        dialog.close();
     }
 
     public static AboutAction getInstance() {
-	return instance;
+        return instance;
     }
 }

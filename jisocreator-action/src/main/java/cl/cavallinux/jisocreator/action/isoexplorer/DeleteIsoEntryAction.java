@@ -19,44 +19,44 @@ public class DeleteIsoEntryAction extends Action implements IRunnableWithProgres
     private ITreeNode parent, node;
 
     private DeleteIsoEntryAction() {
-	super("Delete", ImageUtils.getInstance().loadImageDescriptor("delete.png"));
-	setToolTipText("Delete iso entry, from iso layout");
-	setEnabled(false);
+        super("Delete", ImageUtils.getInstance().loadImageDescriptor("delete.png"));
+        setToolTipText("Delete iso entry, from iso layout");
+        setEnabled(false);
     }
 
     @Override
     public void run() {
-	try {
-	    IStructuredSelection selection = (IStructuredSelection) IsoExplorerSashForm.getInstance()
-		    .getIsoDirectoriesTable().getSelection();
-	    node = (ITreeNode) selection.getFirstElement();
-	    parent = node.getParent();
-	    ProgressMonitorDialog dialog = new BaseProgressMonitorDialog(MainWindow.getInstance().getShell());
-	    dialog.run(true, false, this);
-	    IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().refresh();
-	    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
-	    dialog.close();
-	} catch (InvocationTargetException e) {
-	    e.printStackTrace();
-	} catch (InterruptedException e) {
-	    e.printStackTrace();
-	}
+        try {
+            IStructuredSelection selection = (IStructuredSelection) IsoExplorerSashForm.getInstance()
+                    .getIsoDirectoriesTable().getSelection();
+            node = (ITreeNode) selection.getFirstElement();
+            parent = node.getParent();
+            ProgressMonitorDialog dialog = new BaseProgressMonitorDialog(MainWindow.getInstance().getShell());
+            dialog.run(true, false, this);
+            IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().refresh();
+            IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
+            dialog.close();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-	try {
-	    monitor.beginTask("Deleting node", IProgressMonitor.UNKNOWN);
-	    parent.deleteNode(node, monitor);
-	} finally {
-	    monitor.done();
-	}
+        try {
+            monitor.beginTask("Deleting node", IProgressMonitor.UNKNOWN);
+            parent.deleteNode(node, monitor);
+        } finally {
+            monitor.done();
+        }
     }
 
     public static DeleteIsoEntryAction getInstance() {
-	if (instance == null) {
-	    instance = new DeleteIsoEntryAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new DeleteIsoEntryAction();
+        }
+        return instance;
     }
 }

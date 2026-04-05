@@ -8,13 +8,13 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 public class BaseProgressMonitorDialog extends ProgressMonitorDialog {
 
     public BaseProgressMonitorDialog(Shell parent) {
-	super(parent);
+        super(parent);
     }
 
     @Override
     protected void configureShell(Shell shell) {
-	super.configureShell(shell);
-	shell.setText("Progress Information");
-	shell.setImage(ImageUtils.getInstance().loadImage("iso.png"));
+        super.configureShell(shell);
+        shell.setText("Progress Information");
+        shell.setImage(ImageUtils.getInstance().loadImage("iso.png"));
     }
 }

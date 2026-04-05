@@ -24,55 +24,55 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     private IsoFileSystem iso;
 
     public SaveAsXMLAction() {
-	super("XML Layout", ImageUtils.getInstance().loadImageDescriptor("xml.png"));
-	setToolTipText("Save iso layout as xml file");
+        super("XML Layout", ImageUtils.getInstance().loadImageDescriptor("xml.png"));
+        setToolTipText("Save iso layout as xml file");
     }
 
     @Override
     public void run() {
-	setFile();
-	if (path == null) {
-	    return;
-	}
-	iso = (IsoFileSystem) IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput();
-	iso.setIsoLength();
-	iso.setIsoPaths(null);
-	try {
-	    ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(Display.getDefault().getActiveShell());
-	    saveProgress.run(true, false, this);
-	    saveProgress.close();
-	} catch (InvocationTargetException e) {
-	    MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
-	} catch (InterruptedException e) {
-	    MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
-	}
+        setFile();
+        if (path == null) {
+            return;
+        }
+        iso = (IsoFileSystem) IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput();
+        iso.setIsoLength();
+        iso.setIsoPaths(null);
+        try {
+            ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(Display.getDefault().getActiveShell());
+            saveProgress.run(true, false, this);
+            saveProgress.close();
+        } catch (InvocationTargetException e) {
+            MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
+        } catch (InterruptedException e) {
+            MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
+        }
 
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-	monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
-	if (IOUtils.getInstance().saveObjectToXML(iso, path, monitor)) {
-	    monitor.done();
-	} else {
-	    throw new InterruptedException("Saving file is not possible, try later.");
-	}
+        monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
+        if (IOUtils.getInstance().saveObjectToXML(iso, path, monitor)) {
+            monitor.done();
+        } else {
+            throw new InterruptedException("Saving file is not possible, try later.");
+        }
     }
 
     public static SaveAsXMLAction getInstance() {
-	if (instance == null) {
-	    instance = new SaveAsXMLAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new SaveAsXMLAction();
+        }
+        return instance;
     }
 
     private void setFile() {
-	FileDialog saveXMLDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.SAVE);
-	saveXMLDialog.setText("Choose a xml file name to save");
-	saveXMLDialog.setOverwrite(true);
-	saveXMLDialog.setFileName("layout.xml");
-	saveXMLDialog.setFilterExtensions(new String[] { "*.xml" });
-	saveXMLDialog.setFilterNames(new String[] { "XML Files" });
-	path = saveXMLDialog.open();
+        FileDialog saveXMLDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.SAVE);
+        saveXMLDialog.setText("Choose a xml file name to save");
+        saveXMLDialog.setOverwrite(true);
+        saveXMLDialog.setFileName("layout.xml");
+        saveXMLDialog.setFilterExtensions(new String[] { "*.xml" });
+        saveXMLDialog.setFilterNames(new String[] { "XML Files" });
+        path = saveXMLDialog.open();
     }
 }

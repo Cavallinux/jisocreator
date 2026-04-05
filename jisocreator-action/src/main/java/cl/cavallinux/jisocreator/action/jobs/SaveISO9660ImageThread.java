@@ -17,41 +17,42 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
     private InputStream saveProgressInputStream;
 
     public SaveISO9660ImageThread(InputStream saveProgressInputStream) {
-	super("cl.cavallinux.jisocreator.iso.save.thread");
-	this.saveProgressInputStream = saveProgressInputStream;
+        super("cl.cavallinux.jisocreator.iso.save.thread");
+        this.saveProgressInputStream = saveProgressInputStream;
     }
 
     @Override
     public void run() {
-	Display.getDefault().asyncExec(new Runnable() {
-	    @Override
-	    public void run() {
-		try {
-		    ModalContext.run(SaveISO9660ImageThread.this, true, MainWindow.getInstance().getStatusLine().getProgressMonitor(), Display.getCurrent());
-		} catch (InvocationTargetException e) {
-		    e.printStackTrace();
-		} catch (InterruptedException e) {
-		    e.printStackTrace();
-		}
-	    }
-	});
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ModalContext.run(SaveISO9660ImageThread.this, true,
+                            MainWindow.getInstance().getStatusLine().getProgressMonitor(), Display.getCurrent());
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-	try {
-	    monitor.beginTask("Saving image...", IProgressMonitor.UNKNOWN);
-	    InputStreamReader isr = new InputStreamReader(saveProgressInputStream);
-	    LineNumberReader lnr = new LineNumberReader(isr);
-	    String line;
-	    while ((line = lnr.readLine()) != null) {
-		monitor.subTask(line);
-		System.out.println(line);
-	    }
-	} catch (IOException e) {
-	    e.printStackTrace();
-	} finally {
-	    monitor.done();
-	}
+        try {
+            monitor.beginTask("Saving image...", IProgressMonitor.UNKNOWN);
+            InputStreamReader isr = new InputStreamReader(saveProgressInputStream);
+            LineNumberReader lnr = new LineNumberReader(isr);
+            String line;
+            while ((line = lnr.readLine()) != null) {
+                monitor.subTask(line);
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            monitor.done();
+        }
     }
 }

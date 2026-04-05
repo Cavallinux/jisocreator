@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Menu;
 public abstract class ActionMenuCreator extends Action implements IMenuCreator {
 
     public ActionMenuCreator(String string) {
-	super(string, AS_DROP_DOWN_MENU);
+        super(string, AS_DROP_DOWN_MENU);
     }
 
     @Override
@@ -18,14 +18,14 @@ public abstract class ActionMenuCreator extends Action implements IMenuCreator {
 
     @Override
     public Menu getMenu(Control arg0) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Menu getMenu(Menu arg0) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

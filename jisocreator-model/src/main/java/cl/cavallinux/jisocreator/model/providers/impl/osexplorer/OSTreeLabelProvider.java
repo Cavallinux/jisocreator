@@ -12,15 +12,15 @@ public class OSTreeLabelProvider extends TreeLabelAdapter {
 
     @Override
     public Image getImage(Object element) {
-	return ImageUtils.getInstance().loadImage((File) element);
+        return ImageUtils.getInstance().loadImage((File) element);
     }
 
     @Override
     public String getText(Object element) {
-	if (OSExplorer.getInstance().isRoot((File) element)) {
-	    return ((File) element).getAbsolutePath();
-	} else {
-	    return ((File) element).getName();
-	}
+        if (OSExplorer.getInstance().isRoot((File) element)) {
+            return ((File) element).getAbsolutePath();
+        } else {
+            return ((File) element).getName();
+        }
     }
 }

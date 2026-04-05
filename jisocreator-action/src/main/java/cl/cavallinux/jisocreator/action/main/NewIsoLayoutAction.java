@@ -10,21 +10,21 @@ public class NewIsoLayoutAction extends Action {
     private static NewIsoLayoutAction instance;
 
     public NewIsoLayoutAction() {
-	super("New Layout", ImageUtils.getInstance().loadImageDescriptor("new.png"));
-	setToolTipText("Create new iso layout");
+        super("New Layout", ImageUtils.getInstance().loadImageDescriptor("new.png"));
+        setToolTipText("Create new iso layout");
     }
 
     @Override
     public void run() {
-	IsoFileSystem iso = new IsoFileSystem();
-	IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(iso);
-	IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().setInput(iso.getRoot());
+        IsoFileSystem iso = new IsoFileSystem();
+        IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(iso);
+        IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().setInput(iso.getRoot());
     }
 
     public static NewIsoLayoutAction getInstance() {
-	if (instance == null) {
-	    instance = new NewIsoLayoutAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new NewIsoLayoutAction();
+        }
+        return instance;
     }
 }

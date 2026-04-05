@@ -9,20 +9,20 @@ public class RefreshExplorerAction extends Action {
     private static RefreshExplorerAction instance;
 
     private RefreshExplorerAction() {
-	super("Refresh OS Explorer", ImageUtils.getInstance().loadImageDescriptor("refresh.png"));
-	setToolTipText("Refresh OS Explorer");
+        super("Refresh OS Explorer", ImageUtils.getInstance().loadImageDescriptor("refresh.png"));
+        setToolTipText("Refresh OS Explorer");
     }
 
     @Override
     public void run() {
-	OSExplorerSashForm.getInstance().getOsDirectoriesTable().refresh();
-	OSExplorerSashForm.getInstance().getOsDirectoriesTree().refresh();
+        OSExplorerSashForm.getInstance().getOsDirectoriesTable().refresh();
+        OSExplorerSashForm.getInstance().getOsDirectoriesTree().refresh();
     }
 
     public static RefreshExplorerAction getInstance() {
-	if (instance == null) {
-	    instance = new RefreshExplorerAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new RefreshExplorerAction();
+        }
+        return instance;
     }
 }

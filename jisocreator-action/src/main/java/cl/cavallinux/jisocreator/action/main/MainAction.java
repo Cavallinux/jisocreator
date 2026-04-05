@@ -10,23 +10,23 @@ public class MainAction extends Action {
 
     @Override
     public void run() {
-	MainWindow.getInstance().setBlockOnOpen(true);
-	MainWindow.getInstance().open();
+        MainWindow.getInstance().setBlockOnOpen(true);
+        MainWindow.getInstance().open();
     }
 
     public static void main(String[] args) {
-	PropertyConfigurator.configure(System.getProperty("log4j.file"));
-	getInstance().run();
+        PropertyConfigurator.configure(System.getProperty("log4j.file"));
+        getInstance().run();
     }
 
     private synchronized static void createInstance() {
-	instance = new MainAction();
+        instance = new MainAction();
     }
 
     public static MainAction getInstance() {
-	if (instance == null) {
-	    createInstance();
-	}
-	return instance;
+        if (instance == null) {
+            createInstance();
+        }
+        return instance;
     }
 }

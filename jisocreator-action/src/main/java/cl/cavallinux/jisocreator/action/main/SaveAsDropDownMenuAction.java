@@ -11,28 +11,28 @@ public class SaveAsDropDownMenuAction extends ActionMenuCreator {
     private static SaveAsDropDownMenuAction instance;
 
     public SaveAsDropDownMenuAction() {
-	super("Save as...");
-	setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("saveas.png"));
-	setMenuCreator(this);
+        super("Save as...");
+        setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("saveas.png"));
+        setMenuCreator(this);
     }
 
     @Override
     public void run() {
-	SaveAsIsoAction.getInstance().run();
+        SaveAsIsoAction.getInstance().run();
     }
 
     @Override
     public Menu getMenu(Control parent) {
-	MenuManager menu = new MenuManager();
-	menu.add(SaveAsXMLAction.getInstance());
-	menu.add(SaveAsIsoAction.getInstance());
-	return menu.createContextMenu(parent);
+        MenuManager menu = new MenuManager();
+        menu.add(SaveAsXMLAction.getInstance());
+        menu.add(SaveAsIsoAction.getInstance());
+        return menu.createContextMenu(parent);
     }
 
     public static SaveAsDropDownMenuAction getInstance() {
-	if (instance == null) {
-	    instance = new SaveAsDropDownMenuAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new SaveAsDropDownMenuAction();
+        }
+        return instance;
     }
 }

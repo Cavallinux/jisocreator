@@ -25,63 +25,63 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
     private String path;
 
     public OpenIsoLayoutAction() {
-	super("Open layout");
-	setToolTipText("Open a iso layout");
-	setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("open.png"));
+        super("Open layout");
+        setToolTipText("Open a iso layout");
+        setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("open.png"));
     }
 
     @Override
     public void run() {
-	try {
-	    executeOpenFile();
-	    if (path == null) {
-		return;
-	    }
-	    ProgressMonitorDialog openProgressDialog = new BaseProgressMonitorDialog(
-		    Display.getDefault().getActiveShell());
-	    openProgressDialog.run(true, false, this);
-	    openProgressDialog.close();
-	} catch (InvocationTargetException e) {
-	    e.printStackTrace();
-	} catch (InterruptedException e) {
-	    MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
-	}
+        try {
+            executeOpenFile();
+            if (path == null) {
+                return;
+            }
+            ProgressMonitorDialog openProgressDialog = new BaseProgressMonitorDialog(
+                    Display.getDefault().getActiveShell());
+            openProgressDialog.run(true, false, this);
+            openProgressDialog.close();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
+        }
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-	try {
-	    monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
-	    monitor.subTask("Parsing xml...");
-	    object = IOUtils.getInstance().parseXMLFileToObject(path);
-	    monitor.subTask("Inserting into tree...");
-	    Display.getDefault().asyncExec(new Runnable() {
-		@Override
-		public void run() {
-		    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(object);
-		    ITreeNode node = ((IsoFileSystem) object).getRoot();
-		    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().expandToLevel(node, 1);
-		}
-	    });
-	} finally {
-	    monitor.done();
-	}
+        try {
+            monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
+            monitor.subTask("Parsing xml...");
+            object = IOUtils.getInstance().parseXMLFileToObject(path);
+            monitor.subTask("Inserting into tree...");
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(object);
+                    ITreeNode node = ((IsoFileSystem) object).getRoot();
+                    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().expandToLevel(node, 1);
+                }
+            });
+        } finally {
+            monitor.done();
+        }
     }
 
     public static OpenIsoLayoutAction getInstance() {
-	if (instance == null) {
-	    instance = new OpenIsoLayoutAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new OpenIsoLayoutAction();
+        }
+        return instance;
     }
 
     private void executeOpenFile() {
-	FileDialog openXMLDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
-	openXMLDialog.setText("Choose a xml file to open");
-	openXMLDialog.setOverwrite(true);
-	openXMLDialog.setFileName("layout.xml");
-	openXMLDialog.setFilterExtensions(new String[] { "*.xml" });
-	openXMLDialog.setFilterNames(new String[] { "XML Files" });
-	path = openXMLDialog.open();
+        FileDialog openXMLDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
+        openXMLDialog.setText("Choose a xml file to open");
+        openXMLDialog.setOverwrite(true);
+        openXMLDialog.setFileName("layout.xml");
+        openXMLDialog.setFilterExtensions(new String[] { "*.xml" });
+        openXMLDialog.setFilterNames(new String[] { "XML Files" });
+        path = openXMLDialog.open();
     }
 }

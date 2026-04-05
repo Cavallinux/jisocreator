@@ -11,21 +11,21 @@ public class PreferencesAction extends Action {
     private static PreferencesAction instance;
 
     public PreferencesAction() {
-	super("Preferences", ImageUtils.getInstance().loadImageDescriptor("preferences.png"));
-	setToolTipText("Open preferences dialog");
+        super("Preferences", ImageUtils.getInstance().loadImageDescriptor("preferences.png"));
+        setToolTipText("Open preferences dialog");
     }
 
     @Override
     public void run() {
-	PreferencesDialog dialog = new PreferencesDialog(MainWindow.getInstance().getShell(), new PreferenceManager());
-	dialog.open();
-	dialog.close();
+        PreferencesDialog dialog = new PreferencesDialog(MainWindow.getInstance().getShell(), new PreferenceManager());
+        dialog.open();
+        dialog.close();
     }
 
     public static PreferencesAction getInstance() {
-	if (instance == null) {
-	    instance = new PreferencesAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new PreferencesAction();
+        }
+        return instance;
     }
 }

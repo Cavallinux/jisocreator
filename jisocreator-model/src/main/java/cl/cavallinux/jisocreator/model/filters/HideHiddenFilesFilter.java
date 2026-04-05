@@ -9,7 +9,7 @@ public class HideHiddenFilesFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
-	return !((File) arg2).isHidden();
+        return !((File) arg2).isHidden();
     }
 
 }

@@ -8,9 +8,9 @@ public class ShowIsoInformationAction extends Action {
     private static ShowIsoInformationAction instance;
 
     private ShowIsoInformationAction() {
-	super("Open", ImageUtils.getInstance().loadImageDescriptor("properties.png"));
-	setToolTipText("Show and/or modify iso layout information");
-	setEnabled(false);
+        super("Open", ImageUtils.getInstance().loadImageDescriptor("properties.png"));
+        setToolTipText("Show and/or modify iso layout information");
+        setEnabled(false);
     }
 
     @Override
@@ -18,9 +18,9 @@ public class ShowIsoInformationAction extends Action {
     }
 
     public static ShowIsoInformationAction getInstance() {
-	if (instance == null) {
-	    instance = new ShowIsoInformationAction();
-	}
-	return instance;
+        if (instance == null) {
+            instance = new ShowIsoInformationAction();
+        }
+        return instance;
     }
 }

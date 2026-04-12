@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cl.cavallinux</groupId>
 	<artifactId>jisocreator</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>pom</packaging>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
@@ -19,7 +19,8 @@
 		<swt.platform.version>linux-x86_64</swt.platform.version>
 		<xstream.version>1.4.21</xstream.version>
 		<slf4j.version>1.7.7</slf4j.version>
-		<jface.version>3.4.0</jface.version>
+		<jface.version>3.133.0</jface.version>
+		<jsvg.version>2.0.0</jsvg.version>
 	</properties>
 
 	<build>
@@ -38,6 +39,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.github.weisj</groupId>
+			<artifactId>jsvg</artifactId>
+			<version>${jsvg.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>${xstream.version}</version>
@@ -50,6 +56,11 @@
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>swt-linux-x86_64</artifactId>
+			<version>${jface.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>swt-svg</artifactId>
 			<version>${jface.version}</version>
 		</dependency>
 		<dependency>

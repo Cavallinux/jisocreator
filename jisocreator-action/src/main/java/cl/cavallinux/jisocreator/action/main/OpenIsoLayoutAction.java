@@ -38,7 +38,7 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
                 return;
             }
             ProgressMonitorDialog openProgressDialog = new BaseProgressMonitorDialog(
-                    Display.getDefault().getActiveShell());
+                    MainWindow.getInstance().getShell());
             openProgressDialog.run(true, false, this);
             openProgressDialog.close();
         } catch (InvocationTargetException e) {
@@ -76,7 +76,7 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
     }
 
     private void executeOpenFile() {
-        FileDialog openXMLDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
+        FileDialog openXMLDialog = new FileDialog(MainWindow.getInstance().getShell(), SWT.OPEN);
         openXMLDialog.setText("Choose a xml file to open");
         openXMLDialog.setOverwrite(true);
         openXMLDialog.setFileName("layout.xml");

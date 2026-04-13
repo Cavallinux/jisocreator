@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<maven.compiler.plugin>3.5.1</maven.compiler.plugin>
+		<maven.jar.plugin>3.3.0</maven.jar.plugin>
 		<swt.platform.version>linux-x86_64</swt.platform.version>
 		<xstream.version>1.4.21</xstream.version>
 		<slf4j.version>1.7.7</slf4j.version>
@@ -46,7 +47,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.3.0</version> <!-- Use latest version -->
+				<version>${maven.jar.plugin}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -64,7 +65,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.weisj</groupId>
@@ -82,39 +83,39 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.swt</groupId>
-			<artifactId>swt-linux-x86_64</artifactId>
-			<version>${jface.version}</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+			<version>3.133.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.swt</groupId>
-			<artifactId>swt-svg</artifactId>
-			<version>${jface.version}</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.swt.svg</artifactId>
+			<version>3.132.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jface</groupId>
-			<artifactId>jface</artifactId>
-			<version>${jface.version}</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.jface</artifactId>
+			<version>3.39.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>commands</artifactId>
-			<version>${jface.version}</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.core.commands</artifactId>
+			<version>3.12.500</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>common</artifactId>
-			<version>${jface.version}</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.equinox.common</artifactId>
+			<version>3.20.300</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse</groupId>
-			<artifactId>osgi</artifactId>
-			<version>${jface.version}</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.24.100</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.ui</groupId>
-			<artifactId>workbench</artifactId>
-			<version>${jface.version}</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.ui.workbench</artifactId>
+			<version>3.138.0</version>
 		</dependency>
 	</dependencies>
 </project>

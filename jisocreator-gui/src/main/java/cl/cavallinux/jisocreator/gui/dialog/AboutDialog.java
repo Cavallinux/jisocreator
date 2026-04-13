@@ -34,7 +34,8 @@ public class AboutDialog extends TitleAreaDialog {
     private Control createAboutPanel(Composite parent) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("Version: ");
-        stringBuffer.append("0.0.0\n");
+        stringBuffer.append(AboutDialog.class.getPackage().getImplementationVersion());
+        stringBuffer.append("\n");
         stringBuffer.append("Running in ");
         stringBuffer.append(System.getProperty("os.name"));
         stringBuffer.append(" ");

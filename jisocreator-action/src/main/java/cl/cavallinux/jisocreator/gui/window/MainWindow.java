@@ -55,7 +55,7 @@ public class MainWindow extends ApplicationWindow {
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText("JIsoCreator");
-        shell.setSize(800, 600);
+        shell.setSize(1024, 768);
         shell.setImage(ImageUtils.getInstance().loadImage("iso.png"));
 
         Monitor primary = Display.getCurrent().getPrimaryMonitor();

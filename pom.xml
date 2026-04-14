@@ -10,7 +10,6 @@
 	<description>MKISOFS Frontend</description>
 	<modules>
 		<module>jisocreator-model</module>
-		<module>jisocreator-gui</module>
 		<module>jisocreator-action</module>
 	</modules>
 

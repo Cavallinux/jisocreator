@@ -1,16 +1,12 @@
-package cl.cavallinux.jisocreator.model.sorters;
+package cl.cavallinux.jisocreator.model.comparators;
 
 import java.io.File;
 
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
-import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 
-/**
- * @deprecated Use instead {@link ITreeNodeDirectoriesFirstComparator}
- */
-public class SortByIsoEntryFirstSorter extends ViewerSorter {
+public class ITreeNodeDirectoriesFirstComparator extends ViewerComparator {
     @Override
     public int category(Object element) {
         ITreeNode node = (ITreeNode) element;

@@ -25,7 +25,6 @@ import cl.cavallinux.jisocreator.action.osexplorer.OpenAction;
 import cl.cavallinux.jisocreator.action.osexplorer.RefreshExplorerAction;
 import cl.cavallinux.jisocreator.action.osexplorer.ShowHiddenFilesAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
-import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import cl.cavallinux.jisocreator.model.filters.ShowOnlyDirectoriesFilter;

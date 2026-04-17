@@ -24,11 +24,11 @@ import cl.cavallinux.jisocreator.action.isoexplorer.GoToIsoEntryParentAction;
 import cl.cavallinux.jisocreator.action.isoexplorer.OpenIsoEntryAction;
 import cl.cavallinux.jisocreator.action.isoexplorer.ShowIsoInformationAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.filters.isoexplorer.ShowOnlyIsoDirectoriesFilter;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTableProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
-import cl.cavallinux.jisocreator.model.sorters.SortByIsoEntryFirstSorter;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
@@ -98,11 +98,11 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         isoDirectoriesTree.setContentProvider(new IsoTreeContentProvider());
         isoDirectoriesTree.setLabelProvider(new IsoTreeLabelProvider());
         isoDirectoriesTree.addFilter(new ShowOnlyIsoDirectoriesFilter());
-        isoDirectoriesTree.setSorter(new SortByIsoEntryFirstSorter());
+        isoDirectoriesTree.setComparator(new ITreeNodeDirectoriesFirstComparator());
 
         isoDirectoriesTable.setContentProvider(new IsoTableProvider());
         isoDirectoriesTable.setLabelProvider(new IsoTableProvider());
-        isoDirectoriesTable.setSorter(new SortByIsoEntryFirstSorter());
+        isoDirectoriesTable.setComparator(new ITreeNodeDirectoriesFirstComparator());
 
         GridDataFactory.defaultsFor(isoTreeCLabel).grab(true, false).applyTo(isoTreeCLabel);
         GridDataFactory.defaultsFor(isoDirectoriesTree.getControl()).grab(true, true)

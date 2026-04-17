@@ -25,13 +25,13 @@ import cl.cavallinux.jisocreator.action.osexplorer.OpenAction;
 import cl.cavallinux.jisocreator.action.osexplorer.RefreshExplorerAction;
 import cl.cavallinux.jisocreator.action.osexplorer.ShowHiddenFilesAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import cl.cavallinux.jisocreator.model.filters.ShowOnlyDirectoriesFilter;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeLabelProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OsTableProvider;
-import cl.cavallinux.jisocreator.model.sorters.SortByDirectoriesFirstSorter;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
@@ -105,13 +105,13 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osDirectoriesTree.setLabelProvider(new OSTreeLabelProvider());
         osDirectoriesTree.addFilter(new ShowOnlyDirectoriesFilter());
         osDirectoriesTree.addFilter(new HideHiddenFilesFilter());
-        osDirectoriesTree.setSorter(new SortByDirectoriesFirstSorter());
+        osDirectoriesTree.setComparator(new OSDirectoriesComparator());
         osDirectoriesTree.setInput(OSExplorer.getInstance());
 
         osDirectoriesTable.setContentProvider(new OsTableProvider());
         osDirectoriesTable.setLabelProvider(new OsTableProvider());
         osDirectoriesTable.addFilter(new HideHiddenFilesFilter());
-        osDirectoriesTable.setSorter(new SortByDirectoriesFirstSorter());
+        osDirectoriesTable.setComparator(new OSDirectoriesComparator());
 
         GridDataFactory.defaultsFor(osTreeCLabel).grab(true, false).applyTo(osTreeCLabel);
         GridDataFactory.defaultsFor(osDirectoriesTree.getControl()).grab(true, true)

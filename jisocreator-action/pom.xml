@@ -8,6 +8,8 @@
 		<version>0.0.2</version>
 	</parent>
 	<artifactId>jisocreator-action</artifactId>
+	<name>JISOCreator Actions</name>
+	<description>Base business logic</description>
 
 	<build>
 		<plugins>
@@ -31,7 +33,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>cl.cavallinux</groupId>
-			<artifactId>jisocreator-gui</artifactId>
+			<artifactId>jisocreator-model</artifactId>
 			<version>0.0.2</version>
 		</dependency>
 	</dependencies>

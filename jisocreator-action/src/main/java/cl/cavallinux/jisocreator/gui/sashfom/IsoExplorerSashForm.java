@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.CoolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -14,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.TableColumn;
@@ -24,6 +26,7 @@ import cl.cavallinux.jisocreator.action.isoexplorer.GoToIsoEntryParentAction;
 import cl.cavallinux.jisocreator.action.isoexplorer.OpenIsoEntryAction;
 import cl.cavallinux.jisocreator.action.isoexplorer.ShowIsoInformationAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.gui.listeners.ISODirectoriesMenuListener;
 import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.filters.isoexplorer.ShowOnlyIsoDirectoriesFilter;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTableProvider;
@@ -100,6 +103,11 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         isoDirectoriesTree.addFilter(new ShowOnlyIsoDirectoriesFilter());
         isoDirectoriesTree.setComparator(new ITreeNodeDirectoriesFirstComparator());
 
+        MenuManager isoDirectoriesTableMenuManager = new MenuManager();
+        isoDirectoriesTableMenuManager.setRemoveAllWhenShown(true);
+        isoDirectoriesTableMenuManager.addMenuListener(new ISODirectoriesMenuListener());
+        Control isoDirectoriesTableControl = isoDirectoriesTable.getControl();
+        isoDirectoriesTableControl.setMenu(isoDirectoriesTableMenuManager.createContextMenu(isoDirectoriesTableControl));
         isoDirectoriesTable.setContentProvider(new IsoTableProvider());
         isoDirectoriesTable.setLabelProvider(new IsoTableProvider());
         isoDirectoriesTable.setComparator(new ITreeNodeDirectoriesFirstComparator());

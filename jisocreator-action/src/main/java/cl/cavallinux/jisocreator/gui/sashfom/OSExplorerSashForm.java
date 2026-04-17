@@ -5,9 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.CoolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -100,11 +102,21 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
             tvc.setResizable(true);
         }
         osDirectoriesTable.getTable().setHeaderVisible(true);
-
+        
+        MenuManager osDirectoriesMenuManager = new MenuManager();
+        osDirectoriesMenuManager.setRemoveAllWhenShown(true);
+        osDirectoriesMenuManager.addMenuListener(MenuListener -> {
+            IStructuredSelection selection = osDirectoriesTable.getStructuredSelection();
+            if (!selection.isEmpty()) {
+                osDirectoriesMenuManager.add(AddFileAction.getInstance());
+            }
+        });
+        
         osDirectoriesTree.setContentProvider(new OSTreeContentProvider());
         osDirectoriesTree.setLabelProvider(new OSTreeLabelProvider());
         osDirectoriesTree.addFilter(new ShowOnlyDirectoriesFilter());
         osDirectoriesTree.addFilter(new HideHiddenFilesFilter());
+<<<<<<< Updated upstream
         osDirectoriesTree.setSorter(new SortByDirectoriesFirstSorter());
         osDirectoriesTree.setInput(OSExplorer.getInstance());
 
@@ -112,6 +124,16 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osDirectoriesTable.setLabelProvider(new OsTableProvider());
         osDirectoriesTable.addFilter(new HideHiddenFilesFilter());
         osDirectoriesTable.setSorter(new SortByDirectoriesFirstSorter());
+=======
+        osDirectoriesTree.setComparator(new OSDirectoriesComparator());
+        osDirectoriesTree.setInput(OSExplorer.getInstance());        
+        
+        osDirectoriesTable.setContentProvider(new OsTableProvider());
+        osDirectoriesTable.setLabelProvider(new OsTableProvider());
+        osDirectoriesTable.addFilter(new HideHiddenFilesFilter());
+        osDirectoriesTable.setComparator(new OSDirectoriesComparator());
+        osDirectoriesTable.getControl().setMenu(osDirectoriesMenuManager.createContextMenu(osDirectoriesTable.getControl()));
+>>>>>>> Stashed changes
 
         GridDataFactory.defaultsFor(osTreeCLabel).grab(true, false).applyTo(osTreeCLabel);
         GridDataFactory.defaultsFor(osDirectoriesTree.getControl()).grab(true, true)

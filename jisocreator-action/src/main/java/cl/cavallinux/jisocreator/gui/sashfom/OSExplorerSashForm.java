@@ -9,7 +9,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -28,6 +27,7 @@ import cl.cavallinux.jisocreator.action.osexplorer.OpenAction;
 import cl.cavallinux.jisocreator.action.osexplorer.RefreshExplorerAction;
 import cl.cavallinux.jisocreator.action.osexplorer.ShowHiddenFilesAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.gui.listeners.OSDirectoriesMenuListener;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import cl.cavallinux.jisocreator.model.filters.ShowOnlyDirectoriesFilter;
@@ -113,13 +113,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
 
         MenuManager osDirectoriesTableMenuManager = new MenuManager();
         osDirectoriesTableMenuManager.setRemoveAllWhenShown(true);
-        osDirectoriesTableMenuManager.addMenuListener(menuListener -> {
-            IStructuredSelection selection = osDirectoriesTree.getStructuredSelection();
-            if (!selection.isEmpty()) {
-                osDirectoriesTableMenuManager.add(AddFileAction.getInstance());
-                osDirectoriesTableMenuManager.add(OpenAction.getInstance());
-            }
-        });
+        osDirectoriesTableMenuManager.addMenuListener(new OSDirectoriesMenuListener());
         Control osDirectoriesTableControl = osDirectoriesTable.getControl();
         osDirectoriesTableControl.setMenu(osDirectoriesTableMenuManager.createContextMenu(osDirectoriesTableControl));
         osDirectoriesTable.setContentProvider(new OsTableProvider());

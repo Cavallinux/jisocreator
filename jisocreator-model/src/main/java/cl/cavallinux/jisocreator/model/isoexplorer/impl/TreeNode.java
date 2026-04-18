@@ -6,6 +6,14 @@ import java.util.List;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.TreeNodeAdapter;
 
+/**
+ * Extension de la clase {@link TreeNodeAdapter}, implementacion real de un nodo
+ * de un arbol con multiples hijos.
+ * 
+ * @author Paolo Mezzano Barahona
+ * @version 0.0.2
+ * @version 0.0.2
+ */
 public class TreeNode extends TreeNodeAdapter {
     protected ITreeNode parent;
     protected List<ITreeNode> children;

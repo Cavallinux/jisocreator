@@ -6,6 +6,14 @@ import java.util.List;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 
+/**
+ * Sistema de archivos ISO, que parte con el nodo raiz y algunos atributos
+ * propios de la imagen ISO
+ * 
+ * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
+ * @version 0.0.1
+ * @since 0.0.1
+ */
 public class IsoFileSystem {
     private List<String> isoPaths;
     private ITreeNode root;

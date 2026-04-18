@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.CoolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -14,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.TableColumn;
@@ -25,6 +27,7 @@ import cl.cavallinux.jisocreator.action.osexplorer.OpenAction;
 import cl.cavallinux.jisocreator.action.osexplorer.RefreshExplorerAction;
 import cl.cavallinux.jisocreator.action.osexplorer.ShowHiddenFilesAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.gui.listeners.OSDirectoriesMenuListener;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import cl.cavallinux.jisocreator.model.filters.ShowOnlyDirectoriesFilter;
@@ -108,6 +111,11 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osDirectoriesTree.setComparator(new OSDirectoriesComparator());
         osDirectoriesTree.setInput(OSExplorer.getInstance());
 
+        MenuManager osDirectoriesTableMenuManager = new MenuManager();
+        osDirectoriesTableMenuManager.setRemoveAllWhenShown(true);
+        osDirectoriesTableMenuManager.addMenuListener(new OSDirectoriesMenuListener());
+        Control osDirectoriesTableControl = osDirectoriesTable.getControl();
+        osDirectoriesTableControl.setMenu(osDirectoriesTableMenuManager.createContextMenu(osDirectoriesTableControl));
         osDirectoriesTable.setContentProvider(new OsTableProvider());
         osDirectoriesTable.setLabelProvider(new OsTableProvider());
         osDirectoriesTable.addFilter(new HideHiddenFilesFilter());
@@ -119,8 +127,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         GridLayoutFactory.fillDefaults().generateLayout(composites.get(0));
 
         GridDataFactory.defaultsFor(osTableCoolBar).grab(true, false).applyTo(osTableCoolBar);
-        GridDataFactory.defaultsFor(osDirectoriesTable.getControl()).grab(true, true)
-                .applyTo(osDirectoriesTable.getControl());
+        GridDataFactory.defaultsFor(osDirectoriesTableControl).grab(true, true).applyTo(osDirectoriesTableControl);
         GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
     }
 

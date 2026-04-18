@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.util;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Objects;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -15,16 +16,18 @@ import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 public class ImageUtils {
     private static ImageUtils instance;
     private ImageRegistry imageRegistry;
+    private static final String IMAGES_FOLDER_PREFIX = "res/img/";
+    private static final String DRIVE_IMAGE_FILENAME = "drive.png";
+    private static final String FOLDER_IMAGE_FILENAME = "folder.png";
+    private static final String ROOT_ISO_FILENAME = "iso.png";
+    private static final String GENERIC_FILENAME = "file.png";
 
     private ImageUtils() {
         imageRegistry = new ImageRegistry(Display.getDefault());
     }
 
     public static ImageUtils getInstance() {
-        if (instance == null) {
-            instance = new ImageUtils();
-        }
-        return instance;
+        return Objects.nonNull(instance) ? instance : newInstance();
     }
 
     public Image loadImage(Program program) {
@@ -40,7 +43,7 @@ public class ImageUtils {
     public Image loadImage(String name) {
         Image image = (Image) imageRegistry.get(name);
         if (image == null) {
-            InputStream stream = getClass().getResourceAsStream("res/img/".concat(name));
+            InputStream stream = getClass().getResourceAsStream(IMAGES_FOLDER_PREFIX.concat(name));
             image = new Image(Display.getDefault(), stream);
             imageRegistry.put(name, image);
         }
@@ -49,17 +52,17 @@ public class ImageUtils {
 
     public Image loadImage(File file) {
         if (OSExplorer.getInstance().isRoot(file)) {
-            return loadImage("drive.png");
+            return loadImage(DRIVE_IMAGE_FILENAME);
         } else if (file.isDirectory()) {
-            return loadImage("folder.png");
+            return loadImage(FOLDER_IMAGE_FILENAME);
         } else {
             String extension = OSExplorer.getInstance().getExtension(file);
             if (extension.equals("")) {
-                return loadImage("file.png");
+                return loadImage(GENERIC_FILENAME);
             } else {
                 Program program = Program.findProgram(extension);
                 if (program == null) {
-                    return loadImage("file.png");
+                    return loadImage(GENERIC_FILENAME);
                 } else {
                     return loadImage(program);
                 }
@@ -69,7 +72,7 @@ public class ImageUtils {
 
     public Image loadImage(ITreeNode node) {
         if (node.isRoot()) {
-            return loadImage("iso.png");
+            return loadImage(ROOT_ISO_FILENAME);
         } else {
             return loadImage((File) node.getElement());
         }
@@ -77,5 +80,10 @@ public class ImageUtils {
 
     public ImageDescriptor loadImageDescriptor(String imagePath) {
         return ImageDescriptor.createFromImage(loadImage(imagePath));
+    }
+    
+    private static ImageUtils newInstance() {
+        instance = new ImageUtils();
+        return instance;
     }
 }

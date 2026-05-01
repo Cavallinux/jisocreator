@@ -3,13 +3,29 @@ package cl.cavallinux.jisocreator.action.main;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
+/**
+ * Action para cerrar la aplicacion.
+ * 
+ * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
+ * @version 0.0.2
+ * @since 0.0.2
+ */
 public class ExitApplicationAction extends Action {
     private static ExitApplicationAction instance;
 
+    static {
+        instance = new ExitApplicationAction();
+    }
+
+    /**
+     * Constructor por defecto, con acceso privado para prevenir instanciacion desde
+     * otras clases.
+     */
     private ExitApplicationAction() {
         super("Exit");
         setToolTipText("Create new iso layout");
@@ -18,10 +34,12 @@ public class ExitApplicationAction extends Action {
 
     @Override
     public void run() {
-        if (MessageDialog.openConfirm(MainWindow.getInstance().getShell(), "Confirm",
-                "Are you sure to exit JIsocreator?")) {
-            MainWindow.getInstance().getShell().setVisible(false);
-            MainWindow.getInstance().close();
+        MainWindow mainWindow = MainWindow.getInstance();
+        Shell shell = mainWindow.getShell();
+        boolean confirmExit = MessageDialog.openConfirm(shell, "Confirm", "Are you sure to exit JIsocreator?");
+        if (confirmExit) {
+            shell.setVisible(false);
+            mainWindow.close();
             Display.getCurrent().dispose();
             System.exit(0);
         } else {
@@ -29,10 +47,12 @@ public class ExitApplicationAction extends Action {
         }
     }
 
+    /**
+     * Obtiene la instalacia de la clase.
+     * 
+     * @return un {@link ExitApplicationAction}
+     */
     public static ExitApplicationAction getInstance() {
-        if (instance == null) {
-            instance = new ExitApplicationAction();
-        }
         return instance;
     }
 }

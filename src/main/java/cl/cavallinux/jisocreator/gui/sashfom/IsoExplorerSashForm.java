@@ -33,7 +33,13 @@ import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTableProvid
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Getter
+@Setter
 public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     private static IsoExplorerSashForm instance;
     private List<Composite> composites;
@@ -52,6 +58,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
 
     @Override
     public void addFeatures() {
+        log.info("Adding IsoExplorerSashForm features");
         setWeights(new int[] { 25, 75 });
         isoTreeCLabel.setText("Iso explorer");
         isoTreeCLabel.setImage(ImageUtils.getInstance().loadImage("iso.png"));
@@ -125,6 +132,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
 
     @Override
     public void addListeners() {
+        log.info("Adding IsoExplorerSashForm listeners");
         isoDirectoriesTree.addDoubleClickListener(OpenIsoEntryAction.getInstance());
         isoDirectoriesTable.addDoubleClickListener(OpenIsoEntryAction.getInstance());
 
@@ -134,6 +142,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
 
     @Override
     public void createComponents() {
+        log.info("Creating IsoExplorerSashForm components");
         composites = new ArrayList<Composite>();
         composites.add(new Composite(this, SWT.NONE));
         composites.add(new Composite(this, SWT.NONE));
@@ -145,30 +154,6 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         isoTableCoolBar = new CoolBar(composites.get(1), SWT.WRAP | SWT.FLAT);
         isoDirectoriesTable = new TableViewer(composites.get(1),
                 SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
-    }
-
-    public TableViewer getIsoDirectoriesTable() {
-        return isoDirectoriesTable;
-    }
-
-    public void setIsoDirectoriesTable(TableViewer isoDirectoriesTable) {
-        this.isoDirectoriesTable = isoDirectoriesTable;
-    }
-
-    public TreeViewer getIsoDirectoriesTree() {
-        return isoDirectoriesTree;
-    }
-
-    public void setIsoDirectoriesTree(TreeViewer isoDirectoriesTree) {
-        this.isoDirectoriesTree = isoDirectoriesTree;
-    }
-
-    public Text getIsoTableText() {
-        return isoTableText;
-    }
-
-    public void setIsoTableText(Text isoTableText) {
-        this.isoTableText = isoTableText;
     }
 
     public static void setInstance(IsoExplorerSashForm instance) {

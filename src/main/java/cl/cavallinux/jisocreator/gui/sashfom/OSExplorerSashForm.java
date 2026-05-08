@@ -36,7 +36,13 @@ import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeContentPr
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeLabelProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OsTableProvider;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Getter
+@Setter
 public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     private static OSExplorerSashForm instance;
     private List<Composite> composites;
@@ -55,6 +61,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
 
     @Override
     public void addFeatures() {
+        log.info("Adding OSExplorerSashForm features");
         setWeights(new int[] { 25, 75 });
         osTreeCLabel.setText("File explorer");
         osTreeCLabel.setImage(ImageUtils.getInstance().loadImage("drive.png"));
@@ -133,6 +140,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
 
     @Override
     public void addListeners() {
+        log.info("Adding OSExplorerSashForm listeners");
         osDirectoriesTree.addDoubleClickListener(OpenAction.getInstance());
         osDirectoriesTable.addDoubleClickListener(OpenAction.getInstance());
 
@@ -142,6 +150,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
 
     @Override
     public void createComponents() {
+        log.info("Adding OSExplorerSashForm components");
         composites = new ArrayList<Composite>();
         composites.add(new Composite(this, SWT.NONE));
         composites.add(new Composite(this, SWT.NONE));
@@ -154,31 +163,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osDirectoriesTable = new TableViewer(composites.get(1),
                 SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
     }
-
-    public TableViewer getOsDirectoriesTable() {
-        return osDirectoriesTable;
-    }
-
-    public void setOsDirectoriesTable(TableViewer osDirectoriesTable) {
-        this.osDirectoriesTable = osDirectoriesTable;
-    }
-
-    public TreeViewer getOsDirectoriesTree() {
-        return osDirectoriesTree;
-    }
-
-    public void setOsDirectoriesTree(TreeViewer osDirectoriesTree) {
-        this.osDirectoriesTree = osDirectoriesTree;
-    }
-
-    public Text getOsTableText() {
-        return osTableText;
-    }
-
-    public void setOsTableText(Text osTableText) {
-        this.osTableText = osTableText;
-    }
-
+    
     public static void setInstance(OSExplorerSashForm instance) {
         OSExplorerSashForm.instance = instance;
     }

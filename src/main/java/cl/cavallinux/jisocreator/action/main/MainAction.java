@@ -22,8 +22,10 @@ public class MainAction extends Action {
 
     @Override
     public void run() {
-        MainWindow.getInstance().setBlockOnOpen(true);
-        MainWindow.getInstance().open();
+        log.info("Running application");
+        MainWindow mainWindowInstance = MainWindow.getInstance();
+        mainWindowInstance.setBlockOnOpen(true);
+        mainWindowInstance.open();
     }
 
     /**

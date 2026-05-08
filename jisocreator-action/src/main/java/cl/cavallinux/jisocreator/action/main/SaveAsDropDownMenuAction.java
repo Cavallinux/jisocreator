@@ -9,8 +9,12 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class SaveAsDropDownMenuAction extends ActionMenuCreator {
     private static SaveAsDropDownMenuAction instance;
+    
+    static {
+        instance = new SaveAsDropDownMenuAction();
+    }
 
-    public SaveAsDropDownMenuAction() {
+    private SaveAsDropDownMenuAction() {
         super("Save as...");
         setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("saveas.png"));
         setMenuCreator(this);
@@ -30,9 +34,6 @@ public class SaveAsDropDownMenuAction extends ActionMenuCreator {
     }
 
     public static SaveAsDropDownMenuAction getInstance() {
-        if (instance == null) {
-            instance = new SaveAsDropDownMenuAction();
-        }
         return instance;
     }
 }

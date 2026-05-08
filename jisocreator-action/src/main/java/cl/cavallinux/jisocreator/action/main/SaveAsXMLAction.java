@@ -20,10 +20,13 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     private String path;
-    private static SaveAsXMLAction instance;
     private IsoFileSystem iso;
+    private static SaveAsXMLAction instance;
+    static {
+        instance = new SaveAsXMLAction();
+    }
 
-    public SaveAsXMLAction() {
+    private SaveAsXMLAction() {
         super("XML Layout", ImageUtils.getInstance().loadImageDescriptor("xml.png"));
         setToolTipText("Save iso layout as xml file");
     }
@@ -60,9 +63,6 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     }
 
     public static SaveAsXMLAction getInstance() {
-        if (instance == null) {
-            instance = new SaveAsXMLAction();
-        }
         return instance;
     }
 

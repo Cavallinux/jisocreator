@@ -9,6 +9,10 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class GoToIsoEntryParentAction extends Action {
     private static GoToIsoEntryParentAction instance;
+    
+    static {
+        instance = new GoToIsoEntryParentAction();
+    }
 
     private GoToIsoEntryParentAction() {
         super("Go to parent file", ImageUtils.getInstance().loadImageDescriptor("up.png"));
@@ -28,9 +32,6 @@ public class GoToIsoEntryParentAction extends Action {
     }
 
     public static GoToIsoEntryParentAction getInstance() {
-        if (instance == null) {
-            instance = new GoToIsoEntryParentAction();
-        }
         return instance;
     }
 }

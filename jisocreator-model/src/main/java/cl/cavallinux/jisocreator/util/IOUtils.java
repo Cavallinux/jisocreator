@@ -32,6 +32,7 @@ public class IOUtils {
         JISOCREATOR_CONFIG_DIR = System.getProperty("user.home").concat("/.config/jisocreator/");
         JISOCREATOR_DEFAULTCONFIG_FILENAME = "defaultconfig.properties";
         JISOCREATOR_CONFIG_FILENAME = "jisocreator.properties";
+        instance = new IOUtils();
     }
 
     private IOUtils() {
@@ -57,14 +58,12 @@ public class IOUtils {
             fos.close();
             return true;
         } catch (IOException e) {
+            log.error("Error saving XML", e);
             return false;
         }
     }
 
     public static IOUtils getInstance() {
-        if (instance == null) {
-            instance = new IOUtils();
-        }
         return instance;
     }
 

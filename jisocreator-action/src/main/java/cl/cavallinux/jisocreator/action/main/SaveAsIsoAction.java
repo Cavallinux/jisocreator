@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
@@ -17,10 +15,16 @@ import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.util.IOUtils;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SaveAsIsoAction extends Action {
-    private static SaveAsIsoAction instance;
     private List<String> mkisofsCommand;
+    private static SaveAsIsoAction instance;
+    
+    static {
+        instance = new SaveAsIsoAction();
+    }
 
     private SaveAsIsoAction() {
         super("ISO9660 File", ImageUtils.getInstance().loadImageDescriptor("x-cd-image.png"));
@@ -59,32 +63,30 @@ public class SaveAsIsoAction extends Action {
             SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream());
             saveThread.start();
         } catch (IOException e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Error executing command", e);
+            log.info("Error executing command", e);
         }
     }
 
     public static SaveAsIsoAction getInstance() {
-        if (instance == null) {
-            instance = new SaveAsIsoAction();
-        }
         return instance;
     }
 
     private void setMkisofsCommand() {
         mkisofsCommand = new ArrayList<String>();
-        mkisofsCommand.add(IOUtils.getInstance().getStore().getString("mkisofs.path"));
+        IOUtils storeInstance = IOUtils.getInstance();
+        PreferenceStore preferenceStore = storeInstance.getStore();
+        mkisofsCommand.add(preferenceStore.getString("mkisofs.path"));
         mkisofsCommand.add("-graft-points");
         mkisofsCommand.add("-gui");
-        if (IOUtils.getInstance().getStore().getBoolean("mkisofs.joliet.use")) {
+        if (preferenceStore.getBoolean("mkisofs.joliet.use")) {
             mkisofsCommand.add("-J");
             mkisofsCommand.add("-joliet-long");
-
-            if (IOUtils.getInstance().getStore().getBoolean("mkisofs.rockridge.use")) {
+            if (preferenceStore.getBoolean("mkisofs.rockridge.use")) {
                 mkisofsCommand.add("-r");
             }
         }
 
-        if (IOUtils.getInstance().getStore().getBoolean("mkisofs.symlinks.follow")) {
+        if (preferenceStore.getBoolean("mkisofs.symlinks.follow")) {
             mkisofsCommand.add("-f");
         }
         mkisofsCommand.add("-l");

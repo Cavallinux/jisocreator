@@ -102,9 +102,6 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
     }
 
     public static OpenIsoEntryAction getInstance() {
-        if (instance == null) {
-            instance = new OpenIsoEntryAction();
-        }
         return instance;
     }
 }

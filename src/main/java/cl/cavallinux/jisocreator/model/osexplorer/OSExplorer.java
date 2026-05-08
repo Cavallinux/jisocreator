@@ -62,7 +62,7 @@ public class OSExplorer {
             return FILE_TYPE;
         } else {
             Program program = Program.findProgram(extension);
-            return Objects.nonNull(program) ? program.getName() : FILE_TYPE.concat(" ").concat(extension);
+            return Objects.nonNull(program) ? program.getName() : FILE_TYPE.concat(StringUtils.SPACE).concat(extension);
         }
     }
 

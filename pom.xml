@@ -20,7 +20,9 @@
 		<jsvg.version>2.1.0</jsvg.version>
 		<lombok.version>1.18.44</lombok.version>
 		<commons-lang3.version>3.20.0</commons-lang3.version>
-		<debug.jvm.args>-Xdebug-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8010</debug.jvm.args>
+		<debug.port>5005</debug.port>
+		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
+		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
@@ -86,10 +88,13 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>${exec.maven.plugin}</version>
 				<configuration>
-					<mainClass>${jisocreator.main.class}</mainClass>
-					<classpathScope>runtime</classpathScope>
+					<executable>java</executable>
 					<arguments>
+						<argument>-classpath</argument>
+						<classpath />
 						<argument>${debug.jvm.args}</argument>
+						<argument>${jvm.nativeacess.arg}</argument>
+						<argument>${jisocreator.main.class}</argument>
 					</arguments>
 				</configuration>
 			</plugin>

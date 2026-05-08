@@ -22,9 +22,21 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>cl.cavallinux.jisocreator.action.main.MainAction</mainClass>
+							<mainClass>${jisocreator.main.class}</mainClass>
 						</manifest>
 					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${exec.maven.plugin}</version>
+				<configuration>
+					<mainClass>${jisocreator.main.class}</mainClass>
+					<classpathScope>runtime</classpathScope>
+					<arguments>
+						<argument>${debug.jvm.args}</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 		</plugins>

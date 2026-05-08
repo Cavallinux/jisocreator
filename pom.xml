@@ -17,12 +17,14 @@
 		<java.version>21</java.version>
 		<maven.compiler.plugin>3.15.0</maven.compiler.plugin>
 		<maven.jar.plugin>3.5.0</maven.jar.plugin>
+		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
 		<swt.platform.version>linux-x86_64</swt.platform.version>
 		<xstream.version>1.4.21</xstream.version>
-		<slf4j.version>1.7.7</slf4j.version>
+		<slf4j.version>2.26.0</slf4j.version>
 		<jface.version>3.133.0</jface.version>
-		<jsvg.version>2.0.0</jsvg.version>
+		<jsvg.version>2.1.0</jsvg.version>
 		<lombok.version>1.18.44</lombok.version>
+		<commons-lang3.version>3.20.0</commons-lang3.version>
 	</properties>
 
 	<build>
@@ -41,6 +43,29 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>${maven.enforcer.plugin}</version>
+				<executions>
+					<execution>
+						<id>enforce</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.6,)</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>[21,)</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -78,12 +103,12 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
-			<version>2.20.0</version> <!-- or latest -->
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.20.0</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
@@ -123,7 +148,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.20.0</version>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 	</dependencies>
 </project>

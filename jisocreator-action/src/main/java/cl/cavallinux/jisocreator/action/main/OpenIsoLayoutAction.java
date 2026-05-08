@@ -18,11 +18,17 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.util.IOUtils;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress {
-    private static OpenIsoLayoutAction instance;
     private Object object;
     private String path;
+    private static OpenIsoLayoutAction instance;
+    
+    static {
+        instance = new OpenIsoLayoutAction();
+    }
 
     public OpenIsoLayoutAction() {
         super("Open layout");
@@ -41,9 +47,8 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
                     MainWindow.getInstance().getShell());
             openProgressDialog.run(true, false, this);
             openProgressDialog.close();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (InvocationTargetException | InterruptedException e) {
+            log.error("Error opening file", e);
             MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
         }
     }
@@ -69,9 +74,6 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
     }
 
     public static OpenIsoLayoutAction getInstance() {
-        if (instance == null) {
-            instance = new OpenIsoLayoutAction();
-        }
         return instance;
     }
 

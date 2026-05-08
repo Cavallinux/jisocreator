@@ -11,6 +11,10 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class ShowHiddenFilesAction extends Action {
     private static ShowHiddenFilesAction instance;
+    
+    static {
+        instance = new ShowHiddenFilesAction();
+    }
 
     private ShowHiddenFilesAction() {
         super("Show hidden", IAction.AS_CHECK_BOX);
@@ -51,9 +55,6 @@ public class ShowHiddenFilesAction extends Action {
     }
 
     public static ShowHiddenFilesAction getInstance() {
-        if (instance == null) {
-            instance = new ShowHiddenFilesAction();
-        }
         return instance;
     }
 }

@@ -3,7 +3,6 @@ package cl.cavallinux.jisocreator.action.isoexplorer;
 import java.io.File;
 import java.util.EventObject;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -16,14 +15,15 @@ import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OpenIsoEntryAction extends Action implements IDoubleClickListener, ISelectionChangedListener {
-    private static OpenIsoEntryAction instance;
     private ITreeNode node;
-    private static Logger logger;
+    private static OpenIsoEntryAction instance;
 
     static {
-        logger = Logger.getLogger(OpenIsoEntryAction.class);
+        instance = new OpenIsoEntryAction();
     }
 
     private OpenIsoEntryAction() {
@@ -63,7 +63,7 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
         if (arg0.getSource() instanceof TreeViewer) {
             if (node == null) {
                 DeleteIsoEntryAction.getInstance().setEnabled(false);
-                logger.warn("SWT Library bug");
+                log.warn("SWT Library bug");
                 return;
             } else {
                 DeleteIsoEntryAction.getInstance().setEnabled(true);
@@ -102,9 +102,6 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
     }
 
     public static OpenIsoEntryAction getInstance() {
-        if (instance == null) {
-            instance = new OpenIsoEntryAction();
-        }
         return instance;
     }
 }

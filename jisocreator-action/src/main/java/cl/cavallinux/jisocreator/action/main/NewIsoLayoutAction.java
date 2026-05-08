@@ -8,6 +8,10 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class NewIsoLayoutAction extends Action {
     private static NewIsoLayoutAction instance;
+    
+    static {
+        instance = new NewIsoLayoutAction();
+    }
 
     public NewIsoLayoutAction() {
         super("New Layout", ImageUtils.getInstance().loadImageDescriptor("new.png"));
@@ -22,9 +26,6 @@ public class NewIsoLayoutAction extends Action {
     }
 
     public static NewIsoLayoutAction getInstance() {
-        if (instance == null) {
-            instance = new NewIsoLayoutAction();
-        }
         return instance;
     }
 }

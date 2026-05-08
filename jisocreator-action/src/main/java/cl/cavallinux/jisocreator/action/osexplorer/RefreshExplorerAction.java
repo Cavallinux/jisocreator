@@ -7,6 +7,10 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class RefreshExplorerAction extends Action {
     private static RefreshExplorerAction instance;
+    
+    static {
+        instance = new RefreshExplorerAction();
+    }
 
     private RefreshExplorerAction() {
         super("Refresh OS Explorer", ImageUtils.getInstance().loadImageDescriptor("refresh.png"));
@@ -20,9 +24,6 @@ public class RefreshExplorerAction extends Action {
     }
 
     public static RefreshExplorerAction getInstance() {
-        if (instance == null) {
-            instance = new RefreshExplorerAction();
-        }
         return instance;
     }
 }

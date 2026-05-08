@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -17,7 +16,9 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class IOUtils {
     private static IOUtils instance;
     private final static String JISOCREATOR_CONFIG_DIR;
@@ -26,13 +27,12 @@ public class IOUtils {
     private PreferenceStore store;
     private Properties defaultProperties;
     private XStream xStreamParser;
-    private static Logger logger;
 
     static {
         JISOCREATOR_CONFIG_DIR = System.getProperty("user.home").concat("/.config/jisocreator/");
         JISOCREATOR_DEFAULTCONFIG_FILENAME = "defaultconfig.properties";
         JISOCREATOR_CONFIG_FILENAME = "jisocreator.properties";
-        logger = Logger.getLogger(IOUtils.class);
+        instance = new IOUtils();
     }
 
     private IOUtils() {
@@ -58,14 +58,12 @@ public class IOUtils {
             fos.close();
             return true;
         } catch (IOException e) {
+            log.error("Error saving XML", e);
             return false;
         }
     }
 
     public static IOUtils getInstance() {
-        if (instance == null) {
-            instance = new IOUtils();
-        }
         return instance;
     }
 
@@ -74,7 +72,7 @@ public class IOUtils {
         try {
             store.load();
         } catch (IOException e) {
-            logger.warn("Loading defaults", e);
+            log.warn("Loading defaults", e);
             loadPreferencesFromBackup();
         }
 
@@ -121,7 +119,7 @@ public class IOUtils {
             store.save();
             stream.close();
         } catch (IOException e) {
-            logger.error("Error saving properties", e);
+            log.error("Error saving properties", e);
         }
     }
 }

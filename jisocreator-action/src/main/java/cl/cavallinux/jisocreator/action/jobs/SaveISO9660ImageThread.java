@@ -1,9 +1,9 @@
 package cl.cavallinux.jisocreator.action.jobs;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -12,7 +12,9 @@ import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgress {
     private InputStream saveProgressInputStream;
 
@@ -29,10 +31,8 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
                 try {
                     ModalContext.run(SaveISO9660ImageThread.this, true,
                             MainWindow.getInstance().getStatusLine().getProgressMonitor(), Display.getCurrent());
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InvocationTargetException | InterruptedException e) {
+                    log.error("Error saving ISO image", e);
                 }
             }
         });
@@ -40,17 +40,14 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        try {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(saveProgressInputStream))) {
             monitor.beginTask("Saving image...", IProgressMonitor.UNKNOWN);
-            InputStreamReader isr = new InputStreamReader(saveProgressInputStream);
-            LineNumberReader lnr = new LineNumberReader(isr);
-            String line;
-            while ((line = lnr.readLine()) != null) {
+            br.lines().forEach(line -> {
                 monitor.subTask(line);
-                System.out.println(line);
-            }
+                log.info(line);
+            });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error reading save progress", e);
         } finally {
             monitor.done();
         }

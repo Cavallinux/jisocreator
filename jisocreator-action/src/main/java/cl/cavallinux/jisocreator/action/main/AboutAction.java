@@ -6,14 +6,20 @@ import cl.cavallinux.jisocreator.gui.dialog.AboutDialog;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
+/**
+ * Action que despliega el cuadro de dialog que muestra la version de la aplicacion 
+ */
 public class AboutAction extends Action {
     private static AboutAction instance;
 
     static {
         instance = new AboutAction();
     }
-
-    public AboutAction() {
+    
+    /**
+     * Constructor por defecto de la clase
+     */
+    private AboutAction() {
         super("About JIsoCreator", ImageUtils.getInstance().loadImageDescriptor("about.png"));
         setToolTipText("Open about dialog");
     }

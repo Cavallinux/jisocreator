@@ -15,7 +15,7 @@ public class GoToParentAction extends Action {
         instance = new GoToParentAction();
     }
 
-    public GoToParentAction() {
+    private GoToParentAction() {
         super("Go to Parent File", ImageUtils.getInstance().loadImageDescriptor("up.png"));
         setToolTipText("Go to parent file");
         setEnabled(false);

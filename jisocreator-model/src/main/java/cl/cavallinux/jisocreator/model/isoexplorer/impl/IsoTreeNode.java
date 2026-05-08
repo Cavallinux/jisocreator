@@ -8,22 +8,29 @@ import org.eclipse.swt.graphics.Image;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
+/**
+ * Extension de la clase {@link TreeNode}, implementacion de un nodo del arbol de directorios ISO
+ * 
+ * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
+ * @version 0.0.2
+ * @since 0.0.2
+ */
 public class IsoTreeNode extends TreeNode {
     private File file;
     private String isoName;
     private boolean isRoot;
+    private static final String ROOT_ISO_NAME = "/";
 
     public IsoTreeNode(ITreeNode parent, File file, boolean isRoot) {
         super(parent);
         this.file = file;
         this.isRoot = isRoot;
-        if (isRoot) {
-            this.isoName = "/";
-        } else if (file.isDirectory()) {
-            this.isoName = parent.getIsoName().concat(getShortName()).concat("/");
-        } else {
-            this.isoName = parent.getIsoName().concat(getShortName());
-        }
+        this.isoName = isRoot ? ROOT_ISO_NAME : setIsoName();
+    }
+    
+    private String setIsoName() {
+        String parentIsoShortName = this.parent.getIsoName().concat(getShortName());
+        return this.file.isDirectory() ? parentIsoShortName.concat("/") : parentIsoShortName;
     }
 
     public IsoTreeNode(ITreeNode parent, File file) {

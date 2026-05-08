@@ -3,6 +3,13 @@ package cl.cavallinux.jisocreator.model.isoexplorer.decl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * Implementacion de clase {@link ITreeNode}
+ * 
+ * @author Paolo Mezzano Barahona
+ * @version 0.0.2
+ * @since 0.0.2
+ */
 public abstract class TreeNodeAdapter implements ITreeNode {
 
     @Override

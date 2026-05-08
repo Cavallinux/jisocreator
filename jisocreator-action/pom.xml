@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>cl.cavallinux</groupId>
 		<artifactId>jisocreator</artifactId>
-		<version>0.0.2</version>
+		<version>0.0.3</version>
 	</parent>
 	<artifactId>jisocreator-action</artifactId>
 	<name>JISOCreator Actions</name>
@@ -16,15 +16,27 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>${maven.jar.plugin}</version>
 				<configuration>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>cl.cavallinux.jisocreator.action.main.MainAction</mainClass>
+							<mainClass>${jisocreator.main.class}</mainClass>
 						</manifest>
 					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${exec.maven.plugin}</version>
+				<configuration>
+					<mainClass>${jisocreator.main.class}</mainClass>
+					<classpathScope>runtime</classpathScope>
+					<arguments>
+						<argument>${debug.jvm.args}</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 		</plugins>

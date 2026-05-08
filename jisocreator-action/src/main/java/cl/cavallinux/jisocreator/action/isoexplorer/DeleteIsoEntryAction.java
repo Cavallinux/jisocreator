@@ -13,10 +13,16 @@ import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DeleteIsoEntryAction extends Action implements IRunnableWithProgress {
-    private static DeleteIsoEntryAction instance;
     private ITreeNode parent, node;
+    private static DeleteIsoEntryAction instance;
+    
+    static {
+        instance = new DeleteIsoEntryAction();
+    }
 
     private DeleteIsoEntryAction() {
         super("Delete", ImageUtils.getInstance().loadImageDescriptor("delete.png"));
@@ -36,10 +42,8 @@ public class DeleteIsoEntryAction extends Action implements IRunnableWithProgres
             IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().refresh();
             IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
             dialog.close();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InvocationTargetException | InterruptedException e) {
+            log.error("Error while processing delete action: ", e);
         }
     }
 
@@ -54,9 +58,6 @@ public class DeleteIsoEntryAction extends Action implements IRunnableWithProgres
     }
 
     public static DeleteIsoEntryAction getInstance() {
-        if (instance == null) {
-            instance = new DeleteIsoEntryAction();
-        }
         return instance;
     }
 }

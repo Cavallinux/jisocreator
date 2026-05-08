@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cl.cavallinux</groupId>
 	<artifactId>jisocreator</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>pom</packaging>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
@@ -14,15 +14,20 @@
 	</modules>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<maven.compiler.plugin>3.5.1</maven.compiler.plugin>
-		<maven.jar.plugin>3.3.0</maven.jar.plugin>
+		<java.version>21</java.version>
+		<maven.compiler.plugin>3.15.0</maven.compiler.plugin>
+		<maven.jar.plugin>3.5.0</maven.jar.plugin>
+		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
 		<swt.platform.version>linux-x86_64</swt.platform.version>
 		<xstream.version>1.4.21</xstream.version>
-		<slf4j.version>1.7.7</slf4j.version>
+		<slf4j.version>2.26.0</slf4j.version>
 		<jface.version>3.133.0</jface.version>
-		<jsvg.version>2.0.0</jsvg.version>
+		<jsvg.version>2.1.0</jsvg.version>
 		<lombok.version>1.18.44</lombok.version>
+		<commons-lang3.version>3.20.0</commons-lang3.version>
+		<debug.jvm.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8010</debug.jvm.args>
+		<exec.maven.plugin>3.6.3</exec.maven.plugin>
+		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
 
 	<build>
@@ -32,8 +37,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin}</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
+					<release>${java.version}</release>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -42,6 +46,29 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>${maven.enforcer.plugin}</version>
+				<executions>
+					<execution>
+						<id>enforce</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.6,)</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>[21,)</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -77,8 +104,13 @@
 			<version>${xstream.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
@@ -115,6 +147,11 @@
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.ui.workbench</artifactId>
 			<version>3.138.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 	</dependencies>
 </project>

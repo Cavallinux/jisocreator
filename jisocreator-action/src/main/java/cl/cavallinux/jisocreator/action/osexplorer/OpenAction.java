@@ -3,7 +3,6 @@ package cl.cavallinux.jisocreator.action.osexplorer;
 import java.io.File;
 import java.util.EventObject;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -15,14 +14,15 @@ import org.eclipse.jface.viewers.TreeViewer;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OpenAction extends Action implements IDoubleClickListener, ISelectionChangedListener {
-    private static OpenAction instance;
     private File file;
-    private static Logger logger;
+    private static OpenAction instance;
 
     static {
-        logger = Logger.getLogger(OpenAction.class);
+        instance = new OpenAction();
     }
 
     private OpenAction() {
@@ -63,7 +63,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
             if (file == null) {
                 AddFileAction.getInstance().setEnabled(false);
                 GoToParentAction.getInstance().setEnabled(false);
-                logger.warn("SWT Library bug");
+                log.warn("SWT Library bug");
             } else {
                 AddFileAction.getInstance().setEnabled(true);
             }
@@ -102,9 +102,6 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
     }
 
     public static OpenAction getInstance() {
-        if (instance == null) {
-            instance = new OpenAction();
-        }
         return instance;
     }
 }

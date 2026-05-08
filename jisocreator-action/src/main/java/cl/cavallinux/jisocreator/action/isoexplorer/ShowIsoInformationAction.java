@@ -6,6 +6,10 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class ShowIsoInformationAction extends Action {
     private static ShowIsoInformationAction instance;
+    
+    static {
+        instance = new ShowIsoInformationAction();
+    }
 
     private ShowIsoInformationAction() {
         super("Open", ImageUtils.getInstance().loadImageDescriptor("properties.png"));
@@ -18,9 +22,6 @@ public class ShowIsoInformationAction extends Action {
     }
 
     public static ShowIsoInformationAction getInstance() {
-        if (instance == null) {
-            instance = new ShowIsoInformationAction();
-        }
         return instance;
     }
 }

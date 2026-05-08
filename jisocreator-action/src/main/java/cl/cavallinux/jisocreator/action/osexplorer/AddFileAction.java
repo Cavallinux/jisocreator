@@ -21,12 +21,18 @@ import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AddFileAction extends Action implements IRunnableWithProgress {
-    private static AddFileAction instance;
     private ITreeNode isoNode;
     private List<File> files;
+    private static AddFileAction instance;
 
+    static {
+        instance = new AddFileAction();
+    }
+    
     private AddFileAction() {
         super("Add", ImageUtils.getInstance().loadImageDescriptor("add.png"));
         setToolTipText("Add selected files to ISO9660 layout");
@@ -71,9 +77,6 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
     }
 
     public static AddFileAction getInstance() {
-        if (instance == null) {
-            instance = new AddFileAction();
-        }
         return instance;
     }
 
@@ -89,11 +92,8 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
         try {
             ModalContext.run(this, true, MainWindow.getInstance().getStatusLine().getProgressMonitor(),
                     Display.getCurrent());
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            return;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InvocationTargetException | InterruptedException e) {
+            log.error("Error executing AddFileAction", e);
             return;
         }
     }

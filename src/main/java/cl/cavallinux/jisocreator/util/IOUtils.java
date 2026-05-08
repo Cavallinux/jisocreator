@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class IOUtils {
-    private static IOUtils instance;
+    private final static IOUtils instance;
     private final static String JISOCREATOR_CONFIG_DIR;
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
     private final static String JISOCREATOR_CONFIG_FILENAME;

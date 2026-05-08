@@ -30,12 +30,13 @@ import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class MainWindow extends ApplicationWindow {
-    private static MainWindow instance;
+    private static final MainWindow instance;
+    
+    static {
+        instance = new MainWindow();
+    }
 
     public static MainWindow getInstance() {
-        if (instance == null) {
-            instance = new MainWindow();
-        }
         return instance;
     }
 

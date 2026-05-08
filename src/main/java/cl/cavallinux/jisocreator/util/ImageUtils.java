@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -14,20 +15,24 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 
 public class ImageUtils {
-    private static ImageUtils instance;
     private ImageRegistry imageRegistry;
     private static final String IMAGES_FOLDER_PREFIX = "res/img/";
     private static final String DRIVE_IMAGE_FILENAME = "drive.png";
     private static final String FOLDER_IMAGE_FILENAME = "folder.png";
     private static final String ROOT_ISO_FILENAME = "iso.png";
     private static final String GENERIC_FILENAME = "file.png";
+    private static final ImageUtils instance;
+    
+    static {
+        instance = new ImageUtils();
+    }
 
     private ImageUtils() {
         imageRegistry = new ImageRegistry(Display.getDefault());
     }
 
     public static ImageUtils getInstance() {
-        return Objects.nonNull(instance) ? instance : newInstance();
+        return instance;
     }
 
     public Image loadImage(Program program) {
@@ -57,33 +62,20 @@ public class ImageUtils {
             return loadImage(FOLDER_IMAGE_FILENAME);
         } else {
             String extension = OSExplorer.getInstance().getExtension(file);
-            if (extension.equals("")) {
-                return loadImage(GENERIC_FILENAME);
-            } else {
+            if (StringUtils.isBlank(extension)) {
                 Program program = Program.findProgram(extension);
-                if (program == null) {
-                    return loadImage(GENERIC_FILENAME);
-                } else {
-                    return loadImage(program);
-                }
+                return Objects.nonNull(program) ? loadImage(program) : loadImage(GENERIC_FILENAME);
+            } else {
+                return loadImage(GENERIC_FILENAME);   
             }
         }
     }
 
     public Image loadImage(ITreeNode node) {
-        if (node.isRoot()) {
-            return loadImage(ROOT_ISO_FILENAME);
-        } else {
-            return loadImage((File) node.getElement());
-        }
+        return node.isRoot() ? loadImage(ROOT_ISO_FILENAME) : loadImage((File) node.getElement());
     }
 
     public ImageDescriptor loadImageDescriptor(String imagePath) {
         return ImageDescriptor.createFromImage(loadImage(imagePath));
-    }
-    
-    private static ImageUtils newInstance() {
-        instance = new ImageUtils();
-        return instance;
     }
 }

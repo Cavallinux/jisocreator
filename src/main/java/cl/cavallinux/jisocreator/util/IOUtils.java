@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class IOUtils {
-    private static IOUtils instance;
+    private final static IOUtils instance;
     private final static String JISOCREATOR_CONFIG_DIR;
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
     private final static String JISOCREATOR_CONFIG_FILENAME;
@@ -38,33 +38,31 @@ public class IOUtils {
     private IOUtils() {
         loadXMLParser();
     }
+    
+    public static IOUtils getInstance() {
+        return instance;
+    }
 
     public Object parseXMLFileToObject(String path) {
-        try {
-            FileInputStream fis = new FileInputStream(path);
+        try (FileInputStream fis = new FileInputStream(path)) {
             IsoFileSystem iso = new IsoFileSystem();
             xStreamParser.fromXML(fis, iso);
             return iso;
         } catch (IOException e) {
+            log.error("Error parsing XML", e);
             return null;
         }
     }
 
     public boolean saveObjectToXML(Object objectToParse, String path, IProgressMonitor monitor) {
-        try {
+        try (FileOutputStream fos = new FileOutputStream(path)){
             monitor.subTask("Parsing XML...");
-            FileOutputStream fos = new FileOutputStream(path);
             xStreamParser.toXML(objectToParse, fos);
-            fos.close();
             return true;
         } catch (IOException e) {
             log.error("Error saving XML", e);
             return false;
         }
-    }
-
-    public static IOUtils getInstance() {
-        return instance;
     }
 
     public PreferenceStore getStore() {

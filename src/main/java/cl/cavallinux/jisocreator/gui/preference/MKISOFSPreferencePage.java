@@ -15,11 +15,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MKISOFSPreferencePage extends PreferencePage {
     private List<FieldEditor> fieldEditors;
 
     @Override
     protected Control createContents(Composite parent) {
+        log.info("Creating MKISOFS preference page");
         setTitle("Iso options");
         Composite top = new Composite(parent, SWT.NONE);
         fieldEditors = new ArrayList<FieldEditor>();
@@ -53,6 +57,7 @@ public class MKISOFSPreferencePage extends PreferencePage {
 
     @Override
     public boolean performOk() {
+        log.info("Performing OK on MKISOFS preference page");
         performApply();
         return super.performOk();
     }

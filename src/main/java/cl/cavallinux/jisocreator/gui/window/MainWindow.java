@@ -28,14 +28,17 @@ import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MainWindow extends ApplicationWindow {
-    private static MainWindow instance;
+    private static final MainWindow instance;
+    
+    static {
+        instance = new MainWindow();
+    }
 
     public static MainWindow getInstance() {
-        if (instance == null) {
-            instance = new MainWindow();
-        }
         return instance;
     }
 
@@ -53,6 +56,7 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected void configureShell(Shell shell) {
+        log.info("Configuring shell");
         super.configureShell(shell);
         shell.setText("JIsoCreator");
         shell.setSize(1024, 768);
@@ -70,6 +74,7 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected Control createContents(Composite parent) {
+        log.info("Creating main window contents");
         Composite composite = new Composite(parent, SWT.NONE);
         SashForm mainPanel = new SashForm(composite, SWT.VERTICAL);
         IsoExplorerSashForm.setInstance(new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL));
@@ -82,6 +87,7 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected MenuManager createMenuManager() {
+        log.info("creating menu managers");
         MenuManager mainMenuManager = new MenuManager();
 
         MenuManager fileMenu = new MenuManager("&File");
@@ -111,6 +117,7 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected ToolBarManager createToolBarManager(int style) {
+        log.info("creating tool bar manager");
         ToolBarManager tool = new ToolBarManager(style);
         tool.add(NewIsoLayoutAction.getInstance());
         tool.add(OpenIsoLayoutAction.getInstance());

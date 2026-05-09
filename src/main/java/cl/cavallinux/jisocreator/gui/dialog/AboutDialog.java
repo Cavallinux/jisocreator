@@ -13,7 +13,9 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AboutDialog extends TitleAreaDialog {
 
     public AboutDialog(Shell parentShell) {
@@ -22,6 +24,7 @@ public class AboutDialog extends TitleAreaDialog {
 
     @Override
     protected void configureShell(Shell newShell) {
+        log.info("Configuring about dialog shell");
         super.configureShell(newShell);
         newShell.setText("About");
     }
@@ -32,6 +35,7 @@ public class AboutDialog extends TitleAreaDialog {
     }
 
     private Control createAboutPanel(Composite parent) {
+        log.info("Creating about panel");
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("Version: ");
         stringBuffer.append(AboutDialog.class.getPackage().getImplementationVersion());
@@ -95,6 +99,7 @@ public class AboutDialog extends TitleAreaDialog {
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
+        log.info("Creating buttons for about dialog");
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
     }
 }

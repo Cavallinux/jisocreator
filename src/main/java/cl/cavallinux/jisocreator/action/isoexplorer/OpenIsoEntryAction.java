@@ -37,9 +37,8 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
         if (((File) node.getElement()).isFile()) {
             OSExplorer.getInstance().launch((File) node.getElement());
         } else {
-            IsoExplorerSashForm.getInstance().getIsoDirectoriesTree()
-                    .setSelection(IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().getSelection());
-            IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().expandToLevel(node, 1);
+            IsoExplorerSashForm isoSashFormInstance = IsoExplorerSashForm.getInstance();
+            isoSashFormInstance.refresh(node);
         }
     }
 
@@ -68,11 +67,12 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
             } else {
                 DeleteIsoEntryAction.getInstance().setEnabled(true);
             }
-            if (node.isRoot()) {
+            /*if (node.isRoot()) {
                 GoToIsoEntryParentAction.getInstance().setEnabled(false);
             } else {
                 GoToIsoEntryParentAction.getInstance().setEnabled(true);
-            }
+            }*/
+            GoToIsoEntryParentAction.getInstance().setEnabled(!node.isRoot());
             IsoExplorerSashForm.getInstance().getIsoTableText().setText(node.getIsoName());
             IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().setInput(node);
             setEnabled(false);

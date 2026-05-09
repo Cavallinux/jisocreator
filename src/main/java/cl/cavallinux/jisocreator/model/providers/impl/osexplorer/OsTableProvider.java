@@ -8,33 +8,97 @@ import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.decl.TableProviderAdapter;
 import cl.cavallinux.jisocreator.util.ImageUtils;
 
+/**
+ * Table content and label provider for OS file system explorer.
+ * <p>
+ * This class provides table data and rendering for displaying files and directories
+ * from the operating system file system. It extends {@link TableProviderAdapter} to
+ * implement the content and label provider functionality.
+ * </p>
+ * <p>
+ * The table displays the following columns for each file:
+ * <ol>
+ *   <li>File name with icon</li>
+ *   <li>File size</li>
+ *   <li>File type</li>
+ *   <li>Last modified date</li>
+ * </ol>
+ * </p>
+ * <p>
+ * The input to this provider should be a {@link File} object representing
+ * a directory whose contents are to be displayed.
+ * </p>
+ * 
+ * @see TableProviderAdapter
+ * @see OSExplorer
+ * @see ImageUtils
+ * 
+ * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
+ * @version 0.0.3
+ * @since 0.0.3
+ */
 public class OsTableProvider extends TableProviderAdapter {
-    private static Object[] EMPTY = new Object[0];
+    private static final Object[] EMPTY = new Object[0];
 
+    /**
+     * Retrieves the file list from a directory.
+     * <p>
+     * This method expects the input object to be a {@link File} representing
+     * a directory. It returns an array of files and subdirectories within that
+     * directory. If the file is not a directory or cannot be read, an empty
+     * array is returned.
+     * </p>
+     * 
+     * @param inputElement a File object representing a directory
+     * @return an array of File objects in the directory, or an empty array if none
+     */
     @Override
-    public Object[] getElements(Object arg0) {
-        File[] files = ((File) arg0).listFiles();
-        if (files == null) {
-            return EMPTY;
-        } else {
-            return files;
-        }
+    public Object[] getElements(Object inputElement) {
+        File[] files = ((File) inputElement).listFiles();
+        return files != null ? files : EMPTY;
     }
 
+    /**
+     * Provides an icon image for a file in the table.
+     * <p>
+     * Column 0 displays the file's icon based on its type. Other columns
+     * do not display images.
+     * </p>
+     * 
+     * @param element a File object
+     * @param columnIndex the zero-based column index (0=icon, others=null)
+     * @return the file's icon image, or null if no image should be displayed
+     */
     @Override
-    public Image getColumnImage(Object arg0, int arg1) {
-        switch (arg1) {
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
         case 0:
-            return ImageUtils.getInstance().loadImage((File) arg0);
+            return ImageUtils.getInstance().loadImage((File) element);
         default:
             return null;
         }
     }
 
+    /**
+     * Provides text content for file columns in the table.
+     * <p>
+     * The method retrieves file metadata through {@link OSExplorer}:
+     * <ul>
+     *   <li>Column 0: File name</li>
+     *   <li>Column 1: File size</li>
+     *   <li>Column 2: File type</li>
+     *   <li>Column 3: Last modified date</li>
+     * </ul>
+     * </p>
+     * 
+     * @param element a File object
+     * @param columnIndex the zero-based column index
+     * @return the file property as a string, or null if invalid column
+     */
     @Override
-    public String getColumnText(Object arg0, int arg1) {
-        File file = ((File) arg0);
-        switch (arg1) {
+    public String getColumnText(Object element, int columnIndex) {
+        File file = ((File) element);
+        switch (columnIndex) {
         case 0:
             return OSExplorer.getInstance().getName(file);
         case 1:

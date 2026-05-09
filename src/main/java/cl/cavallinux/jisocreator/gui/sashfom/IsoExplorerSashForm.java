@@ -29,6 +29,7 @@ import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
 import cl.cavallinux.jisocreator.gui.listeners.ISODirectoriesMenuListener;
 import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.filters.isoexplorer.ShowOnlyIsoDirectoriesFilter;
+import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTableProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
@@ -154,6 +155,13 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         isoTableCoolBar = new CoolBar(composites.get(1), SWT.WRAP | SWT.FLAT);
         isoDirectoriesTable = new TableViewer(composites.get(1),
                 SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+    }
+    
+    public void refresh(ITreeNode node) {
+        TreeViewer isoTreeInstance = getIsoDirectoriesTree();
+        TableViewer isoTableInstance = getIsoDirectoriesTable();
+        isoTreeInstance.setSelection(isoTableInstance.getSelection());
+        isoTreeInstance.expandToLevel(node, 1);
     }
 
     public static void setInstance(IsoExplorerSashForm instance) {

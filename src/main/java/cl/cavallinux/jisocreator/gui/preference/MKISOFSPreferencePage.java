@@ -43,11 +43,11 @@ public class MKISOFSPreferencePage extends PreferencePage {
         editor = new BooleanFieldEditor("mkisofs.symlinks.follow", "Follow symbolic links", optionsGroup);
         fieldEditors.add(editor);
 
-        for (FieldEditor fieldEditor : fieldEditors) {
+        fieldEditors.forEach(fieldEditor -> {
             fieldEditor.setPage(this);
             fieldEditor.setPreferenceStore(getPreferenceStore());
             fieldEditor.load();
-        }
+        });
 
         GridDataFactory.defaultsFor(optionsGroup).grab(true, false).span(3, 1).applyTo(optionsGroup);
         GridLayoutFactory.swtDefaults().generateLayout(optionsGroup);
@@ -64,15 +64,11 @@ public class MKISOFSPreferencePage extends PreferencePage {
 
     @Override
     protected void performDefaults() {
-        for (FieldEditor fieldEditor : fieldEditors) {
-            fieldEditor.loadDefault();
-        }
+        fieldEditors.forEach(FieldEditor::loadDefault);
     }
 
     @Override
     protected void performApply() {
-        for (FieldEditor fieldEditor : fieldEditors) {
-            fieldEditor.store();
-        }
+        fieldEditors.forEach(FieldEditor::store);
     }
 }

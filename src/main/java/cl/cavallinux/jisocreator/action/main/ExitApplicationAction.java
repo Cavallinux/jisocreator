@@ -41,14 +41,20 @@ public class ExitApplicationAction extends Action {
         Shell shell = mainWindow.getShell();
         boolean confirmExit = MessageDialog.openConfirm(shell, "Confirm", "Are you sure to exit JIsocreator?");
         if (confirmExit) {
-            log.info("Exiting application");
-            shell.setVisible(false);
-            mainWindow.close();
-            Display.getCurrent().dispose();
-            System.exit(0);
+            exit();
         } else {
             return;
         }
+    }
+    
+    public void exit() {
+        log.info("Exiting application");
+        MainWindow mainWindow = MainWindow.getInstance();
+        Shell shell = mainWindow.getShell();
+        shell.setVisible(false);
+        mainWindow.close();
+        Display.getCurrent().dispose();
+        System.exit(0);
     }
 
     /**

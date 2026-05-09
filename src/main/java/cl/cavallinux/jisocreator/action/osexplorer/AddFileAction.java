@@ -63,16 +63,14 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
         int i = calculateFileQuantity();
         monitor.done();
         monitor.beginTask("Adding selected files", i);
-        for (File file : files) {
+        files.forEach(file -> {
             ITreeNode dirEntry = new IsoTreeNode(isoNode, file);
             isoNode.addNode(dirEntry, monitor);
-        }
-        monitor.subTask("Refreshing GUI...");
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
-            }
         });
+        monitor.subTask("Refreshing GUI...");
+        Display.getDefault().asyncExec(new Thread(() -> {
+            IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
+        }));
         monitor.done();
     }
 

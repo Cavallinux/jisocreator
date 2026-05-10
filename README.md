@@ -56,7 +56,7 @@ mvn clean compile -DskipTests
 
 ### From Maven
 ```bash
-mvn exec:java
+mvn exec:exec
 ```
 
 This command uses the exec-maven-plugin configured in pom.xml and includes:

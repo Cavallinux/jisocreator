@@ -18,6 +18,7 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 - **Eclipse SWT 3.133.0** - Standard Widget Toolkit for native GUI components
 - **Eclipse JFace 3.39.0** - Higher-level UI framework built on SWT
 - **Eclipse Core Commands 3.12.500** - Command pattern framework
+- **Eclipse Equinox Common 3.20.300** - Equinox common utilities
 - **Eclipse OSGi 3.24.100** - Module system and services
 - **Eclipse UI Workbench 3.138.0** - Workbench framework
 
@@ -34,6 +35,15 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
   - log4j-core
 
 ## Building the Project
+
+### Maven Profiles
+
+The project uses Maven profiles to select the SWT platform dependency:
+
+- `linux` (active by default): `gtk.linux.x86_64`
+- `windows`: `win32.win32.x86_64`
+
+To activate `windows` profile add -Pwindows in maven command to be used.
 
 ### Clean Build
 ```bash

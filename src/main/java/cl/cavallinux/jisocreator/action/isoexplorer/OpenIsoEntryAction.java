@@ -34,8 +34,9 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
 
     @Override
     public void run() {
-        if (((File) node.getElement()).isFile()) {
-            OSExplorer.getInstance().launch((File) node.getElement());
+        File element = (File) node.getElement();
+        if (element.isFile()) {
+            OSExplorer.getInstance().launch(element);
         } else {
             IsoExplorerSashForm isoSashFormInstance = IsoExplorerSashForm.getInstance();
             isoSashFormInstance.refresh(node);

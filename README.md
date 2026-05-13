@@ -18,6 +18,7 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 - **Eclipse SWT 3.133.0** - Standard Widget Toolkit for native GUI components
 - **Eclipse JFace 3.39.0** - Higher-level UI framework built on SWT
 - **Eclipse Core Commands 3.12.500** - Command pattern framework
+- **Eclipse Equinox Common 3.20.300** - Equinox common utilities
 - **Eclipse OSGi 3.24.100** - Module system and services
 - **Eclipse UI Workbench 3.138.0** - Workbench framework
 
@@ -34,6 +35,15 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
   - log4j-core
 
 ## Building the Project
+
+### Maven Profiles
+
+The project uses Maven profiles to select the SWT platform dependency:
+
+- `linux` (active by default): `gtk.linux.x86_64`
+- `windows`: `win32.win32.x86_64`
+
+To activate `windows` profile add -Pwindows in maven command to be used.
 
 ### Clean Build
 ```bash
@@ -52,11 +62,58 @@ This creates an executable JAR file in the `target/` directory with all dependen
 mvn clean compile -DskipTests
 ```
 
+## Testing
+
+### Testing Framework
+
+The project includes comprehensive unit tests using:
+- **JUnit 5 (Jupiter)**: Modern Java testing framework (v5.10.2)
+- **Mockito**: Mocking library for test doubles (v5.7.0)
+- **Maven Surefire Plugin**: Test execution plugin (v3.2.5)
+
+### Running Tests
+
+#### Run All Tests
+```bash
+mvn test
+```
+
+#### Run Specific Test Class
+```bash
+mvn test -Dtest=OSExplorerTest
+```
+
+#### Run Tests During Build
+Tests are automatically executed during the Maven build process. To skip tests:
+```bash
+mvn clean package -DskipTests
+```
+
+### Test Structure
+
+```
+src/test/java/cl/cavallinux/jisocreator/
+├── model/osexplorer/
+│   └── OSExplorerTest.java      # File system operations (13 tests)
+└── util/
+    └── IOUtilsPathTest.java     # File path utilities (5 tests)
+```
+
+**Current Test Statistics**: 18 tests total, all passing
+
+### Test Features
+- **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
+- **Singleton Pattern Testing**: Validates OSExplorer singleton implementation
+- **File System Operations**: Comprehensive testing of file and directory handling
+- **Path Manipulation**: Tests for file path concatenation and validation
+
+For detailed testing information, see `TESTING.md`.
+
 ## Running the Application
 
 ### From Maven
 ```bash
-mvn exec:java
+mvn exec:exec
 ```
 
 This command uses the exec-maven-plugin configured in pom.xml and includes:
@@ -106,4 +163,3 @@ Current version: **0.0.3**
 ## License
 
 See LICENSE file for details.
-

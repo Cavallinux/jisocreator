@@ -25,17 +25,14 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
 
     @Override
     public void run() {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ModalContext.run(SaveISO9660ImageThread.this, true,
-                            MainWindow.getInstance().getStatusLine().getProgressMonitor(), Display.getCurrent());
-                } catch (InvocationTargetException | InterruptedException e) {
-                    log.error("Error saving ISO image", e);
-                }
+        Display.getDefault().asyncExec(new Thread(() -> {
+            try {
+                ModalContext.run(SaveISO9660ImageThread.this, true,
+                        MainWindow.getInstance().getStatusLine().getProgressMonitor(), Display.getCurrent());
+            } catch (InvocationTargetException | InterruptedException e) {
+                log.error("Error saving ISO image", e);
             }
-        });
+        }));
     }
 
     @Override

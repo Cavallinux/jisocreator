@@ -7,13 +7,36 @@
 	<version>0.0.3</version>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
+	
+	<profiles>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<swt.platform>gtk.linux.x86_64</swt.platform>
+			</properties>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<properties>
+				<swt.platform>win32.win32.x86_64</swt.platform>
+			</properties>
+		</profile>
+	</profiles>
 
 	<properties>
 		<maven.compiler.java.version>21</maven.compiler.java.version>
 		<maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
 		<maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
+		<maven.exec.plugin.classpath.config>-classpath</maven.exec.plugin.classpath.config>
 		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
-		<swt.platform.name>org.eclipse.swt.gtk.linux.x86_64</swt.platform.name>
+		<maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
+		<maven.assembly.plugin.descriptor>src/assembly/assembly.xml</maven.assembly.plugin.descriptor>
+		<junit.version>5.10.2</junit.version>
+		<mockito.version>5.7.0</mockito.version>
+		<swt.platform.name>org.eclipse.swt.${swt.platform}</swt.platform.name>
 		<xstream.version>1.4.21</xstream.version>
 		<slf4j.version>2.26.0</slf4j.version>
 		<swt.version>3.133.0</swt.version>
@@ -91,12 +114,42 @@
 				<configuration>
 					<executable>java</executable>
 					<arguments>
-						<argument>-classpath</argument>
+						<argument>${maven.exec.plugin.classpath.config}</argument>
 						<classpath />
 						<argument>${debug.jvm.args}</argument>
 						<argument>${jvm.nativeacess.arg}</argument>
 						<argument>${jisocreator.main.class}</argument>
 					</arguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven.assembly.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptors>
+						<descriptor>${maven.assembly.plugin.descriptor}</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Tests.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -168,6 +221,24 @@
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.ui.workbench</artifactId>
 			<version>3.138.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

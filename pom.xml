@@ -7,13 +7,30 @@
 	<version>0.0.3</version>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
+	
+	<profiles>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<swt.platform>gtk.linux.x86_64</swt.platform>
+			</properties>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<properties>
+				<swt.platform>win32.win32.x86_64</swt.platform>
+			</properties>
+		</profile>
+	</profiles>
 
 	<properties>
 		<maven.compiler.java.version>21</maven.compiler.java.version>
 		<maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
 		<maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
 		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
-		<swt.platform>gtk.linux.x86_64</swt.platform>
 		<swt.platform.name>org.eclipse.swt.${swt.platform}</swt.platform.name>
 		<xstream.version>1.4.21</xstream.version>
 		<slf4j.version>2.26.0</slf4j.version>

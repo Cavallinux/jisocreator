@@ -3,6 +3,7 @@ package cl.cavallinux.jisocreator.gui.sashfom;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -83,32 +84,23 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osTableText.pack();
         coolItem.setSize(osTableText.getSize());
         coolItem.setControl(osTableText);
-
-        List<String> tooltips = new ArrayList<String>();
-        {
-            tooltips.add("File name");
-            tooltips.add("File size, in bytes");
-            tooltips.add("File type");
-            tooltips.add("File kast modified date");
-        }
-
-        List<String> columnNames = new ArrayList<String>();
-        {
-            columnNames.add("Name");
-            columnNames.add("Size");
-            columnNames.add("Type");
-            columnNames.add("Last Modified Date");
-        }
-        Iterator<String> it = tooltips.iterator();
-
-        for (String columnName : columnNames) {
+        
+        Map<String, String> columnTooltips = Map.of(
+                "Name", "File name",
+                "Size", "File size, in bytes",
+                "Type", "File type",
+                "Last Modified Date", "File last modified date"
+        );
+        
+        columnTooltips.forEach((columnName, tooltip) -> {
             TableColumn tvc = new TableColumn(osDirectoriesTable.getTable(), SWT.LEFT);
             tvc.setText(columnName);
-            tvc.setToolTipText(it.next());
+            tvc.setToolTipText(tooltip);
             tvc.setWidth(200);
             tvc.setMoveable(true);
             tvc.setResizable(true);
-        }
+        });
+
         osDirectoriesTable.getTable().setHeaderVisible(true);
 
         osDirectoriesTree.setContentProvider(new OSTreeContentProvider());

@@ -9,6 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.eclipse.swt.program.Program;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class OSExplorer {
     private File[] roots;
     private static OSExplorer instance;
@@ -16,12 +19,17 @@ public class OSExplorer {
     private static final String FILE_TYPE = "File";
     private static final int NO_EXTENSION_DOT = -1;
     private static final char EXTENSION_DOT_CHAR = '.';
+    
+    static {
+        instance = newInstance();
+    }
 
     public static OSExplorer getInstance() {
-        return Objects.nonNull(instance) ? instance : newInstance();
+        return instance;
     }
 
     private OSExplorer(File[] roots) {
+        log.info("OS: {}, file roots: {}", System.getProperty("os.name"), roots);
         this.setRoots(roots);
     }
 
@@ -30,8 +38,7 @@ public class OSExplorer {
     }
 
     private static OSExplorer newInstance() {
-        instance = new OSExplorer();
-        return instance;
+        return new OSExplorer();
     }
 
     public boolean launch(File file) {

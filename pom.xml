@@ -30,8 +30,10 @@
 		<maven.compiler.java.version>21</maven.compiler.java.version>
 		<maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
 		<maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
+		<maven.exec.plugin.classpath.config>-classpath</maven.exec.plugin.classpath.config>
 		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
 		<maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
+		<maven.assembly.plugin.descriptor>src/assembly/assembly.xml</maven.assembly.plugin.descriptor>
 		<swt.platform.name>org.eclipse.swt.${swt.platform}</swt.platform.name>
 		<xstream.version>1.4.21</xstream.version>
 		<slf4j.version>2.26.0</slf4j.version>
@@ -110,7 +112,7 @@
 				<configuration>
 					<executable>java</executable>
 					<arguments>
-						<argument>-classpath</argument>
+						<argument>${maven.exec.plugin.classpath.config}</argument>
 						<classpath />
 						<argument>${debug.jvm.args}</argument>
 						<argument>${jvm.nativeacess.arg}</argument>
@@ -133,7 +135,7 @@
 				</executions>
 				<configuration>
 					<descriptors>
-						<descriptor>src/assembly/assembly.xml</descriptor>
+						<descriptor>${maven.assembly.plugin.descriptor}</descriptor>
 					</descriptors>
 				</configuration>
 			</plugin>

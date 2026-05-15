@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
@@ -197,7 +198,8 @@ public class OSExplorer {
     //TODO use java time api.
     public String lastModified(Path path) {
         try {
-            return DateFormat.getDateTimeInstance().format(new Date(Files.getLastModifiedTime(path).toMillis()));
+            return DateFormat.getDateTimeInstance()
+                    .format(new Date(Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS).toMillis()));
         } catch (IOException e) {
             log.error("Error retrieving last modified time for path: {}", path, e);
             return BigInteger.ZERO.toString();

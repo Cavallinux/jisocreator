@@ -1,6 +1,8 @@
 package cl.cavallinux.jisocreator.model.osexplorer;
 
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -9,11 +11,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.eclipse.swt.program.Program;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Getter
+@Setter
 public class OSExplorer {
     private File[] roots;
+    private Path[] rootPaths;
     private static OSExplorer instance;
     private static final String FOLDER_TYPE = "Folder";
     private static final String FILE_TYPE = "File";
@@ -28,13 +35,14 @@ public class OSExplorer {
         return instance;
     }
 
-    private OSExplorer(File[] roots) {
-        log.info("OS: {}, file roots: {}", System.getProperty("os.name"), roots);
+    private OSExplorer(File[] roots, Iterable<Path> rootsPath) {
+        log.info("OS: {}, Legacy FileSystem roots: {}", System.getProperty("os.name"), roots);
+        log.info("Java NIO FileSystem roots: {}", rootsPath);
         this.setRoots(roots);
     }
 
     private OSExplorer() {
-        this(File.listRoots());
+        this(File.listRoots(), FileSystems.getDefault().getRootDirectories());
     }
 
     private static OSExplorer newInstance() {
@@ -71,14 +79,6 @@ public class OSExplorer {
             Program program = Program.findProgram(extension);
             return Objects.nonNull(program) ? program.getName() : FILE_TYPE.concat(StringUtils.SPACE).concat(extension);
         }
-    }
-
-    public void setRoots(File[] roots) {
-        this.roots = roots;
-    }
-
-    public File[] getRoots() {
-        return roots;
     }
 
     public boolean isRoot(File file) {

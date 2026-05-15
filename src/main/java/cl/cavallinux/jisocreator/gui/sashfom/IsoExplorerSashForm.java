@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.gui.sashfom;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,12 +81,11 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         coolItem.setSize(isoTableText.getSize());
         coolItem.setControl(isoTableText);
         
-        Map<String, String> columnTooltips = Map.of(
-                "Name", "File name",
-                "Size", "File size, in bytes",
-                "Type", "File type",
-                "Last Modified Date", "File last modified date"
-        );
+        Map<String, String> columnTooltips = new LinkedHashMap<>();
+        columnTooltips.put("Name", "File name");
+        columnTooltips.put("Type", "File type");
+        columnTooltips.put("Size", "File size, in bytes");
+        columnTooltips.put("Last Modified Date", "File last modified date");
         
         columnTooltips.forEach((columnName, tooltip) -> {
             TableColumn tvc = new TableColumn(isoDirectoriesTable.getTable(), SWT.LEFT);

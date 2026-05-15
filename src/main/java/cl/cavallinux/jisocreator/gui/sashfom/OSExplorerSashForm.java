@@ -1,6 +1,7 @@
 package cl.cavallinux.jisocreator.gui.sashfom;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addFeatures() {
         log.info("Adding OSExplorerSashForm features");
-        setWeights(new int[] { 25, 75 });
+        setWeights(25, 75);
         osTreeCLabel.setText("File explorer");
         osTreeCLabel.setImage(ImageUtils.getInstance().loadImage("drive.png"));
 
@@ -84,12 +85,11 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         coolItem.setSize(osTableText.getSize());
         coolItem.setControl(osTableText);
         
-        Map<String, String> columnTooltips = Map.of(
-                "Name", "File name",
-                "Type", "File type",
-                "Size", "File size, in bytes",
-                "Last Modified Date", "File last modified date"
-        );
+        Map<String, String> columnTooltips = new LinkedHashMap<>();
+        columnTooltips.put("Name", "File name");
+        columnTooltips.put("Type", "File type");
+        columnTooltips.put("Size", "File size, in bytes");
+        columnTooltips.put("Last Modified Date", "File last modified date");
         
         columnTooltips.forEach((columnName, tooltip) -> {
             TableColumn tvc = new TableColumn(osDirectoriesTable.getTable(), SWT.LEFT);

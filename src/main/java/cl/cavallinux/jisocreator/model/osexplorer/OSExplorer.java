@@ -7,6 +7,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
@@ -109,7 +111,8 @@ public class OSExplorer {
      * @return The name of the file.
      */
     public String getName(Path path) {
-        return path.getFileName().toString();
+        boolean isRoot = path.getRoot() != null && path.getNameCount() == 0;
+        return isRoot ? getAbsolutePath(path) : path.getFileName().toString();
     }
 
     /**
@@ -191,6 +194,7 @@ public class OSExplorer {
      * @return The last modified time of the file as a formatted string. If an error
      *         occurs while retrieving the last modified time, it returns "0".
      */
+    //TODO use java time api.
     public String lastModified(Path path) {
         try {
             return DateFormat.getDateTimeInstance().format(new Date(Files.getLastModifiedTime(path).toMillis()));

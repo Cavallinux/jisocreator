@@ -1,6 +1,7 @@
 package cl.cavallinux.jisocreator.model.providers.impl.osexplorer;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.eclipse.swt.graphics.Image;
 
@@ -15,12 +16,12 @@ public class OSTreeLabelProvider extends TreeLabelAdapter {
         return ImageUtils.getInstance().loadImage((File) element);
     }
 
+    //TODO cast directly element from File to Path
     @Override
     public String getText(Object element) {
-        if (OSExplorer.getInstance().isRoot((File) element)) {
-            return ((File) element).getAbsolutePath();
-        } else {
-            return ((File) element).getName();
-        }
+        File file = (File) element;
+        Path path = file.toPath();
+        OSExplorer instance = OSExplorer.getInstance();
+        return instance.getName(path);
     }
 }

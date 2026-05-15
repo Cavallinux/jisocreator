@@ -86,8 +86,8 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         
         Map<String, String> columnTooltips = Map.of(
                 "Name", "File name",
-                "Size", "File size, in bytes",
                 "Type", "File type",
+                "Size", "File size, in bytes",
                 "Last Modified Date", "File last modified date"
         );
         

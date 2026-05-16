@@ -58,33 +58,35 @@ public class ImageUtils {
     }
 
     /**
-     * Loads an image based on the type of the given file.
+     * Loads an image based on the type of the given file system element.
      * <p>
-     * This method determines the appropriate image to load based on the
-     * characteristics of the provided file. It checks if the file is a root
-     * directory, a regular directory, or a regular file, and loads the
-     * corresponding image accordingly.
+     * This method accepts an {@link ITreeNode} and will resolve its underlying
+     * element to either a {@link Path} or a {@link File} and delegate to the
+     * {@link #loadImage(Path)} implementation. This avoids relying on deprecated
+     * File-based APIs and supports both node implementations that expose File or
+     * Path objects as their element.
      * </p>
      * 
-     * @param file the File object for which to load an image
-     * @return an Image object representing the file type
-     * @deprecated Use {@link #loadImage(Path)} instead for better abstraction and
-     *             flexibility.
+     * @param node the tree node whose element determines the image
+     * @return an Image object representing the node's element type
      */
-    @Deprecated
-    public Image loadImage(File file) {
-        if (OSExplorer.getInstance().isRoot(file)) {
-            return loadImage(DRIVE_IMAGE_FILENAME);
-        } else if (file.isDirectory()) {
-            return loadImage(FOLDER_IMAGE_FILENAME);
+    public Image loadImage(ITreeNode node) {
+        if (node.isRoot()) {
+            return loadImage(ROOT_ISO_FILENAME);
+        }
+
+        Object element = node.getElement();
+        if (element == null) {
+            return loadImage(GENERIC_FILENAME);
+        }
+
+        // Support both Path and File-backed nodes
+        if (element instanceof Path) {
+            return loadImage((Path) element);
+        } else if (element instanceof File) {
+            return loadImage(((File) element).toPath());
         } else {
-            String extension = OSExplorer.getInstance().getExtension(file);
-            if (StringUtils.isBlank(extension)) {
-                Program program = Program.findProgram(extension);
-                return Objects.nonNull(program) ? loadImage(program) : loadImage(GENERIC_FILENAME);
-            } else {
-                return loadImage(GENERIC_FILENAME);   
-            }
+            return loadImage(GENERIC_FILENAME);
         }
     }
     
@@ -104,9 +106,7 @@ public class ImageUtils {
         }
     }
 
-    public Image loadImage(ITreeNode node) {
-        return node.isRoot() ? loadImage(ROOT_ISO_FILENAME) : loadImage((File) node.getElement());
-    }
+    
 
     public ImageDescriptor loadImageDescriptor(String imagePath) {
         return ImageDescriptor.createFromImage(loadImage(imagePath));

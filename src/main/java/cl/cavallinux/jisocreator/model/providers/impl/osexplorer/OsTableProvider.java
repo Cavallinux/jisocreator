@@ -1,7 +1,10 @@
 package cl.cavallinux.jisocreator.model.providers.impl.osexplorer;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Image;
@@ -9,6 +12,7 @@ import org.eclipse.swt.graphics.Image;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.decl.TableProviderAdapter;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Table content and label provider for OS file system explorer.
@@ -40,6 +44,7 @@ import cl.cavallinux.jisocreator.util.ImageUtils;
  * @version 0.0.3
  * @since 0.0.3
  */
+@Slf4j
 public class OsTableProvider extends TableProviderAdapter {
     private static final Object[] EMPTY = new Object[0];
 
@@ -57,8 +62,21 @@ public class OsTableProvider extends TableProviderAdapter {
      */
     @Override
     public Object[] getElements(Object inputElement) {
-        File[] files = ((File) inputElement).listFiles();
-        return files != null ? files : EMPTY;
+        if (inputElement instanceof Path) {
+            return getElements((Path) inputElement);
+        } else {
+            File[] files = ((File) inputElement).listFiles();
+            return files != null ? files : EMPTY;
+        }
+    }
+    
+    public Object[] getElements(Path inputElement) {
+        try (Stream<Path> stream = Files.list(inputElement)) {
+            return stream.toArray();
+        } catch (IOException e) {
+            log.error("Error listing files in directory: {}", inputElement, e);
+            return EMPTY;
+        }
     }
 
     /**
@@ -74,9 +92,10 @@ public class OsTableProvider extends TableProviderAdapter {
      */
     @Override
     public Image getColumnImage(Object element, int columnIndex) {
+        Path path = element instanceof Path ? (Path) element : ((File) element).toPath();
         switch (columnIndex) {
         case 0:
-            return ImageUtils.getInstance().loadImage(((File) element).toPath());
+            return ImageUtils.getInstance().loadImage(path);
         default:
             return null;
         }
@@ -101,8 +120,7 @@ public class OsTableProvider extends TableProviderAdapter {
     //TODO refactor to cast from File to Path in getElements and pass Path to getColumnText, to avoid repeated casting and allow better separation of concerns
     @Override
     public String getColumnText(Object element, int columnIndex) {
-        File file = ((File) element);
-        Path filePath = file.toPath();
+        Path filePath = element instanceof Path ? (Path) element : ((File) element).toPath();
         OSExplorer explorer = OSExplorer.getInstance();
         switch (columnIndex) {
         case 0:

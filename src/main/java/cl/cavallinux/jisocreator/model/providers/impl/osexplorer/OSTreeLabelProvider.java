@@ -19,9 +19,8 @@ public class OSTreeLabelProvider extends TreeLabelAdapter {
     //TODO cast directly element from File to Path
     @Override
     public String getText(Object element) {
-        File file = (File) element;
-        Path path = file.toPath();
         OSExplorer instance = OSExplorer.getInstance();
+        Path path = element instanceof Path ? (Path) element : ((File) element).toPath();
         return instance.getName(path);
     }
 }

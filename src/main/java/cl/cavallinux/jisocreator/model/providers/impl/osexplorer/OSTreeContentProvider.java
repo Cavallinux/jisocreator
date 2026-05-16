@@ -14,10 +14,10 @@ public class OSTreeContentProvider extends TreeContentAdapter {
 
     @Override
     public Object[] getChildren(Object arg0) {
-        if (arg0 instanceof OSExplorer) {
-            return ((OSExplorer) arg0).getRoots();
-        } else {
+        if (arg0 instanceof File) {
             return ((File) arg0).listFiles();
+        } else {
+            return OSExplorer.getInstance().getRoots();
         }
     }
 

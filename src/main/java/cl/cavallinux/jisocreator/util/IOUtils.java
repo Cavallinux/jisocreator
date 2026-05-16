@@ -1,10 +1,10 @@
 package cl.cavallinux.jisocreator.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -105,11 +105,8 @@ public class IOUtils {
     }
 
     private void loadPreferencesFromBackup() {
-        InputStream stream = null;
-        try {
-            File file = new File(JISOCREATOR_CONFIG_DIR);
-            file.mkdirs();
-            stream = getClass().getResourceAsStream("res/conf/".concat(JISOCREATOR_DEFAULTCONFIG_FILENAME));
+        try (InputStream stream = getClass().getResourceAsStream("res/conf/".concat(JISOCREATOR_DEFAULTCONFIG_FILENAME))) {
+            Files.createDirectories(Paths.get(JISOCREATOR_CONFIG_DIR));
             defaultProperties = new Properties();
             defaultProperties.load(stream);
             store.setValue("mkisofs.rockridge.use",
@@ -128,7 +125,6 @@ public class IOUtils {
             }
             store.setValue("mkisofs.path", mkisofsPath.toString());
             store.save();
-            stream.close();
         } catch (IOException e) {
             log.error("Error saving properties", e);
         }

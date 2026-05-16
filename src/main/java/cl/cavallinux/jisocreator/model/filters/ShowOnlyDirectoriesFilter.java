@@ -1,6 +1,8 @@
 package cl.cavallinux.jisocreator.model.filters;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -14,9 +16,11 @@ import org.eclipse.jface.viewers.ViewerFilter;
  */
 public class ShowOnlyDirectoriesFilter extends ViewerFilter {
 
+    // TODO cast directly element to Path
     @Override
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
         File file = (File) arg2;
-        return file.isDirectory();
+        Path path = file.toPath();
+        return Files.isDirectory(path);
     }
 }

@@ -97,7 +97,7 @@ public class ImageUtils {
             return loadImage(FOLDER_IMAGE_FILENAME);
         } else {
             String extension = OSExplorer.getInstance().getExtension(path);
-            if (StringUtils.isBlank(extension)) {
+            if (StringUtils.isNotBlank(extension)) {
                 Program program = Program.findProgram(extension);
                 return Objects.nonNull(program) ? loadImage(program) : loadImage(GENERIC_FILENAME);
             } else {

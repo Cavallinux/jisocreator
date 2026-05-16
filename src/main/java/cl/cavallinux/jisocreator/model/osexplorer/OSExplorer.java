@@ -8,8 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.text.DateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
@@ -112,8 +110,7 @@ public class OSExplorer {
      * @return The name of the file.
      */
     public String getName(Path path) {
-        boolean isRoot = path.getRoot() != null && path.getNameCount() == 0;
-        return isRoot ? getAbsolutePath(path) : path.getFileName().toString();
+        return isRoot(path) ? getAbsolutePath(path) : path.getFileName().toString();
     }
 
     /**
@@ -285,12 +282,7 @@ public class OSExplorer {
      * @return true if the specified path is a root directory, false otherwise.
      */
     public boolean isRoot(Path path) {
-        for (Path root : rootPaths) {
-            if (root.equals(path)) {
-                return true;
-            }
-        }
-        return false;
+        return Objects.nonNull(path.getRoot()) && path.getNameCount() == 0;
     }
 
     /**
@@ -304,11 +296,25 @@ public class OSExplorer {
      * @return The file extension as a string. If the file is a directory, it
      *         returns "Folder". If the file has no extension, it returns an empty
      *         string.
-     * @deprecated Method will be removed in future versions of JIsocreator.
+     * @deprecated Use {@link #getExtension(Path)} instead
      */
     @Deprecated
     public String getExtension(File file) {
         return file.isDirectory() ? FOLDER_TYPE : getExtension(file.getName());
+    }
+    
+    /**
+     * Retrieves the file extension of the specified file path. This method utilizes
+     * the modern `Path` API, which is more efficient and compatible with modern
+     * Java versions compared to the legacy `File` API.
+     * 
+     * @param path The path of the file whose extension is to be retrieved.
+     * @return The file extension as a string. If the path represents a directory,
+     *         it returns "Folder". If the file has no extension, it returns an
+     *         empty string.
+     */
+    public String getExtension(Path path) {
+        return Files.isDirectory(path) ? FOLDER_TYPE : getExtension(path.getFileName().toString());
     }
 
     private String getExtension(String fileName) {

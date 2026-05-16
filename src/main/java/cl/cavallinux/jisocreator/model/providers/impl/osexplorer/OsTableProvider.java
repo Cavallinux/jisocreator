@@ -76,7 +76,7 @@ public class OsTableProvider extends TableProviderAdapter {
     public Image getColumnImage(Object element, int columnIndex) {
         switch (columnIndex) {
         case 0:
-            return ImageUtils.getInstance().loadImage((File) element);
+            return ImageUtils.getInstance().loadImage(((File) element).toPath());
         default:
             return null;
         }

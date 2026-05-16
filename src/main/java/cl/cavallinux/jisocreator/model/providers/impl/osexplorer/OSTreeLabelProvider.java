@@ -13,7 +13,7 @@ public class OSTreeLabelProvider extends TreeLabelAdapter {
 
     @Override
     public Image getImage(Object element) {
-        return ImageUtils.getInstance().loadImage((File) element);
+        return ImageUtils.getInstance().loadImage(((File) element).toPath());
     }
 
     //TODO cast directly element from File to Path

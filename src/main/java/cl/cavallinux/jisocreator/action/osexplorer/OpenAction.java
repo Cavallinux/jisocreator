@@ -34,7 +34,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
     @Override
     public void run() {
         if (file.isFile()) {
-            OSExplorer.getInstance().launch(file);
+            OSExplorer.getInstance().launch(file.toPath());
         } else {
             OSExplorerSashForm.getInstance().getOsDirectoriesTree()
                     .setSelection(OSExplorerSashForm.getInstance().getOsDirectoriesTable().getSelection());
@@ -67,7 +67,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
             } else {
                 AddFileAction.getInstance().setEnabled(true);
             }
-            if (OSExplorer.getInstance().isRoot(file)) {
+            if (OSExplorer.getInstance().isRoot(file.toPath())) {
                 GoToParentAction.getInstance().setEnabled(false);
             } else {
                 GoToParentAction.getInstance().setEnabled(true);

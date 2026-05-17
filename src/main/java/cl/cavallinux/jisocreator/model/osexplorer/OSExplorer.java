@@ -183,7 +183,7 @@ public class OSExplorer {
      * @return true if the specified path is a root directory, false otherwise.
      */
     public boolean isRoot(Path path) {
-        return Objects.nonNull(path.getRoot()) && path.getNameCount() == 0;
+        return (Objects.nonNull(path.getRoot()) && path.getNameCount() == 0) || Strings.CI.equalsAny(path.toAbsolutePath().toString(), System.getProperty("user.home"));
     }
 
     /**

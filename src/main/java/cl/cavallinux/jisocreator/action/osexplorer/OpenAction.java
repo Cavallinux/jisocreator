@@ -14,9 +14,13 @@ import org.eclipse.jface.viewers.TreeViewer;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Getter
+@Setter
 public class OpenAction extends Action implements IDoubleClickListener, ISelectionChangedListener {
     private File file;
     private static OpenAction instance;
@@ -44,7 +48,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
 
     @Override
     public void doubleClick(DoubleClickEvent arg0) {
-        setFile(arg0);
+        setFileSelected(arg0);
         if (arg0.getSource() instanceof TreeViewer) {
             if (OSExplorerSashForm.getInstance().getOsDirectoriesTree().getExpandedState(file)) {
                 OSExplorerSashForm.getInstance().getOsDirectoriesTree().collapseToLevel(file, 1);
@@ -58,20 +62,19 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
 
     @Override
     public void selectionChanged(SelectionChangedEvent arg0) {
-        setFile(arg0);
+        setFileSelected(arg0);
         if (arg0.getSource() instanceof TreeViewer) {
             if (file == null) {
                 AddFileAction.getInstance().setEnabled(false);
                 GoToParentAction.getInstance().setEnabled(false);
+                OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(new File(
+                        ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent()));
                 log.warn("SWT Library bug");
+                return;
             } else {
                 AddFileAction.getInstance().setEnabled(true);
             }
-            if (OSExplorer.getInstance().isRoot(file.toPath())) {
-                GoToParentAction.getInstance().setEnabled(false);
-            } else {
-                GoToParentAction.getInstance().setEnabled(true);
-            }
+            GoToParentAction.getInstance().setEnabled(!OSExplorer.getInstance().isRoot(file.toPath()));
             OSExplorerSashForm.getInstance().getOsTableText().setText(file.getAbsolutePath());
             OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(file);
             setEnabled(false);
@@ -80,7 +83,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
         }
     }
 
-    public void setFile(EventObject event) {
+    public void setFileSelected(EventObject event) {
         IStructuredSelection selection;
 
         if (event instanceof DoubleClickEvent) {
@@ -91,14 +94,6 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
             selection = (IStructuredSelection) sce.getSelection();
         }
         this.setFile((File) selection.getFirstElement());
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
-
-    public File getFile() {
-        return file;
     }
 
     public static OpenAction getInstance() {

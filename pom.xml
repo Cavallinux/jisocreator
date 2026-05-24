@@ -7,7 +7,7 @@
 	<version>0.1.0</version>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
-	
+
 	<profiles>
 		<profile>
 			<id>linux</id>
@@ -46,7 +46,8 @@
 		<commons-lang3.version>3.20.0</commons-lang3.version>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<debug.port>5005</debug.port>
-		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
+		<debug.jvm.args>
+			-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>

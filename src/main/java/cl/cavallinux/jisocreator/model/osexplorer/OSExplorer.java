@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
@@ -160,18 +159,7 @@ public class OSExplorer {
      * @return The file type as a string.
      */
     public String getFileType(Path path) {
-        if (Files.isDirectory(path)) {
-            return FOLDER_TYPE;
-        } else {
-            String extension = getExtension(path.getFileName().toString());
-            if (StringUtils.isBlank(extension)) {
-                return FILE_TYPE;
-            } else {
-                Program program = Program.findProgram(extension);
-                return Objects.nonNull(program) ? program.getName()
-                        : FILE_TYPE.concat(StringUtils.SPACE).concat(extension);
-            }
-        }
+        return Files.isDirectory(path) ? FOLDER_TYPE : getFileType2(path);
     }
 
     /**
@@ -183,7 +171,8 @@ public class OSExplorer {
      * @return true if the specified path is a root directory, false otherwise.
      */
     public boolean isRoot(Path path) {
-        return (Objects.nonNull(path.getRoot()) && path.getNameCount() == 0) || Strings.CI.equalsAny(path.toAbsolutePath().toString(), System.getProperty("user.home"));
+        return (Objects.nonNull(path.getRoot()) && path.getNameCount() == 0)
+                || Strings.CI.equalsAny(path.toAbsolutePath().toString(), System.getProperty("user.home"));
     }
 
     /**
@@ -198,6 +187,15 @@ public class OSExplorer {
      */
     public String getExtension(Path path) {
         return Files.isDirectory(path) ? FOLDER_TYPE : getExtension(path.getFileName().toString());
+    }
+    
+    private String getFileType2(Path path) {
+        String extension = getExtension(path.getFileName().toString());
+        return StringUtils.isBlank(extension) ? FILE_TYPE : getFileType(Program.findProgram(extension), extension);
+    }
+    
+    private String getFileType(Program program, String extension) {
+        return Objects.nonNull(program) ? program.getName() : FILE_TYPE.concat(StringUtils.SPACE).concat(extension);
     }
 
     private String getExtension(String fileName) {

@@ -69,6 +69,8 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
                 GoToParentAction.getInstance().setEnabled(false);
                 OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(new File(
                         ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent()));
+                OSExplorerSashForm.getInstance().getOsTableText().setText(new File(
+                        ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent()).getAbsolutePath());
                 log.warn("SWT Library bug");
                 return;
             } else {

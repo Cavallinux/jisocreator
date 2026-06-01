@@ -118,18 +118,21 @@ public class IOUtils {
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.symlinks.follow")));
             store.setValue("general.exit.confirm",
                     Boolean.parseBoolean(defaultProperties.getProperty("general.exit.confirm")));
-            String swtPlatform = SWT.getPlatform();
-            StringBuilder mkisofsPath = new StringBuilder();
-            if (Strings.CI.equalsAny(swtPlatform, GTK_PLATFORM)) {
-                mkisofsPath.append(defaultProperties.getProperty("mkisofs.unix.path"));
-            } else if (Strings.CI.equalsAny(swtPlatform, WIN32_PLATFORM)) {
-                mkisofsPath.append(Strings.CS.replace(defaultProperties.getProperty("mkisofs.win32.path"),
-                        WIN32_MKISOFS_BASE_PATH, Paths.get("").toAbsolutePath().toString()));
-            }
-            store.setValue("mkisofs.path", mkisofsPath.toString());
+            store.setValue("mkisofs.path", obtainMkisofsPath(SWT.getPlatform()));
             store.save();
         } catch (IOException e) {
             log.error("Error saving properties", e);
         }
+    }
+
+    private String obtainMkisofsPath(String swtPlatform) {
+        StringBuilder mkisofsPath = new StringBuilder();
+        if (Strings.CI.equalsAny(swtPlatform, GTK_PLATFORM)) {
+            mkisofsPath.append(defaultProperties.getProperty("mkisofs.unix.path"));
+        } else if (Strings.CI.equalsAny(swtPlatform, WIN32_PLATFORM)) {
+            mkisofsPath.append(Strings.CS.replace(defaultProperties.getProperty("mkisofs.win32.path"),
+                    WIN32_MKISOFS_BASE_PATH, Paths.get("").toAbsolutePath().toString()));
+        }
+        return mkisofsPath.toString();
     }
 }

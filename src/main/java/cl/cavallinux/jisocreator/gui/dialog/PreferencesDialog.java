@@ -7,6 +7,7 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 
+import cl.cavallinux.jisocreator.gui.preference.GeneralPreferencesPage;
 import cl.cavallinux.jisocreator.gui.preference.MKISOFSPreferencePage;
 import cl.cavallinux.jisocreator.util.IOUtils;
 import cl.cavallinux.jisocreator.util.ImageUtils;
@@ -19,6 +20,8 @@ public class PreferencesDialog extends PreferenceDialog {
         log.info("Initializing PreferencesDialog");
         getPreferenceManager().addToRoot(new PreferenceNode("preferences.mkisofs", "ISO options",
                 ImageUtils.getInstance().loadImageDescriptor("iso.png"), MKISOFSPreferencePage.class.getName()));
+        getPreferenceManager().addToRoot(new PreferenceNode("preferences.general", "General options",
+                ImageUtils.getInstance().loadImageDescriptor("iso.png"), GeneralPreferencesPage.class.getName()));
         setPreferenceStore(IOUtils.getInstance().getStore());
     }
 

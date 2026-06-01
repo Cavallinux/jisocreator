@@ -1,8 +1,9 @@
 package cl.cavallinux.jisocreator.gui.sashfom;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -78,32 +79,21 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         isoTableText.pack();
         coolItem.setSize(isoTableText.getSize());
         coolItem.setControl(isoTableText);
-
-        List<String> columnNames = new ArrayList<String>();
-        {
-            columnNames.add("Name");
-            columnNames.add("Size");
-            columnNames.add("Type");
-            columnNames.add("Last Modified Date");
-        }
-
-        List<String> tooltips = new ArrayList<String>();
-        {
-            tooltips.add("Name");
-            tooltips.add("Size");
-            tooltips.add("Type");
-            tooltips.add("Last Modified Date");
-        }
-        Iterator<String> it = tooltips.iterator();
-
-        for (String columnName : columnNames) {
+        
+        Map<String, String> columnTooltips = new LinkedHashMap<>();
+        columnTooltips.put("Name", "File name");
+        columnTooltips.put("Type", "File type");
+        columnTooltips.put("Size", "File size, in bytes");
+        columnTooltips.put("Last Modified Date", "File last modified date");
+        
+        columnTooltips.forEach((columnName, tooltip) -> {
             TableColumn tvc = new TableColumn(isoDirectoriesTable.getTable(), SWT.LEFT);
             tvc.setText(columnName);
-            tvc.setToolTipText(it.next());
+            tvc.setToolTipText(tooltip);
             tvc.setWidth(200);
             tvc.setMoveable(true);
             tvc.setResizable(true);
-        }
+        });
 
         isoDirectoriesTable.getTable().setHeaderVisible(true);
         isoDirectoriesTree.setContentProvider(new IsoTreeContentProvider());

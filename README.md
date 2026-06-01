@@ -109,6 +109,36 @@ src/test/java/cl/cavallinux/jisocreator/
 
 For detailed testing information, see `TESTING.md`.
 
+## Continuous Integration
+
+### GitHub Actions
+
+The project uses GitHub Actions for automated testing and building. The CI pipeline is configured in `.github/workflows/ci.yml` and includes:
+
+#### Workflow Triggers
+- **Push** to `main` branch
+- **Pull Requests** targeting `main` branch
+
+#### CI Pipeline Steps
+1. **Setup Java**: Configures JDK 21 for the build environment
+2. **Dependency Caching**: Caches Maven dependencies for faster builds
+3. **Code Compilation**: Runs `mvn clean compile` to verify code compilation
+4. **Unit Tests**: Executes all unit tests with `mvn test`
+5. **Package Build**: Creates JAR artifacts with `mvn package -DskipTests`
+
+#### Workflow Status
+[![CI](https://github.com/Cavallinux/jisocreator/workflows/CI/badge.svg)](https://github.com/Cavallinux/jisocreator/actions)
+
+#### Local CI Simulation
+To simulate the CI pipeline locally:
+```bash
+# Full CI simulation
+mvn clean compile test package -DskipTests
+
+# Quick verification (compilation + tests only)
+mvn clean compile test
+```
+
 ## Running the Application
 
 ### From Maven

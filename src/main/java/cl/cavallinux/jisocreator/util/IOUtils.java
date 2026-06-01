@@ -1,12 +1,14 @@
 package cl.cavallinux.jisocreator.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
+import org.apache.commons.lang3.Strings;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -20,25 +22,31 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class IOUtils {
+    private PreferenceStore store;
+    private Properties defaultProperties;
+    private XStream xStreamParser;
     private final static IOUtils instance;
     private final static String JISOCREATOR_CONFIG_DIR;
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
     private final static String JISOCREATOR_CONFIG_FILENAME;
-    private PreferenceStore store;
-    private Properties defaultProperties;
-    private XStream xStreamParser;
+    private final static String GTK_PLATFORM;
+    private final static String WIN32_PLATFORM;
+    private final static String WIN32_MKISOFS_BASE_PATH;
 
     static {
         JISOCREATOR_CONFIG_DIR = System.getProperty("user.home").concat("/.config/jisocreator/");
         JISOCREATOR_DEFAULTCONFIG_FILENAME = "defaultconfig.properties";
         JISOCREATOR_CONFIG_FILENAME = "jisocreator.properties";
+        GTK_PLATFORM = "gtk";
+        WIN32_PLATFORM = "win32";
+        WIN32_MKISOFS_BASE_PATH="<mkisofs.base.path>";
         instance = new IOUtils();
     }
 
     private IOUtils() {
         loadXMLParser();
     }
-    
+
     public static IOUtils getInstance() {
         return instance;
     }
@@ -55,7 +63,7 @@ public class IOUtils {
     }
 
     public boolean saveObjectToXML(Object objectToParse, String path, IProgressMonitor monitor) {
-        try (FileOutputStream fos = new FileOutputStream(path)){
+        try (FileOutputStream fos = new FileOutputStream(path)) {
             monitor.subTask("Parsing XML...");
             xStreamParser.toXML(objectToParse, fos);
             return true;
@@ -97,27 +105,34 @@ public class IOUtils {
     }
 
     private void loadPreferencesFromBackup() {
-        InputStream stream = null;
-        try {
-            File file = new File(JISOCREATOR_CONFIG_DIR);
-            file.mkdirs();
-            stream = getClass().getResourceAsStream("res/conf/".concat(JISOCREATOR_DEFAULTCONFIG_FILENAME));
+        try (InputStream stream = getClass().getResourceAsStream("res/conf/".concat(JISOCREATOR_DEFAULTCONFIG_FILENAME))) {
+            Files.createDirectories(Paths.get(JISOCREATOR_CONFIG_DIR));
             defaultProperties = new Properties();
             defaultProperties.load(stream);
+            log.info("Default properties loaded: {}", defaultProperties);
             store.setValue("mkisofs.rockridge.use",
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.rockridge.use")));
             store.setValue("mkisofs.joliet.use",
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.joliet.use")));
             store.setValue("mkisofs.symlinks.follow",
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.symlinks.follow")));
-            if (SWT.getPlatform().equals("gtk"))
-                store.setValue("mkisofs.path", defaultProperties.getProperty("mkisofs.unix.path"));
-            else if (SWT.getPlatform().equals("win32"))
-                store.setValue("mkisofs.path", defaultProperties.getProperty("mkisofs.win32.path"));
+            store.setValue("general.exit.confirm",
+                    Boolean.parseBoolean(defaultProperties.getProperty("general.exit.confirm")));
+            store.setValue("mkisofs.path", obtainMkisofsPath(SWT.getPlatform()));
             store.save();
-            stream.close();
         } catch (IOException e) {
             log.error("Error saving properties", e);
         }
+    }
+
+    private String obtainMkisofsPath(String swtPlatform) {
+        StringBuilder mkisofsPath = new StringBuilder();
+        if (Strings.CI.equalsAny(swtPlatform, GTK_PLATFORM)) {
+            mkisofsPath.append(defaultProperties.getProperty("mkisofs.unix.path"));
+        } else if (Strings.CI.equalsAny(swtPlatform, WIN32_PLATFORM)) {
+            mkisofsPath.append(Strings.CS.replace(defaultProperties.getProperty("mkisofs.win32.path"),
+                    WIN32_MKISOFS_BASE_PATH, Paths.get("").toAbsolutePath().toString()));
+        }
+        return mkisofsPath.toString();
     }
 }

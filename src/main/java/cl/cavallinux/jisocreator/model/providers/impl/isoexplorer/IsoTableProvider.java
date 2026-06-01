@@ -1,7 +1,9 @@
 package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
 
 import java.io.File;
+import java.nio.file.Path;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Image;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
@@ -98,19 +100,19 @@ public class IsoTableProvider extends TableProviderAdapter {
     @Override
     public String getColumnText(Object element, int columnIndex) {
         File file = (File) ((ITreeNode) element).getElement();
+        Path filePath = file.toPath();
+        OSExplorer explorer = OSExplorer.getInstance();
         switch (columnIndex) {
         case 0:
-            return OSExplorer.getInstance().getName(file);
+            return explorer.getName(filePath);
         case 1:
-            return OSExplorer.getInstance().length(file);
+            return explorer.getFileType(filePath);
         case 2:
-            return OSExplorer.getInstance().getFileType(file);
+            return explorer.length(filePath);
         case 3:
-            return OSExplorer.getInstance().lastModified(file);
-        case 4:
-            return OSExplorer.getInstance().getAbsolutePath(file);
+            return explorer.lastModified(filePath);
         default:
-            return null;
+            return StringUtils.EMPTY;
         }
     }
 }

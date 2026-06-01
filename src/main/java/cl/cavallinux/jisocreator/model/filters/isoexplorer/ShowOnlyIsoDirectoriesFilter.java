@@ -1,6 +1,8 @@
 package cl.cavallinux.jisocreator.model.filters.isoexplorer;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -24,6 +26,7 @@ public class ShowOnlyIsoDirectoriesFilter extends ViewerFilter {
 
     private boolean isDirectory(ITreeNode node) {
         File file = (File) node.getElement();
-        return file.isDirectory();
+        Path path = file.toPath();
+        return Files.isDirectory(path);
     }
 }

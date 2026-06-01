@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cl.cavallinux</groupId>
 	<artifactId>jisocreator</artifactId>
-	<version>0.0.3</version>
+	<version>0.1.0</version>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
-	
+
 	<profiles>
 		<profile>
 			<id>linux</id>
@@ -33,7 +33,8 @@
 		<maven.exec.plugin.classpath.config>-classpath</maven.exec.plugin.classpath.config>
 		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
 		<maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
-		<maven.assembly.plugin.descriptor>src/assembly/assembly.xml</maven.assembly.plugin.descriptor>
+		<maven.assembly.plugin.descriptor>src/assembly/assembly.${swt.platform}.xml</maven.assembly.plugin.descriptor>
+		<maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
 		<junit.version>5.10.2</junit.version>
 		<mockito.version>5.7.0</mockito.version>
 		<swt.platform.name>org.eclipse.swt.${swt.platform}</swt.platform.name>
@@ -46,12 +47,14 @@
 		<commons-lang3.version>3.20.0</commons-lang3.version>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<debug.port>5005</debug.port>
-		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
+		<debug.jvm.args>
+			-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -144,7 +147,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.2.5</version>
+				<version>${maven.surefire.plugin.version}</version>
 				<configuration>
 					<includes>
 						<include>**/*Test.java</include>

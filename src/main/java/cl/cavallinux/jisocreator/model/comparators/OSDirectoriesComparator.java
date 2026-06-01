@@ -2,6 +2,8 @@ package cl.cavallinux.jisocreator.model.comparators;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.eclipse.jface.viewers.ViewerComparator;
 
@@ -14,8 +16,10 @@ import org.eclipse.jface.viewers.ViewerComparator;
  */
 public class OSDirectoriesComparator extends ViewerComparator {
     @Override
+    //TODO cast directly element to Path
     public int category(Object element) {
         File file = (File) element;
-        return file.isDirectory() ? BigInteger.ZERO.intValue() : BigInteger.ONE.intValue();
+        Path path = file.toPath();
+        return Files.isDirectory(path)? BigInteger.ZERO.intValue() : BigInteger.ONE.intValue();
     }
 }

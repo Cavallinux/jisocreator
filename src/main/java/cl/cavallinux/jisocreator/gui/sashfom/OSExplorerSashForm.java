@@ -1,8 +1,9 @@
 package cl.cavallinux.jisocreator.gui.sashfom;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -62,7 +63,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addFeatures() {
         log.info("Adding OSExplorerSashForm features");
-        setWeights(new int[] { 25, 75 });
+        setWeights(25, 75);
         osTreeCLabel.setText("File explorer");
         osTreeCLabel.setImage(ImageUtils.getInstance().loadImage("drive.png"));
 
@@ -83,32 +84,22 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osTableText.pack();
         coolItem.setSize(osTableText.getSize());
         coolItem.setControl(osTableText);
-
-        List<String> tooltips = new ArrayList<String>();
-        {
-            tooltips.add("File name");
-            tooltips.add("File size, in bytes");
-            tooltips.add("File type");
-            tooltips.add("File kast modified date");
-        }
-
-        List<String> columnNames = new ArrayList<String>();
-        {
-            columnNames.add("Name");
-            columnNames.add("Size");
-            columnNames.add("Type");
-            columnNames.add("Last Modified Date");
-        }
-        Iterator<String> it = tooltips.iterator();
-
-        for (String columnName : columnNames) {
+        
+        Map<String, String> columnTooltips = LinkedHashMap.newLinkedHashMap(4);
+        columnTooltips.put("Name", "File name");
+        columnTooltips.put("Type", "File type");
+        columnTooltips.put("Size", "File size, in bytes");
+        columnTooltips.put("Last Modified Date", "File last modified date");
+        
+        columnTooltips.forEach((columnName, tooltip) -> {
             TableColumn tvc = new TableColumn(osDirectoriesTable.getTable(), SWT.LEFT);
             tvc.setText(columnName);
-            tvc.setToolTipText(it.next());
+            tvc.setToolTipText(tooltip);
             tvc.setWidth(200);
             tvc.setMoveable(true);
             tvc.setResizable(true);
-        }
+        });
+
         osDirectoriesTable.getTable().setHeaderVisible(true);
 
         osDirectoriesTree.setContentProvider(new OSTreeContentProvider());

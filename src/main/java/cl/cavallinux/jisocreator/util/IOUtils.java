@@ -109,12 +109,15 @@ public class IOUtils {
             Files.createDirectories(Paths.get(JISOCREATOR_CONFIG_DIR));
             defaultProperties = new Properties();
             defaultProperties.load(stream);
+            log.info("Default properties loaded: {}", defaultProperties);
             store.setValue("mkisofs.rockridge.use",
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.rockridge.use")));
             store.setValue("mkisofs.joliet.use",
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.joliet.use")));
             store.setValue("mkisofs.symlinks.follow",
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.symlinks.follow")));
+            store.setValue("general.exit.confirm",
+                    Boolean.parseBoolean(defaultProperties.getProperty("general.exit.confirm")));
             String swtPlatform = SWT.getPlatform();
             StringBuilder mkisofsPath = new StringBuilder();
             if (Strings.CI.equalsAny(swtPlatform, GTK_PLATFORM)) {

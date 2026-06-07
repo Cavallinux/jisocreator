@@ -16,6 +16,13 @@
      </fileSet>
      <fileSet>
         <directory>res/mkisofs</directory>
+        <outputDirectory>/</outputDirectory>
+        <includes>
+          <include>*.bat</include>
+        </includes>
+    </fileSet>
+     <fileSet>
+        <directory>res/mkisofs</directory>
         <outputDirectory>res/mkisofs</outputDirectory>
         <includes>
           <include>*.exe</include>

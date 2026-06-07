@@ -6,15 +6,12 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
 
 import lombok.Getter;
@@ -42,8 +39,8 @@ public class OSExplorer {
     }
 
     private OSExplorer(File[] roots, Path[] rootsPath) {
-        log.info("OS: {}, Legacy FileSystem roots: {}", System.getProperty("os.name"), roots);
-        log.info("Java NIO FileSystem roots: {}", (Object[]) rootsPath);
+        log.info("OS: {}, Legacy FileSystem roots: {}, Java NIO FileSystems roots: {}", System.getProperty("os.name"),
+                roots, (Object[]) rootsPath);
         this.setRoots(roots);
         this.setRootPaths(rootsPath);
     }
@@ -58,19 +55,12 @@ public class OSExplorer {
 
     @Deprecated(since = "0.2.0", forRemoval = true)
     private static File[] loadLegacyOSRoots() {
-        return Strings.CI.equalsAny(SWT.getPlatform(), "gtk") ? File.listRoots()
-                : new File(System.getProperty("user.home")).listFiles();
+        return File.listRoots();
     }
 
     private static Path[] loadOSRoots() {
-        try {
-            return Strings.CI.equalsAny(SWT.getPlatform(), "gtk") ? StreamSupport
-                    .stream(FileSystems.getDefault().getRootDirectories().spliterator(), false).toArray(Path[]::new)
-                    : Files.list(Paths.get(System.getProperty("user.home"))).toArray(Path[]::new);
-        } catch (IOException e) {
-            log.error("Error loading roots", e);
-            return new Path[0];
-        }
+        return StreamSupport.stream(FileSystems.getDefault().getRootDirectories().spliterator(), false)
+                .toArray(Path[]::new);
     }
 
     /**
@@ -171,8 +161,7 @@ public class OSExplorer {
      * @return true if the specified path is a root directory, false otherwise.
      */
     public boolean isRoot(Path path) {
-        return (Objects.nonNull(path.getRoot()) && path.getNameCount() == 0)
-                || Strings.CI.equalsAny(path.toAbsolutePath().toString(), System.getProperty("user.home"));
+        return (Objects.nonNull(path.getRoot()) && path.getNameCount() == 0);
     }
 
     /**

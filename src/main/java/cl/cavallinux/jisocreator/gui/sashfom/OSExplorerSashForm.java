@@ -85,7 +85,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         coolItem.setSize(osTableText.getSize());
         coolItem.setControl(osTableText);
         
-        Map<String, String> columnTooltips = new LinkedHashMap<>();
+        Map<String, String> columnTooltips = LinkedHashMap.newLinkedHashMap(4);
         columnTooltips.put("Name", "File name");
         columnTooltips.put("Type", "File type");
         columnTooltips.put("Size", "File size, in bytes");
@@ -104,8 +104,8 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
 
         osDirectoriesTree.setContentProvider(new OSTreeContentProvider());
         osDirectoriesTree.setLabelProvider(new OSTreeLabelProvider());
-        osDirectoriesTree.addFilter(new ShowOnlyDirectoriesFilter());
-        osDirectoriesTree.addFilter(new HideHiddenFilesFilter());
+        //osDirectoriesTree.addFilter(new ShowOnlyDirectoriesFilter());
+        //osDirectoriesTree.addFilter(new HideHiddenFilesFilter());
         osDirectoriesTree.setComparator(new OSDirectoriesComparator());
         osDirectoriesTree.setInput(OSExplorer.getInstance());
 

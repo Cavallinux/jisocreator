@@ -44,11 +44,15 @@
 		<swt.svg.version>3.132.0</swt.svg.version>
 		<jsvg.version>2.1.0</jsvg.version>
 		<lombok.version>1.18.44</lombok.version>
+		<org.eclipse.ui.workbench.version>3.138.0</org.eclipse.ui.workbench.version>
+		<org.eclipse.osgi.version>3.24.100</org.eclipse.osgi.version>
+		<org.eclipse.equinox.common>3.20.300</org.eclipse.equinox.common>
+		<org.eclipse.core.commands.version>3.12.500</org.eclipse.core.commands.version>
+		<org.eclipse.jface.version>3.39.0</org.eclipse.jface.version>
 		<commons-lang3.version>3.20.0</commons-lang3.version>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<debug.port>5005</debug.port>
-		<debug.jvm.args>
-			-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
+		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
@@ -203,27 +207,27 @@
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.jface</artifactId>
-			<version>3.39.0</version>
+			<version>${org.eclipse.jface.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.core.commands</artifactId>
-			<version>3.12.500</version>
+			<version>${org.eclipse.core.commands.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.equinox.common</artifactId>
-			<version>3.20.300</version>
+			<version>${org.eclipse.equinox.common}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.osgi</artifactId>
-			<version>3.24.100</version>
+			<version>${org.eclipse.osgi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.ui.workbench</artifactId>
-			<version>3.138.0</version>
+			<version>${org.eclipse.ui.workbench.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

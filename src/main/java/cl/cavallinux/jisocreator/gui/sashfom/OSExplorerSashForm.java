@@ -104,8 +104,8 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
 
         osDirectoriesTree.setContentProvider(new OSTreeContentProvider());
         osDirectoriesTree.setLabelProvider(new OSTreeLabelProvider());
-        osDirectoriesTree.addFilter(new ShowOnlyDirectoriesFilter());
-        osDirectoriesTree.addFilter(new HideHiddenFilesFilter());
+        //osDirectoriesTree.addFilter(new ShowOnlyDirectoriesFilter());
+        //osDirectoriesTree.addFilter(new HideHiddenFilesFilter());
         osDirectoriesTree.setComparator(new OSDirectoriesComparator());
         osDirectoriesTree.setInput(OSExplorer.getInstance());
 

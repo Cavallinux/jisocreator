@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.action.main.AboutAction;
-import cl.cavallinux.jisocreator.action.main.ExitApplicationAction;
 import cl.cavallinux.jisocreator.action.main.NewIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.PreferencesAction;
@@ -27,6 +26,7 @@ import cl.cavallinux.jisocreator.action.main.SaveAsIsoAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.extern.slf4j.Slf4j;
 
@@ -107,7 +107,7 @@ public class MainWindow extends ApplicationWindow {
         fileMenu.add(OpenIsoLayoutAction.getInstance());
         fileMenu.add(saveAsMenu);
         fileMenu.add(new Separator());
-        fileMenu.add(ExitApplicationAction.getInstance());
+        fileMenu.add(ActionsManager.EXITACTION.getAction());
 
         toolsMenu.add(PreferencesAction.getInstance());
 
@@ -138,7 +138,7 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected void handleShellCloseEvent() {
-        ExitApplicationAction.getInstance().run();
+        ActionsManager.EXITACTION.getAction().run();
     }
 
     public StatusLineManager getStatusLine() {

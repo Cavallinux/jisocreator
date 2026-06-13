@@ -19,17 +19,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ExitApplicationAction extends Action {
-    private static ExitApplicationAction instance;
-
-    static {
-        instance = new ExitApplicationAction();
-    }
-
-    /**
-     * Constructor por defecto, con acceso privado para prevenir instanciacion desde
-     * otras clases.
-     */
-    private ExitApplicationAction() {
+    public ExitApplicationAction() {
         super("Exit");
         setToolTipText("Create new iso layout");
         setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("exit.png"));
@@ -66,14 +56,5 @@ public class ExitApplicationAction extends Action {
         mainWindow.close();
         Display.getCurrent().dispose();
         System.exit(0);
-    }
-
-    /**
-     * Obtiene la instalacia de la clase.
-     * 
-     * @return un {@link ExitApplicationAction}
-     */
-    public static ExitApplicationAction getInstance() {
-        return instance;
     }
 }

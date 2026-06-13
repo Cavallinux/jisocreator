@@ -208,6 +208,41 @@ jisocreator/
 - **Preferences**: Customizable application settings
 - **Logging**: Comprehensive logging to track operations
 
+## Architecture Highlights (v0.1.2+)
+
+### Singleton Manager Pattern
+
+The application uses enum-based singleton managers for centralized component management:
+
+```
+┌─────────────────────────────────────────────────────┐
+│           Application Startup                       │
+└────────────────────┬────────────────────────────────┘
+                     │
+          ┌──────────┼──────────┐
+          ▼          ▼          ▼
+    ┌──────────┐ ┌──────────┐ ┌──────────┐
+    │ Actions  │ │   GUI    │ │ Explorers│
+    │ Manager  │ │ Manager  │ │ Manager  │
+    └────┬─────┘ └────┬─────┘ └────┬─────┘
+         │            │            │
+    ┌────┴────────────┼────────────┴────┐
+    │                 │                  │
+    ▼                 ▼                  ▼
+ Actions           GUI Comps        Explorers
+ (18 types)      (SashForms,       (OS/ISO)
+                  Dialogs,
+                  Windows)
+```
+
+### Benefits of Manager Pattern
+
+1. **Centralized Control**: All singleton instances managed from one entry point
+2. **Thread Safety**: Enum singletons guarantee thread-safe lazy initialization
+3. **Testability**: Easy to mock managers for unit testing
+4. **Maintainability**: Simplified dependency tracking and initialization order
+5. **Scalability**: Easy to add new managed components
+
 ## Version
 
 Current version: **0.1.2-SNAPSHOT**
@@ -216,20 +251,42 @@ Current version: **0.1.2-SNAPSHOT**
 
 This version introduces significant architectural refactoring focused on improving code maintainability and following better design patterns:
 
-#### Key Refactorings
-- **Centralized Actions Management**: Refactored all action classes to use a centralized `ActionsManager` enum that implements the singleton pattern for better control and initialization
-- **Singleton Pattern Implementation**: Improved singleton pattern implementation for utility classes:
-  - `ImageUtils` now uses enum-based singleton for SVG and image management
-  - `IOUtils` uses enum-based singleton for file I/O operations
-- **Enhanced GUI Management**: Introduced `GUIManager` enum to centralize GUI component management
-- **Main Window Refactoring**: Optimized main window instantiation and monitor detection logic for reliable multi-monitor support
+#### Key Architectural Improvements
+
+**Centralized Singleton Managers**:
+- **ActionsManager**: Enum-based centralized management of all 18 application actions
+  - Provides clean, consistent access patterns across the application
+  - Ensures proper initialization and lifecycle management
+- **GUIManager**: Manages GUI component instances and lifecycle
+- **OSAndIsoExplorerManager**: Unified management of file system and ISO explorers
+- **ImageRegister**: Centralized image resource management
+
+**Refactored Components** (30+ files):
+- **18 Action Classes**: All action classes now centrally managed through `ActionsManager`
+- **8 GUI Components**: Updated to use centralized managers and improved patterns
+- **2 Utility Classes**: `ImageUtils` and `IOUtils` refactored to use enum singleton pattern
+- **1 Test Suite**: Updated to verify singleton management patterns
+
+**Enhanced Multi-Monitor Support**:
+- Improved monitor detection logic in `MainWindow`
+- Better handling of active shell detection
+- Fallback to primary monitor when needed
+- More reliable window positioning across multiple displays
+
+**Improved Code Quality**:
+- Removed scattered singleton implementations
+- Unified approach to dependency management
+- Better encapsulation and controlled access
+- Enhanced testability with centralized manager pattern
 
 #### Benefits
-- Cleaner dependency management through centralized manager classes
-- Improved thread safety with enum-based singletons
-- Better separation of concerns across action handlers
-- Enhanced code maintainability and testability
-- Simplified initialization and access of shared resources
+- **Cleaner Architecture**: Single point of access for singletons through enum-based managers
+- **Thread Safety**: Enum singleton pattern provides inherent thread safety
+- **Maintainability**: Centralized initialization and configuration of application components
+- **Testability**: Easier to mock and test components through manager interfaces
+- **Separation of Concerns**: Clear separation between action handlers, GUI components, and utilities
+- **Code Consistency**: Unified approach to singleton pattern across the codebase
+- **Better Encapsulation**: Manager enums provide controlled access to singleton instances
 
 ## License
 

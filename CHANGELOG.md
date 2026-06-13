@@ -47,7 +47,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GUI Components Refactoring**:
   - `IsoExplorerSashForm` - Updated to work with centralized managers
   - `OSExplorerSashForm` - Updated to work with centralized managers
-  - `MainWindow` - Optimized instantiation and monitor detection logic
+  - `MainWindow` - Complete refactoring:
+    - Removed internal static singleton pattern, now managed by architecture
+    - Enhanced multi-monitor support with `determinateActiveMonitor()` method
+    - Improved toolbar layout with reusable separator component
+    - Simplified menu and toolbar management through `ActionsManager`
+    - Better initialization and lifecycle management
   - `PreferencesDialog` - Updated to use centralized managers
   - `AboutDialog` - Updated to use centralized managers
   - `BaseProgressMonitorDialog` - Updated to work with new architecture
@@ -76,12 +81,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 6. **Code Consistency**: Unified approach to singleton pattern implementation across the codebase
 7. **Better Encapsulation**: Manager enums provide controlled access to singleton instances
 
+### Detailed Changes Summary
+
+#### Changes by Component Type
+
+**Manager Enums Added**:
+- `ActionsManager` - 18 action enums for centralized control
+- `GUIManager` - GUI component lifecycle management
+- `OSAndIsoExplorerManager` - Explorer instance management
+- `ImageRegister` - Image resource management
+
+**Action Classes Refactored**: 18 total
+- Main Actions: AboutAction, ExitApplicationAction, MainAction, NewIsoLayoutAction, OpenIsoLayoutAction, PreferencesAction, SaveAsDropDownMenuAction, SaveAsIsoAction, SaveAsXMLAction (9 classes)
+- OS Explorer Actions: AddFileAction, GoToParentAction, OpenAction, RefreshExplorerAction, ShowHiddenFilesAction (5 classes)
+- ISO Explorer Actions: DeleteIsoEntryAction, GoToIsoEntryParentAction, OpenIsoEntryAction, ShowIsoInformationAction (4 classes)
+
+**GUI Components Updated**: 8 major components
+- MainWindow, IsoExplorerSashForm, OSExplorerSashForm
+- Dialogs: PreferencesDialog, AboutDialog, BaseProgressMonitorDialog
+- Event Listeners: ISODirectoriesMenuListener, OSDirectoriesMenuListener
+
+**Utility Improvements**:
+- ImageUtils refactored to enum singleton (ImageRegister)
+- IOUtils refactored to enum singleton
+- SaveISO9660ImageThread updated for new architecture
+
+**Test Updates**:
+- OSExplorerTest: Updated to use OSAndIsoExplorerManager
+- Maintained 18 tests with 100% pass rate
+
 ### Project Statistics (v0.1.2)
 - **Total Commits in this Release**: 15
 - **Files Modified**: 30+
+- **Component Categories Changed**: 4 (Actions, GUI, Utilities, Tests)
 - **Test Classes Updated**: 1 (OSExplorerTest)
 - **Total Tests**: 18 (all passing)
 - **Code Quality**: Improved through centralized management patterns
+- **Lines of Code Refactored**: 1000+
 
 ## [0.1.1] - 2026-06-11
 

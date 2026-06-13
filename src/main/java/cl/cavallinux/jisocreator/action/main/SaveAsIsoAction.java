@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.util.IOUtils;
@@ -75,7 +76,7 @@ public class SaveAsIsoAction extends Action {
 
     private void setMkisofsCommand(String path) {
         mkisofsCommand = new ArrayList<String>();
-        IOUtils storeInstance = IOUtils.getInstance();
+        IOUtils storeInstance = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = storeInstance.getStore();
         mkisofsCommand.add(preferenceStore.getString("mkisofs.path"));
         mkisofsCommand.add("-graft-points");

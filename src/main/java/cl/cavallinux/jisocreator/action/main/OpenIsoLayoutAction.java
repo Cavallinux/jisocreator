@@ -14,10 +14,10 @@ import org.eclipse.swt.widgets.FileDialog;
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -58,7 +58,7 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
         try {
             monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
             monitor.subTask("Parsing xml...");
-            object = IOUtils.getInstance().parseXMLFileToObject(path);
+            object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
             monitor.subTask("Inserting into tree...");
             Display.getDefault().asyncExec(new Runnable() {
                 @Override

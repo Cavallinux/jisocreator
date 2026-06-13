@@ -12,9 +12,9 @@ import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -54,7 +54,7 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
         log.info("Saving layout as xml to path: {}", path);
-        if (IOUtils.getInstance().saveObjectToXML(iso, path, monitor)) {
+        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path, monitor)) {
             monitor.done();
             log.info("Layout saved successfully as xml to path: {}", path);
         } else {

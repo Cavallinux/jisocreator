@@ -6,8 +6,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
-import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -38,7 +38,8 @@ public class ExitApplicationAction extends Action {
     @Override
     public void run() {
         log.info("Confirming exit application");
-        boolean openExitDialogConfirmation = IOUtils.getInstance().getStore().getBoolean("general.exit.confirm");
+        boolean openExitDialogConfirmation = IOManager.INSTANCE.getIoUtils().getStore()
+                .getBoolean("general.exit.confirm");
         if (openExitDialogConfirmation) {
             openConfirmExitAppDialog();
         } else {

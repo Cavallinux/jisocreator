@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.preference.GeneralPreferencesPage;
 import cl.cavallinux.jisocreator.gui.preference.MKISOFSPreferencePage;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
-import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,7 +25,7 @@ public class PreferencesDialog extends PreferenceDialog {
         getPreferenceManager().addToRoot(new PreferenceNode("preferences.general", "General options",
                 ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.png"),
                 GeneralPreferencesPage.class.getName()));
-        setPreferenceStore(IOUtils.getInstance().getStore());
+        setPreferenceStore(IOManager.INSTANCE.getIoUtils().getStore());
     }
 
     @Override

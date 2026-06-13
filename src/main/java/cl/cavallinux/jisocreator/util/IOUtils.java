@@ -25,7 +25,6 @@ public class IOUtils {
     private PreferenceStore store;
     private Properties defaultProperties;
     private XStream xStreamParser;
-    private final static IOUtils instance;
     private final static String JISOCREATOR_CONFIG_DIR;
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
     private final static String JISOCREATOR_CONFIG_FILENAME;
@@ -40,15 +39,10 @@ public class IOUtils {
         GTK_PLATFORM = "gtk";
         WIN32_PLATFORM = "win32";
         WIN32_MKISOFS_BASE_PATH="<mkisofs.base.path>";
-        instance = new IOUtils();
     }
 
-    private IOUtils() {
+    public IOUtils() {
         loadXMLParser();
-    }
-
-    public static IOUtils getInstance() {
-        return instance;
     }
 
     public Object parseXMLFileToObject(String path) {

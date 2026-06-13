@@ -11,7 +11,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.widgets.Display;
 
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,7 +28,7 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
         Display.getDefault().asyncExec(new Thread(() -> {
             try {
                 ModalContext.run(SaveISO9660ImageThread.this, true,
-                        MainWindow.getInstance().getStatusLine().getProgressMonitor(), Display.getCurrent());
+                        GUIManager.INSTANCE.getMainWindow().getStatusLine().getProgressMonitor(), Display.getCurrent());
             } catch (InvocationTargetException | InterruptedException e) {
                 log.error("Error saving ISO image", e);
             }

@@ -3,7 +3,7 @@ package cl.cavallinux.jisocreator.action.main;
 import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.gui.dialog.AboutDialog;
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 /**
@@ -21,7 +21,7 @@ public class AboutAction extends Action {
 
     @Override
     public void run() {
-        AboutDialog dialog = new AboutDialog(MainWindow.getInstance().getShell());
+        AboutDialog dialog = new AboutDialog(GUIManager.INSTANCE.getMainWindow().getShell());
         dialog.open();
         dialog.close();
     }

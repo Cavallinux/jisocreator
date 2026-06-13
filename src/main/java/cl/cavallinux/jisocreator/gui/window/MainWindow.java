@@ -1,5 +1,7 @@
 package cl.cavallinux.jisocreator.gui.window;
 
+import java.util.Objects;
+
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -25,16 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MainWindow extends ApplicationWindow {
-    private static final MainWindow instance;
-    
-    static {
-        instance = new MainWindow();
-    }
-
-    public static MainWindow getInstance() {
-        return instance;
-    }
-
     private MainWindow(Shell parentShell) {
         super(parentShell);
         addMenuBar();
@@ -55,7 +47,7 @@ public class MainWindow extends ApplicationWindow {
         shell.setSize(1024, 768);
         shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
 
-        Monitor primary = Display.getCurrent().getPrimaryMonitor();
+        Monitor primary = determinateActiveMonitor();
         Rectangle bounds = primary.getBounds();
         Rectangle rect = shell.getBounds();
 
@@ -123,6 +115,12 @@ public class MainWindow extends ApplicationWindow {
         tool.add(ActionsManager.PREFERENCESACTION.getAction());
         tool.add(ActionsManager.ABOUTACTION.getAction());
         return tool;
+    }
+    
+    private Monitor determinateActiveMonitor() {
+        Display display = Display.getCurrent();
+        Shell activeShell = display.getActiveShell();
+        return Objects.nonNull(activeShell) ? activeShell.getMonitor() : display.getPrimaryMonitor();
     }
 
     @Override

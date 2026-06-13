@@ -156,6 +156,11 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         isoTreeInstance.setSelection(isoTableInstance.getSelection());
         isoTreeInstance.expandToLevel(node, 1);
     }
+    
+    public void refresh() {
+        getIsoDirectoriesTree().refresh();
+        getIsoDirectoriesTable().refresh();
+    }
 
     public static void setInstance(IsoExplorerSashForm instance) {
         IsoExplorerSashForm.instance = instance;

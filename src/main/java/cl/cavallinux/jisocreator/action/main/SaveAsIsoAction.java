@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
@@ -32,7 +32,7 @@ public class SaveAsIsoAction extends Action {
     @Override
     public void run() {
         try {
-            FileDialog openXMLDialog = new FileDialog(MainWindow.getInstance().getShell(), SWT.SAVE);
+            FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.SAVE);
             openXMLDialog.setText("Choose a iso file to save");
             openXMLDialog.setOverwrite(true);
             openXMLDialog.setFileName("iso.iso");
@@ -41,10 +41,9 @@ public class SaveAsIsoAction extends Action {
             String path = openXMLDialog.open();
             if (StringUtils.isNotBlank(path)) {
                 deleteIsoFileIfExists(path);
-                setMkisofsCommand(path);
                 IsoFileSystem root = obtainIsoFileSystem();
                 root.parse();
-                root.getPaths().forEach(temp -> mkisofsCommand.add(temp));
+                setMkisofsCommand(path, root.getPaths());
                 ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
                 Process isoProcess = mkisofsProcessBuilder.start();
                 SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream());
@@ -58,14 +57,14 @@ public class SaveAsIsoAction extends Action {
     private IsoFileSystem obtainIsoFileSystem() {
         return (IsoFileSystem) IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput();
     }
-    
+
     private void deleteIsoFileIfExists(String path) {
         if (new File(path).exists()) {
             new File(path).delete();
         }
     }
 
-    private void setMkisofsCommand(String path) {
+    private void setMkisofsCommand(String path, List<String> rootPaths) {
         mkisofsCommand = new ArrayList<String>();
         IOUtils storeInstance = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = storeInstance.getStore();
@@ -90,5 +89,6 @@ public class SaveAsIsoAction extends Action {
         mkisofsCommand.add("2");
         mkisofsCommand.add("-o");
         mkisofsCommand.add(path);
+        mkisofsCommand.addAll(rootPaths);
     }
 }

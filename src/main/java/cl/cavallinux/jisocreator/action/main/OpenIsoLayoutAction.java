@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
@@ -39,12 +39,12 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
                 return;
             }
             ProgressMonitorDialog openProgressDialog = new BaseProgressMonitorDialog(
-                    MainWindow.getInstance().getShell());
+                    GUIManager.INSTANCE.getMainWindow().getShell());
             openProgressDialog.run(true, false, this);
             openProgressDialog.close();
         } catch (InvocationTargetException | InterruptedException e) {
             log.error("Error opening file", e);
-            MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
+            MessageDialog.openError(GUIManager.INSTANCE.getMainWindow().getShell(), "Error", e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
     }
 
     private void executeOpenFile() {
-        FileDialog openXMLDialog = new FileDialog(MainWindow.getInstance().getShell(), SWT.OPEN);
+        FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.OPEN);
         openXMLDialog.setText("Choose a xml file to open");
         openXMLDialog.setOverwrite(true);
         openXMLDialog.setFileName("layout.xml");

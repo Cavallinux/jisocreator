@@ -10,7 +10,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +32,10 @@ public class DeleteIsoEntryAction extends Action implements IRunnableWithProgres
                     .getIsoDirectoriesTable().getSelection();
             node = (ITreeNode) selection.getFirstElement();
             parent = node.getParent();
-            ProgressMonitorDialog dialog = new BaseProgressMonitorDialog(MainWindow.getInstance().getShell());
+            ProgressMonitorDialog dialog = new BaseProgressMonitorDialog(
+                    GUIManager.INSTANCE.getMainWindow().getShell());
             dialog.run(true, false, this);
-            IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().refresh();
-            IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
+            IsoExplorerSashForm.getInstance().refresh();
             dialog.close();
         } catch (InvocationTargetException | InterruptedException e) {
             log.error("Error while processing delete action: ", e);

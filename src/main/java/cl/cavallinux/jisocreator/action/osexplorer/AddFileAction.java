@@ -15,7 +15,7 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
@@ -79,7 +79,7 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
 
     private void executeAction() {
         try {
-            ModalContext.run(this, true, MainWindow.getInstance().getStatusLine().getProgressMonitor(),
+            ModalContext.run(this, true, GUIManager.INSTANCE.getMainWindow().getStatusLine().getProgressMonitor(),
                     Display.getCurrent());
         } catch (InvocationTargetException | InterruptedException e) {
             log.error("Error executing AddFileAction", e);

@@ -2,8 +2,8 @@ package cl.cavallinux.jisocreator.action.main;
 
 import org.eclipse.jface.action.Action;
 
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,9 +20,8 @@ public class MainAction extends Action {
     @Override
     public void run() {
         log.info("Running application");
-        MainWindow mainWindowInstance = MainWindow.getInstance();
-        mainWindowInstance.setBlockOnOpen(true);
-        mainWindowInstance.open();
+        GUIManager.INSTANCE.getMainWindow().setBlockOnOpen(true);
+        GUIManager.INSTANCE.getMainWindow().open();
     }
 
     /**

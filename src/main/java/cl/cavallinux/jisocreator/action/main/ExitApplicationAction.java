@@ -6,8 +6,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.util.IOUtils;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -32,7 +32,7 @@ public class ExitApplicationAction extends Action {
     private ExitApplicationAction() {
         super("Exit");
         setToolTipText("Create new iso layout");
-        setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("exit.png"));
+        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("exit.png"));
     }
 
     @Override

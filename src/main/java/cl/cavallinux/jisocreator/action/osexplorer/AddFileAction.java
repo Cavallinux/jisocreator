@@ -16,11 +16,11 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,7 +34,7 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
     }
     
     private AddFileAction() {
-        super("Add", ImageUtils.getInstance().loadImageDescriptor("add.png"));
+        super("Add", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
         setToolTipText("Add selected files to ISO9660 layout");
     }
 

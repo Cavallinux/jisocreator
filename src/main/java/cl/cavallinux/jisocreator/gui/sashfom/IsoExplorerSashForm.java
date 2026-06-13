@@ -28,13 +28,13 @@ import cl.cavallinux.jisocreator.action.isoexplorer.OpenIsoEntryAction;
 import cl.cavallinux.jisocreator.action.isoexplorer.ShowIsoInformationAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
 import cl.cavallinux.jisocreator.gui.listeners.ISODirectoriesMenuListener;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.filters.isoexplorer.ShowOnlyIsoDirectoriesFilter;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTableProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +63,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         log.info("Adding IsoExplorerSashForm features");
         setWeights(new int[] { 25, 75 });
         isoTreeCLabel.setText("Iso explorer");
-        isoTreeCLabel.setImage(ImageUtils.getInstance().loadImage("iso.png"));
+        isoTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
         CoolBarManager coolbar = new CoolBarManager(isoTableCoolBar);
         ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);
 

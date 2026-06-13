@@ -5,7 +5,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 
 import cl.cavallinux.jisocreator.gui.dialog.PreferencesDialog;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public class PreferencesAction extends Action {
     private PreferenceManager preferenceManager;
@@ -16,7 +16,7 @@ public class PreferencesAction extends Action {
     }
 
     private PreferencesAction() {
-        super("Preferences", ImageUtils.getInstance().loadImageDescriptor("preferences.png"));
+        super("Preferences", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("preferences.png"));
         setToolTipText("Open preferences dialog");
         preferenceManager = new PreferenceManager();
     }

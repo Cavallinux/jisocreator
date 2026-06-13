@@ -4,7 +4,7 @@ import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.gui.dialog.AboutDialog;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 /**
  * Action que despliega el cuadro de dialog que muestra la version de la aplicacion 
@@ -20,7 +20,7 @@ public class AboutAction extends Action {
      * Constructor por defecto de la clase
      */
     private AboutAction() {
-        super("About JIsoCreator", ImageUtils.getInstance().loadImageDescriptor("about.png"));
+        super("About JIsoCreator", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("about.png"));
         setToolTipText("Open about dialog");
     }
 

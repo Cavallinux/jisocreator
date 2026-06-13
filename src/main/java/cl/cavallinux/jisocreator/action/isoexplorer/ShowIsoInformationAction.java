@@ -2,7 +2,7 @@ package cl.cavallinux.jisocreator.action.isoexplorer;
 
 import org.eclipse.jface.action.Action;
 
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public class ShowIsoInformationAction extends Action {
     private static ShowIsoInformationAction instance;
@@ -12,7 +12,7 @@ public class ShowIsoInformationAction extends Action {
     }
 
     private ShowIsoInformationAction() {
-        super("Open", ImageUtils.getInstance().loadImageDescriptor("properties.png"));
+        super("Open", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("properties.png"));
         setToolTipText("Show and/or modify iso layout information");
         setEnabled(false);
     }

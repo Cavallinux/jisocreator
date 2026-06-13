@@ -12,8 +12,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
     }
 
     private OpenAction() {
-        super("Open", ImageUtils.getInstance().loadImageDescriptor("run.png"));
+        super("Open", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
         setToolTipText("Open a file or folder");
         setEnabled(false);
     }

@@ -12,9 +12,9 @@ import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.util.IOUtils;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,7 +27,7 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     }
 
     private SaveAsXMLAction() {
-        super("XML Layout", ImageUtils.getInstance().loadImageDescriptor("xml.png"));
+        super("XML Layout", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png"));
         setToolTipText("Save iso layout as xml file");
     }
 

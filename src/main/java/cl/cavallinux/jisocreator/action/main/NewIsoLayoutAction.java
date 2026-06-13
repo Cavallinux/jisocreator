@@ -3,18 +3,18 @@ package cl.cavallinux.jisocreator.action.main;
 import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class NewIsoLayoutAction extends Action {
     private static NewIsoLayoutAction instance;
-    
+
     static {
         instance = new NewIsoLayoutAction();
     }
 
     public NewIsoLayoutAction() {
-        super("New Layout", ImageUtils.getInstance().loadImageDescriptor("new.png"));
+        super("New Layout", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("new.png"));
         setToolTipText("Create new iso layout");
     }
 

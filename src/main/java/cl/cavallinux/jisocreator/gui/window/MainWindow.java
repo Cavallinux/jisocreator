@@ -27,7 +27,7 @@ import cl.cavallinux.jisocreator.action.main.SaveAsIsoAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -60,7 +60,7 @@ public class MainWindow extends ApplicationWindow {
         super.configureShell(shell);
         shell.setText("JIsoCreator");
         shell.setSize(1024, 768);
-        shell.setImage(ImageUtils.getInstance().loadImage("iso.png"));
+        shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
 
         Monitor primary = Display.getCurrent().getPrimaryMonitor();
         Rectangle bounds = primary.getBounds();
@@ -98,8 +98,8 @@ public class MainWindow extends ApplicationWindow {
         mainMenuManager.add(toolsMenu);
         mainMenuManager.add(helpMenu);
 
-        MenuManager saveAsMenu = new MenuManager("&Save as", ImageUtils.getInstance().loadImageDescriptor("saveas.png"),
-                "saveAs");
+        MenuManager saveAsMenu = new MenuManager("&Save as",
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("saveas.png"), "saveAs");
         saveAsMenu.add(SaveAsXMLAction.getInstance());
         saveAsMenu.add(SaveAsIsoAction.getInstance());
 

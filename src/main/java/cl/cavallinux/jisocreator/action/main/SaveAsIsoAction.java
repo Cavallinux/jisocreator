@@ -14,9 +14,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.util.IOUtils;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,7 +29,7 @@ public class SaveAsIsoAction extends Action {
     }
 
     private SaveAsIsoAction() {
-        super("ISO9660 File", ImageUtils.getInstance().loadImageDescriptor("x-cd-image.png"));
+        super("ISO9660 File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
         setToolTipText("Save the actual layout into a ISO9660 file");
     }
 

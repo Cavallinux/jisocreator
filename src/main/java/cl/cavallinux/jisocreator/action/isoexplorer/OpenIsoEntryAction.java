@@ -12,9 +12,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,7 +27,7 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
     }
 
     private OpenIsoEntryAction() {
-        super("Open", ImageUtils.getInstance().loadImageDescriptor("run.png"));
+        super("Open", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
         setToolTipText("Open a file or folder, in the layout");
         setEnabled(false);
     }

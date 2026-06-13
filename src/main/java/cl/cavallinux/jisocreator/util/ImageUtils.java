@@ -23,28 +23,19 @@ public class ImageUtils {
     private static final String FOLDER_IMAGE_FILENAME = "folder.png";
     private static final String ROOT_ISO_FILENAME = "iso.png";
     private static final String GENERIC_FILENAME = "file.png";
-    private static final ImageUtils instance;
-    
-    static {
-        instance = new ImageUtils();
-    }
 
-    private ImageUtils() {
+    public ImageUtils() {
         imageRegistry = new ImageRegistry(Display.getDefault());
-    }
-
-    public static ImageUtils getInstance() {
-        return instance;
     }
 
     public Image loadImage(Program program) {
         Image image = (Image) imageRegistry.get(program.getName());
         if (image == null) {
-            image = new Image(Display.getCurrent(), program.getImageData());
+            image = Objects.nonNull(program.getImageData()) ? new Image(Display.getCurrent(), program.getImageData())
+                    : loadImage(GENERIC_FILENAME);
             imageRegistry.put(program.getName(), image);
         }
         return image;
-
     }
 
     public Image loadImage(String name) {

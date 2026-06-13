@@ -11,8 +11,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,7 +25,7 @@ public class DeleteIsoEntryAction extends Action implements IRunnableWithProgres
     }
 
     private DeleteIsoEntryAction() {
-        super("Delete", ImageUtils.getInstance().loadImageDescriptor("delete.png"));
+        super("Delete", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("delete.png"));
         setToolTipText("Delete iso entry, from iso layout");
         setEnabled(false);
     }

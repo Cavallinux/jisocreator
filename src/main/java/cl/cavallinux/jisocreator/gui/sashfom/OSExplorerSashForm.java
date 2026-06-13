@@ -29,6 +29,7 @@ import cl.cavallinux.jisocreator.action.osexplorer.RefreshExplorerAction;
 import cl.cavallinux.jisocreator.action.osexplorer.ShowHiddenFilesAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
 import cl.cavallinux.jisocreator.gui.listeners.OSDirectoriesMenuListener;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import cl.cavallinux.jisocreator.model.filters.ShowOnlyDirectoriesFilter;
@@ -36,7 +37,6 @@ import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeContentProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeLabelProvider;
 import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OsTableProvider;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +65,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         log.info("Adding OSExplorerSashForm features");
         setWeights(25, 75);
         osTreeCLabel.setText("File explorer");
-        osTreeCLabel.setImage(ImageUtils.getInstance().loadImage("drive.png"));
+        osTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("drive.png"));
 
         CoolBarManager coolbar = new CoolBarManager(osTableCoolBar);
         ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);

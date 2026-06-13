@@ -3,7 +3,7 @@ package cl.cavallinux.jisocreator.action.osexplorer;
 import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public class RefreshExplorerAction extends Action {
     private static RefreshExplorerAction instance;
@@ -13,7 +13,7 @@ public class RefreshExplorerAction extends Action {
     }
 
     private RefreshExplorerAction() {
-        super("Refresh OS Explorer", ImageUtils.getInstance().loadImageDescriptor("refresh.png"));
+        super("Refresh OS Explorer", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("refresh.png"));
         setToolTipText("Refresh OS Explorer");
     }
 

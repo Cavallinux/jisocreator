@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -48,14 +48,14 @@ public class AboutDialog extends TitleAreaDialog {
         Composite composite = new Composite(parent, SWT.NONE);
         setTitle("JIsocreator");
         setMessage(stringBuffer.toString());
-        setTitleImage(ImageUtils.getInstance().loadImage("iso72.png"));
+        setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso72.png"));
 
         TabFolder tabFolder = new TabFolder(composite, SWT.NONE);
         TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
         tabItem.setText("About");
         Composite aboutComposite = new Composite(tabFolder, SWT.NONE);
         Label label = new Label(aboutComposite, SWT.NONE);
-        label.setImage(ImageUtils.getInstance().loadImage("iso128.png"));
+        label.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso128.png"));
         Label textClabel = new Label(aboutComposite, SWT.NONE);
 
         stringBuffer = new StringBuffer();

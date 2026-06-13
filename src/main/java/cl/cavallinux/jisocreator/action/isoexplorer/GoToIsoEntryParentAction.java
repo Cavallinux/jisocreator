@@ -4,8 +4,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 
 public class GoToIsoEntryParentAction extends Action {
     private static GoToIsoEntryParentAction instance;
@@ -15,7 +15,7 @@ public class GoToIsoEntryParentAction extends Action {
     }
 
     private GoToIsoEntryParentAction() {
-        super("Go to parent file", ImageUtils.getInstance().loadImageDescriptor("up.png"));
+        super("Go to parent file", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("up.png"));
         setToolTipText("Go to parent file");
         setEnabled(false);
     }

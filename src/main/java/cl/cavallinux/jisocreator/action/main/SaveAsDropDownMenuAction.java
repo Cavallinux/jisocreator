@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
 import cl.cavallinux.jisocreator.action.decl.ActionMenuCreator;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public class SaveAsDropDownMenuAction extends ActionMenuCreator {
     private static SaveAsDropDownMenuAction instance;
@@ -16,7 +16,7 @@ public class SaveAsDropDownMenuAction extends ActionMenuCreator {
 
     private SaveAsDropDownMenuAction() {
         super("Save as...");
-        setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("saveas.png"));
+        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("saveas.png"));
         setMenuCreator(this);
     }
 

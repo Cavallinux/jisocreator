@@ -9,13 +9,8 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public class PreferencesAction extends Action {
     private PreferenceManager preferenceManager;
-    private static PreferencesAction instance;
-    
-    static {
-        instance = new PreferencesAction();
-    }
 
-    private PreferencesAction() {
+    public PreferencesAction() {
         super("Preferences", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("preferences.png"));
         setToolTipText("Open preferences dialog");
         preferenceManager = new PreferenceManager();
@@ -26,9 +21,5 @@ public class PreferencesAction extends Action {
         PreferencesDialog dialog = new PreferencesDialog(MainWindow.getInstance().getShell(), preferenceManager);
         dialog.open();
         dialog.close();
-    }
-
-    public static PreferencesAction getInstance() {
-        return instance;
     }
 }

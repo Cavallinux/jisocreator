@@ -48,7 +48,7 @@ public class ExitApplicationAction extends Action {
         }
     }
     
-    public void exit() {
+    private void exit() {
         log.info("Exiting application");
         MainWindow mainWindow = MainWindow.getInstance();
         Shell shell = mainWindow.getShell();

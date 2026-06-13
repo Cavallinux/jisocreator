@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.action.main.NewIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
-import cl.cavallinux.jisocreator.action.main.PreferencesAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsDropDownMenuAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsIsoAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
@@ -108,7 +107,7 @@ public class MainWindow extends ApplicationWindow {
         fileMenu.add(new Separator());
         fileMenu.add(ActionsManager.EXITACTION.getAction());
 
-        toolsMenu.add(PreferencesAction.getInstance());
+        toolsMenu.add(ActionsManager.PREFERENCESACTION.getAction());
 
         helpMenu.add(ActionsManager.ABOUTACTION.getAction());
         return mainMenuManager;
@@ -125,7 +124,7 @@ public class MainWindow extends ApplicationWindow {
         contrib.setMode(ActionContributionItem.MODE_FORCE_TEXT);
         tool.add(contrib);
         tool.add(new Separator());
-        tool.add(PreferencesAction.getInstance());
+        tool.add(ActionsManager.PREFERENCESACTION.getAction());
         tool.add(ActionsManager.ABOUTACTION.getAction());
         return tool;
     }

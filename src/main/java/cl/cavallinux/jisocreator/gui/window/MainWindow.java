@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.gui.window;
 
 import java.util.Objects;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -133,8 +134,8 @@ public class MainWindow extends ApplicationWindow {
     protected void handleShellCloseEvent() {
         ActionsManager.EXITACTION.getAction().run();
     }
-
-    public StatusLineManager getStatusLine() {
-        return getStatusLineManager();
+    
+    public IProgressMonitor getProgressMonitor() {
+        return getStatusLineManager().getProgressMonitor();
     }
 }

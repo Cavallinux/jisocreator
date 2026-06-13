@@ -79,7 +79,7 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
 
     private void executeAction() {
         try {
-            ModalContext.run(this, true, GUIManager.INSTANCE.getMainWindow().getStatusLine().getProgressMonitor(),
+            ModalContext.run(this, true, GUIManager.INSTANCE.getMainWindow().getProgressMonitor(),
                     Display.getCurrent());
         } catch (InvocationTargetException | InterruptedException e) {
             log.error("Error executing AddFileAction", e);

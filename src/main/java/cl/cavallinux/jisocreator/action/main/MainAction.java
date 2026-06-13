@@ -3,6 +3,8 @@ package cl.cavallinux.jisocreator.action.main;
 import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.ActionsManager;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -13,13 +15,8 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.2
  */
 @Slf4j
+@NoArgsConstructor
 public class MainAction extends Action {
-    private static MainAction instance = null;
-
-    static {
-        instance = new MainAction();
-    }
-
     @Override
     public void run() {
         log.info("Running application");
@@ -34,15 +31,6 @@ public class MainAction extends Action {
      * @param args Argumentos recibidos desde el sistema operativo.
      */
     public static void main(String[] args) {
-        getInstance().run();
-    }
-
-    /**
-     * Obtiene la instancia del objeto indicado.
-     * 
-     * @return un {@link MainAction}
-     */
-    public static MainAction getInstance() {
-        return instance;
+        ActionsManager.MAINACTION.getAction().run();
     }
 }

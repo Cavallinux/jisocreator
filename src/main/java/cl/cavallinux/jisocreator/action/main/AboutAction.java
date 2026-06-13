@@ -10,16 +10,11 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
  * Action que despliega el cuadro de dialog que muestra la version de la aplicacion 
  */
 public class AboutAction extends Action {
-    private static AboutAction instance;
-
-    static {
-        instance = new AboutAction();
-    }
     
     /**
      * Constructor por defecto de la clase
      */
-    private AboutAction() {
+    public AboutAction() {
         super("About JIsoCreator", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("about.png"));
         setToolTipText("Open about dialog");
     }
@@ -29,9 +24,5 @@ public class AboutAction extends Action {
         AboutDialog dialog = new AboutDialog(MainWindow.getInstance().getShell());
         dialog.open();
         dialog.close();
-    }
-
-    public static AboutAction getInstance() {
-        return instance;
     }
 }

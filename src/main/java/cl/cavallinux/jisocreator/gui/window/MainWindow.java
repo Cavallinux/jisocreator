@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
-import cl.cavallinux.jisocreator.action.main.AboutAction;
 import cl.cavallinux.jisocreator.action.main.NewIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.PreferencesAction;
@@ -111,7 +110,7 @@ public class MainWindow extends ApplicationWindow {
 
         toolsMenu.add(PreferencesAction.getInstance());
 
-        helpMenu.add(AboutAction.getInstance());
+        helpMenu.add(ActionsManager.ABOUTACTION.getAction());
         return mainMenuManager;
     }
 
@@ -127,7 +126,7 @@ public class MainWindow extends ApplicationWindow {
         tool.add(contrib);
         tool.add(new Separator());
         tool.add(PreferencesAction.getInstance());
-        tool.add(AboutAction.getInstance());
+        tool.add(ActionsManager.ABOUTACTION.getAction());
         return tool;
     }
 

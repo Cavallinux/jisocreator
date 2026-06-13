@@ -2,7 +2,7 @@ package cl.cavallinux.jisocreator.gui.window;
 
 import java.util.Objects;
 
-import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
@@ -27,8 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MainWindow extends ApplicationWindow {
+    private IContributionItem separator;
+
     private MainWindow(Shell parentShell) {
         super(parentShell);
+        separator = new Separator();
         addMenuBar();
         addToolBar(SWT.RIGHT);
         addStatusLine();
@@ -91,7 +94,7 @@ public class MainWindow extends ApplicationWindow {
         fileMenu.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
         fileMenu.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
         fileMenu.add(saveAsMenu);
-        fileMenu.add(new Separator());
+        fileMenu.add(separator);
         fileMenu.add(ActionsManager.EXITACTION.getAction());
 
         toolsMenu.add(ActionsManager.PREFERENCESACTION.getAction());
@@ -106,12 +109,10 @@ public class MainWindow extends ApplicationWindow {
         ToolBarManager tool = new ToolBarManager(style);
         tool.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
         tool.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
-
-        ActionContributionItem contrib = new ActionContributionItem(
-                ActionsManager.SAVEASDROPDOWNMENUACTION.getAction());
-        contrib.setMode(ActionContributionItem.MODE_FORCE_TEXT);
-        tool.add(contrib);
-        tool.add(new Separator());
+        tool.add(separator);
+        tool.add(ActionsManager.SAVEASISOACTION.getAction());
+        tool.add(ActionsManager.SAVEASXMLACTION.getAction());
+        tool.add(separator);
         tool.add(ActionsManager.PREFERENCESACTION.getAction());
         tool.add(ActionsManager.ABOUTACTION.getAction());
         return tool;

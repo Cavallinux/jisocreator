@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OpenIsoEntryAction extends Action implements IDoubleClickListener, ISelectionChangedListener {
     private ITreeNode node;
-    private static OpenIsoEntryAction instance;
 
-    static {
-        instance = new OpenIsoEntryAction();
-    }
-
-    private OpenIsoEntryAction() {
+    public OpenIsoEntryAction() {
         super("Open", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
         setToolTipText("Open a file or folder, in the layout");
         setEnabled(false);
@@ -62,26 +58,26 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
         setNode(arg0);
         if (arg0.getSource() instanceof TreeViewer) {
             if (node == null) {
-                DeleteIsoEntryAction.getInstance().setEnabled(false);
+                IsoExplorerActionsManager.DELETEISOENTRY.getAction().setEnabled(false);
                 log.warn("SWT Library bug");
                 return;
             } else {
-                DeleteIsoEntryAction.getInstance().setEnabled(true);
+                IsoExplorerActionsManager.DELETEISOENTRY.getAction().setEnabled(true);
             }
-            /*if (node.isRoot()) {
-                GoToIsoEntryParentAction.getInstance().setEnabled(false);
-            } else {
-                GoToIsoEntryParentAction.getInstance().setEnabled(true);
-            }*/
-            GoToIsoEntryParentAction.getInstance().setEnabled(!node.isRoot());
+            /*
+             * if (node.isRoot()) {
+             * GoToIsoEntryParentAction.getInstance().setEnabled(false); } else {
+             * GoToIsoEntryParentAction.getInstance().setEnabled(true); }
+             */
+            IsoExplorerActionsManager.GOTOISOPARENT.getAction().setEnabled(!node.isRoot());
             IsoExplorerSashForm.getInstance().getIsoTableText().setText(node.getIsoName());
             IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().setInput(node);
             setEnabled(false);
-            DeleteIsoEntryAction.getInstance().setEnabled(false);
+            IsoExplorerActionsManager.DELETEISOENTRY.getAction().setEnabled(false);
 
         } else {
             setEnabled(true);
-            DeleteIsoEntryAction.getInstance().setEnabled(true);
+            IsoExplorerActionsManager.DELETEISOENTRY.getAction().setEnabled(true);
         }
     }
 
@@ -100,9 +96,5 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
             selection = (IStructuredSelection) sce.getSelection();
         }
         setNode((ITreeNode) selection.getFirstElement());
-    }
-
-    public static OpenIsoEntryAction getInstance() {
-        return instance;
     }
 }

@@ -5,11 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -22,13 +25,10 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import cl.cavallinux.jisocreator.action.isoexplorer.DeleteIsoEntryAction;
-import cl.cavallinux.jisocreator.action.isoexplorer.GoToIsoEntryParentAction;
-import cl.cavallinux.jisocreator.action.isoexplorer.OpenIsoEntryAction;
-import cl.cavallinux.jisocreator.action.isoexplorer.ShowIsoInformationAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
 import cl.cavallinux.jisocreator.gui.listeners.ISODirectoriesMenuListener;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.filters.isoexplorer.ShowOnlyIsoDirectoriesFilter;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
@@ -67,10 +67,10 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         CoolBarManager coolbar = new CoolBarManager(isoTableCoolBar);
         ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);
 
-        toolbar.add(OpenIsoEntryAction.getInstance());
-        toolbar.add(GoToIsoEntryParentAction.getInstance());
-        toolbar.add(ShowIsoInformationAction.getInstance());
-        toolbar.add(DeleteIsoEntryAction.getInstance());
+        toolbar.add(IsoExplorerActionsManager.OPENISOENTRY.getAction());
+        toolbar.add(IsoExplorerActionsManager.GOTOISOPARENT.getAction());
+        toolbar.add(IsoExplorerActionsManager.SHOWISOINFO.getAction());
+        toolbar.add(IsoExplorerActionsManager.DELETEISOENTRY.getAction());
 
         coolbar.add(toolbar);
         coolbar.update(true);
@@ -124,11 +124,14 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addListeners() {
         log.info("Adding IsoExplorerSashForm listeners");
-        isoDirectoriesTree.addDoubleClickListener(OpenIsoEntryAction.getInstance());
-        isoDirectoriesTable.addDoubleClickListener(OpenIsoEntryAction.getInstance());
+        Action openAction = IsoExplorerActionsManager.OPENISOENTRY.getAction();
+        IDoubleClickListener iDoubleClickListener = (IDoubleClickListener) openAction;
+        ISelectionChangedListener iSelectionChangedListener = (ISelectionChangedListener) openAction;
+        isoDirectoriesTree.addDoubleClickListener(iDoubleClickListener);
+        isoDirectoriesTable.addDoubleClickListener(iDoubleClickListener);
 
-        isoDirectoriesTree.addSelectionChangedListener(OpenIsoEntryAction.getInstance());
-        isoDirectoriesTable.addSelectionChangedListener(OpenIsoEntryAction.getInstance());
+        isoDirectoriesTree.addSelectionChangedListener(iSelectionChangedListener);
+        isoDirectoriesTable.addSelectionChangedListener(iSelectionChangedListener);
     }
 
     @Override

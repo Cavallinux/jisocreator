@@ -18,13 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DeleteIsoEntryAction extends Action implements IRunnableWithProgress {
     private ITreeNode parent, node;
-    private static DeleteIsoEntryAction instance;
-    
-    static {
-        instance = new DeleteIsoEntryAction();
-    }
 
-    private DeleteIsoEntryAction() {
+    public DeleteIsoEntryAction() {
         super("Delete", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("delete.png"));
         setToolTipText("Delete iso entry, from iso layout");
         setEnabled(false);
@@ -55,9 +50,5 @@ public class DeleteIsoEntryAction extends Action implements IRunnableWithProgres
         } finally {
             monitor.done();
         }
-    }
-
-    public static DeleteIsoEntryAction getInstance() {
-        return instance;
     }
 }

@@ -4,9 +4,8 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-import cl.cavallinux.jisocreator.action.isoexplorer.DeleteIsoEntryAction;
-import cl.cavallinux.jisocreator.action.isoexplorer.OpenIsoEntryAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 
 public class ISODirectoriesMenuListener implements IMenuListener {
     @Override
@@ -14,8 +13,8 @@ public class ISODirectoriesMenuListener implements IMenuListener {
         IStructuredSelection selection = IsoExplorerSashForm.getInstance().getIsoDirectoriesTable()
                 .getStructuredSelection();
         if (!selection.isEmpty()) {
-            manager.add(OpenIsoEntryAction.getInstance());
-            manager.add(DeleteIsoEntryAction.getInstance());
+            manager.add(IsoExplorerActionsManager.OPENISOENTRY.getAction());
+            manager.add(IsoExplorerActionsManager.DELETEISOENTRY.getAction());
         }
     }
 }

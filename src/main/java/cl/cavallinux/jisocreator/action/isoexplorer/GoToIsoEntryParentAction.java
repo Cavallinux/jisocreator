@@ -8,13 +8,7 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 
 public class GoToIsoEntryParentAction extends Action {
-    private static GoToIsoEntryParentAction instance;
-    
-    static {
-        instance = new GoToIsoEntryParentAction();
-    }
-
-    private GoToIsoEntryParentAction() {
+    public GoToIsoEntryParentAction() {
         super("Go to parent file", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("up.png"));
         setToolTipText("Go to parent file");
         setEnabled(false);
@@ -29,9 +23,5 @@ public class GoToIsoEntryParentAction extends Action {
         ITreeNode parent = node.getParent();
         selection = new StructuredSelection(parent);
         IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setSelection(selection);
-    }
-
-    public static GoToIsoEntryParentAction getInstance() {
-        return instance;
     }
 }

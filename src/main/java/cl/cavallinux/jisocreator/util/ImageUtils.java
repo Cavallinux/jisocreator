@@ -13,8 +13,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 
 public class ImageUtils {
     private ImageRegistry imageRegistry;
@@ -82,12 +82,12 @@ public class ImageUtils {
     }
     
     public Image loadImage(Path path) {
-        if (OSExplorer.getInstance().isRoot(path)) {
+        if (OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(path)) {
             return loadImage(DRIVE_IMAGE_FILENAME);
         } else if (Files.isDirectory(path)) {
             return loadImage(FOLDER_IMAGE_FILENAME);
         } else {
-            String extension = OSExplorer.getInstance().getExtension(path);
+            String extension = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getExtension(path);
             if (StringUtils.isNotBlank(extension)) {
                 Program program = Program.findProgram(extension);
                 return Objects.nonNull(program) ? loadImage(program) : loadImage(GENERIC_FILENAME);

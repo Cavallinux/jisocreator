@@ -7,7 +7,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 
 public class GoToParentAction extends Action {
     public GoToParentAction() {
@@ -25,6 +25,6 @@ public class GoToParentAction extends Action {
         File parent = file.getParentFile();
         selection = new StructuredSelection(parent);
         OSExplorerSashForm.getInstance().getOsDirectoriesTree().setSelection(selection);
-        setEnabled(OSExplorer.getInstance().isRoot(file.toPath()));
+        setEnabled(OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(file.toPath()));
     }
 }

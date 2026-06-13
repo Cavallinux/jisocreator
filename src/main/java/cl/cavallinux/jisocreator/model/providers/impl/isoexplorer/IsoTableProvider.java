@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Image;
 
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.decl.TableProviderAdapter;
@@ -101,7 +102,7 @@ public class IsoTableProvider extends TableProviderAdapter {
     public String getColumnText(Object element, int columnIndex) {
         File file = (File) ((ITreeNode) element).getElement();
         Path filePath = file.toPath();
-        OSExplorer explorer = OSExplorer.getInstance();
+        OSExplorer explorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
         switch (columnIndex) {
         case 0:
             return explorer.getName(filePath);

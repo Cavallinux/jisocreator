@@ -14,8 +14,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,7 +32,7 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
     public void run() {
         File element = (File) node.getElement();
         if (element.isFile()) {
-            OSExplorer.getInstance().launch(element.toPath());
+            OSAndIsoExplorerManager.INSTANCE.getOsExplorer().launch(element.toPath());
         } else {
             IsoExplorerSashForm isoSashFormInstance = IsoExplorerSashForm.getInstance();
             isoSashFormInstance.refresh(node);

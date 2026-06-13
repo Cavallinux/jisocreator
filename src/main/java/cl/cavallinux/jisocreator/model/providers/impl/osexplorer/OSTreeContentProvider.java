@@ -2,7 +2,7 @@ package cl.cavallinux.jisocreator.model.providers.impl.osexplorer;
 
 import java.io.File;
 
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.providers.decl.TreeContentAdapter;
 
 public class OSTreeContentProvider extends TreeContentAdapter {
@@ -17,7 +17,7 @@ public class OSTreeContentProvider extends TreeContentAdapter {
         if (arg0 instanceof File) {
             return ((File) arg0).listFiles();
         } else {
-            return OSExplorer.getInstance().getRoots();
+            return OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
         }
     }
 

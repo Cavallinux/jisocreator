@@ -13,8 +13,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
     @Override
     public void run() {
         if (file.isFile()) {
-            OSExplorer.getInstance().launch(file.toPath());
+            OSAndIsoExplorerManager.INSTANCE.getOsExplorer().launch(file.toPath());
         } else {
             OSExplorerSashForm.getInstance().getOsDirectoriesTree()
                     .setSelection(OSExplorerSashForm.getInstance().getOsDirectoriesTable().getSelection());
@@ -74,7 +74,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
                 OSExplorerActionsManager.ADDFILEACTION.getAction().setEnabled(true);
             }
             OSExplorerActionsManager.GOTOPARENTACTION.getAction()
-                    .setEnabled(!OSExplorer.getInstance().isRoot(file.toPath()));
+                    .setEnabled(!OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(file.toPath()));
             OSExplorerSashForm.getInstance().getOsTableText().setText(file.getAbsolutePath());
             OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(file);
             setEnabled(false);

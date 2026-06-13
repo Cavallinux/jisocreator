@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.io.TempDir;
 
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("OSExplorer Tests")
@@ -19,7 +21,7 @@ class OSExplorerTest {
 
     @BeforeEach
     void setUp() {
-        osExplorer = OSExplorer.getInstance();
+        osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
     }
 
     @Test
@@ -170,8 +172,8 @@ class OSExplorerTest {
     @Test
     @DisplayName("Should return singleton instance")
     void testGetInstance() {
-        OSExplorer instance1 = OSExplorer.getInstance();
-        OSExplorer instance2 = OSExplorer.getInstance();
+        OSExplorer instance1 = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+        OSExplorer instance2 = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
 
         assertSame(instance1, instance2);
     }

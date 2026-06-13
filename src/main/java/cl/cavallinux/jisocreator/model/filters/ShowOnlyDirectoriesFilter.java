@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 
 /**
  * Filtro para mostrar solo los directorios
@@ -22,6 +22,6 @@ public class ShowOnlyDirectoriesFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
         Path path = arg2 instanceof Path ? (Path) arg2 : ((File) arg2).toPath();
-        return Files.isDirectory(path) || OSExplorer.getInstance().isRoot(path);
+        return Files.isDirectory(path) || OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(path);
     }
 }

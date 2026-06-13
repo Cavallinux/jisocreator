@@ -6,13 +6,7 @@ import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public class RefreshExplorerAction extends Action {
-    private static RefreshExplorerAction instance;
-    
-    static {
-        instance = new RefreshExplorerAction();
-    }
-
-    private RefreshExplorerAction() {
+    public RefreshExplorerAction() {
         super("Refresh OS Explorer", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("refresh.png"));
         setToolTipText("Refresh OS Explorer");
     }
@@ -21,9 +15,5 @@ public class RefreshExplorerAction extends Action {
     public void run() {
         OSExplorerSashForm.getInstance().getOsDirectoriesTable().refresh();
         OSExplorerSashForm.getInstance().getOsDirectoriesTree().refresh();
-    }
-
-    public static RefreshExplorerAction getInstance() {
-        return instance;
     }
 }

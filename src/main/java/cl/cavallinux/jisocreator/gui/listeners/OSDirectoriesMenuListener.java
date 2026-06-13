@@ -4,9 +4,8 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-import cl.cavallinux.jisocreator.action.osexplorer.AddFileAction;
-import cl.cavallinux.jisocreator.action.osexplorer.OpenAction;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 
 public class OSDirectoriesMenuListener implements IMenuListener {
     @Override
@@ -14,8 +13,8 @@ public class OSDirectoriesMenuListener implements IMenuListener {
         IStructuredSelection selection = OSExplorerSashForm.getInstance().getOsDirectoriesTable()
                 .getStructuredSelection();
         if (!selection.isEmpty()) {
-            manager.add(AddFileAction.getInstance());
-            manager.add(OpenAction.getInstance());
+            manager.add(OSExplorerActionsManager.ADDFILEACTION.getAction());
+            manager.add(OSExplorerActionsManager.OPENFILEACTION.getAction());
         }
     }
 }

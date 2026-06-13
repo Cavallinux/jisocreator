@@ -5,11 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -22,14 +25,10 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import cl.cavallinux.jisocreator.action.osexplorer.AddFileAction;
-import cl.cavallinux.jisocreator.action.osexplorer.GoToParentAction;
-import cl.cavallinux.jisocreator.action.osexplorer.OpenAction;
-import cl.cavallinux.jisocreator.action.osexplorer.RefreshExplorerAction;
-import cl.cavallinux.jisocreator.action.osexplorer.ShowHiddenFilesAction;
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
 import cl.cavallinux.jisocreator.gui.listeners.OSDirectoriesMenuListener;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import cl.cavallinux.jisocreator.model.filters.ShowOnlyDirectoriesFilter;
@@ -70,11 +69,11 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         CoolBarManager coolbar = new CoolBarManager(osTableCoolBar);
         ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);
 
-        toolbar.add(OpenAction.getInstance());
-        toolbar.add(GoToParentAction.getInstance());
-        toolbar.add(RefreshExplorerAction.getInstance());
-        toolbar.add(AddFileAction.getInstance());
-        toolbar.add(ShowHiddenFilesAction.getInstance());
+        toolbar.add(OSExplorerActionsManager.OPENFILEACTION.getAction());
+        toolbar.add(OSExplorerActionsManager.GOTOPARENTACTION.getAction());
+        toolbar.add(OSExplorerActionsManager.REFRESHACTION.getAction());
+        toolbar.add(OSExplorerActionsManager.ADDFILEACTION.getAction());
+        toolbar.add(OSExplorerActionsManager.SHOWHIDDENFILES.getAction());
 
         coolbar.add(toolbar);
         coolbar.update(true);
@@ -84,13 +83,13 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osTableText.pack();
         coolItem.setSize(osTableText.getSize());
         coolItem.setControl(osTableText);
-        
+
         Map<String, String> columnTooltips = LinkedHashMap.newLinkedHashMap(4);
         columnTooltips.put("Name", "File name");
         columnTooltips.put("Type", "File type");
         columnTooltips.put("Size", "File size, in bytes");
         columnTooltips.put("Last Modified Date", "File last modified date");
-        
+
         columnTooltips.forEach((columnName, tooltip) -> {
             TableColumn tvc = new TableColumn(osDirectoriesTable.getTable(), SWT.LEFT);
             tvc.setText(columnName);
@@ -132,11 +131,14 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addListeners() {
         log.info("Adding OSExplorerSashForm listeners");
-        osDirectoriesTree.addDoubleClickListener(OpenAction.getInstance());
-        osDirectoriesTable.addDoubleClickListener(OpenAction.getInstance());
+        Action openAction = OSExplorerActionsManager.OPENFILEACTION.getAction();
+        IDoubleClickListener iDoubleClickListener = (IDoubleClickListener) openAction;
+        ISelectionChangedListener iSelectionChangedListener = (ISelectionChangedListener) openAction;
+        osDirectoriesTree.addDoubleClickListener(iDoubleClickListener);
+        osDirectoriesTable.addDoubleClickListener(iDoubleClickListener);
 
-        osDirectoriesTree.addSelectionChangedListener(OpenAction.getInstance());
-        osDirectoriesTable.addSelectionChangedListener(OpenAction.getInstance());
+        osDirectoriesTree.addSelectionChangedListener(iSelectionChangedListener);
+        osDirectoriesTable.addSelectionChangedListener(iSelectionChangedListener);
     }
 
     @Override
@@ -154,7 +156,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osDirectoriesTable = new TableViewer(composites.get(1),
                 SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
     }
-    
+
     public static void setInstance(OSExplorerSashForm instance) {
         OSExplorerSashForm.instance = instance;
     }

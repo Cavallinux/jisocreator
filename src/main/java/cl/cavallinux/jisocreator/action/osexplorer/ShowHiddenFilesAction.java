@@ -7,16 +7,11 @@ import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 
 public class ShowHiddenFilesAction extends Action {
-    private static ShowHiddenFilesAction instance;
-
-    static {
-        instance = new ShowHiddenFilesAction();
-    }
-
-    private ShowHiddenFilesAction() {
+    public ShowHiddenFilesAction() {
         super("Show hidden", IAction.AS_CHECK_BOX);
         setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("showhidden.svg"));
         setToolTipText("Show hidden files of the OS explorer");
@@ -48,13 +43,8 @@ public class ShowHiddenFilesAction extends Action {
                     OSExplorerSashForm.getInstance().getOsDirectoriesTable().addFilter(new HideHiddenFilesFilter());
                     OSExplorerSashForm.getInstance().getOsDirectoriesTree().addFilter(new HideHiddenFilesFilter());
                 }
-                RefreshExplorerAction.getInstance().run();
-
+                OSExplorerActionsManager.REFRESHACTION.getAction().run();
             }
         });
-    }
-
-    public static ShowHiddenFilesAction getInstance() {
-        return instance;
     }
 }

@@ -27,13 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AddFileAction extends Action implements IRunnableWithProgress {
     private ITreeNode isoNode;
     private List<File> files;
-    private static AddFileAction instance;
-
-    static {
-        instance = new AddFileAction();
-    }
     
-    private AddFileAction() {
+    public AddFileAction() {
         super("Add", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
         setToolTipText("Add selected files to ISO9660 layout");
     }
@@ -72,10 +67,6 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
             IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
         }));
         monitor.done();
-    }
-
-    public static AddFileAction getInstance() {
-        return instance;
     }
 
     @SuppressWarnings("unchecked")

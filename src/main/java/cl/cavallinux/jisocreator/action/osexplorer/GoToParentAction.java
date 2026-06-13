@@ -10,13 +10,7 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 
 public class GoToParentAction extends Action {
-    private static GoToParentAction instance;
-
-    static {
-        instance = new GoToParentAction();
-    }
-
-    private GoToParentAction() {
+    public GoToParentAction() {
         super("Go to Parent File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("up.png"));
         setToolTipText("Go to parent file");
         setEnabled(false);
@@ -32,9 +26,5 @@ public class GoToParentAction extends Action {
         selection = new StructuredSelection(parent);
         OSExplorerSashForm.getInstance().getOsDirectoriesTree().setSelection(selection);
         setEnabled(OSExplorer.getInstance().isRoot(file.toPath()));
-    }
-
-    public static GoToParentAction getInstance() {
-        return instance;
     }
 }

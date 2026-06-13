@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,13 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 public class OpenAction extends Action implements IDoubleClickListener, ISelectionChangedListener {
     private File file;
-    private static OpenAction instance;
 
-    static {
-        instance = new OpenAction();
-    }
-
-    private OpenAction() {
+    public OpenAction() {
         super("Open", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
         setToolTipText("Open a file or folder");
         setEnabled(false);
@@ -65,18 +61,20 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
         setFileSelected(arg0);
         if (arg0.getSource() instanceof TreeViewer) {
             if (file == null) {
-                AddFileAction.getInstance().setEnabled(false);
-                GoToParentAction.getInstance().setEnabled(false);
+                OSExplorerActionsManager.ADDFILEACTION.getAction().setEnabled(false);
+                OSExplorerActionsManager.GOTOPARENTACTION.getAction().setEnabled(false);
                 OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(new File(
                         ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent()));
                 OSExplorerSashForm.getInstance().getOsTableText().setText(new File(
-                        ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent()).getAbsolutePath());
+                        ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent())
+                        .getAbsolutePath());
                 log.warn("SWT Library bug");
                 return;
             } else {
-                AddFileAction.getInstance().setEnabled(true);
+                OSExplorerActionsManager.ADDFILEACTION.getAction().setEnabled(true);
             }
-            GoToParentAction.getInstance().setEnabled(!OSExplorer.getInstance().isRoot(file.toPath()));
+            OSExplorerActionsManager.GOTOPARENTACTION.getAction()
+                    .setEnabled(!OSExplorer.getInstance().isRoot(file.toPath()));
             OSExplorerSashForm.getInstance().getOsTableText().setText(file.getAbsolutePath());
             OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(file);
             setEnabled(false);
@@ -96,9 +94,5 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
             selection = (IStructuredSelection) sce.getSelection();
         }
         this.setFile((File) selection.getFirstElement());
-    }
-
-    public static OpenAction getInstance() {
-        return instance;
     }
 }

@@ -17,9 +17,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
-import cl.cavallinux.jisocreator.action.main.NewIsoLayoutAction;
-import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
-import cl.cavallinux.jisocreator.action.main.SaveAsDropDownMenuAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
@@ -76,7 +73,7 @@ public class MainWindow extends ApplicationWindow {
         IsoExplorerSashForm.setInstance(new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL));
         OSExplorerSashForm.setInstance(new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL));
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
-        NewIsoLayoutAction.getInstance().run();
+        ActionsManager.NEWISOLAYOUTACTION.getAction().run();
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         return composite;
     }
@@ -99,8 +96,8 @@ public class MainWindow extends ApplicationWindow {
         saveAsMenu.add(ActionsManager.SAVEASXMLACTION.getAction());
         saveAsMenu.add(ActionsManager.SAVEASISOACTION.getAction());
 
-        fileMenu.add(NewIsoLayoutAction.getInstance());
-        fileMenu.add(OpenIsoLayoutAction.getInstance());
+        fileMenu.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
+        fileMenu.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
         fileMenu.add(saveAsMenu);
         fileMenu.add(new Separator());
         fileMenu.add(ActionsManager.EXITACTION.getAction());
@@ -115,10 +112,11 @@ public class MainWindow extends ApplicationWindow {
     protected ToolBarManager createToolBarManager(int style) {
         log.info("creating tool bar manager");
         ToolBarManager tool = new ToolBarManager(style);
-        tool.add(NewIsoLayoutAction.getInstance());
-        tool.add(OpenIsoLayoutAction.getInstance());
+        tool.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
+        tool.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
 
-        ActionContributionItem contrib = new ActionContributionItem(SaveAsDropDownMenuAction.getInstance());
+        ActionContributionItem contrib = new ActionContributionItem(
+                ActionsManager.SAVEASDROPDOWNMENUACTION.getAction());
         contrib.setMode(ActionContributionItem.MODE_FORCE_TEXT);
         tool.add(contrib);
         tool.add(new Separator());

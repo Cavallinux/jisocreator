@@ -24,11 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress {
     private Object object;
     private String path;
-    private static OpenIsoLayoutAction instance;
-    
-    static {
-        instance = new OpenIsoLayoutAction();
-    }
 
     public OpenIsoLayoutAction() {
         super("Open layout");
@@ -71,10 +66,6 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
         } finally {
             monitor.done();
         }
-    }
-
-    public static OpenIsoLayoutAction getInstance() {
-        return instance;
     }
 
     private void executeOpenFile() {

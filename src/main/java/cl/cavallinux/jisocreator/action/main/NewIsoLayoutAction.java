@@ -7,12 +7,6 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 
 public class NewIsoLayoutAction extends Action {
-    private static NewIsoLayoutAction instance;
-
-    static {
-        instance = new NewIsoLayoutAction();
-    }
-
     public NewIsoLayoutAction() {
         super("New Layout", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("new.png"));
         setToolTipText("Create new iso layout");
@@ -23,9 +17,5 @@ public class NewIsoLayoutAction extends Action {
         IsoFileSystem iso = new IsoFileSystem();
         IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(iso);
         IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().setInput(iso.getRoot());
-    }
-
-    public static NewIsoLayoutAction getInstance() {
-        return instance;
     }
 }

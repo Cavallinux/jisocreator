@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
 import cl.cavallinux.jisocreator.action.decl.ActionMenuCreator;
+import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public class SaveAsDropDownMenuAction extends ActionMenuCreator {
@@ -22,14 +23,14 @@ public class SaveAsDropDownMenuAction extends ActionMenuCreator {
 
     @Override
     public void run() {
-        SaveAsIsoAction.getInstance().run();
+        ActionsManager.SAVEASISOACTION.getAction().run();
     }
 
     @Override
     public Menu getMenu(Control parent) {
         MenuManager menu = new MenuManager();
-        menu.add(SaveAsXMLAction.getInstance());
-        menu.add(SaveAsIsoAction.getInstance());
+        menu.add(ActionsManager.SAVEASXMLACTION.getAction());
+        menu.add(ActionsManager.SAVEASISOACTION.getAction());
         return menu.createContextMenu(parent);
     }
 

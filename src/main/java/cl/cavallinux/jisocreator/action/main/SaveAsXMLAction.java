@@ -21,12 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     private String path;
     private IsoFileSystem iso;
-    private static SaveAsXMLAction instance;
-    static {
-        instance = new SaveAsXMLAction();
-    }
 
-    private SaveAsXMLAction() {
+    public SaveAsXMLAction() {
         super("XML Layout", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png"));
         setToolTipText("Save iso layout as xml file");
     }
@@ -60,10 +56,6 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
         } else {
             throw new InterruptedException("Saving file is not possible, try later.");
         }
-    }
-
-    public static SaveAsXMLAction getInstance() {
-        return instance;
     }
 
     private void setFile() {

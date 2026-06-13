@@ -23,13 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SaveAsIsoAction extends Action {
     private List<String> mkisofsCommand;
-    private static SaveAsIsoAction instance;
 
-    static {
-        instance = new SaveAsIsoAction();
-    }
-
-    private SaveAsIsoAction() {
+    public SaveAsIsoAction() {
         super("ISO9660 File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
         setToolTipText("Save the actual layout into a ISO9660 file");
     }
@@ -63,11 +58,7 @@ public class SaveAsIsoAction extends Action {
     private IsoFileSystem obtainIsoFileSystem() {
         return (IsoFileSystem) IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput();
     }
-
-    public static SaveAsIsoAction getInstance() {
-        return instance;
-    }
-
+    
     private void deleteIsoFileIfExists(String path) {
         if (new File(path).exists()) {
             new File(path).delete();

@@ -6,6 +6,8 @@ import cl.cavallinux.jisocreator.action.main.AboutAction;
 import cl.cavallinux.jisocreator.action.main.ExitApplicationAction;
 import cl.cavallinux.jisocreator.action.main.MainAction;
 import cl.cavallinux.jisocreator.action.main.PreferencesAction;
+import cl.cavallinux.jisocreator.action.main.SaveAsIsoAction;
+import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,7 +15,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ActionsManager {
     MAINACTION(new MainAction()), EXITACTION(new ExitApplicationAction()), ABOUTACTION(new AboutAction()),
-    PREFERENCESACTION(new PreferencesAction());
+    PREFERENCESACTION(new PreferencesAction()), SAVEASXMLACTION(new SaveAsXMLAction()),
+    SAVEASISOACTION(new SaveAsIsoAction());
 
     private Action action;
 }

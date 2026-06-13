@@ -20,8 +20,6 @@ import org.eclipse.swt.widgets.Shell;
 import cl.cavallinux.jisocreator.action.main.NewIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsDropDownMenuAction;
-import cl.cavallinux.jisocreator.action.main.SaveAsIsoAction;
-import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
@@ -98,8 +96,8 @@ public class MainWindow extends ApplicationWindow {
 
         MenuManager saveAsMenu = new MenuManager("&Save as",
                 ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("saveas.png"), "saveAs");
-        saveAsMenu.add(SaveAsXMLAction.getInstance());
-        saveAsMenu.add(SaveAsIsoAction.getInstance());
+        saveAsMenu.add(ActionsManager.SAVEASXMLACTION.getAction());
+        saveAsMenu.add(ActionsManager.SAVEASISOACTION.getAction());
 
         fileMenu.add(NewIsoLayoutAction.getInstance());
         fileMenu.add(OpenIsoLayoutAction.getInstance());

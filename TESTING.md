@@ -42,7 +42,12 @@ Tests the OSExplorer singleton class which manages file system operations:
 - **testGetExtensionForFile**: Validates file extension with dot notation
 - **testGetExtensionForFileWithoutExtension**: Tests empty extension for files without extension
 - **testSetAndGetRoots**: Verifies root directory setter and getter
-- **testGetInstance**: Confirms singleton pattern implementation
+- **testGetInstance**: Confirms singleton pattern implementation via `OSAndIsoExplorerManager`
+
+#### v0.1.2 Updates
+- **Refactored Singleton Access**: Tests now access `OSExplorer` through the centralized `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` instead of direct `OSExplorer.getInstance()` calls
+- **Improved Manager Pattern**: Demonstrates proper usage of the new centralized singleton manager pattern
+- **Singleton Verification**: The `testGetInstance()` method now validates that instances retrieved through the manager are properly singleton-managed
 
 ### 2. IOUtilsPathTest (5 tests)
 **Location**: `src/test/java/cl/cavallinux/jisocreator/util/IOUtilsPathTest.java`
@@ -142,10 +147,18 @@ class MyClassTest {
 }
 ```
 
-## Current Test Statistics
+## Current Test Statistics (v0.1.2)
 - **Total Tests**: 18
 - **Test Classes**: 2
 - **All Tests Passing**: ✓
+
+### Test Statistics Summary
+```
+OSExplorerTest.java:      13 tests
+IOUtilsPathTest.java:      5 tests
+─────────────────────────────────
+Total:                    18 tests
+```
 
 ## Best Practices
 
@@ -162,11 +175,39 @@ Some classes depend on SWT (Standard Widget Toolkit) which requires an active Di
 - Model and utility classes are prioritized
 - Future integration with SWT testing frameworks can be added if needed
 
+## Version 0.1.2 Testing Updates
+
+### Architectural Changes in Tests
+As part of the v0.1.2 refactoring, the following testing improvements were made:
+
+1. **Centralized Singleton Manager Access**
+   - Tests now use the `OSAndIsoExplorerManager` enum to access singleton instances
+   - This ensures tests follow the same architectural pattern as the application code
+   - Better encapsulation and centralized management of singleton lifecycle
+
+2. **Manager Pattern Integration**
+   - All test setup now uses the centralized managers (`OSAndIsoExplorerManager`)
+   - Provides a single point of access for test fixtures
+   - Improves maintainability and consistency with application architecture
+
+### Example of Updated Test Pattern
+```java
+@BeforeEach
+void setUp() {
+    // Previous approach (deprecated in v0.1.2):
+    // osExplorer = OSExplorer.getInstance();
+    
+    // New approach (v0.1.2+):
+    osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+}
+```
+
 ## Future Testing Enhancements
 
 1. Add integration tests for ISO file operations
 2. Add API tests for file system operations
-3. Add tests for action classes
+3. Add tests for action classes (utilizing centralized `ActionsManager`)
 4. Add tests for provider implementations
-5. Consider adding code coverage reporting with JaCoCo
-6. Add performance benchmarks for large file operations
+5. Add tests for new manager components (`GUIManager`, `ImageRegister`)
+6. Consider adding code coverage reporting with JaCoCo
+7. Add performance benchmarks for large file operations

@@ -153,14 +153,14 @@ This command uses the exec-maven-plugin configured in pom.xml and includes:
 
 ### From Command Line (after packaging)
 ```bash
-java --enable-native-access=ALL-UNNAMED -jar target/jisocreator-0.0.3.jar
+java --enable-native-access=ALL-UNNAMED -jar target/jisocreator-0.1.2.jar
 ```
 
 ### With Debug Mode
 ```bash
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
      --enable-native-access=ALL-UNNAMED \
-     -jar target/jisocreator-0.0.3.jar
+     -jar target/jisocreator-0.1.2.jar
 ```
 
 ## Project Structure
@@ -169,8 +169,30 @@ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
 jisocreator/
 ├── src/main/java/cl/cavallinux/jisocreator/
 │   ├── action/           # Action handlers and commands
+│   │   ├── decl/         # Action declarations
+│   │   ├── main/         # Main application actions
+│   │   ├── isoexplorer/  # ISO explorer specific actions
+│   │   ├── osexplorer/   # OS explorer specific actions
+│   │   └── jobs/         # Background job threads
 │   ├── gui/              # GUI components and windows
+│   │   ├── decl/         # GUI declarations
+│   │   ├── dialog/       # Dialog components
+│   │   ├── listeners/    # Event listeners
+│   │   ├── preference/   # Preference dialogs
+│   │   ├── sashfom/      # Sash form components
+│   │   └── window/       # Main window components
+│   ├── instances/        # Singleton managers
+│   │   ├── ActionsManager.java       # Centralized action management
+│   │   ├── GUIManager.java           # GUI component management
+│   │   ├── ImageRegister.java        # Image resource registry
+│   │   ├── IOManager.java            # I/O operations management
+│   │   └── ...
 │   ├── model/            # Data models and providers
+│   │   ├── comparators/  # Custom comparators
+│   │   ├── filters/      # File filters
+│   │   ├── isoexplorer/  # ISO explorer models
+│   │   ├── osexplorer/   # OS explorer models
+│   │   └── providers/    # Data providers
 │   └── util/             # Utility classes
 ├── src/main/resources/   # Configuration and resources
 │   └── log4j2.xml       # Logging configuration
@@ -188,7 +210,26 @@ jisocreator/
 
 ## Version
 
-Current version: **0.1.1**
+Current version: **0.1.2-SNAPSHOT**
+
+### Version 0.1.2 Changes
+
+This version introduces significant architectural refactoring focused on improving code maintainability and following better design patterns:
+
+#### Key Refactorings
+- **Centralized Actions Management**: Refactored all action classes to use a centralized `ActionsManager` enum that implements the singleton pattern for better control and initialization
+- **Singleton Pattern Implementation**: Improved singleton pattern implementation for utility classes:
+  - `ImageUtils` now uses enum-based singleton for SVG and image management
+  - `IOUtils` uses enum-based singleton for file I/O operations
+- **Enhanced GUI Management**: Introduced `GUIManager` enum to centralize GUI component management
+- **Main Window Refactoring**: Optimized main window instantiation and monitor detection logic for reliable multi-monitor support
+
+#### Benefits
+- Cleaner dependency management through centralized manager classes
+- Improved thread safety with enum-based singletons
+- Better separation of concerns across action handlers
+- Enhanced code maintainability and testability
+- Simplified initialization and access of shared resources
 
 ## License
 

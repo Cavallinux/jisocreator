@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +42,9 @@ public class ToggleHiddenFilesOSExplorerThread extends Thread {
                             .removeFilter(filter));
         } else {
             GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable()
-                    .addFilter(new HideHiddenFilesFilter());
+                    .addFilter(JFaceResourcesManager.OSEXPLORER_INSTANCE.getToggleHiddenFilesFilter());
             GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree()
-                    .addFilter(new HideHiddenFilesFilter());
+                    .addFilter(JFaceResourcesManager.OSEXPLORER_INSTANCE.getToggleHiddenFilesFilter());
         }
     }
 }

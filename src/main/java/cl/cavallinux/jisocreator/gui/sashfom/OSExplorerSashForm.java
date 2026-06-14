@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -64,9 +63,9 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addListeners() {
         log.info("Adding OSExplorerSashForm listeners");
-        Action openAction = OSExplorerActionsManager.OPENFILEACTION.getAction();
-        IDoubleClickListener iDoubleClickListener = (IDoubleClickListener) openAction;
-        ISelectionChangedListener iSelectionChangedListener = (ISelectionChangedListener) openAction;
+        JFaceResourcesManager osexplorerInstance = JFaceResourcesManager.OSEXPLORER_INSTANCE;
+        IDoubleClickListener iDoubleClickListener = osexplorerInstance.getDoubleClickListener();
+        ISelectionChangedListener iSelectionChangedListener = osexplorerInstance.getSelectionChangedListener();
         osDirectoriesTree.addDoubleClickListener(iDoubleClickListener);
         osDirectoriesTable.addDoubleClickListener(iDoubleClickListener);
 

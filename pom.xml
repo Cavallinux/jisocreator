@@ -121,6 +121,8 @@
 				<configuration>
 					<executable>java</executable>
 					<arguments>
+						<argument>--add-opens</argument>
+						<argument>java.base/java.util=ALL-UNNAMED</argument>
 						<argument>${maven.exec.plugin.classpath.config}</argument>
 						<classpath />
 						<argument>${debug.jvm.args}</argument>

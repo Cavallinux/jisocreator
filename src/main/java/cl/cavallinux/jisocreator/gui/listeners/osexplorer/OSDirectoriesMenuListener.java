@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.gui.listeners;
+package cl.cavallinux.jisocreator.gui.listeners.osexplorer;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;

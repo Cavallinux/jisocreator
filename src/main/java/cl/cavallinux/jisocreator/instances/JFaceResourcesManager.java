@@ -1,12 +1,16 @@
 package cl.cavallinux.jisocreator.instances;
 
 import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 
-import cl.cavallinux.jisocreator.gui.listeners.ISODirectoriesMenuListener;
-import cl.cavallinux.jisocreator.gui.listeners.OSDirectoriesMenuListener;
+import cl.cavallinux.jisocreator.gui.listeners.isoexplorer.ISODirectoriesMenuListener;
+import cl.cavallinux.jisocreator.gui.listeners.osexplorer.OSDirectoriesMenuListener;
+import cl.cavallinux.jisocreator.gui.listeners.osexplorer.OSExplorerSashFormDoubleClickListener;
+import cl.cavallinux.jisocreator.gui.listeners.osexplorer.OSExplorerSashFormSelectionChangedEvent;
 import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
@@ -31,12 +35,13 @@ public enum JFaceResourcesManager {
             new OSTreeLabelProvider(), new OSTreeContentProvider(), new OsTableProvider(),
             new OSDirectoriesMenuListener(),
             SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
-            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI),
+            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
+            new OSExplorerSashFormDoubleClickListener(), new OSExplorerSashFormSelectionChangedEvent()),
     ISOEXPLORER_INSTANCE(null, new ShowOnlyIsoDirectoriesFilter(), new ITreeNodeDirectoriesFirstComparator(),
             new IsoTreeLabelProvider(), new IsoTreeContentProvider(), new IsoTableProvider(),
             new ISODirectoriesMenuListener(),
             SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
-            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI, null, null);
 
     private ViewerFilter toggleHiddenFilesFilter;
     private ViewerFilter showOnlyDirectoriesFilter;
@@ -47,4 +52,6 @@ public enum JFaceResourcesManager {
     private IMenuListener directoriesMenuListener;
     private int treeSWTOptions;
     private int tableSWTOptions;
+    private IDoubleClickListener doubleClickListener;
+    private ISelectionChangedListener selectionChangedListener;
 }

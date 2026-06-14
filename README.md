@@ -275,7 +275,7 @@ This version introduces significant architectural refactoring focused on improvi
 - **18 Action Classes**: All action classes now centrally managed through `ActionsManager`, `IsoExplorerActionsManager`, and `OSExplorerActionsManager`
 - **8 GUI Components**: Updated to use centralized managers and improved patterns:
   - **IsoExplorerSashForm**: Uses `IsoExplorerActionsManager` for toolbar actions and listeners
-  - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions and `OSAndIsoExplorerManager` for explorer access
+  - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions with dynamic action loading via `Arrays.stream()`, includes private `fillToolbarAndCoolbars()` method, and provides `getTableSelection()`/`getTreeSelection()` helper methods
   - **MainWindow**: Uses `ActionsManager` for menu and toolbar management with enhanced multi-monitor support
 - **2 Utility Classes**: `ImageUtils` and `IOUtils` refactored to use enum singleton pattern
 - **1 Test Suite**: Updated to verify singleton management patterns

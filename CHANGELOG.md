@@ -104,6 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **OSExplorerSashForm Manager Integration**:
 - Uses `OSExplorerActionsManager` singleton enum for toolbar actions:
+  - Dynamically adds all actions using `Arrays.stream(OSExplorerActionsManager.values()).forEach()`
   - `OSExplorerActionsManager.OPENFILEACTION.getAction()` - Open files
   - `OSExplorerActionsManager.GOTOPARENTACTION.getAction()` - Navigate to parent
   - `OSExplorerActionsManager.REFRESHACTION.getAction()` - Refresh explorer
@@ -111,6 +112,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `OSExplorerActionsManager.SHOWHIDDENFILES.getAction()` - Toggle hidden files
 - Uses `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` for model initialization
 - Actions serve dual purpose as listeners and toolbar contributions
+- Private `fillToolbarAndCoolbars()` method for cleaner toolbar/coolbar management
+- Selection helper methods: `getTableSelection()` and `getTreeSelection()` returning `IStructuredSelection`
 
 **MainWindow Manager Integration**:
 - Uses `ActionsManager` singleton enum for all application actions

@@ -69,7 +69,10 @@ public interface ICompositeCreator {
      * </p>
      */
     void addListeners();
+    
+    default void applyConstraints() {
 
+    }
     /**
      * Fills the given table with predefined columns and tooltips.
      * <p>
@@ -109,15 +112,15 @@ public interface ICompositeCreator {
 
     default void addJFaceResourcesToControls(JFaceResourcesManager resourceManager, TableViewer table,
             TreeViewer tree) {
-        table.setContentProvider(resourceManager.getOsTableProviderAdapter());
-        table.setLabelProvider(resourceManager.getOsTableProviderAdapter());
+        table.setContentProvider(resourceManager.getTableProviderAdapter());
+        table.setLabelProvider(resourceManager.getTableProviderAdapter());
         table.addFilter(resourceManager.getToggleHiddenFilesFilter());
-        table.setComparator(resourceManager.getOsDirectoriesComparator());
+        table.setComparator(resourceManager.getDirectoriesComparator());
 
-        tree.setContentProvider(resourceManager.getOsTreeContentProvider());
-        tree.setLabelProvider(resourceManager.getOsTreeLabelProvider());
+        tree.setContentProvider(resourceManager.getTreeContentProvider());
+        tree.setLabelProvider(resourceManager.getTreeLabelProvider());
         tree.addFilter(resourceManager.getShowOnlyDirectoriesFilter());
         tree.addFilter(resourceManager.getToggleHiddenFilesFilter());
-        tree.setComparator(resourceManager.getOsDirectoriesComparator());
+        tree.setComparator(resourceManager.getDirectoriesComparator());
     }
 }

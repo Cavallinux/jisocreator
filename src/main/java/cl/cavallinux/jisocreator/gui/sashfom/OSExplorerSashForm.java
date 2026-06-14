@@ -47,6 +47,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         createComponents();
         addFeatures();
         addListeners();
+        applyConstraints();
     }
 
     @Override
@@ -75,19 +76,9 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         coolItem.setControl(osTableText);
 
         fillTableColumnValues(osDirectoriesTable.getTable());
-        addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.INSTANCE.getOsDirectoriesMenuListener());
-        addJFaceResourcesToControls(JFaceResourcesManager.INSTANCE, osDirectoriesTable, osDirectoriesTree);
+        addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.OSEXPLORER_INSTANCE.getDirectoriesMenuListener());
+        addJFaceResourcesToControls(JFaceResourcesManager.OSEXPLORER_INSTANCE, osDirectoriesTable, osDirectoriesTree);
         osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer());
-
-        GridDataFactory.defaultsFor(osTreeCLabel).grab(true, false).applyTo(osTreeCLabel);
-        GridDataFactory.defaultsFor(osDirectoriesTree.getControl()).grab(true, true)
-                .applyTo(osDirectoriesTree.getControl());
-        GridLayoutFactory.fillDefaults().generateLayout(composites.get(0));
-
-        GridDataFactory.defaultsFor(osTableCoolBar).grab(true, false).applyTo(osTableCoolBar);
-        GridDataFactory.defaultsFor(osDirectoriesTable.getControl()).grab(true, true)
-                .applyTo(osDirectoriesTable.getControl());
-        GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
     }
 
     @Override
@@ -111,10 +102,25 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         composites.add(new Composite(this, SWT.NONE));
 
         osTreeCLabel = new CLabel(composites.get(0), SWT.NONE);
-        osDirectoriesTree = new TreeViewer(composites.get(0), JFaceResourcesManager.INSTANCE.getTreeSWTOptions());
+        osDirectoriesTree = new TreeViewer(composites.get(0),
+                JFaceResourcesManager.OSEXPLORER_INSTANCE.getTreeSWTOptions());
 
         osTableCoolBar = new CoolBar(composites.get(1), SWT.WRAP | SWT.FLAT);
-        osDirectoriesTable = new TableViewer(composites.get(1), JFaceResourcesManager.INSTANCE.getTableSWTOptions());
+        osDirectoriesTable = new TableViewer(composites.get(1),
+                JFaceResourcesManager.OSEXPLORER_INSTANCE.getTableSWTOptions());
+    }
+
+    @Override
+    public void applyConstraints() {
+        GridDataFactory.defaultsFor(osDirectoriesTree.getControl()).grab(true, true)
+                .applyTo(osDirectoriesTree.getControl());
+        GridLayoutFactory.fillDefaults().generateLayout(composites.get(0));
+
+        GridDataFactory.defaultsFor(osTableCoolBar).grab(true, false).applyTo(osTableCoolBar);
+        GridDataFactory.defaultsFor(osDirectoriesTable.getControl()).grab(true, true)
+                .applyTo(osDirectoriesTable.getControl());
+        GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
+
     }
 
     public IStructuredSelection getTableSelection() {

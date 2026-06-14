@@ -1,13 +1,10 @@
 package cl.cavallinux.jisocreator.gui.sashfom;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.CoolBarManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -19,22 +16,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
-import cl.cavallinux.jisocreator.gui.listeners.ISODirectoriesMenuListener;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
-import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
-import cl.cavallinux.jisocreator.model.filters.isoexplorer.ShowOnlyIsoDirectoriesFilter;
+import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTableProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +46,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         createComponents();
         addFeatures();
         addListeners();
+        applyConstraints();
     }
 
     @Override
@@ -79,46 +70,10 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         isoTableText.pack();
         coolItem.setSize(isoTableText.getSize());
         coolItem.setControl(isoTableText);
-        
-        Map<String, String> columnTooltips = new LinkedHashMap<>();
-        columnTooltips.put("Name", "File name");
-        columnTooltips.put("Type", "File type");
-        columnTooltips.put("Size", "File size, in bytes");
-        columnTooltips.put("Last Modified Date", "File last modified date");
-        
-        columnTooltips.forEach((columnName, tooltip) -> {
-            TableColumn tvc = new TableColumn(isoDirectoriesTable.getTable(), SWT.LEFT);
-            tvc.setText(columnName);
-            tvc.setToolTipText(tooltip);
-            tvc.setWidth(200);
-            tvc.setMoveable(true);
-            tvc.setResizable(true);
-        });
-
-        isoDirectoriesTable.getTable().setHeaderVisible(true);
-        isoDirectoriesTree.setContentProvider(new IsoTreeContentProvider());
-        isoDirectoriesTree.setLabelProvider(new IsoTreeLabelProvider());
-        isoDirectoriesTree.addFilter(new ShowOnlyIsoDirectoriesFilter());
-        isoDirectoriesTree.setComparator(new ITreeNodeDirectoriesFirstComparator());
-
-        MenuManager isoDirectoriesTableMenuManager = new MenuManager();
-        isoDirectoriesTableMenuManager.setRemoveAllWhenShown(true);
-        isoDirectoriesTableMenuManager.addMenuListener(new ISODirectoriesMenuListener());
-        Control isoDirectoriesTableControl = isoDirectoriesTable.getControl();
-        isoDirectoriesTableControl.setMenu(isoDirectoriesTableMenuManager.createContextMenu(isoDirectoriesTableControl));
-        isoDirectoriesTable.setContentProvider(new IsoTableProvider());
-        isoDirectoriesTable.setLabelProvider(new IsoTableProvider());
-        isoDirectoriesTable.setComparator(new ITreeNodeDirectoriesFirstComparator());
-
-        GridDataFactory.defaultsFor(isoTreeCLabel).grab(true, false).applyTo(isoTreeCLabel);
-        GridDataFactory.defaultsFor(isoDirectoriesTree.getControl()).grab(true, true)
-                .applyTo(isoDirectoriesTree.getControl());
-        GridLayoutFactory.fillDefaults().generateLayout(composites.get(0));
-
-        GridDataFactory.defaultsFor(isoTableCoolBar).grab(true, false).applyTo(isoTableCoolBar);
-        GridDataFactory.defaultsFor(isoDirectoriesTable.getControl()).grab(true, true)
-                .applyTo(isoDirectoriesTable.getControl());
-        GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
+        fillTableColumnValues(isoDirectoriesTable.getTable());
+        addPopMenuToTable(isoDirectoriesTable, JFaceResourcesManager.ISOEXPLORER_INSTANCE.getDirectoriesMenuListener());
+        addJFaceResourcesToControls(JFaceResourcesManager.ISOEXPLORER_INSTANCE, isoDirectoriesTable,
+                isoDirectoriesTree);
     }
 
     @Override
@@ -143,20 +98,45 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
 
         isoTreeCLabel = new CLabel(composites.get(0), SWT.NONE);
         isoDirectoriesTree = new TreeViewer(composites.get(0),
-                SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+                JFaceResourcesManager.ISOEXPLORER_INSTANCE.getTreeSWTOptions());
 
         isoTableCoolBar = new CoolBar(composites.get(1), SWT.WRAP | SWT.FLAT);
         isoDirectoriesTable = new TableViewer(composites.get(1),
-                SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+                JFaceResourcesManager.ISOEXPLORER_INSTANCE.getTableSWTOptions());
     }
-    
+
+    @Override
+    public void addJFaceResourcesToControls(JFaceResourcesManager resourceManager, TableViewer table, TreeViewer tree) {
+        tree.setContentProvider(resourceManager.getTreeContentProvider());
+        tree.setLabelProvider(resourceManager.getTreeLabelProvider());
+        tree.addFilter(resourceManager.getShowOnlyDirectoriesFilter());
+        tree.setComparator(resourceManager.getDirectoriesComparator());
+
+        table.setContentProvider(resourceManager.getTableProviderAdapter());
+        table.setLabelProvider(resourceManager.getTableProviderAdapter());
+        table.setComparator(resourceManager.getDirectoriesComparator());
+    }
+
+    @Override
+    public void applyConstraints() {
+        GridDataFactory.defaultsFor(isoTreeCLabel).grab(true, false).applyTo(isoTreeCLabel);
+        GridDataFactory.defaultsFor(isoDirectoriesTree.getControl()).grab(true, true)
+                .applyTo(isoDirectoriesTree.getControl());
+        GridLayoutFactory.fillDefaults().generateLayout(composites.get(0));
+
+        GridDataFactory.defaultsFor(isoTableCoolBar).grab(true, false).applyTo(isoTableCoolBar);
+        GridDataFactory.defaultsFor(isoDirectoriesTable.getControl()).grab(true, true)
+                .applyTo(isoDirectoriesTable.getControl());
+        GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
+    }
+
     public void refresh(ITreeNode node) {
         TreeViewer isoTreeInstance = getIsoDirectoriesTree();
         TableViewer isoTableInstance = getIsoDirectoriesTable();
         isoTreeInstance.setSelection(isoTableInstance.getSelection());
         isoTreeInstance.expandToLevel(node, 1);
     }
-    
+
     public void refresh() {
         getIsoDirectoriesTree().refresh();
         getIsoDirectoriesTable().refresh();

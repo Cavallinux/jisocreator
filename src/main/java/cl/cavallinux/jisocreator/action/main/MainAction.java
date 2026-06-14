@@ -1,7 +1,6 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
@@ -11,9 +10,6 @@ import org.eclipse.jface.action.Action;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.util.JISOCreatorCommandLineParser;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,18 +24,14 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.2
  */
 @Slf4j
-@NoArgsConstructor
-@Getter
-@Setter
 public class MainAction extends Action {
     private static final String APP_NAME = MainAction.class.getPackage().getSpecificationTitle();
     private static final String APP_VERSION = MainAction.class.getPackage().getImplementationVersion();
     private static final String PROGRAM_NAME = "jisocreator";
-    private List<String> appArguments;
-
+    
     @Override
     public void run() {
-        log.info("Ejecutando aplicación en modo GUI");
+        log.info("Executing app in GUI mode");
         GUIManager.INSTANCE.getMainWindow().setBlockOnOpen(true);
         GUIManager.INSTANCE.getMainWindow().open();
     }
@@ -53,6 +45,8 @@ public class MainAction extends Action {
         try {
             JISOCreatorCommandLineParser parser = buildParser();
             CommandLine cmd = parser.parse(args);
+            boolean commandLineMode = false;
+            MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
 
             if (cmd.hasOption("v")) {
                 parser.printVersion();
@@ -65,13 +59,18 @@ public class MainAction extends Action {
             }
 
             if (cmd.hasOption("i") || cmd.hasOption("o")) {
-                parser.handleCommandLineMode(cmd);
-                System.exit(0);
+                commandLineMode = parser.handleCommandLineMode(cmd);
             }
-
-            MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
-            mainAction.setAppArguments(Arrays.asList(args));
-            mainAction.run();
+            
+            if (commandLineMode) {
+                SaveAsIsoAction saveAsIsoAction = (SaveAsIsoAction) ActionsManager.SAVEASISOACTION.getAction();
+                saveAsIsoAction.setAppArguments(Arrays.asList(args));
+                saveAsIsoAction.setCommandLineMode(commandLineMode);
+                saveAsIsoAction.run();
+            } else {
+                mainAction.run();
+            }
+           
         } catch (ParseException | IllegalArgumentException e) {
             System.err.format("[ERROR] Error parsing app arguments: %s\n" + e.getMessage());
             System.err.format("Use -h or --help to view available options.\n");

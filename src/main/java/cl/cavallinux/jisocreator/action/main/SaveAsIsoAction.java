@@ -17,35 +17,37 @@ import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.util.IOUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Getter
+@Setter
 public class SaveAsIsoAction extends Action {
     private List<String> mkisofsCommand;
+    private List<String> appArguments;
+    private boolean commandLineMode;
 
     public SaveAsIsoAction() {
         super("ISO9660 File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
         setToolTipText("Save the actual layout into a ISO9660 file");
+        this.commandLineMode = false;
     }
 
     @Override
     public void run() {
         try {
-            FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.SAVE);
-            openXMLDialog.setText("Choose a iso file to save");
-            openXMLDialog.setOverwrite(true);
-            openXMLDialog.setFileName("iso.iso");
-            openXMLDialog.setFilterExtensions(new String[] { "*.iso" });
-            openXMLDialog.setFilterNames(new String[] { "ISO9660 CD-ROM Files" });
-            String path = openXMLDialog.open();
-            if (StringUtils.isNotBlank(path)) {
-                deleteIsoFileIfExists(path);
+            String isoFilePath = obtainIsoFilePath(commandLineMode);
+            if (StringUtils.isNotBlank(isoFilePath)) {
+                deleteIsoFileIfExists(isoFilePath);
                 IsoFileSystem root = obtainIsoFileSystem();
                 root.parse();
-                setMkisofsCommand(path, root.getPaths());
+                setMkisofsCommand(isoFilePath, root.getPaths());
                 ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
                 Process isoProcess = mkisofsProcessBuilder.start();
-                SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream());
+                SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream(),
+                        commandLineMode);
                 saveThread.start();
             }
         } catch (IOException e) {
@@ -54,7 +56,26 @@ public class SaveAsIsoAction extends Action {
     }
 
     private IsoFileSystem obtainIsoFileSystem() {
-        return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput();
+        if (commandLineMode) {
+            return (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(appArguments.get(1));
+        } else {
+            return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                    .getInput();
+        }
+    }
+
+    private String obtainIsoFilePath(boolean commandLineMode) {
+        if (commandLineMode) {
+            FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.SAVE);
+            openXMLDialog.setText("Choose a iso file to save");
+            openXMLDialog.setOverwrite(true);
+            openXMLDialog.setFileName("iso.iso");
+            openXMLDialog.setFilterExtensions(new String[] { "*.iso" });
+            openXMLDialog.setFilterNames(new String[] { "ISO9660 CD-ROM Files" });
+            return openXMLDialog.open();
+        } else {
+            return appArguments.get(3);
+        }
     }
 
     private void deleteIsoFileIfExists(String path) {

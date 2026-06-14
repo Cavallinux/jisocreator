@@ -73,7 +73,7 @@ public class JISOCreatorCommandLineParser {
      * @param cmd CommandLine parseado
      * @throws Exception si hay errores de validación
      */
-    public void handleCommandLineMode(CommandLine cmd) throws IllegalArgumentException {
+    public boolean handleCommandLineMode(CommandLine cmd) throws IllegalArgumentException {
         String inputPath = cmd.getOptionValue("i");
         String outputFile = cmd.getOptionValue("o");
         boolean debugMode = cmd.hasOption("d");
@@ -86,7 +86,7 @@ public class JISOCreatorCommandLineParser {
 
         // Si no hay entrada/salida, terminamos
         if (inputPath == null && outputFile == null) {
-            return;
+            return false;
         }
 
         // Validación 2: Validar que la ruta de entrada existe
@@ -134,5 +134,7 @@ public class JISOCreatorCommandLineParser {
 
         System.out.println("[INFO] Modo CLI listo para procesamiento");
         System.out.println("[TODO] Implementar lógica de creación de ISO");
+        
+        return true;
     }
 }

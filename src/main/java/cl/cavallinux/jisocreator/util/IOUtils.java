@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.Strings;
@@ -15,6 +16,9 @@ import org.eclipse.swt.SWT;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.NullPermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
@@ -81,7 +85,11 @@ public class IOUtils {
 
     private void loadXMLParser() {
         xStreamParser = new XStream(new DomDriver());
-
+        xStreamParser.addPermission(NoTypePermission.NONE);
+        xStreamParser.addPermission(NullPermission.NULL);
+        xStreamParser.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xStreamParser.allowTypesByWildcard(new String[] { "cl.cavallinux.jisocreator.model.isoexplorer.impl.**" });
+        
         xStreamParser.alias("iso9660", IsoFileSystem.class);
         xStreamParser.alias("entry", IsoTreeNode.class);
         xStreamParser.aliasAttribute(IsoFileSystem.class, "root", "RootEntry");

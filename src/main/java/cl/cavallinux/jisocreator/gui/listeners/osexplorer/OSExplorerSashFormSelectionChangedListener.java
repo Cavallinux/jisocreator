@@ -16,7 +16,7 @@ import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OSExplorerSashFormSelectionChangedEvent implements ISelectionChangedListener {
+public class OSExplorerSashFormSelectionChangedListener implements ISelectionChangedListener {
 
     @Override
     public void selectionChanged(SelectionChangedEvent event) {

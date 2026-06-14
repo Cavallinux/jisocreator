@@ -8,9 +8,11 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 
 import cl.cavallinux.jisocreator.gui.listeners.isoexplorer.ISODirectoriesMenuListener;
+import cl.cavallinux.jisocreator.gui.listeners.isoexplorer.ISOExplorerSashFormDoubleClickListener;
+import cl.cavallinux.jisocreator.gui.listeners.isoexplorer.ISOExplorerSashFormSelectionChangedListener;
 import cl.cavallinux.jisocreator.gui.listeners.osexplorer.OSDirectoriesMenuListener;
 import cl.cavallinux.jisocreator.gui.listeners.osexplorer.OSExplorerSashFormDoubleClickListener;
-import cl.cavallinux.jisocreator.gui.listeners.osexplorer.OSExplorerSashFormSelectionChangedEvent;
+import cl.cavallinux.jisocreator.gui.listeners.osexplorer.OSExplorerSashFormSelectionChangedListener;
 import cl.cavallinux.jisocreator.model.comparators.ITreeNodeDirectoriesFirstComparator;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
@@ -36,12 +38,13 @@ public enum JFaceResourcesManager {
             new OSDirectoriesMenuListener(),
             SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
             SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
-            new OSExplorerSashFormDoubleClickListener(), new OSExplorerSashFormSelectionChangedEvent()),
+            new OSExplorerSashFormDoubleClickListener(), new OSExplorerSashFormSelectionChangedListener()),
     ISOEXPLORER_INSTANCE(null, new ShowOnlyIsoDirectoriesFilter(), new ITreeNodeDirectoriesFirstComparator(),
             new IsoTreeLabelProvider(), new IsoTreeContentProvider(), new IsoTableProvider(),
             new ISODirectoriesMenuListener(),
             SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
-            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI, null, null);
+            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
+            new ISOExplorerSashFormDoubleClickListener(), new ISOExplorerSashFormSelectionChangedListener());
 
     private ViewerFilter toggleHiddenFilesFilter;
     private ViewerFilter showOnlyDirectoriesFilter;

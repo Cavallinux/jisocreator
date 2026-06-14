@@ -271,12 +271,14 @@ This version introduces significant architectural refactoring focused on improvi
    - Enum-based singleton for thread-safe image loading
    - Used by all GUI components for consistent image access
 
-**Refactored Components** (30+ files):
+**Refactored Components** (33+ files):
 - **18 Action Classes**: All action classes now centrally managed through `ActionsManager`, `IsoExplorerActionsManager`, and `OSExplorerActionsManager`
 - **8 GUI Components**: Updated to use centralized managers and improved patterns:
   - **IsoExplorerSashForm**: Uses `IsoExplorerActionsManager` for toolbar actions and listeners
   - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions with dynamic action loading via `Arrays.stream()`, includes private `fillToolbarAndCoolbars()` method, and provides `getTableSelection()`/`getTreeSelection()` helper methods
   - **MainWindow**: Uses `ActionsManager` for menu and toolbar management with enhanced multi-monitor support
+- **Event Listeners**: Refactored to integrate with centralized managers:
+  - **OSExplorerSashFormSelectionChangedEvent**: Implements `ISelectionChangedListener` with full manager integration for intelligent action state management based on file system navigation
 - **2 Utility Classes**: `ImageUtils` and `IOUtils` refactored to use enum singleton pattern
 - **1 Test Suite**: Updated to verify singleton management patterns
 
@@ -300,6 +302,26 @@ This version introduces significant architectural refactoring focused on improvi
 - **Separation of Concerns**: Clear separation between action handlers, GUI components, and utilities
 - **Code Consistency**: Unified approach to singleton pattern across the codebase
 - **Better Encapsulation**: Manager enums provide controlled access to singleton instances
+
+### Event Listener Integration with Managers
+
+The event listeners leverage centralized managers to provide intelligent, context-aware behavior:
+
+**OSExplorerSashFormSelectionChangedEvent**:
+- Implements `ISelectionChangedListener` for monitoring file navigation events
+- **Smart Action Management**:
+  - Uses `OSExplorerActionsManager` to enable/disable toolbar actions dynamically
+  - OPENFILEACTION: Enabled only when a file is selected in TableViewer
+  - ADDFILEACTION: Enabled when a valid directory is selected in TreeViewer
+  - GOTOPARENTACTION: Enabled only when current directory is not file system root
+- **Manager Integration**:
+  - `GUIManager`: Access to MainWindow and OSExplorer UI components to update path display and directory listings
+  - `OSAndIsoExplorerManager`: Check if current path is file system root
+  - `OSExplorerActionsManager`: Dynamic action state management
+- **Robust Event Handling**:
+  - Distinguishes between TreeViewer (directory navigation) and TableViewer (file selection) events
+  - Handles SWT library edge cases gracefully
+  - Comprehensive JSON logging for debugging selection flows
 
 ## License
 

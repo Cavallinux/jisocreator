@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -63,9 +62,9 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addListeners() {
         log.info("Adding IsoExplorerSashForm listeners");
-        Action openAction = IsoExplorerActionsManager.OPENISOENTRY.getAction();
-        IDoubleClickListener iDoubleClickListener = (IDoubleClickListener) openAction;
-        ISelectionChangedListener iSelectionChangedListener = (ISelectionChangedListener) openAction;
+        IDoubleClickListener iDoubleClickListener = JFaceResourcesManager.ISOEXPLORER_INSTANCE.getDoubleClickListener();
+        ISelectionChangedListener iSelectionChangedListener = JFaceResourcesManager.ISOEXPLORER_INSTANCE
+                .getSelectionChangedListener();
         isoDirectoriesTree.addDoubleClickListener(iDoubleClickListener);
         isoDirectoriesTable.addDoubleClickListener(iDoubleClickListener);
 
@@ -113,7 +112,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
                 .applyTo(isoDirectoriesTable.getControl());
         GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
     }
-    
+
     private void fillCoolbarAndToolbars() {
         isoTreeCLabel.setText("Iso explorer");
         isoTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));

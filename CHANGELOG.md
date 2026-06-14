@@ -70,6 +70,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved singleton lifecycle management
   - Better encapsulation of explorer instances
 
+- **Event Listeners Refactoring**:
+  - `OSExplorerSashFormSelectionChangedEvent` - Implements `ISelectionChangedListener` with full manager integration:
+    - Uses `OSExplorerActionsManager` to enable/disable actions based on selection state
+    - Uses `GUIManager` to access MainWindow and OSExplorer components
+    - Uses `OSAndIsoExplorerManager` to check if current file is root directory
+    - Handles both TreeViewer and TableViewer selection events
+    - Provides intelligent action state management based on file system navigation
+    - Logs selection events with JSON format for debugging
+
 #### Test Updates
 - **OSExplorerTest**: Updated to access `OSExplorer` through `OSAndIsoExplorerManager` instead of direct getInstance()
   - `testGetInstance()` now verifies singleton management through the centralized manager
@@ -121,6 +130,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toolbar management with actions and separator component
 - Multi-monitor support through `determinateActiveMonitor()` method
 
+**Event Listener Manager Integration**:
+- **OSExplorerSashFormSelectionChangedEvent**: Advanced listener implementation with full manager integration
+  - Listens to selection changes from both TreeViewer and TableViewer
+  - Uses `OSExplorerActionsManager` to dynamically enable/disable toolbar actions:
+    - OPENFILEACTION enabled only when TableViewer has selection
+    - ADDFILEACTION enabled when TreeViewer has valid directory selection
+    - GOTOPARENTACTION enabled only when not at file system root
+  - Uses `GUIManager.INSTANCE.getMainWindow()` to access and update UI components:
+    - Updates osTableText with current path
+    - Updates osDirectoriesTable with current directory's contents
+  - Uses `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` to check root directory status
+  - Provides comprehensive logging of selection events using ToStringBuilder with JSON style
+  - Handles SWT library edge cases gracefully
+
 #### Summary of Manager Enums
 
 **Action Classes Refactored**: 18 total
@@ -131,7 +154,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **GUI Components Updated**: 8 major components
 - MainWindow, IsoExplorerSashForm, OSExplorerSashForm
 - Dialogs: PreferencesDialog, AboutDialog, BaseProgressMonitorDialog
-- Event Listeners: ISODirectoriesMenuListener, OSDirectoriesMenuListener
+- Event Listeners: ISODirectoriesMenuListener, OSDirectoriesMenuListener, OSExplorerSashFormSelectionChangedEvent
 
 **Utility Improvements**:
 - ImageUtils refactored to enum singleton (ImageRegister)
@@ -144,9 +167,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Project Statistics (v0.1.2)
 - **Total Commits in this Release**: 15+
-- **Files Modified**: 32+
+- **Files Modified**: 33+
 - **Component Categories Changed**: 4 (Actions, GUI, Utilities, Tests)
 - **Manager Enums**: 4 (ActionsManager, IsoExplorerActionsManager, OSExplorerActionsManager, OSAndIsoExplorerManager)
+- **Event Listeners Updated**: 3 (ISODirectoriesMenuListener, OSDirectoriesMenuListener, OSExplorerSashFormSelectionChangedEvent)
 - **Test Classes Updated**: 1 (OSExplorerTest)
 - **Total Tests**: 18 (all passing)
 - **Code Quality**: Improved through centralized management patterns

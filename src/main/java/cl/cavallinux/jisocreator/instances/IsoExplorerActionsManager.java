@@ -12,8 +12,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum IsoExplorerActionsManager {
-    DELETEISOENTRY(new DeleteIsoEntryAction()), GOTOISOPARENT(new GoToIsoEntryParentAction()),
-    OPENISOENTRY(new OpenIsoEntryAction()), SHOWISOINFO(new ShowIsoInformationAction());
+    OPENISOENTRY(new OpenIsoEntryAction()), GOTOISOPARENT(new GoToIsoEntryParentAction()),
+    SHOWISOINFO(new ShowIsoInformationAction()), DELETEISOENTRY(new DeleteIsoEntryAction());
 
     private Action action;
 }

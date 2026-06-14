@@ -1,6 +1,7 @@
 package cl.cavallinux.jisocreator.gui.sashfom;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -54,27 +55,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     public void addFeatures() {
         log.info("Adding OSExplorerSashForm features");
         setWeights(25, 75);
-        osTreeCLabel.setText("File explorer");
-        osTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("drive.png"));
-
-        CoolBarManager coolbar = new CoolBarManager(osTableCoolBar);
-        ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);
-
-        toolbar.add(OSExplorerActionsManager.OPENFILEACTION.getAction());
-        toolbar.add(OSExplorerActionsManager.GOTOPARENTACTION.getAction());
-        toolbar.add(OSExplorerActionsManager.REFRESHACTION.getAction());
-        toolbar.add(OSExplorerActionsManager.ADDFILEACTION.getAction());
-        toolbar.add(OSExplorerActionsManager.SHOWHIDDENFILES.getAction());
-
-        coolbar.add(toolbar);
-        coolbar.update(true);
-
-        CoolItem coolItem = new CoolItem(osTableCoolBar, SWT.WRAP | SWT.FLAT);
-        osTableText = new Text(osTableCoolBar, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER);
-        osTableText.pack();
-        coolItem.setSize(osTableText.getSize());
-        coolItem.setControl(osTableText);
-
+        fillToolbarAndCoolbars();
         fillTableColumnValues(osDirectoriesTable.getTable());
         addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.OSEXPLORER_INSTANCE.getDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.OSEXPLORER_INSTANCE, osDirectoriesTable, osDirectoriesTree);
@@ -121,6 +102,27 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
                 .applyTo(osDirectoriesTable.getControl());
         GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
 
+    }
+
+    private void fillToolbarAndCoolbars() {
+        osTreeCLabel.setText("File explorer");
+        osTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("drive.png"));
+
+        CoolBarManager coolbar = new CoolBarManager(osTableCoolBar);
+        ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);
+
+        Arrays.stream(OSExplorerActionsManager.values()).forEach(value -> {
+            toolbar.add(value.getAction());
+        });
+
+        coolbar.add(toolbar);
+        coolbar.update(true);
+
+        CoolItem coolItem = new CoolItem(osTableCoolBar, SWT.WRAP | SWT.FLAT);
+        osTableText = new Text(osTableCoolBar, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER);
+        osTableText.pack();
+        coolItem.setSize(osTableText.getSize());
+        coolItem.setControl(osTableText);
     }
 
     public IStructuredSelection getTableSelection() {

@@ -255,15 +255,28 @@ This version introduces significant architectural refactoring focused on improvi
 
 **Centralized Singleton Managers**:
 - **ActionsManager**: Enum-based centralized management of all 18 application actions
-  - Provides clean, consistent access patterns across the application
-  - Ensures proper initialization and lifecycle management
-- **GUIManager**: Manages GUI component instances and lifecycle
+   - Provides clean, consistent access patterns across the application
+   - Ensures proper initialization and lifecycle management
+   - Integrated with MainWindow for menu and toolbar management
+- **IsoExplorerActionsManager**: Manages ISO explorer specific actions (4 actions)
+   - OPENISOENTRY, GOTOISOPARENT, SHOWISOINFO, DELETEISOENTRY
+   - Integrated with IsoExplorerSashForm toolbar and listeners
+- **OSExplorerActionsManager**: Manages OS explorer specific actions (5 actions)
+   - OPENFILEACTION, GOTOPARENTACTION, REFRESHACTION, ADDFILEACTION, SHOWHIDDENFILES
+   - Integrated with OSExplorerSashForm toolbar and listeners
 - **OSAndIsoExplorerManager**: Unified management of file system and ISO explorers
+   - Provides controlled access to OSExplorer and IsoExplorer instances
+   - Used by OSExplorerSashForm to initialize tree input
 - **ImageRegister**: Centralized image resource management
+   - Enum-based singleton for thread-safe image loading
+   - Used by all GUI components for consistent image access
 
 **Refactored Components** (30+ files):
-- **18 Action Classes**: All action classes now centrally managed through `ActionsManager`
-- **8 GUI Components**: Updated to use centralized managers and improved patterns
+- **18 Action Classes**: All action classes now centrally managed through `ActionsManager`, `IsoExplorerActionsManager`, and `OSExplorerActionsManager`
+- **8 GUI Components**: Updated to use centralized managers and improved patterns:
+  - **IsoExplorerSashForm**: Uses `IsoExplorerActionsManager` for toolbar actions and listeners
+  - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions and `OSAndIsoExplorerManager` for explorer access
+  - **MainWindow**: Uses `ActionsManager` for menu and toolbar management with enhanced multi-monitor support
 - **2 Utility Classes**: `ImageUtils` and `IOUtils` refactored to use enum singleton pattern
 - **1 Test Suite**: Updated to verify singleton management patterns
 

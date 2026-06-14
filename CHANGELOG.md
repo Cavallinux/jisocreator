@@ -45,17 +45,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `IOUtils` - Refactored to use enum-based singleton pattern
 
 - **GUI Components Refactoring**:
-  - `IsoExplorerSashForm` - Updated to work with centralized managers
-  - `OSExplorerSashForm` - Updated to work with centralized managers
-  - `MainWindow` - Complete refactoring:
-    - Removed internal static singleton pattern, now managed by architecture
-    - Enhanced multi-monitor support with `determinateActiveMonitor()` method
-    - Improved toolbar layout with reusable separator component
-    - Simplified menu and toolbar management through `ActionsManager`
-    - Better initialization and lifecycle management
-  - `PreferencesDialog` - Updated to use centralized managers
-  - `AboutDialog` - Updated to use centralized managers
-  - `BaseProgressMonitorDialog` - Updated to work with new architecture
+   - `IsoExplorerSashForm` - Complete refactoring:
+     - Now uses `IsoExplorerActionsManager` for centralized action access
+     - Toolbar actions added through manager pattern: OPENISOENTRY, GOTOISOPARENT, SHOWISOINFO, DELETEISOENTRY
+     - Listener management delegated through manager's actions
+     - Cleaner initialization without direct action instantiation
+   - `OSExplorerSashForm` - Complete refactoring:
+     - Now uses `OSExplorerActionsManager` for centralized action access
+     - Toolbar actions added through manager pattern: OPENFILEACTION, GOTOPARENTACTION, REFRESHACTION, ADDFILEACTION, SHOWHIDDENFILES
+     - OSExplorer access through `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()`
+     - Listener management delegated through manager's actions
+   - `MainWindow` - Complete refactoring:
+     - Removed internal static singleton pattern, now managed by architecture
+     - Enhanced multi-monitor support with `determinateActiveMonitor()` method
+     - Improved toolbar layout with reusable separator component
+     - Simplified menu and toolbar management through `ActionsManager`
+     - Better initialization and lifecycle management
+   - `PreferencesDialog` - Updated to use centralized managers
+   - `AboutDialog` - Updated to use centralized managers
+   - `BaseProgressMonitorDialog` - Updated to work with new architecture
 
 - **OS and ISO Explorer Instantiation**:
   - `OSExplorer` - Now accessed through `OSAndIsoExplorerManager`
@@ -83,13 +91,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Detailed Changes Summary
 
-#### Changes by Component Type
+#### Manager Integration in GUI Components
 
-**Manager Enums Added**:
-- `ActionsManager` - 18 action enums for centralized control
-- `GUIManager` - GUI component lifecycle management
-- `OSAndIsoExplorerManager` - Explorer instance management
-- `ImageRegister` - Image resource management
+**IsoExplorerSashForm Manager Integration**:
+- Uses `IsoExplorerActionsManager` singleton enum for toolbar actions:
+  - `IsoExplorerActionsManager.OPENISOENTRY.getAction()` - Open ISO entries
+  - `IsoExplorerActionsManager.GOTOISOPARENT.getAction()` - Navigate to parent
+  - `IsoExplorerActionsManager.SHOWISOINFO.getAction()` - Show ISO info
+  - `IsoExplorerActionsManager.DELETEISOENTRY.getAction()` - Delete ISO entries
+- Actions also serve as `IDoubleClickListener` and `ISelectionChangedListener`
+- Clean separation of concerns: UI layout and action management
+
+**OSExplorerSashForm Manager Integration**:
+- Uses `OSExplorerActionsManager` singleton enum for toolbar actions:
+  - `OSExplorerActionsManager.OPENFILEACTION.getAction()` - Open files
+  - `OSExplorerActionsManager.GOTOPARENTACTION.getAction()` - Navigate to parent
+  - `OSExplorerActionsManager.REFRESHACTION.getAction()` - Refresh explorer
+  - `OSExplorerActionsManager.ADDFILEACTION.getAction()` - Add files to ISO
+  - `OSExplorerActionsManager.SHOWHIDDENFILES.getAction()` - Toggle hidden files
+- Uses `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` for model initialization
+- Actions serve dual purpose as listeners and toolbar contributions
+
+**MainWindow Manager Integration**:
+- Uses `ActionsManager` singleton enum for all application actions
+- Menu management through: NEWISOLAYOUTACTION, OPENISOLAYOUTACTION, SAVEASXMLACTION, SAVEASISOACTION, SAVEAISDROPDOWNMENUACTION, EXITACTION, PREFERENCESACTION, ABOUTACTION
+- Toolbar management with actions and separator component
+- Multi-monitor support through `determinateActiveMonitor()` method
+
+#### Summary of Manager Enums
 
 **Action Classes Refactored**: 18 total
 - Main Actions: AboutAction, ExitApplicationAction, MainAction, NewIsoLayoutAction, OpenIsoLayoutAction, PreferencesAction, SaveAsDropDownMenuAction, SaveAsIsoAction, SaveAsXMLAction (9 classes)
@@ -111,13 +140,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Maintained 18 tests with 100% pass rate
 
 ### Project Statistics (v0.1.2)
-- **Total Commits in this Release**: 15
-- **Files Modified**: 30+
+- **Total Commits in this Release**: 15+
+- **Files Modified**: 32+
 - **Component Categories Changed**: 4 (Actions, GUI, Utilities, Tests)
+- **Manager Enums**: 4 (ActionsManager, IsoExplorerActionsManager, OSExplorerActionsManager, OSAndIsoExplorerManager)
 - **Test Classes Updated**: 1 (OSExplorerTest)
 - **Total Tests**: 18 (all passing)
 - **Code Quality**: Improved through centralized management patterns
-- **Lines of Code Refactored**: 1000+
+- **Lines of Code Refactored**: 1200+
 
 ## [0.1.1] - 2026-06-11
 

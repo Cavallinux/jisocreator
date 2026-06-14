@@ -66,6 +66,8 @@ public class SaveAsIsoAction extends Action {
 
     private String obtainIsoFilePath(boolean commandLineMode) {
         if (commandLineMode) {
+            return appArguments.get(3);
+        } else {
             FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.SAVE);
             openXMLDialog.setText("Choose a iso file to save");
             openXMLDialog.setOverwrite(true);
@@ -73,8 +75,6 @@ public class SaveAsIsoAction extends Action {
             openXMLDialog.setFilterExtensions(new String[] { "*.iso" });
             openXMLDialog.setFilterNames(new String[] { "ISO9660 CD-ROM Files" });
             return openXMLDialog.open();
-        } else {
-            return appArguments.get(3);
         }
     }
 

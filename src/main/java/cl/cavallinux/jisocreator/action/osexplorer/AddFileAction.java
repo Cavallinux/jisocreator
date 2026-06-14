@@ -71,8 +71,7 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
 
     @SuppressWarnings("unchecked")
     private void executeAddFiles(ITreeNode node) {
-        IStructuredSelection selection = (IStructuredSelection) OSExplorerSashForm.getInstance().getOsDirectoriesTable()
-                .getSelection();
+        IStructuredSelection selection = (IStructuredSelection) OSExplorerSashForm.getInstance().getTableSelection();
         files = selection.toList();
         isoNode = node;
     }

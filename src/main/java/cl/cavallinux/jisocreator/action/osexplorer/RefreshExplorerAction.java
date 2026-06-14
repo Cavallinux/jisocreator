@@ -4,7 +4,9 @@ import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class RefreshExplorerAction extends Action {
     public RefreshExplorerAction() {
         super("Refresh OS Explorer", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("refresh.png"));
@@ -13,7 +15,7 @@ public class RefreshExplorerAction extends Action {
 
     @Override
     public void run() {
-        OSExplorerSashForm.getInstance().getOsDirectoriesTable().refresh();
-        OSExplorerSashForm.getInstance().getOsDirectoriesTree().refresh();
+        log.info("Refreshing OS Explorer");
+        OSExplorerSashForm.getInstance().refresh();
     }
 }

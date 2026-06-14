@@ -37,7 +37,7 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
             OSAndIsoExplorerManager.INSTANCE.getOsExplorer().launch(file.toPath());
         } else {
             OSExplorerSashForm.getInstance().getOsDirectoriesTree()
-                    .setSelection(OSExplorerSashForm.getInstance().getOsDirectoriesTable().getSelection());
+                    .setSelection(OSExplorerSashForm.getInstance().getTreeSelection());
             OSExplorerSashForm.getInstance().getOsDirectoriesTree().expandToLevel(file, 1);
         }
     }

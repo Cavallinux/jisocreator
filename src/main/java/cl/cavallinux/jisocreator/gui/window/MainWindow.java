@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MainWindow extends ApplicationWindow {
     private IContributionItem separator;
     private OSExplorerSashForm osExplorer;
+    private IsoExplorerSashForm isoExplorer;
 
     private MainWindow(Shell parentShell) {
         super(parentShell);
@@ -69,10 +70,10 @@ public class MainWindow extends ApplicationWindow {
         log.info("Creating main window contents");
         Composite composite = new Composite(parent, SWT.NONE);
         SashForm mainPanel = new SashForm(composite, SWT.VERTICAL);
-        IsoExplorerSashForm.setInstance(new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL));
+        isoExplorer = new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
-        GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         ActionsManager.NEWISOLAYOUTACTION.getAction().run();
+        GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         return composite;
     }

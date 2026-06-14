@@ -13,7 +13,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
-import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
@@ -26,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AddFileAction extends Action implements IRunnableWithProgress {
     private ITreeNode isoNode;
     private List<File> files;
-    
+
     public AddFileAction() {
         super("Add", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
         setToolTipText("Add selected files to ISO9660 layout");
@@ -38,7 +37,8 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
                 Display.getDefault().getActiveShell(), new IsoTreeLabelProvider(), new IsoTreeContentProvider());
         isoTreeSelectionDialog.setTitle("Iso tree");
         isoTreeSelectionDialog.setMessage("Select the destination directory to place the selected files.");
-        isoTreeSelectionDialog.setInput(IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput());
+        isoTreeSelectionDialog
+                .setInput(GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput());
 
         switch (isoTreeSelectionDialog.open()) {
         case Window.OK:
@@ -63,7 +63,7 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
         });
         monitor.subTask("Refreshing GUI...");
         Display.getDefault().asyncExec(new Thread(() -> {
-            IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().refresh();
+            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().refresh();
         }));
         monitor.done();
     }

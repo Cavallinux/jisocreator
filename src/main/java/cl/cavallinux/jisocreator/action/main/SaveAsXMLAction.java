@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
-import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
@@ -33,11 +33,12 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
         if (path == null) {
             return;
         }
-        iso = (IsoFileSystem) IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput();
+        iso = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput();
         iso.setIsoLength();
         iso.setIsoPaths(null);
         try {
-            ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(Display.getDefault().getActiveShell());
+            ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(
+                    GUIManager.INSTANCE.getMainWindow().getShell());
             saveProgress.run(true, false, this);
             saveProgress.close();
         } catch (InvocationTargetException | InterruptedException e) {

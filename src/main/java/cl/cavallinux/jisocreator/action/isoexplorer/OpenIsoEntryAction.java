@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
@@ -34,7 +35,7 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
         if (element.isFile()) {
             OSAndIsoExplorerManager.INSTANCE.getOsExplorer().launch(element.toPath());
         } else {
-            IsoExplorerSashForm isoSashFormInstance = IsoExplorerSashForm.getInstance();
+            IsoExplorerSashForm isoSashFormInstance = GUIManager.INSTANCE.getMainWindow().getIsoExplorer();
             isoSashFormInstance.refresh(node);
         }
     }
@@ -43,10 +44,10 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
     public void doubleClick(DoubleClickEvent arg0) {
         setNode(arg0);
         if (arg0.getSource() instanceof TreeViewer) {
-            if (IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getExpandedState(node)) {
-                IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().collapseToLevel(node, 1);
+            if (GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getExpandedState(node)) {
+                GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().collapseToLevel(node, 1);
             } else {
-                IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().expandToLevel(node, 1);
+                GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);
             }
         } else {
             run();
@@ -70,8 +71,8 @@ public class OpenIsoEntryAction extends Action implements IDoubleClickListener, 
              * GoToIsoEntryParentAction.getInstance().setEnabled(true); }
              */
             IsoExplorerActionsManager.GOTOISOPARENT.getAction().setEnabled(!node.isRoot());
-            IsoExplorerSashForm.getInstance().getIsoTableText().setText(node.getIsoName());
-            IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().setInput(node);
+            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoTableText().setText(node.getIsoName());
+            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTable().setInput(node);
             setEnabled(false);
             IsoExplorerActionsManager.DELETEISOENTRY.getAction().setEnabled(false);
 

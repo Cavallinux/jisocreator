@@ -2,7 +2,7 @@ package cl.cavallinux.jisocreator.action.main;
 
 import org.eclipse.jface.action.Action;
 
-import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 
@@ -15,7 +15,7 @@ public class NewIsoLayoutAction extends Action {
     @Override
     public void run() {
         IsoFileSystem iso = new IsoFileSystem();
-        IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(iso);
-        IsoExplorerSashForm.getInstance().getIsoDirectoriesTable().setInput(iso.getRoot());
+        GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(iso);
+        GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTable().setInput(iso.getRoot());
     }
 }

@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
-    private static IsoExplorerSashForm instance;
     private List<Composite> composites;
     private TableViewer isoDirectoriesTable;
     private TreeViewer isoDirectoriesTree;
@@ -42,8 +41,8 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     private CoolBar isoTableCoolBar;
     private Text isoTableText;
 
-    public IsoExplorerSashForm(Composite arg0, int arg1) {
-        super(arg0, arg1);
+    public IsoExplorerSashForm(Composite parent, int style) {
+        super(parent, style);
         createComponents();
         addFeatures();
         addListeners();
@@ -142,13 +141,5 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     public void refresh() {
         getIsoDirectoriesTree().refresh();
         getIsoDirectoriesTable().refresh();
-    }
-
-    public static void setInstance(IsoExplorerSashForm instance) {
-        IsoExplorerSashForm.instance = instance;
-    }
-
-    public static IsoExplorerSashForm getInstance() {
-        return instance;
     }
 }

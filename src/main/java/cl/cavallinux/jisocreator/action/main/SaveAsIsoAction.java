@@ -12,7 +12,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
-import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -55,7 +54,7 @@ public class SaveAsIsoAction extends Action {
     }
 
     private IsoFileSystem obtainIsoFileSystem() {
-        return (IsoFileSystem) IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput();
+        return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput();
     }
 
     private void deleteIsoFileIfExists(String path) {

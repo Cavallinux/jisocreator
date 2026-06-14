@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
-import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -58,9 +57,9 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(object);
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(object);
                     ITreeNode node = ((IsoFileSystem) object).getRoot();
-                    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().expandToLevel(node, 1);
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);
                 }
             });
         } finally {

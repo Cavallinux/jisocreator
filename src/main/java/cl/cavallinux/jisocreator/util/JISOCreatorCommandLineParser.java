@@ -131,9 +131,7 @@ public class JISOCreatorCommandLineParser {
         System.out.println("[INFO] Debug: " + (debugMode ? "ACTIVADO" : "DESACTIVADO"));
         System.out.println("[INFO] ====================================");
 
-
         System.out.println("[INFO] Modo CLI listo para procesamiento");
-        System.out.println("[TODO] Implementar lógica de creación de ISO");
         
         return true;
     }

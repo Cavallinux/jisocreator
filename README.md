@@ -271,14 +271,20 @@ This version introduces significant architectural refactoring focused on improvi
    - Enum-based singleton for thread-safe image loading
    - Used by all GUI components for consistent image access
 
-**Refactored Components** (33+ files):
+**Refactored Components** (37+ files):
 - **18 Action Classes**: All action classes now centrally managed through `ActionsManager`, `IsoExplorerActionsManager`, and `OSExplorerActionsManager`
 - **8 GUI Components**: Updated to use centralized managers and improved patterns:
-  - **IsoExplorerSashForm**: Uses `IsoExplorerActionsManager` for toolbar actions and listeners
-  - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions with dynamic action loading via `Arrays.stream()`, includes private `fillToolbarAndCoolbars()` method, and provides `getTableSelection()`/`getTreeSelection()` helper methods
-  - **MainWindow**: Uses `ActionsManager` for menu and toolbar management with enhanced multi-monitor support
-- **Event Listeners**: Refactored to integrate with centralized managers:
-  - **OSExplorerSashFormSelectionChangedEvent**: Implements `ISelectionChangedListener` with full manager integration for intelligent action state management based on file system navigation
+   - **IsoExplorerSashForm**: Uses `IsoExplorerActionsManager` for toolbar actions and listeners
+   - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions with dynamic action loading via `Arrays.stream()`, includes private `fillToolbarAndCoolbars()` method, and provides `getTableSelection()`/`getTreeSelection()` helper methods
+   - **MainWindow**: Uses `ActionsManager` for menu and toolbar management with enhanced multi-monitor support
+- **Event Listeners**: Complete refactoring with 6 dedicated listener classes for improved separation of concerns:
+   - **Double-Click Listeners**:
+     - `ISOExplorerSashFormDoubleClickListener`: Implements `IDoubleClickListener` for ISO explorer navigation and content opening
+     - `OSExplorerSashFormDoubleClickListener`: Implements `IDoubleClickListener` for file system navigation
+   - **Selection Changed Listeners**:
+     - `ISOExplorerSashFormSelectionChangedListener`: Implements `ISelectionChangedListener` with intelligent ISO explorer action state management
+     - `OSExplorerSashFormSelectionChangedListener`: Implements `ISelectionChangedListener` with intelligent file system action state management
+   - **Menu Listeners**: ISODirectoriesMenuListener, OSDirectoriesMenuListener (existing)
 - **2 Utility Classes**: `ImageUtils` and `IOUtils` refactored to use enum singleton pattern
 - **1 Test Suite**: Updated to verify singleton management patterns
 
@@ -305,23 +311,56 @@ This version introduces significant architectural refactoring focused on improvi
 
 ### Event Listener Integration with Managers
 
-The event listeners leverage centralized managers to provide intelligent, context-aware behavior:
+The application features complete separation of concerns with dedicated listener classes that leverage centralized managers to provide intelligent, context-aware behavior:
 
-**OSExplorerSashFormSelectionChangedEvent**:
-- Implements `ISelectionChangedListener` for monitoring file navigation events
-- **Smart Action Management**:
-  - Uses `OSExplorerActionsManager` to enable/disable toolbar actions dynamically
-  - OPENFILEACTION: Enabled only when a file is selected in TableViewer
-  - ADDFILEACTION: Enabled when a valid directory is selected in TreeViewer
-  - GOTOPARENTACTION: Enabled only when current directory is not file system root
+#### Double-Click Listeners
+
+**OSExplorerSashFormDoubleClickListener**:
+- Implements `IDoubleClickListener` for file system navigation
+- **Smart Navigation**:
+   - TreeViewer double-click: Expands/collapses directory nodes for hierarchical navigation
+   - TableViewer double-click: Opens files using `OPENFILEACTION` through `OSExplorerActionsManager`
 - **Manager Integration**:
-  - `GUIManager`: Access to MainWindow and OSExplorer UI components to update path display and directory listings
-  - `OSAndIsoExplorerManager`: Check if current path is file system root
-  - `OSExplorerActionsManager`: Dynamic action state management
+   - `OSExplorerActionsManager`: Access to OpenAction for file opening
+   - `GUIManager`: Access to UI components for tree state management
+- **Enhanced Debugging**: JSON logging of all double-click events
+
+**ISOExplorerSashFormDoubleClickListener**:
+- Implements `IDoubleClickListener` for ISO content navigation
+- **Smart Navigation**:
+   - TreeViewer double-click: Expands/collapses ISO directory nodes with state tracking
+   - TableViewer double-click: Opens ISO entries using `OPENISOENTRY` action
+- **Tree State Tracking**: Maintains expanded/collapsed state for improved UX
+- **Manager Integration**: Uses `IsoExplorerActionsManager` and `GUIManager`
+
+#### Selection Changed Listeners
+
+**OSExplorerSashFormSelectionChangedListener**:
+- Implements `ISelectionChangedListener` for monitoring file system selection events
+- **Smart Action Management**:
+   - Uses `OSExplorerActionsManager` to enable/disable toolbar actions dynamically
+   - OPENFILEACTION: Enabled only when a file is selected in TableViewer
+   - ADDFILEACTION: Enabled when a valid directory is selected in TreeViewer
+   - GOTOPARENTACTION: Enabled only when current directory is not file system root
+- **Manager Integration**:
+   - `GUIManager`: Access to MainWindow and OSExplorer UI components to update path display and directory listings
+   - `OSAndIsoExplorerManager`: Check if current path is file system root
+   - `OSExplorerActionsManager`: Dynamic action state management
 - **Robust Event Handling**:
-  - Distinguishes between TreeViewer (directory navigation) and TableViewer (file selection) events
-  - Handles SWT library edge cases gracefully
-  - Comprehensive JSON logging for debugging selection flows
+   - Distinguishes between TreeViewer (directory navigation) and TableViewer (file selection) events
+   - Handles SWT library edge cases gracefully
+   - Comprehensive JSON logging for debugging selection flows
+
+**ISOExplorerSashFormSelectionChangedListener**:
+- Implements `ISelectionChangedListener` for ISO explorer selection events
+- **Smart Action Management**:
+   - Uses `IsoExplorerActionsManager` for intelligent action state control
+   - OPENISOENTRY and DELETEISOENTRY: Enabled only for TableViewer selections
+   - GOTOISOPARENT: Conditionally enabled based on node hierarchy
+- **Manager Integration**:
+   - `GUIManager`: Access to UI components for path text and table updates
+   - `IsoExplorerActionsManager`: Dynamic action enablement based on context
+- **Edge Case Handling**: Graceful handling of SWT library edge cases with appropriate logging
 
 ## License
 

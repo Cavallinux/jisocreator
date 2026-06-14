@@ -70,14 +70,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved singleton lifecycle management
   - Better encapsulation of explorer instances
 
-- **Event Listeners Refactoring**:
-  - `OSExplorerSashFormSelectionChangedEvent` - Implements `ISelectionChangedListener` with full manager integration:
-    - Uses `OSExplorerActionsManager` to enable/disable actions based on selection state
-    - Uses `GUIManager` to access MainWindow and OSExplorer components
-    - Uses `OSAndIsoExplorerManager` to check if current file is root directory
-    - Handles both TreeViewer and TableViewer selection events
-    - Provides intelligent action state management based on file system navigation
-    - Logs selection events with JSON format for debugging
+- **Event Listeners Refactoring** - Major separation of concerns with dedicated listener classes:
+   - `OSExplorerSashFormDoubleClickListener` - Implements `IDoubleClickListener`:
+     - Handles double-click events from TreeViewer (expand/collapse navigation) and TableViewer (file opening)
+     - Uses `OSExplorerActionsManager.OPENFILEACTION` to open selected files
+     - Uses `GUIManager` to access UI components for tree expansion/collapse operations
+     - Comprehensive JSON logging of double-click events
+   - `OSExplorerSashFormSelectionChangedListener` - Implements `ISelectionChangedListener` with full manager integration:
+     - Uses `OSExplorerActionsManager` to enable/disable actions based on selection state
+     - Uses `GUIManager` to access MainWindow and OSExplorer components
+     - Uses `OSAndIsoExplorerManager` to check if current file is root directory
+     - Handles both TreeViewer and TableViewer selection events
+     - Provides intelligent action state management based on file system navigation
+     - Logs selection events with JSON format for debugging
+   - `ISOExplorerSashFormDoubleClickListener` - Implements `IDoubleClickListener`:
+     - Handles double-click events for ISO explorer navigation and file opening
+     - Uses `IsoExplorerActionsManager.OPENISOENTRY` action integration
+     - Manages tree expand/collapse and node navigation
+     - Accesses UI components through `GUIManager`
+   - `ISOExplorerSashFormSelectionChangedListener` - Implements `ISelectionChangedListener`:
+     - Manages ISO explorer selection state and action enablement
+     - Distinguishes between TreeViewer (directory) and TableViewer (file) selections
+     - Uses `IsoExplorerActionsManager` for dynamic action state management
+     - Handles edge cases and SWT library bugs gracefully
 
 #### Test Updates
 - **OSExplorerTest**: Updated to access `OSExplorer` through `OSAndIsoExplorerManager` instead of direct getInstance()
@@ -131,18 +146,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-monitor support through `determinateActiveMonitor()` method
 
 **Event Listener Manager Integration**:
-- **OSExplorerSashFormSelectionChangedEvent**: Advanced listener implementation with full manager integration
-  - Listens to selection changes from both TreeViewer and TableViewer
-  - Uses `OSExplorerActionsManager` to dynamically enable/disable toolbar actions:
-    - OPENFILEACTION enabled only when TableViewer has selection
-    - ADDFILEACTION enabled when TreeViewer has valid directory selection
-    - GOTOPARENTACTION enabled only when not at file system root
-  - Uses `GUIManager.INSTANCE.getMainWindow()` to access and update UI components:
-    - Updates osTableText with current path
-    - Updates osDirectoriesTable with current directory's contents
-  - Uses `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` to check root directory status
-  - Provides comprehensive logging of selection events using ToStringBuilder with JSON style
-  - Handles SWT library edge cases gracefully
+
+**OS Explorer Listeners**:
+- **OSExplorerSashFormSelectionChangedListener**: Selection change listener with full manager integration
+   - Listens to selection changes from both TreeViewer and TableViewer
+   - Uses `OSExplorerActionsManager` to dynamically enable/disable toolbar actions:
+     - OPENFILEACTION enabled only when TableViewer has selection
+     - ADDFILEACTION enabled when TreeViewer has valid directory selection
+     - GOTOPARENTACTION enabled only when not at file system root
+   - Uses `GUIManager.INSTANCE.getMainWindow()` to access and update UI components:
+     - Updates osTableText with current path
+     - Updates osDirectoriesTable with current directory's contents
+   - Uses `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` to check root directory status
+   - Provides comprehensive logging of selection events using ToStringBuilder with JSON style
+   - Handles SWT library edge cases gracefully
+
+- **OSExplorerSashFormDoubleClickListener**: Double-click listener for file system navigation
+   - Listens to double-click events from both TreeViewer and TableViewer
+   - TreeViewer events: Expand/collapse directory navigation
+   - TableViewer events: Open files using `OPENFILEACTION` through `OSExplorerActionsManager`
+   - Uses `GUIManager.INSTANCE.getMainWindow()` to access tree viewer for expansion state
+   - Comprehensive logging using JSON format for debugging
+
+**ISO Explorer Listeners**:
+- **ISOExplorerSashFormSelectionChangedListener**: Selection change listener for ISO navigation
+   - Listens to selection changes from TreeViewer and TableViewer
+   - Uses `IsoExplorerActionsManager` to manage action states:
+     - OPENISOENTRY and DELETEISOENTRY enabled only for TableViewer selections
+     - GOTOISOPARENT enabled when selected node is not root
+   - Updates UI components through `GUIManager`
+   - Handles SWT library edge cases
+
+- **ISOExplorerSashFormDoubleClickListener**: Double-click listener for ISO content navigation
+   - TreeViewer events: Expand/collapse node navigation with tree state tracking
+   - TableViewer events: Open ISO entries using `OPENISOENTRY` action
+   - Uses `GUIManager` to access UI components
+   - Smart tree state management for improved UX
 
 #### Summary of Manager Enums
 
@@ -166,15 +205,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Maintained 18 tests with 100% pass rate
 
 ### Project Statistics (v0.1.2)
-- **Total Commits in this Release**: 15+
-- **Files Modified**: 33+
-- **Component Categories Changed**: 4 (Actions, GUI, Utilities, Tests)
+- **Total Commits in this Release**: 20+
+- **Files Modified**: 37+
+- **Component Categories Changed**: 5 (Actions, GUI, Utilities, Event Listeners, Tests)
 - **Manager Enums**: 4 (ActionsManager, IsoExplorerActionsManager, OSExplorerActionsManager, OSAndIsoExplorerManager)
-- **Event Listeners Updated**: 3 (ISODirectoriesMenuListener, OSDirectoriesMenuListener, OSExplorerSashFormSelectionChangedEvent)
+- **Event Listeners Refactored**: 6 total classes with full separation of concerns
+  - Menu Listeners: ISODirectoriesMenuListener, OSDirectoriesMenuListener
+  - Double-Click Listeners: ISOExplorerSashFormDoubleClickListener, OSExplorerSashFormDoubleClickListener
+  - Selection Changed Listeners: ISOExplorerSashFormSelectionChangedListener, OSExplorerSashFormSelectionChangedListener
 - **Test Classes Updated**: 1 (OSExplorerTest)
 - **Total Tests**: 18 (all passing)
-- **Code Quality**: Improved through centralized management patterns
-- **Lines of Code Refactored**: 1200+
+- **Code Quality**: Improved through centralized management and listener separation patterns
+- **Lines of Code Refactored**: 1500+
 
 ## [0.1.1] - 2026-06-11
 

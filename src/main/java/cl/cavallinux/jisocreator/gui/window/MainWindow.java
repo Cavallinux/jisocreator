@@ -24,11 +24,14 @@ import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Getter
 public class MainWindow extends ApplicationWindow {
     private IContributionItem separator;
+    private OSExplorerSashForm osExplorer;
 
     private MainWindow(Shell parentShell) {
         super(parentShell);
@@ -67,7 +70,7 @@ public class MainWindow extends ApplicationWindow {
         Composite composite = new Composite(parent, SWT.NONE);
         SashForm mainPanel = new SashForm(composite, SWT.VERTICAL);
         IsoExplorerSashForm.setInstance(new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL));
-        OSExplorerSashForm.setInstance(new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL));
+        osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         ActionsManager.NEWISOLAYOUTACTION.getAction().run();
         GridLayoutFactory.swtDefaults().generateLayout(composite);

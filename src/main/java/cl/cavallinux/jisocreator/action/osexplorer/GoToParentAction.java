@@ -6,7 +6,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
-import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 
@@ -19,11 +19,12 @@ public class GoToParentAction extends Action {
 
     @Override
     public void run() {
-        IStructuredSelection selection = (IStructuredSelection) OSExplorerSashForm.getInstance().getTreeSelection();
+        IStructuredSelection selection = (IStructuredSelection) GUIManager.INSTANCE.getMainWindow().getOsExplorer()
+                .getTreeSelection();
         File file = (File) selection.getFirstElement();
         File parent = file.getParentFile();
         selection = new StructuredSelection(parent);
-        OSExplorerSashForm.getInstance().getOsDirectoriesTree().setSelection(selection);
+        GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree().setSelection(selection);
         setEnabled(OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(file.toPath()));
     }
 }

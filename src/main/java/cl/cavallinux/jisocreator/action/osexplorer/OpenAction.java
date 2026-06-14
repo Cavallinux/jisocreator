@@ -11,7 +11,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
@@ -36,9 +36,9 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
         if (file.isFile()) {
             OSAndIsoExplorerManager.INSTANCE.getOsExplorer().launch(file.toPath());
         } else {
-            OSExplorerSashForm.getInstance().getOsDirectoriesTree()
-                    .setSelection(OSExplorerSashForm.getInstance().getTreeSelection());
-            OSExplorerSashForm.getInstance().getOsDirectoriesTree().expandToLevel(file, 1);
+            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree()
+                    .setSelection(GUIManager.INSTANCE.getMainWindow().getOsExplorer().getTreeSelection());
+            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree().expandToLevel(file, 1);
         }
     }
 
@@ -46,10 +46,10 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
     public void doubleClick(DoubleClickEvent arg0) {
         setFileSelected(arg0);
         if (arg0.getSource() instanceof TreeViewer) {
-            if (OSExplorerSashForm.getInstance().getOsDirectoriesTree().getExpandedState(file)) {
-                OSExplorerSashForm.getInstance().getOsDirectoriesTree().collapseToLevel(file, 1);
+            if (GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree().getExpandedState(file)) {
+                GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree().collapseToLevel(file, 1);
             } else {
-                OSExplorerSashForm.getInstance().getOsDirectoriesTree().expandToLevel(file, 1);
+                GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree().expandToLevel(file, 1);
             }
         } else {
             run();
@@ -63,10 +63,12 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
             if (file == null) {
                 OSExplorerActionsManager.ADDFILEACTION.getAction().setEnabled(false);
                 OSExplorerActionsManager.GOTOPARENTACTION.getAction().setEnabled(false);
-                OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(new File(
-                        ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent()));
-                OSExplorerSashForm.getInstance().getOsTableText().setText(new File(
-                        ((File) OSExplorerSashForm.getInstance().getOsDirectoriesTable().getInput()).getParent())
+                GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable().setInput(new File(
+                        ((File) GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable().getInput())
+                                .getParent()));
+                GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsTableText().setText(new File(
+                        ((File) GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable().getInput())
+                                .getParent())
                         .getAbsolutePath());
                 log.warn("SWT Library bug");
                 return;
@@ -75,8 +77,8 @@ public class OpenAction extends Action implements IDoubleClickListener, ISelecti
             }
             OSExplorerActionsManager.GOTOPARENTACTION.getAction()
                     .setEnabled(!OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(file.toPath()));
-            OSExplorerSashForm.getInstance().getOsTableText().setText(file.getAbsolutePath());
-            OSExplorerSashForm.getInstance().getOsDirectoriesTable().setInput(file);
+            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsTableText().setText(file.getAbsolutePath());
+            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable().setInput(file);
             setEnabled(false);
         } else {
             setEnabled(true);

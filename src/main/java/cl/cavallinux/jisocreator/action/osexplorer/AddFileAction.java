@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
-import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
@@ -71,7 +70,8 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
 
     @SuppressWarnings("unchecked")
     private void executeAddFiles(ITreeNode node) {
-        IStructuredSelection selection = (IStructuredSelection) OSExplorerSashForm.getInstance().getTableSelection();
+        IStructuredSelection selection = (IStructuredSelection) GUIManager.INSTANCE.getMainWindow().getOsExplorer()
+                .getTableSelection();
         files = selection.toList();
         isoNode = node;
     }

@@ -6,7 +6,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
@@ -23,22 +23,27 @@ public class ToggleHiddenFilesOSExplorerThread extends Thread {
         action.setImageDescriptor(loadImageDescriptor(isChecked ? "hidehidden.svg" : "showhidden.svg"));
         OSExplorerActionsManager.REFRESHACTION.getAction().run();
     }
-    
+
     private ImageDescriptor loadImageDescriptor(String imageName) {
         return ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor(imageName);
     }
-    
+
     private void execute(boolean isChecked) {
         if (isChecked) {
-            ViewerFilter[] filters = OSExplorerSashForm.getInstance().getOsDirectoriesTree().getFilters();
+            ViewerFilter[] filters = GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree()
+                    .getFilters();
             Arrays.stream(filters).filter(filter -> filter instanceof HideHiddenFilesFilter).findFirst()
-                    .ifPresent(filter -> OSExplorerSashForm.getInstance().getOsDirectoriesTree().removeFilter(filter));
-            filters = OSExplorerSashForm.getInstance().getOsDirectoriesTable().getFilters();
+                    .ifPresent(filter -> GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree()
+                            .removeFilter(filter));
+            filters = GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable().getFilters();
             Arrays.stream(filters).filter(filter -> filter instanceof HideHiddenFilesFilter).findFirst()
-                    .ifPresent(filter -> OSExplorerSashForm.getInstance().getOsDirectoriesTable().removeFilter(filter));
+                    .ifPresent(filter -> GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable()
+                            .removeFilter(filter));
         } else {
-            OSExplorerSashForm.getInstance().getOsDirectoriesTable().addFilter(new HideHiddenFilesFilter());
-            OSExplorerSashForm.getInstance().getOsDirectoriesTree().addFilter(new HideHiddenFilesFilter());
+            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTable()
+                    .addFilter(new HideHiddenFilesFilter());
+            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree()
+                    .addFilter(new HideHiddenFilesFilter());
         }
     }
 }

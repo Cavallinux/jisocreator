@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
-import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 
 /**
  * Interface for creating and configuring composite GUI components.
@@ -97,6 +96,7 @@ public interface ICompositeCreator {
             tvc.setMoveable(true);
             tvc.setResizable(true);
         });
+        table.setHeaderVisible(true);
     }
 
     default void addPopMenuToTable(TableViewer table, IMenuListener menuListener) {

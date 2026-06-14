@@ -3,6 +3,7 @@ package cl.cavallinux.jisocreator.instances;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 
 import cl.cavallinux.jisocreator.gui.listeners.OSDirectoriesMenuListener;
 import cl.cavallinux.jisocreator.model.comparators.OSDirectoriesComparator;
@@ -21,7 +22,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum JFaceResourcesManager {
     INSTANCE(new HideHiddenFilesFilter(), new ShowOnlyDirectoriesFilter(), new OSDirectoriesComparator(),
-            new OSTreeLabelProvider(), new OSTreeContentProvider(), new OsTableProvider(), new OSDirectoriesMenuListener());
+            new OSTreeLabelProvider(), new OSTreeContentProvider(), new OsTableProvider(),
+            new OSDirectoriesMenuListener(),
+            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
+            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
 
     private ViewerFilter toggleHiddenFilesFilter;
     private ViewerFilter showOnlyDirectoriesFilter;
@@ -30,4 +34,6 @@ public enum JFaceResourcesManager {
     private TreeContentAdapter osTreeContentProvider;
     private TableProviderAdapter osTableProviderAdapter;
     private IMenuListener osDirectoriesMenuListener;
+    private int treeSWTOptions;
+    private int tableSWTOptions;
 }

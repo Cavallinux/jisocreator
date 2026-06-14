@@ -75,7 +75,6 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         coolItem.setControl(osTableText);
 
         fillTableColumnValues(osDirectoriesTable.getTable());
-        osDirectoriesTable.getTable().setHeaderVisible(true);
         addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.INSTANCE.getOsDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.INSTANCE, osDirectoriesTable, osDirectoriesTree);
         osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer());
@@ -112,12 +111,10 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         composites.add(new Composite(this, SWT.NONE));
 
         osTreeCLabel = new CLabel(composites.get(0), SWT.NONE);
-        osDirectoriesTree = new TreeViewer(composites.get(0),
-                SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+        osDirectoriesTree = new TreeViewer(composites.get(0), JFaceResourcesManager.INSTANCE.getTreeSWTOptions());
 
         osTableCoolBar = new CoolBar(composites.get(1), SWT.WRAP | SWT.FLAT);
-        osDirectoriesTable = new TableViewer(composites.get(1),
-                SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+        osDirectoriesTable = new TableViewer(composites.get(1), JFaceResourcesManager.INSTANCE.getTableSWTOptions());
     }
 
     public IStructuredSelection getTableSelection() {

@@ -7,6 +7,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -59,6 +60,8 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
                 public void run() {
                     GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(object);
                     ITreeNode node = ((IsoFileSystem) object).getRoot();
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                            .setSelection(new StructuredSelection(node), true);
                     GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);
                 }
             });

@@ -47,34 +47,43 @@ public class MainAction extends Action {
             CommandLine cmd = parser.parse(args);
             boolean commandLineMode = false;
             MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
-
-            if (cmd.hasOption("v")) {
-                parser.printVersion();
-                System.exit(0);
-            }
-
-            if (cmd.hasOption("h")) {
-                parser.printHelp(PROGRAM_NAME);
-                System.exit(0);
-            }
-
-            if (cmd.hasOption("i") || cmd.hasOption("o")) {
-                commandLineMode = parser.handleCommandLineMode(cmd);
-            }
-            
-            if (commandLineMode) {
-                SaveAsIsoAction saveAsIsoAction = (SaveAsIsoAction) ActionsManager.SAVEASISOACTION.getAction();
-                saveAsIsoAction.setAppArguments(Arrays.asList(args));
-                saveAsIsoAction.setCommandLineMode(commandLineMode);
-                saveAsIsoAction.run();
-            } else {
+            if(cmd.hasOption("l")) {
                 mainAction.run();
             }
+
+            handleCommandLine(args, parser, cmd, commandLineMode, mainAction);
            
         } catch (ParseException | IllegalArgumentException e) {
             System.err.format("[ERROR] Error parsing app arguments: %s\n" + e.getMessage());
             System.err.format("Use -h or --help to view available options.\n");
             System.exit(1);
+        }
+    }
+
+    private static void handleCommandLine(String[] args, JISOCreatorCommandLineParser parser, CommandLine cmd,
+            boolean commandLineMode, MainAction mainAction) {
+        if (cmd.hasOption("v")) {
+            parser.printVersion();
+            System.exit(0);
+        }
+        
+
+        if (cmd.hasOption("h")) {
+            parser.printHelp(PROGRAM_NAME);
+            System.exit(0);
+        }
+
+        if (cmd.hasOption("i") || cmd.hasOption("o")) {
+            commandLineMode = parser.handleCommandLineMode(cmd);
+        }
+        
+        if (commandLineMode) {
+            SaveAsIsoAction saveAsIsoAction = (SaveAsIsoAction) ActionsManager.SAVEASISOACTION.getAction();
+            saveAsIsoAction.setAppArguments(Arrays.asList(args));
+            saveAsIsoAction.setCommandLineMode(commandLineMode);
+            saveAsIsoAction.run();
+        } else {
+            mainAction.run();
         }
     }
 
@@ -99,6 +108,7 @@ public class MainAction extends Action {
         // Opciones que requieren argumentos
         parser.addOption("i", "input", "PATH", "Input path", false);
         parser.addOption("o", "output", "FILE", "ISO File output path", false);
+        parser.addOption("l", "load", "Load xml file into GUI");
         return parser;
     }
 }

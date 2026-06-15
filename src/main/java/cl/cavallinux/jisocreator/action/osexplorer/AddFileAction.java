@@ -9,6 +9,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
@@ -63,6 +64,9 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
         });
         monitor.subTask("Refreshing GUI...");
         Display.getDefault().asyncExec(new Thread(() -> {
+            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                    .setSelection(new StructuredSelection(isoNode), true);
+            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(isoNode, 1);
             GUIManager.INSTANCE.getMainWindow().getIsoExplorer().refresh();
         }));
         monitor.done();

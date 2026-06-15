@@ -1,5 +1,7 @@
 package cl.cavallinux.jisocreator.action.main;
 
+import java.io.IOException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -49,7 +51,7 @@ public class MainAction extends Action {
      * 
      * @param args Argumentos recibidos desde el sistema operativo.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
         try {
             mainAction.handleCommandLine(args);
@@ -60,7 +62,7 @@ public class MainAction extends Action {
         }
     }
 
-    public void handleCommandLine(String[] args) throws ParseException{
+    public void handleCommandLine(String[] args) throws ParseException, IOException {
         CommandLine cmd = parser.parse(args);
         if (cmd.hasOption(CommandLineOptionsManager.LOAD.getOption())) {
             parser.validateLoadXMLFile(cmd, CommandLineOptionsManager.LOAD.getOption());
@@ -89,14 +91,14 @@ public class MainAction extends Action {
         String PROGRAM_NAME = "jisocreator";
         JISOCreatorCommandLineParser parser = JISOCreatorCommandLineParser.builder().applicationName(APP_NAME)
                 .applicationVersion(APP_VERSION)
-                .header("\n " + APP_NAME + " is a Java-based desktop application that simplifies\n "
+                .header("  " + APP_NAME + " is a Java-based desktop application that simplifies\n "
                         + "the process of creating and editing ISO images. It features dual file\n explorers "
                         + "for managing both the operating system file system and ISO\n" + " image contents.\n")
                 .footer("\nExamples:\n" + "  " + PROGRAM_NAME + " -v\n" + "  " + PROGRAM_NAME + " -h\n" + "  "
                         + PROGRAM_NAME + " -i /path/image -o image.iso\n" + "  " + PROGRAM_NAME
                         + " --input /data --output /output/image.iso\n" + "  " + PROGRAM_NAME + " ")
                 .options(new Options()).build();
-        parser.addOptions(CommandLineOptionsManager.values());
+        parser.addOptions();
         return parser;
     }
 }

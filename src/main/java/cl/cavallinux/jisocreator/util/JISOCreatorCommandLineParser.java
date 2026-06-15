@@ -1,17 +1,18 @@
 package cl.cavallinux.jisocreator.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.commons.lang3.StringUtils;
 
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
@@ -40,7 +41,7 @@ public class JISOCreatorCommandLineParser {
         return parser.parse(options, args);
     }
 
-    public void addOptions(CommandLineOptionsManager[] optionsToAdd) {
+    public void addOptions() {
         options.addOption(CommandLineOptionsManager.LOAD.getOption());
         options.addOption(CommandLineOptionsManager.HELP.getOption());
         options.addOption(CommandLineOptionsManager.VERSION.getOption());
@@ -66,8 +67,8 @@ public class JISOCreatorCommandLineParser {
     /**
      * Muestra el mensaje de ayuda.
      */
-    public void printHelp(String programName) {
-        HelpFormatter formatter = new HelpFormatter();
+    public void printHelp(String programName) throws IOException {
+        HelpFormatter formatter = HelpFormatter.builder().get();
         formatter.printHelp(programName, header, options, footer, true);
     }
 

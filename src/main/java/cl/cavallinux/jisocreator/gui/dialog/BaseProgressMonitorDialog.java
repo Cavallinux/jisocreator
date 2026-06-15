@@ -3,7 +3,7 @@ package cl.cavallinux.jisocreator.gui.dialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -18,6 +18,6 @@ public class BaseProgressMonitorDialog extends ProgressMonitorDialog {
         log.info("Configuring progress monitor dialog shell");
         super.configureShell(shell);
         shell.setText("Progress Information");
-        shell.setImage(ImageUtils.getInstance().loadImage("iso.png"));
+        shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
     }
 }

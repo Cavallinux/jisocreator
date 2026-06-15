@@ -13,8 +13,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 
 public class ImageUtils {
     private ImageRegistry imageRegistry;
@@ -23,28 +23,19 @@ public class ImageUtils {
     private static final String FOLDER_IMAGE_FILENAME = "folder.png";
     private static final String ROOT_ISO_FILENAME = "iso.png";
     private static final String GENERIC_FILENAME = "file.png";
-    private static final ImageUtils instance;
-    
-    static {
-        instance = new ImageUtils();
-    }
 
-    private ImageUtils() {
+    public ImageUtils() {
         imageRegistry = new ImageRegistry(Display.getDefault());
-    }
-
-    public static ImageUtils getInstance() {
-        return instance;
     }
 
     public Image loadImage(Program program) {
         Image image = (Image) imageRegistry.get(program.getName());
         if (image == null) {
-            image = new Image(Display.getCurrent(), program.getImageData());
+            image = Objects.nonNull(program.getImageData()) ? new Image(Display.getCurrent(), program.getImageData())
+                    : loadImage(GENERIC_FILENAME);
             imageRegistry.put(program.getName(), image);
         }
         return image;
-
     }
 
     public Image loadImage(String name) {
@@ -91,12 +82,12 @@ public class ImageUtils {
     }
     
     public Image loadImage(Path path) {
-        if (OSExplorer.getInstance().isRoot(path)) {
+        if (OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(path)) {
             return loadImage(DRIVE_IMAGE_FILENAME);
         } else if (Files.isDirectory(path)) {
             return loadImage(FOLDER_IMAGE_FILENAME);
         } else {
-            String extension = OSExplorer.getInstance().getExtension(path);
+            String extension = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getExtension(path);
             if (StringUtils.isNotBlank(extension)) {
                 Program program = Program.findProgram(extension);
                 return Objects.nonNull(program) ? loadImage(program) : loadImage(GENERIC_FILENAME);

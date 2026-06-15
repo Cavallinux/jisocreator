@@ -153,14 +153,14 @@ This command uses the exec-maven-plugin configured in pom.xml and includes:
 
 ### From Command Line (after packaging)
 ```bash
-java --enable-native-access=ALL-UNNAMED -jar target/jisocreator-0.0.3.jar
+java --enable-native-access=ALL-UNNAMED -jar target/jisocreator-0.1.2.jar
 ```
 
 ### With Debug Mode
 ```bash
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
      --enable-native-access=ALL-UNNAMED \
-     -jar target/jisocreator-0.0.3.jar
+     -jar target/jisocreator-0.1.2.jar
 ```
 
 ## Project Structure
@@ -169,8 +169,30 @@ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
 jisocreator/
 ├── src/main/java/cl/cavallinux/jisocreator/
 │   ├── action/           # Action handlers and commands
+│   │   ├── decl/         # Action declarations
+│   │   ├── main/         # Main application actions
+│   │   ├── isoexplorer/  # ISO explorer specific actions
+│   │   ├── osexplorer/   # OS explorer specific actions
+│   │   └── jobs/         # Background job threads
 │   ├── gui/              # GUI components and windows
+│   │   ├── decl/         # GUI declarations
+│   │   ├── dialog/       # Dialog components
+│   │   ├── listeners/    # Event listeners
+│   │   ├── preference/   # Preference dialogs
+│   │   ├── sashfom/      # Sash form components
+│   │   └── window/       # Main window components
+│   ├── instances/        # Singleton managers
+│   │   ├── ActionsManager.java       # Centralized action management
+│   │   ├── GUIManager.java           # GUI component management
+│   │   ├── ImageRegister.java        # Image resource registry
+│   │   ├── IOManager.java            # I/O operations management
+│   │   └── ...
 │   ├── model/            # Data models and providers
+│   │   ├── comparators/  # Custom comparators
+│   │   ├── filters/      # File filters
+│   │   ├── isoexplorer/  # ISO explorer models
+│   │   ├── osexplorer/   # OS explorer models
+│   │   └── providers/    # Data providers
 │   └── util/             # Utility classes
 ├── src/main/resources/   # Configuration and resources
 │   └── log4j2.xml       # Logging configuration
@@ -186,9 +208,159 @@ jisocreator/
 - **Preferences**: Customizable application settings
 - **Logging**: Comprehensive logging to track operations
 
+## Architecture Highlights (v0.1.2+)
+
+### Singleton Manager Pattern
+
+The application uses enum-based singleton managers for centralized component management:
+
+```
+┌─────────────────────────────────────────────────────┐
+│           Application Startup                       │
+└────────────────────┬────────────────────────────────┘
+                     │
+          ┌──────────┼──────────┐
+          ▼          ▼          ▼
+    ┌──────────┐ ┌──────────┐ ┌──────────┐
+    │ Actions  │ │   GUI    │ │ Explorers│
+    │ Manager  │ │ Manager  │ │ Manager  │
+    └────┬─────┘ └────┬─────┘ └────┬─────┘
+         │            │            │
+    ┌────┴────────────┼────────────┴────┐
+    │                 │                  │
+    ▼                 ▼                  ▼
+ Actions           GUI Comps        Explorers
+ (18 types)      (SashForms,       (OS/ISO)
+                  Dialogs,
+                  Windows)
+```
+
+### Benefits of Manager Pattern
+
+1. **Centralized Control**: All singleton instances managed from one entry point
+2. **Thread Safety**: Enum singletons guarantee thread-safe lazy initialization
+3. **Testability**: Easy to mock managers for unit testing
+4. **Maintainability**: Simplified dependency tracking and initialization order
+5. **Scalability**: Easy to add new managed components
+
 ## Version
 
-Current version: **0.1.1**
+Current version: **0.1.2-SNAPSHOT**
+
+### Version 0.1.2 Changes
+
+This version introduces significant architectural refactoring focused on improving code maintainability and following better design patterns:
+
+#### Key Architectural Improvements
+
+**Centralized Singleton Managers**:
+- **ActionsManager**: Enum-based centralized management of all 18 application actions
+   - Provides clean, consistent access patterns across the application
+   - Ensures proper initialization and lifecycle management
+   - Integrated with MainWindow for menu and toolbar management
+- **IsoExplorerActionsManager**: Manages ISO explorer specific actions (4 actions)
+   - OPENISOENTRY, GOTOISOPARENT, SHOWISOINFO, DELETEISOENTRY
+   - Integrated with IsoExplorerSashForm toolbar and listeners
+- **OSExplorerActionsManager**: Manages OS explorer specific actions (5 actions)
+   - OPENFILEACTION, GOTOPARENTACTION, REFRESHACTION, ADDFILEACTION, SHOWHIDDENFILES
+   - Integrated with OSExplorerSashForm toolbar and listeners
+- **OSAndIsoExplorerManager**: Unified management of file system and ISO explorers
+   - Provides controlled access to OSExplorer and IsoExplorer instances
+   - Used by OSExplorerSashForm to initialize tree input
+- **ImageRegister**: Centralized image resource management
+   - Enum-based singleton for thread-safe image loading
+   - Used by all GUI components for consistent image access
+
+**Refactored Components** (37+ files):
+- **18 Action Classes**: All action classes now centrally managed through `ActionsManager`, `IsoExplorerActionsManager`, and `OSExplorerActionsManager`
+- **8 GUI Components**: Updated to use centralized managers and improved patterns:
+   - **IsoExplorerSashForm**: Uses `IsoExplorerActionsManager` for toolbar actions and listeners
+   - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions with dynamic action loading via `Arrays.stream()`, includes private `fillToolbarAndCoolbars()` method, and provides `getTableSelection()`/`getTreeSelection()` helper methods
+   - **MainWindow**: Uses `ActionsManager` for menu and toolbar management with enhanced multi-monitor support
+- **Event Listeners**: Complete refactoring with 6 dedicated listener classes for improved separation of concerns:
+   - **Double-Click Listeners**:
+     - `ISOExplorerSashFormDoubleClickListener`: Implements `IDoubleClickListener` for ISO explorer navigation and content opening
+     - `OSExplorerSashFormDoubleClickListener`: Implements `IDoubleClickListener` for file system navigation
+   - **Selection Changed Listeners**:
+     - `ISOExplorerSashFormSelectionChangedListener`: Implements `ISelectionChangedListener` with intelligent ISO explorer action state management
+     - `OSExplorerSashFormSelectionChangedListener`: Implements `ISelectionChangedListener` with intelligent file system action state management
+   - **Menu Listeners**: ISODirectoriesMenuListener, OSDirectoriesMenuListener (existing)
+- **2 Utility Classes**: `ImageUtils` and `IOUtils` refactored to use enum singleton pattern
+- **1 Test Suite**: Updated to verify singleton management patterns
+
+**Enhanced Multi-Monitor Support**:
+- Improved monitor detection logic in `MainWindow`
+- Better handling of active shell detection
+- Fallback to primary monitor when needed
+- More reliable window positioning across multiple displays
+
+**Improved Code Quality**:
+- Removed scattered singleton implementations
+- Unified approach to dependency management
+- Better encapsulation and controlled access
+- Enhanced testability with centralized manager pattern
+
+#### Benefits
+- **Cleaner Architecture**: Single point of access for singletons through enum-based managers
+- **Thread Safety**: Enum singleton pattern provides inherent thread safety
+- **Maintainability**: Centralized initialization and configuration of application components
+- **Testability**: Easier to mock and test components through manager interfaces
+- **Separation of Concerns**: Clear separation between action handlers, GUI components, and utilities
+- **Code Consistency**: Unified approach to singleton pattern across the codebase
+- **Better Encapsulation**: Manager enums provide controlled access to singleton instances
+
+### Event Listener Integration with Managers
+
+The application features complete separation of concerns with dedicated listener classes that leverage centralized managers to provide intelligent, context-aware behavior:
+
+#### Double-Click Listeners
+
+**OSExplorerSashFormDoubleClickListener**:
+- Implements `IDoubleClickListener` for file system navigation
+- **Smart Navigation**:
+   - TreeViewer double-click: Expands/collapses directory nodes for hierarchical navigation
+   - TableViewer double-click: Opens files using `OPENFILEACTION` through `OSExplorerActionsManager`
+- **Manager Integration**:
+   - `OSExplorerActionsManager`: Access to OpenAction for file opening
+   - `GUIManager`: Access to UI components for tree state management
+- **Enhanced Debugging**: JSON logging of all double-click events
+
+**ISOExplorerSashFormDoubleClickListener**:
+- Implements `IDoubleClickListener` for ISO content navigation
+- **Smart Navigation**:
+   - TreeViewer double-click: Expands/collapses ISO directory nodes with state tracking
+   - TableViewer double-click: Opens ISO entries using `OPENISOENTRY` action
+- **Tree State Tracking**: Maintains expanded/collapsed state for improved UX
+- **Manager Integration**: Uses `IsoExplorerActionsManager` and `GUIManager`
+
+#### Selection Changed Listeners
+
+**OSExplorerSashFormSelectionChangedListener**:
+- Implements `ISelectionChangedListener` for monitoring file system selection events
+- **Smart Action Management**:
+   - Uses `OSExplorerActionsManager` to enable/disable toolbar actions dynamically
+   - OPENFILEACTION: Enabled only when a file is selected in TableViewer
+   - ADDFILEACTION: Enabled when a valid directory is selected in TreeViewer
+   - GOTOPARENTACTION: Enabled only when current directory is not file system root
+- **Manager Integration**:
+   - `GUIManager`: Access to MainWindow and OSExplorer UI components to update path display and directory listings
+   - `OSAndIsoExplorerManager`: Check if current path is file system root
+   - `OSExplorerActionsManager`: Dynamic action state management
+- **Robust Event Handling**:
+   - Distinguishes between TreeViewer (directory navigation) and TableViewer (file selection) events
+   - Handles SWT library edge cases gracefully
+   - Comprehensive JSON logging for debugging selection flows
+
+**ISOExplorerSashFormSelectionChangedListener**:
+- Implements `ISelectionChangedListener` for ISO explorer selection events
+- **Smart Action Management**:
+   - Uses `IsoExplorerActionsManager` for intelligent action state control
+   - OPENISOENTRY and DELETEISOENTRY: Enabled only for TableViewer selections
+   - GOTOISOPARENT: Conditionally enabled based on node hierarchy
+- **Manager Integration**:
+   - `GUIManager`: Access to UI components for path text and table updates
+   - `IsoExplorerActionsManager`: Dynamic action enablement based on context
+- **Edge Case Handling**: Graceful handling of SWT library edge cases with appropriate logging
 
 ## License
 

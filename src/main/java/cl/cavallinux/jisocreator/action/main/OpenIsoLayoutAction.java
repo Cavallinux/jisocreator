@@ -7,33 +7,28 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
-import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
+import cl.cavallinux.jisocreator.instances.IOManager;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.util.IOUtils;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress {
     private Object object;
     private String path;
-    private static OpenIsoLayoutAction instance;
-    
-    static {
-        instance = new OpenIsoLayoutAction();
-    }
 
     public OpenIsoLayoutAction() {
         super("Open layout");
         setToolTipText("Open a iso layout");
-        setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("open.png"));
+        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("open.png"));
     }
 
     @Override
@@ -44,12 +39,12 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
                 return;
             }
             ProgressMonitorDialog openProgressDialog = new BaseProgressMonitorDialog(
-                    MainWindow.getInstance().getShell());
+                    GUIManager.INSTANCE.getMainWindow().getShell());
             openProgressDialog.run(true, false, this);
             openProgressDialog.close();
         } catch (InvocationTargetException | InterruptedException e) {
             log.error("Error opening file", e);
-            MessageDialog.openError(MainWindow.getInstance().getShell(), "Error", e.getMessage());
+            MessageDialog.openError(GUIManager.INSTANCE.getMainWindow().getShell(), "Error", e.getMessage());
         }
     }
 
@@ -58,14 +53,16 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
         try {
             monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
             monitor.subTask("Parsing xml...");
-            object = IOUtils.getInstance().parseXMLFileToObject(path);
+            object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
             monitor.subTask("Inserting into tree...");
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().setInput(object);
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(object);
                     ITreeNode node = ((IsoFileSystem) object).getRoot();
-                    IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().expandToLevel(node, 1);
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                            .setSelection(new StructuredSelection(node), true);
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);
                 }
             });
         } finally {
@@ -73,12 +70,8 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
         }
     }
 
-    public static OpenIsoLayoutAction getInstance() {
-        return instance;
-    }
-
     private void executeOpenFile() {
-        FileDialog openXMLDialog = new FileDialog(MainWindow.getInstance().getShell(), SWT.OPEN);
+        FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.OPEN);
         openXMLDialog.setText("Choose a xml file to open");
         openXMLDialog.setOverwrite(true);
         openXMLDialog.setFileName("layout.xml");

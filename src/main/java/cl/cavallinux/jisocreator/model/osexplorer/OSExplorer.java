@@ -24,19 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 public class OSExplorer {
     private File[] roots;
     private Path[] rootPaths;
-    private static OSExplorer instance;
     private static final String FOLDER_TYPE = "Folder";
     private static final String FILE_TYPE = "File";
     private static final int NO_EXTENSION_DOT = -1;
     private static final char EXTENSION_DOT_CHAR = '.';
 
-    static {
-        instance = newInstance();
-    }
-
-    public static OSExplorer getInstance() {
-        return instance;
-    }
 
     private OSExplorer(File[] roots, Path[] rootsPath) {
         log.info("OS: {}, Legacy FileSystem roots: {}, Java NIO FileSystems roots: {}", System.getProperty("os.name"),
@@ -45,12 +37,8 @@ public class OSExplorer {
         this.setRootPaths(rootsPath);
     }
 
-    private OSExplorer() {
+    public OSExplorer() {
         this(loadLegacyOSRoots(), loadOSRoots());
-    }
-
-    private static OSExplorer newInstance() {
-        return new OSExplorer();
     }
 
     @Deprecated(since = "0.2.0", forRemoval = true)

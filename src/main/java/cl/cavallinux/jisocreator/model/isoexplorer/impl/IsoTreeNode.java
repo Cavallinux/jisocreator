@@ -5,8 +5,8 @@ import java.io.File;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Image;
 
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 
 /**
  * Extension de la clase {@link TreeNode}, implementacion de un nodo del arbol de directorios ISO
@@ -93,7 +93,7 @@ public class IsoTreeNode extends TreeNode {
 
     @Override
     public Image getImage() {
-        return ImageUtils.getInstance().loadImage(this);
+        return ImageRegister.INSTANCE.getImageUtils().loadImage(this);
     }
 
     @Override

@@ -11,28 +11,31 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.widgets.Display;
 
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
+import cl.cavallinux.jisocreator.instances.GUIManager;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Getter
+@Setter
 public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgress {
     private InputStream saveProgressInputStream;
+    private boolean commandLineMode;
 
-    public SaveISO9660ImageThread(InputStream saveProgressInputStream) {
+    public SaveISO9660ImageThread(InputStream saveProgressInputStream, boolean commandLineMode) {
         super("cl.cavallinux.jisocreator.iso.save.thread");
         this.saveProgressInputStream = saveProgressInputStream;
+        this.commandLineMode = commandLineMode;
     }
 
     @Override
     public void run() {
-        Display.getDefault().asyncExec(new Thread(() -> {
-            try {
-                ModalContext.run(SaveISO9660ImageThread.this, true,
-                        MainWindow.getInstance().getStatusLine().getProgressMonitor(), Display.getCurrent());
-            } catch (InvocationTargetException | InterruptedException e) {
-                log.error("Error saving ISO image", e);
-            }
-        }));
+        if (commandLineMode) {
+            printCommandLineMode();
+        } else {
+            printGUIMode();
+        }
     }
 
     @Override
@@ -47,6 +50,28 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
             log.error("Error reading save progress", e);
         } finally {
             monitor.done();
+        }
+    }
+    
+    private void printGUIMode() {
+        Display.getDefault().asyncExec(new Thread(() -> {
+            try {
+                IProgressMonitor progressMonitor = GUIManager.INSTANCE.getMainWindow().getProgressMonitor();
+                ModalContext.run(SaveISO9660ImageThread.this, true, progressMonitor, Display.getCurrent());
+            } catch (InvocationTargetException | InterruptedException e) {
+                log.error("Error saving ISO image", e);
+            }
+        }));
+    }
+
+    private void printCommandLineMode() {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(saveProgressInputStream))) {
+            System.out.println("Saving image");
+            br.lines().forEach(line -> {
+                System.out.println(line);
+            });
+        } catch (IOException e) {
+            log.error("Error reading save progress", e);
         }
     }
 }

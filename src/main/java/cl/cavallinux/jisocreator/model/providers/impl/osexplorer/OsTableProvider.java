@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Image;
 
+import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.decl.TableProviderAdapter;
 import cl.cavallinux.jisocreator.util.ImageUtils;
@@ -95,7 +97,7 @@ public class OsTableProvider extends TableProviderAdapter {
         Path path = element instanceof Path ? (Path) element : ((File) element).toPath();
         switch (columnIndex) {
         case 0:
-            return ImageUtils.getInstance().loadImage(path);
+            return ImageRegister.INSTANCE.getImageUtils().loadImage(path);
         default:
             return null;
         }
@@ -121,7 +123,7 @@ public class OsTableProvider extends TableProviderAdapter {
     @Override
     public String getColumnText(Object element, int columnIndex) {
         Path filePath = element instanceof Path ? (Path) element : ((File) element).toPath();
-        OSExplorer explorer = OSExplorer.getInstance();
+        OSExplorer explorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
         switch (columnIndex) {
         case 0:
             return explorer.getName(filePath);

@@ -1,6 +1,10 @@
 package cl.cavallinux.jisocreator.gui.window;
 
-import org.eclipse.jface.action.ActionContributionItem;
+import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
@@ -17,33 +21,25 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
-import cl.cavallinux.jisocreator.action.main.AboutAction;
-import cl.cavallinux.jisocreator.action.main.ExitApplicationAction;
-import cl.cavallinux.jisocreator.action.main.NewIsoLayoutAction;
-import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
-import cl.cavallinux.jisocreator.action.main.PreferencesAction;
-import cl.cavallinux.jisocreator.action.main.SaveAsDropDownMenuAction;
-import cl.cavallinux.jisocreator.action.main.SaveAsIsoAction;
-import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
+import cl.cavallinux.jisocreator.action.main.LoadCommandLineISOLayoutAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.ActionsManager;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Getter
 public class MainWindow extends ApplicationWindow {
-    private static final MainWindow instance;
-    
-    static {
-        instance = new MainWindow();
-    }
-
-    public static MainWindow getInstance() {
-        return instance;
-    }
+    private IContributionItem separator;
+    private OSExplorerSashForm osExplorer;
+    private IsoExplorerSashForm isoExplorer;
+    private String isoFilePath;
 
     private MainWindow(Shell parentShell) {
         super(parentShell);
+        separator = new Separator();
         addMenuBar();
         addToolBar(SWT.RIGHT);
         addStatusLine();
@@ -60,9 +56,9 @@ public class MainWindow extends ApplicationWindow {
         super.configureShell(shell);
         shell.setText("JIsoCreator");
         shell.setSize(1024, 768);
-        shell.setImage(ImageUtils.getInstance().loadImage("iso.png"));
+        shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
 
-        Monitor primary = Display.getCurrent().getPrimaryMonitor();
+        Monitor primary = determinateActiveMonitor();
         Rectangle bounds = primary.getBounds();
         Rectangle rect = shell.getBounds();
 
@@ -77,12 +73,22 @@ public class MainWindow extends ApplicationWindow {
         log.info("Creating main window contents");
         Composite composite = new Composite(parent, SWT.NONE);
         SashForm mainPanel = new SashForm(composite, SWT.VERTICAL);
-        IsoExplorerSashForm.setInstance(new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL));
-        OSExplorerSashForm.setInstance(new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL));
+        isoExplorer = new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL);
+        osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
+        loadIsoLayout(isoFilePath);
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
-        NewIsoLayoutAction.getInstance().run();
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         return composite;
+    }
+
+    private void loadIsoLayout(String isoFilePath) {
+        if (StringUtils.isNotBlank(isoFilePath)) {
+            LoadCommandLineISOLayoutAction action = (LoadCommandLineISOLayoutAction) ActionsManager.LOADISOFROMLAYOUT
+                    .getAction();
+            action.run(isoFilePath);
+        } else {
+            ActionsManager.NEWISOLAYOUTACTION.getAction().run();
+        }
     }
 
     @Override
@@ -98,20 +104,20 @@ public class MainWindow extends ApplicationWindow {
         mainMenuManager.add(toolsMenu);
         mainMenuManager.add(helpMenu);
 
-        MenuManager saveAsMenu = new MenuManager("&Save as", ImageUtils.getInstance().loadImageDescriptor("saveas.png"),
-                "saveAs");
-        saveAsMenu.add(SaveAsXMLAction.getInstance());
-        saveAsMenu.add(SaveAsIsoAction.getInstance());
+        MenuManager saveAsMenu = new MenuManager("&Save as",
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("saveas.png"), "saveAs");
+        saveAsMenu.add(ActionsManager.SAVEASXMLACTION.getAction());
+        saveAsMenu.add(ActionsManager.SAVEASISOACTION.getAction());
 
-        fileMenu.add(NewIsoLayoutAction.getInstance());
-        fileMenu.add(OpenIsoLayoutAction.getInstance());
+        fileMenu.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
+        fileMenu.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
         fileMenu.add(saveAsMenu);
-        fileMenu.add(new Separator());
-        fileMenu.add(ExitApplicationAction.getInstance());
+        fileMenu.add(separator);
+        fileMenu.add(ActionsManager.EXITACTION.getAction());
 
-        toolsMenu.add(PreferencesAction.getInstance());
+        toolsMenu.add(ActionsManager.PREFERENCESACTION.getAction());
 
-        helpMenu.add(AboutAction.getInstance());
+        helpMenu.add(ActionsManager.ABOUTACTION.getAction());
         return mainMenuManager;
     }
 
@@ -119,16 +125,27 @@ public class MainWindow extends ApplicationWindow {
     protected ToolBarManager createToolBarManager(int style) {
         log.info("creating tool bar manager");
         ToolBarManager tool = new ToolBarManager(style);
-        tool.add(NewIsoLayoutAction.getInstance());
-        tool.add(OpenIsoLayoutAction.getInstance());
-
-        ActionContributionItem contrib = new ActionContributionItem(SaveAsDropDownMenuAction.getInstance());
-        contrib.setMode(ActionContributionItem.MODE_FORCE_TEXT);
-        tool.add(contrib);
-        tool.add(new Separator());
-        tool.add(PreferencesAction.getInstance());
-        tool.add(AboutAction.getInstance());
+        tool.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
+        tool.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
+        tool.add(separator);
+        tool.add(ActionsManager.SAVEASISOACTION.getAction());
+        tool.add(ActionsManager.SAVEASXMLACTION.getAction());
+        tool.add(separator);
+        tool.add(ActionsManager.PREFERENCESACTION.getAction());
+        tool.add(ActionsManager.ABOUTACTION.getAction());
         return tool;
+    }
+
+    public int open(String file) {
+        log.info("Opening window with file: {}", file);
+        this.isoFilePath = file;
+        return super.open();
+    }
+
+    private Monitor determinateActiveMonitor() {
+        Display display = Display.getCurrent();
+        Shell activeShell = display.getActiveShell();
+        return Objects.nonNull(activeShell) ? activeShell.getMonitor() : display.getPrimaryMonitor();
     }
 
     @Override
@@ -138,10 +155,10 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected void handleShellCloseEvent() {
-        ExitApplicationAction.getInstance().run();
+        ActionsManager.EXITACTION.getAction().run();
     }
 
-    public StatusLineManager getStatusLine() {
-        return getStatusLineManager();
+    public IProgressMonitor getProgressMonitor() {
+        return getStatusLineManager().getProgressMonitor();
     }
 }

@@ -15,6 +15,9 @@ import org.eclipse.swt.SWT;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.NullPermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
@@ -25,7 +28,6 @@ public class IOUtils {
     private PreferenceStore store;
     private Properties defaultProperties;
     private XStream xStreamParser;
-    private final static IOUtils instance;
     private final static String JISOCREATOR_CONFIG_DIR;
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
     private final static String JISOCREATOR_CONFIG_FILENAME;
@@ -40,15 +42,10 @@ public class IOUtils {
         GTK_PLATFORM = "gtk";
         WIN32_PLATFORM = "win32";
         WIN32_MKISOFS_BASE_PATH="<mkisofs.base.path>";
-        instance = new IOUtils();
     }
 
-    private IOUtils() {
+    public IOUtils() {
         loadXMLParser();
-    }
-
-    public static IOUtils getInstance() {
-        return instance;
     }
 
     public Object parseXMLFileToObject(String path) {
@@ -87,7 +84,11 @@ public class IOUtils {
 
     private void loadXMLParser() {
         xStreamParser = new XStream(new DomDriver());
-
+        xStreamParser.addPermission(NoTypePermission.NONE);
+        xStreamParser.addPermission(NullPermission.NULL);
+        xStreamParser.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xStreamParser.allowTypesByWildcard(new String[] { "cl.cavallinux.jisocreator.model.isoexplorer.impl.**" });
+        
         xStreamParser.alias("iso9660", IsoFileSystem.class);
         xStreamParser.alias("entry", IsoTreeNode.class);
         xStreamParser.aliasAttribute(IsoFileSystem.class, "root", "RootEntry");

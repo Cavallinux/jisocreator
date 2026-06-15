@@ -11,23 +11,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
-import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.instances.GUIManager;
+import cl.cavallinux.jisocreator.instances.IOManager;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.util.IOUtils;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     private String path;
     private IsoFileSystem iso;
-    private static SaveAsXMLAction instance;
-    static {
-        instance = new SaveAsXMLAction();
-    }
 
-    private SaveAsXMLAction() {
-        super("XML Layout", ImageUtils.getInstance().loadImageDescriptor("xml.png"));
+    public SaveAsXMLAction() {
+        super("XML Layout", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png"));
         setToolTipText("Save iso layout as xml file");
     }
 
@@ -37,11 +33,12 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
         if (path == null) {
             return;
         }
-        iso = (IsoFileSystem) IsoExplorerSashForm.getInstance().getIsoDirectoriesTree().getInput();
+        iso = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput();
         iso.setIsoLength();
         iso.setIsoPaths(null);
         try {
-            ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(Display.getDefault().getActiveShell());
+            ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(
+                    GUIManager.INSTANCE.getMainWindow().getShell());
             saveProgress.run(true, false, this);
             saveProgress.close();
         } catch (InvocationTargetException | InterruptedException e) {
@@ -54,16 +51,12 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
         log.info("Saving layout as xml to path: {}", path);
-        if (IOUtils.getInstance().saveObjectToXML(iso, path, monitor)) {
+        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path, monitor)) {
             monitor.done();
             log.info("Layout saved successfully as xml to path: {}", path);
         } else {
             throw new InterruptedException("Saving file is not possible, try later.");
         }
-    }
-
-    public static SaveAsXMLAction getInstance() {
-        return instance;
     }
 
     private void setFile() {

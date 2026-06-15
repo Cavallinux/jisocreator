@@ -3,38 +3,28 @@ package cl.cavallinux.jisocreator.action.osexplorer;
 import java.io.File;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
-import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
-import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.GUIManager;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 
 public class GoToParentAction extends Action {
-    private static GoToParentAction instance;
-
-    static {
-        instance = new GoToParentAction();
-    }
-
-    private GoToParentAction() {
-        super("Go to Parent File", ImageUtils.getInstance().loadImageDescriptor("up.png"));
+    public GoToParentAction() {
+        super("Go to Parent File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("up.png"));
         setToolTipText("Go to parent file");
         setEnabled(false);
     }
 
     @Override
     public void run() {
-        StructuredSelection selection = (StructuredSelection) OSExplorerSashForm.getInstance().getOsDirectoriesTree()
-                .getSelection();
+        IStructuredSelection selection = (IStructuredSelection) GUIManager.INSTANCE.getMainWindow().getOsExplorer()
+                .getTreeSelection();
         File file = (File) selection.getFirstElement();
-
         File parent = file.getParentFile();
         selection = new StructuredSelection(parent);
-        OSExplorerSashForm.getInstance().getOsDirectoriesTree().setSelection(selection);
-        setEnabled(OSExplorer.getInstance().isRoot(file.toPath()));
-    }
-
-    public static GoToParentAction getInstance() {
-        return instance;
+        GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree().setSelection(selection);
+        setEnabled(OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(file.toPath()));
     }
 }

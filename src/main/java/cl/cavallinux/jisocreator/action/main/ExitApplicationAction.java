@@ -5,9 +5,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import cl.cavallinux.jisocreator.gui.window.MainWindow;
-import cl.cavallinux.jisocreator.util.IOUtils;
-import cl.cavallinux.jisocreator.util.ImageUtils;
+import cl.cavallinux.jisocreator.instances.GUIManager;
+import cl.cavallinux.jisocreator.instances.IOManager;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,26 +19,17 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ExitApplicationAction extends Action {
-    private static ExitApplicationAction instance;
-
-    static {
-        instance = new ExitApplicationAction();
-    }
-
-    /**
-     * Constructor por defecto, con acceso privado para prevenir instanciacion desde
-     * otras clases.
-     */
-    private ExitApplicationAction() {
+    public ExitApplicationAction() {
         super("Exit");
         setToolTipText("Create new iso layout");
-        setImageDescriptor(ImageUtils.getInstance().loadImageDescriptor("exit.png"));
+        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("exit.png"));
     }
 
     @Override
     public void run() {
         log.info("Confirming exit application");
-        boolean openExitDialogConfirmation = IOUtils.getInstance().getStore().getBoolean("general.exit.confirm");
+        boolean openExitDialogConfirmation = IOManager.INSTANCE.getIoUtils().getStore()
+                .getBoolean("general.exit.confirm");
         if (openExitDialogConfirmation) {
             openConfirmExitAppDialog();
         } else {
@@ -47,8 +38,7 @@ public class ExitApplicationAction extends Action {
     }
 
     private void openConfirmExitAppDialog() {
-        MainWindow mainWindow = MainWindow.getInstance();
-        Shell shell = mainWindow.getShell();
+        Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
         boolean confirmExit = MessageDialog.openConfirm(shell, "Confirm", "Are you sure to exit JIsocreator?");
         if (confirmExit) {
             exit();
@@ -57,22 +47,12 @@ public class ExitApplicationAction extends Action {
         }
     }
     
-    public void exit() {
+    private void exit() {
         log.info("Exiting application");
-        MainWindow mainWindow = MainWindow.getInstance();
-        Shell shell = mainWindow.getShell();
+        Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
         shell.setVisible(false);
-        mainWindow.close();
+        GUIManager.INSTANCE.getMainWindow().close();
         Display.getCurrent().dispose();
         System.exit(0);
-    }
-
-    /**
-     * Obtiene la instalacia de la clase.
-     * 
-     * @return un {@link ExitApplicationAction}
-     */
-    public static ExitApplicationAction getInstance() {
-        return instance;
     }
 }

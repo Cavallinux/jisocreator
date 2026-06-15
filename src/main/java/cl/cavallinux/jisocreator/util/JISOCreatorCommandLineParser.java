@@ -2,16 +2,17 @@ package cl.cavallinux.jisocreator.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,14 +37,11 @@ public class JISOCreatorCommandLineParser {
         CommandLineParser parser = new DefaultParser();
         return parser.parse(options, args);
     }
-
-    public void addOption(String shortOpt, String longOpt, String description) {
-        options.addOption(Option.builder(shortOpt).longOpt(longOpt).desc(description).build());
-    }
-
-    public void addOption(String shortOpt, String longOpt, String argName, String description, boolean required) {
-        options.addOption(Option.builder(shortOpt).longOpt(longOpt).hasArg().argName(argName).desc(description)
-                .required(required).build());
+    
+    public void addOptions(CommandLineOptionsManager[] optionsToAdd) {
+        Arrays.asList(optionsToAdd).forEach(option -> {
+            options.addOption(option.getOption());
+        });
     }
 
     /**
@@ -76,7 +74,6 @@ public class JISOCreatorCommandLineParser {
     public boolean handleCommandLineMode(CommandLine cmd) throws IllegalArgumentException {
         String inputPath = cmd.getOptionValue("i");
         String outputFile = cmd.getOptionValue("o");
-        boolean debugMode = cmd.hasOption("d");
 
         // Validación 1: Verificar que ambas opciones estén presentes si se usa modo CLI
         if ((inputPath == null && outputFile != null) || (inputPath != null && outputFile == null)) {
@@ -128,7 +125,6 @@ public class JISOCreatorCommandLineParser {
         System.out.println("[INFO] ========== Configuración ==========");
         System.out.println("[INFO] Entrada: " + inputPath + (inputDir.isDirectory() ? " (Directorio)" : " (Archivo)"));
         System.out.println("[INFO] Salida: " + outputFile);
-        System.out.println("[INFO] Debug: " + (debugMode ? "ACTIVADO" : "DESACTIVADO"));
         System.out.println("[INFO] ====================================");
 
         System.out.println("[INFO] Modo CLI listo para procesamiento");

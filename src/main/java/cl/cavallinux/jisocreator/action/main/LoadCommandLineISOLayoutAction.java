@@ -14,7 +14,6 @@ public class LoadCommandLineISOLayoutAction extends Action {
         log.info("Loading iso layout from file: {}", layoutFilePath);
         IsoFileSystem iso = (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(layoutFilePath);
         GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(iso);
-        //
         GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
                 .setSelection(new StructuredSelection(iso.getRoot()), true);
         GUIManager .INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(iso.getRoot(), 1);

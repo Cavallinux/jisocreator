@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -26,7 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 public class SaveAsIsoAction extends Action {
     private List<String> mkisofsCommand;
-    private List<String> appArguments;
+    private String inputXMLLayoutFile;
+    private String outputISOFile;
     private boolean commandLineMode;
 
     public SaveAsIsoAction() {
@@ -39,17 +39,15 @@ public class SaveAsIsoAction extends Action {
     public void run() {
         try {
             String isoFilePath = obtainIsoFilePath(commandLineMode);
-            if (StringUtils.isNotBlank(isoFilePath)) {
-                deleteIsoFileIfExists(isoFilePath);
-                IsoFileSystem root = obtainIsoFileSystem();
-                root.parse();
-                setMkisofsCommand(isoFilePath, root.getPaths());
-                ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
-                Process isoProcess = mkisofsProcessBuilder.start();
-                SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream(),
-                        commandLineMode);
-                saveThread.start();
-            }
+            deleteIsoFileIfExists(isoFilePath);
+            IsoFileSystem root = obtainIsoFileSystem();
+            root.parse();
+            setMkisofsCommand(isoFilePath, root.getPaths());
+            ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
+            Process isoProcess = mkisofsProcessBuilder.start();
+            SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream(),
+                    commandLineMode);
+            saveThread.start();
         } catch (IOException e) {
             log.error("Error executing command", e);
         }
@@ -57,7 +55,7 @@ public class SaveAsIsoAction extends Action {
 
     private IsoFileSystem obtainIsoFileSystem() {
         if (commandLineMode) {
-            return (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(appArguments.get(1));
+            return (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(inputXMLLayoutFile);
         } else {
             return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
                     .getInput();
@@ -66,7 +64,7 @@ public class SaveAsIsoAction extends Action {
 
     private String obtainIsoFilePath(boolean commandLineMode) {
         if (commandLineMode) {
-            return appArguments.get(3);
+            return outputISOFile;
         } else {
             FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.SAVE);
             openXMLDialog.setText("Choose a iso file to save");

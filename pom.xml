@@ -146,6 +146,8 @@
 					</execution>
 				</executions>
 				<configuration>
+					<finalName>${project.artifactId}-${project.version}-${swt.platform}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
 						<descriptor>${maven.assembly.plugin.descriptor}</descriptor>
 					</descriptors>

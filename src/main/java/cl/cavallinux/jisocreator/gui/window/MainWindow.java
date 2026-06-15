@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.gui.window;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
+import cl.cavallinux.jisocreator.action.main.LoadCommandLineISOLayoutAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
@@ -33,6 +35,7 @@ public class MainWindow extends ApplicationWindow {
     private IContributionItem separator;
     private OSExplorerSashForm osExplorer;
     private IsoExplorerSashForm isoExplorer;
+    private String isoFilePath;
 
     private MainWindow(Shell parentShell) {
         super(parentShell);
@@ -72,10 +75,20 @@ public class MainWindow extends ApplicationWindow {
         SashForm mainPanel = new SashForm(composite, SWT.VERTICAL);
         isoExplorer = new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
-        ActionsManager.NEWISOLAYOUTACTION.getAction().run();
+        loadIsoLayout(isoFilePath);
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         return composite;
+    }
+
+    private void loadIsoLayout(String isoFilePath) {
+        if (StringUtils.isNotBlank(isoFilePath)) {
+            LoadCommandLineISOLayoutAction action = (LoadCommandLineISOLayoutAction) ActionsManager.LOADISOFROMLAYOUT
+                    .getAction();
+            action.run(isoFilePath);
+        } else {
+            ActionsManager.NEWISOLAYOUTACTION.getAction().run();
+        }
     }
 
     @Override
@@ -122,7 +135,13 @@ public class MainWindow extends ApplicationWindow {
         tool.add(ActionsManager.ABOUTACTION.getAction());
         return tool;
     }
-    
+
+    public int open(String file) {
+        log.info("Opening window with file: {}", file);
+        this.isoFilePath = file;
+        return super.open();
+    }
+
     private Monitor determinateActiveMonitor() {
         Display display = Display.getCurrent();
         Shell activeShell = display.getActiveShell();
@@ -138,7 +157,7 @@ public class MainWindow extends ApplicationWindow {
     protected void handleShellCloseEvent() {
         ActionsManager.EXITACTION.getAction().run();
     }
-    
+
     public IProgressMonitor getProgressMonitor() {
         return getStatusLineManager().getProgressMonitor();
     }

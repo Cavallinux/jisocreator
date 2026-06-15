@@ -35,6 +35,11 @@ public class MainAction extends Action {
         GUIManager.INSTANCE.getMainWindow().setBlockOnOpen(true);
         GUIManager.INSTANCE.getMainWindow().open();
     }
+    
+    public void run(String layoutFilePath) {
+        GUIManager.INSTANCE.getMainWindow().setBlockOnOpen(true);
+        GUIManager.INSTANCE.getMainWindow().open(layoutFilePath);
+    }
 
     /**
      * Metodo principal por donde arranca la app
@@ -47,11 +52,13 @@ public class MainAction extends Action {
             CommandLine cmd = parser.parse(args);
             boolean commandLineMode = false;
             MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
-            if(cmd.hasOption("l")) {
-                mainAction.run();
+            if (cmd.hasOption("l")) {
+                mainAction.run(args[1]);
+            } else {
+                handleCommandLine(args, parser, cmd, commandLineMode, mainAction);
             }
 
-            handleCommandLine(args, parser, cmd, commandLineMode, mainAction);
+            
            
         } catch (ParseException | IllegalArgumentException e) {
             System.err.format("[ERROR] Error parsing app arguments: %s\n" + e.getMessage());
@@ -108,7 +115,7 @@ public class MainAction extends Action {
         // Opciones que requieren argumentos
         parser.addOption("i", "input", "PATH", "Input path", false);
         parser.addOption("o", "output", "FILE", "ISO File output path", false);
-        parser.addOption("l", "load", "Load xml file into GUI");
+        parser.addOption("l", "load", "Load existing xml file into GUI");
         return parser;
     }
 }

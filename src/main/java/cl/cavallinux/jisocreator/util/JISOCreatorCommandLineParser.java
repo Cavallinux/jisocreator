@@ -72,26 +72,26 @@ public class JISOCreatorCommandLineParser {
         formatter.printHelp(programName, header, options, footer, true);
     }
 
-    public void validateLoadXMLFile(CommandLine cmd, Option option) {
+    public void validateLoadXMLFile(CommandLine cmd, Option option) throws ParseException {
         String inputPath = cmd.getOptionValue(option);
 
         if (StringUtils.isBlank(inputPath)) {
-            throw new IllegalArgumentException("Load xml argument required");
+            throw new ParseException("Load xml argument required");
         }
         // Validación 2: Validar que la ruta de entrada existe
         File inputDir = new File(inputPath);
         if (!inputDir.exists()) {
-            throw new IllegalArgumentException("File not found or doesn't exists: " + inputPath);
+            throw new ParseException("File not found or doesn't exists: " + inputPath);
         }
 
         // Validación 3: Validar que la ruta de entrada es accesible
         if (!inputDir.canRead()) {
-            throw new IllegalArgumentException("Read and write permissions denied: " + inputPath);
+            throw new ParseException("Read and write permissions denied: " + inputPath);
         }
 
         // Validación 6: Validar extensión del archivo de salida
         if (!inputPath.toLowerCase().endsWith(".xml")) {
-            throw new IllegalArgumentException("Input layout is not a xml file: " + inputPath);
+            throw new ParseException("Input layout is not a xml file: " + inputPath);
         }
     }
 

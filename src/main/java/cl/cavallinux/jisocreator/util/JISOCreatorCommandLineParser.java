@@ -1,16 +1,19 @@
 package cl.cavallinux.jisocreator.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.lang3.StringUtils;
 
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import lombok.AllArgsConstructor;
@@ -37,11 +40,15 @@ public class JISOCreatorCommandLineParser {
         CommandLineParser parser = new DefaultParser();
         return parser.parse(options, args);
     }
-    
-    public void addOptions(CommandLineOptionsManager[] optionsToAdd) {
-        Arrays.asList(optionsToAdd).forEach(option -> {
-            options.addOption(option.getOption());
-        });
+
+    public void addOptions() {
+        options.addOption(CommandLineOptionsManager.LOAD.getOption());
+        options.addOption(CommandLineOptionsManager.HELP.getOption());
+        options.addOption(CommandLineOptionsManager.VERSION.getOption());
+        OptionGroup optionGroup = new OptionGroup();
+        optionGroup.addOption(CommandLineOptionsManager.ISOINPUT.getOption());
+        optionGroup.addOption(CommandLineOptionsManager.ISOOUTPUT.getOption());
+        options.addOptionGroup(optionGroup);
     }
 
     /**
@@ -56,79 +63,84 @@ public class JISOCreatorCommandLineParser {
         versionArguments.add(System.getProperty("os.name"));
         System.out.format("%s version %s\nJVM version: %s\nJVM vendor: %s\n OS host: %s\n", versionArguments.toArray());
     }
-    
+
     /**
      * Muestra el mensaje de ayuda.
      */
-    public void printHelp(String programName) {
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(programName + " [OPCIONES]", header, options, footer, true);
+    public void printHelp(String programName) throws IOException {
+        HelpFormatter formatter = HelpFormatter.builder().get();
+        formatter.printHelp(programName, header, options, footer, true);
     }
-    
+
+    public void validateLoadXMLFile(CommandLine cmd, Option option) throws ParseException {
+        String inputPath = cmd.getOptionValue(option);
+
+        if (StringUtils.isBlank(inputPath)) {
+            throw new ParseException("Load xml argument required");
+        }
+        // Validación 2: Validar que la ruta de entrada existe
+        File inputDir = new File(inputPath);
+        if (!inputDir.exists()) {
+            throw new ParseException("File not found or doesn't exists: " + inputPath);
+        }
+
+        // Validación 3: Validar que la ruta de entrada es accesible
+        if (!inputDir.canRead()) {
+            throw new ParseException("Read and write permissions denied: " + inputPath);
+        }
+
+        // Validación 6: Validar extensión del archivo de salida
+        if (!inputPath.toLowerCase().endsWith(".xml")) {
+            throw new ParseException("Input layout is not a xml file: " + inputPath);
+        }
+    }
+
     /**
      * Maneja el modo línea de comandos con validación completa de argumentos.
      * 
      * @param cmd CommandLine parseado
      * @throws Exception si hay errores de validación
      */
-    public boolean handleCommandLineMode(CommandLine cmd) throws IllegalArgumentException {
-        String inputPath = cmd.getOptionValue("i");
-        String outputFile = cmd.getOptionValue("o");
+    public boolean handleCommandLineMode(CommandLine cmd) throws ParseException {
+        String inputPath = null;
+        String outputFile = null;
 
-        // Validación 1: Verificar que ambas opciones estén presentes si se usa modo CLI
-        if ((inputPath == null && outputFile != null) || (inputPath != null && outputFile == null)) {
-            throw new IllegalArgumentException(
-                    "Se requieren tanto -i (entrada) como -o (salida) cuando se usa modo línea de comandos");
+        if (cmd.hasOption(CommandLineOptionsManager.ISOINPUT.getOption())
+                && cmd.hasOption(CommandLineOptionsManager.ISOOUTPUT.getOption())) {
+            inputPath = cmd.getOptionValue(CommandLineOptionsManager.ISOINPUT.getOption());
+            outputFile = cmd.getOptionValue(CommandLineOptionsManager.ISOOUTPUT.getOption());
+        } else {
+            return false;
         }
 
-        // Si no hay entrada/salida, terminamos
+        if ((inputPath == null && outputFile != null) || (inputPath != null && outputFile == null)) {
+            throw new ParseException("Options -i and -o required");
+        }
+
         if (inputPath == null && outputFile == null) {
             return false;
         }
 
-        // Validación 2: Validar que la ruta de entrada existe
         File inputDir = new File(inputPath);
         if (!inputDir.exists()) {
-            throw new IllegalArgumentException("El archivo o directorio de entrada no existe: " + inputPath);
+            throw new ParseException("Input file doesn't exist" + inputPath);
         }
 
-        // Validación 3: Validar que la ruta de entrada es accesible
         if (!inputDir.canRead()) {
-            throw new IllegalArgumentException(
-                    "No hay permisos para leer el archivo o directorio de entrada: " + inputPath);
+            throw new ParseException("Read and write permissions denied: " + inputPath);
         }
 
-        // Validación 4: Validar que la ruta de salida es válida
         File outputFileObj = new File(outputFile);
         File outputDir = outputFileObj.getParentFile();
 
         if (outputDir != null && !outputDir.exists()) {
-            throw new IllegalArgumentException("El directorio de salida no existe: " + outputDir.getAbsolutePath());
+            throw new ParseException("Output directory doesn't exists " + outputDir.getAbsolutePath());
         }
 
         if (outputDir != null && !outputDir.canWrite()) {
-            throw new IllegalArgumentException(
-                    "No hay permisos de escritura en el directorio de salida: " + outputDir.getAbsolutePath());
+            throw new ParseException("Read and write permissions denied: " + outputDir.getAbsolutePath());
         }
 
-        // Validación 5: Advertencia si el archivo de salida ya existe
-        if (outputFileObj.exists()) {
-            System.out.println("[ADVERTENCIA] El archivo de salida ya existe y será sobrescrito: " + outputFile);
-        }
-
-        // Validación 6: Validar extensión del archivo de salida
-        if (!outputFile.toLowerCase().endsWith(".iso")) {
-            System.out.println("[ADVERTENCIA] Se recomienda que el archivo de salida tenga extensión .iso");
-        }
-
-        // Información del procesamiento
-        System.out.println("[INFO] ========== Configuración ==========");
-        System.out.println("[INFO] Entrada: " + inputPath + (inputDir.isDirectory() ? " (Directorio)" : " (Archivo)"));
-        System.out.println("[INFO] Salida: " + outputFile);
-        System.out.println("[INFO] ====================================");
-
-        System.out.println("[INFO] Modo CLI listo para procesamiento");
-        
         return true;
     }
 }

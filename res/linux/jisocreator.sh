@@ -1,1 +1,1 @@
-java --add-opens java.base/java.util=ALL-UNNAMED --enable-native-access=ALL-UNNAMED -Dpath.logs=/tmp -jar jisocreator.jar $@
+java --add-opens java.base/java.util=ALL-UNNAMED --enable-native-access=ALL-UNNAMED -jar jisocreator.jar $@

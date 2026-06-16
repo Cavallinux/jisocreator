@@ -17,12 +17,43 @@
 			<properties>
 				<swt.platform>gtk.linux.x86_64</swt.platform>
 			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>${swt.platform.name}</artifactId>
+					<version>${swt.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt</artifactId>
+					<version>${swt.version}</version>
+				</dependency>
+			</dependencies>
 		</profile>
 		<profile>
 			<id>windows</id>
 			<properties>
 				<swt.platform>win32.win32.x86_64</swt.platform>
+				<swt.platform.toexclude.name>org.eclipse.swt.gtk.linux.x86_64</swt.platform.toexclude.name>
 			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>${swt.platform.name}</artifactId>
+					<version>${swt.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt</artifactId>
+					<version>${swt.version}</version>
+					<exclusions>
+						<exclusion>
+							<groupId>org.eclipse.platform</groupId>
+							<artifactId>${swt.platform.toexclude.name}</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 
@@ -33,7 +64,8 @@
 		<maven.exec.plugin.classpath.config>-classpath</maven.exec.plugin.classpath.config>
 		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
 		<maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
-		<maven.assembly.plugin.descriptor>src/assembly/assembly.${swt.platform}.xml</maven.assembly.plugin.descriptor>
+		<maven.assembly.plugin.descriptor>
+			src/assembly/assembly.${swt.platform}.xml</maven.assembly.plugin.descriptor>
 		<maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
 		<junit.version>5.10.2</junit.version>
 		<mockito.version>5.7.0</mockito.version>
@@ -53,7 +85,8 @@
 		<commons-cli.version>1.11.0</commons-cli.version>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<debug.port>5005</debug.port>
-		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
+		<debug.jvm.args>
+			-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
@@ -146,7 +179,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<finalName>${project.artifactId}-${project.version}-${swt.platform}</finalName>
+					<finalName>
+						${project.artifactId}-${project.version}-${swt.platform}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
 						<descriptor>${maven.assembly.plugin.descriptor}</descriptor>
@@ -188,11 +222,6 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.platform</groupId>
-			<artifactId>${swt.platform.name}</artifactId>
-			<version>${swt.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>

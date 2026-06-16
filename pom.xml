@@ -23,6 +23,11 @@
 					<artifactId>${swt.platform.name}</artifactId>
 					<version>${swt.version}</version>
 				</dependency>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt</artifactId>
+					<version>${swt.version}</version>
+				</dependency>
 			</dependencies>
 		</profile>
 		<profile>
@@ -84,7 +89,7 @@
 			-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
-	</properties> 
+	</properties>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>

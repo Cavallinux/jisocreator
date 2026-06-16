@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cl.cavallinux</groupId>
 	<artifactId>jisocreator</artifactId>
-	<version>0.1.3</version>
+	<version>0.1.4-SNAPSHOT</version>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
 
@@ -31,6 +31,46 @@
 			</dependencies>
 		</profile>
 		<profile>
+			<id>linux-cmdlinemode</id>
+			<properties>
+				<swt.platform>gtk.linux.x86_64</swt.platform>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>${swt.platform.name}</artifactId>
+					<version>${swt.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt</artifactId>
+					<version>${swt.version}</version>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>${exec.maven.plugin}</version>
+						<configuration>
+							<executable>java</executable>
+							<arguments>
+								<argument>--add-opens</argument>
+								<argument>java.base/java.util=ALL-UNNAMED</argument>
+								<argument>${maven.exec.plugin.classpath.config}</argument>
+								<classpath />
+								<argument>${debug.jvm.args}</argument>
+								<argument>${jvm.nativeacess.arg}</argument>
+								<argument>${jisocreator.main.class}</argument>
+								<argument>-h</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>windows</id>
 			<properties>
 				<swt.platform>win32.win32.x86_64</swt.platform>
@@ -54,6 +94,53 @@
 					</exclusions>
 				</dependency>
 			</dependencies>
+		</profile>
+		<profile>
+			<id>windows-cmdlinemode</id>
+			<properties>
+				<swt.platform>win32.win32.x86_64</swt.platform>
+				<swt.platform.toexclude.name>org.eclipse.swt.gtk.linux.x86_64</swt.platform.toexclude.name>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>${swt.platform.name}</artifactId>
+					<version>${swt.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt</artifactId>
+					<version>${swt.version}</version>
+					<exclusions>
+						<exclusion>
+							<groupId>org.eclipse.platform</groupId>
+							<artifactId>${swt.platform.toexclude.name}</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>${exec.maven.plugin}</version>
+						<configuration>
+							<executable>java</executable>
+							<arguments>
+								<argument>--add-opens</argument>
+								<argument>java.base/java.util=ALL-UNNAMED</argument>
+								<argument>${maven.exec.plugin.classpath.config}</argument>
+								<classpath />
+								<argument>${debug.jvm.args}</argument>
+								<argument>${jvm.nativeacess.arg}</argument>
+								<argument>${jisocreator.main.class}</argument>
+								<argument>-h</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 

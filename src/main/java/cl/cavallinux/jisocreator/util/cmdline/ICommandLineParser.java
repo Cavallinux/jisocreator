@@ -6,7 +6,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 
 public interface ICommandLineParser {
-    default CommandLine parse(String... commandLineArguments) throws ParseException{
+    default CommandLine parse(String... commandLineArguments) throws ParseException {
         throw new ParseException("Default implementation");
     };
 

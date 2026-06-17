@@ -63,7 +63,7 @@
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>${jisocreator.main.class}</argument>
-								<argument>-h</argument>
+								<argument>-v</argument>
 							</arguments>
 						</configuration>
 					</plugin>

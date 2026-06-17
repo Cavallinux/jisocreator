@@ -10,7 +10,7 @@ import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineParserManager;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.util.JISOCreatorCommandLineParser;
+import cl.cavallinux.jisocreator.util.cmdline.ICommandLineParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 public class MainAction extends Action {
-    private JISOCreatorCommandLineParser parser;
+    private ICommandLineParser parser;
 
     public MainAction() {
         parser = CommandLineParserManager.INSTANCE.getParser();
@@ -64,8 +64,9 @@ public class MainAction extends Action {
 
     public void handleCommandLine(String[] args) throws ParseException, IOException {
         CommandLine cmd = parser.parse(args);
+        boolean isSaveToIsoOptions = cmd.hasOption(CommandLineOptionsManager.ISOINPUT.getOption())
+                && cmd.hasOption(CommandLineOptionsManager.ISOOUTPUT.getOption());
         if (cmd.hasOption(CommandLineOptionsManager.LOAD.getOption())) {
-            parser.validateLoadXMLFile(cmd, CommandLineOptionsManager.LOAD.getOption());
             run(cmd.getOptionValue(CommandLineOptionsManager.LOAD.getOption()));
             System.exit(0);
         } else if (cmd.hasOption(CommandLineOptionsManager.VERSION.getOption())) {
@@ -74,7 +75,8 @@ public class MainAction extends Action {
         } else if (cmd.hasOption(CommandLineOptionsManager.HELP.getOption())) {
             parser.printHelp("jisocreator");
             System.exit(0);
-        } else if (parser.handleCommandLineMode(cmd)) {
+        } else if (isSaveToIsoOptions) {
+            parser.handleCommandLine(cmd);
             SaveAsIsoAction saveAsIsoAction = (SaveAsIsoAction) ActionsManager.SAVEASISOACTION.getAction();
             saveAsIsoAction.setOutputISOFile(cmd.getOptionValue(CommandLineOptionsManager.ISOOUTPUT.getOption()));
             saveAsIsoAction.setInputXMLLayoutFile(cmd.getOptionValue(CommandLineOptionsManager.ISOINPUT.getOption()));
@@ -83,5 +85,6 @@ public class MainAction extends Action {
         } else {
             run();
         }
+
     }
 }

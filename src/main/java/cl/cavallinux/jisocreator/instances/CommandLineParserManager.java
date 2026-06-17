@@ -3,6 +3,7 @@ package cl.cavallinux.jisocreator.instances;
 import org.apache.commons.cli.DefaultParser;
 
 import cl.cavallinux.jisocreator.util.JISOCreatorCommandLineParser;
+import cl.cavallinux.jisocreator.util.cmdline.ICommandLineParser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,5 +15,5 @@ public enum CommandLineParserManager {
             .footer(JISOCreatorCommandLineParser.buildHelpFooter()).options(JISOCreatorCommandLineParser.buildOptions())
             .build());
 
-    private JISOCreatorCommandLineParser parser;
+    private ICommandLineParser parser;
 }

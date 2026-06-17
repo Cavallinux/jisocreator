@@ -13,10 +13,7 @@ public class IsoTreeLabelProvider extends TreeLabelAdapter {
 
     @Override
     public String getText(Object element) {
-        if (((ITreeNode) element).isRoot()) {
-            return "Root";
-        } else {
-            return ((ITreeNode) element).getShortName();
-        }
+        ITreeNode isoTreeNodeElement = (ITreeNode) element;
+        return isoTreeNodeElement.isRoot() ? isoTreeNodeElement.getIsoName() : isoTreeNodeElement.getShortName();
     }
 }

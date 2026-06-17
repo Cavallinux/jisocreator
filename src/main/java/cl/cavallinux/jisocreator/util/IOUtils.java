@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.apache.commons.lang3.Strings;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,6 +35,8 @@ public class IOUtils {
     private final static String GTK_PLATFORM;
     private final static String WIN32_PLATFORM;
     private final static String WIN32_MKISOFS_BASE_PATH;
+    public final static int MKISOFS_VOLUMEID_MAXLENGTH;
+    private final static String MKISOFS_ISOFILESYSTEM_APPLICATIONID;
 
     static {
         JISOCREATOR_CONFIG_DIR = System.getProperty("user.home").concat("/.config/jisocreator/");
@@ -42,10 +45,22 @@ public class IOUtils {
         GTK_PLATFORM = "gtk";
         WIN32_PLATFORM = "win32";
         WIN32_MKISOFS_BASE_PATH="<mkisofs.base.path>";
+        MKISOFS_VOLUMEID_MAXLENGTH = 32;
+        MKISOFS_ISOFILESYSTEM_APPLICATIONID = "jisocreator";
     }
 
     public IOUtils() {
         loadXMLParser();
+    }
+    
+    public String generateInitialVolumeID() {
+        String isoFileSystemVolumeID = UUID.randomUUID().toString();
+        isoFileSystemVolumeID = isoFileSystemVolumeID.replace("-", "");
+        return isoFileSystemVolumeID.substring(0, Math.min(isoFileSystemVolumeID.length(), MKISOFS_VOLUMEID_MAXLENGTH));
+    }
+    
+    public String generateIsoFilesystemApplicationID() {
+        return MKISOFS_ISOFILESYSTEM_APPLICATIONID;
     }
 
     public Object parseXMLFileToObject(String path) {

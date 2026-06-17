@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
+import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.Getter;
 
 @Getter
@@ -111,9 +112,19 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
         if (Objects.nonNull(volumeIDText) && !volumeIDText.isDisposed()) {
             String volumeIdInput = volumeIDText.getText();
             if (StringUtils.isNotBlank(volumeIdInput)) {
-                setErrorMessage(null);
-                errorIndicator.setText("");
-                volumeIDResponse = volumeIdInput;
+                if (volumeIdInput.length() <= IOUtils.MKISOFS_VOLUMEID_MAXLENGTH) {
+                    setErrorMessage(null);
+                    errorIndicator.setText("");
+                    volumeIDResponse = volumeIdInput;
+                } else {
+                    setErrorMessage("VolumeID is greater than 32 characters");
+                    errorIndicator.setText("This field must be 32 chars length");
+                    getShell().layout(true, true);
+                    getShell().pack();
+                    volumeIDText.setFocus();
+                    return;
+                }
+                
             } else {
                 setErrorMessage("VolumeID is required");
                 errorIndicator.setText("This field is required to complete request");

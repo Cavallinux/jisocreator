@@ -1,6 +1,7 @@
 package cl.cavallinux.jisocreator.action.isoexplorer;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 
 import cl.cavallinux.jisocreator.gui.dialog.ShowIsoLayoutInformationDialog;
 import cl.cavallinux.jisocreator.instances.GUIManager;
@@ -12,7 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ShowIsoInformationAction extends Action {
     public ShowIsoInformationAction() {
         super("Iso layout information", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("properties.png"));
-        setToolTipText("Show and/or modify iso layout information");
+        setToolTipText(
+                "Show and/or modify iso layout information\n, the volume id field must be minor to 32 chars to be acepted");
         setEnabled(true);
     }
 
@@ -30,13 +32,15 @@ public class ShowIsoInformationAction extends Action {
         ShowIsoLayoutInformationDialog dialog = new ShowIsoLayoutInformationDialog(
                 GUIManager.INSTANCE.getMainWindow().getShell(), windowTitle, staticInfo, valorInicialVol,
                 isoFilesystemSize, applicationID);
-
-        if (dialog.open() == org.eclipse.jface.window.Window.OK) {
+        
+        switch (dialog.open()) {
+        case Window.OK: {
             String nuevoVolumeId = dialog.getVolumeIDResponse();
             isoFileSystem.setVolumeID(nuevoVolumeId);
-            System.out.println("Operación confirmada. Nuevo Volume ID registrado: " + nuevoVolumeId);
-        } else {
-            System.out.println("Operación cancelada por el usuario.");
+            log.info("Confirmed operation, new volume id: {} ", isoFileSystem.getVolumeID());
+        }
+        default:
+            log.info("User cancelled operation");
         }
     }
 }

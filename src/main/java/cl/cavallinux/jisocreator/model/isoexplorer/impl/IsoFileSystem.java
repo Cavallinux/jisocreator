@@ -3,8 +3,8 @@ package cl.cavallinux.jisocreator.model.isoexplorer.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 
 /**
@@ -31,7 +31,8 @@ public class IsoFileSystem {
     }
 
     public IsoFileSystem() {
-        this(UUID.randomUUID().toString(), "jisocreator");
+        this(IOManager.INSTANCE.getIoUtils().generateInitialVolumeID(),
+                IOManager.INSTANCE.getIoUtils().generateIsoFilesystemApplicationID());
     }
 
     public ITreeNode[] toArray() {

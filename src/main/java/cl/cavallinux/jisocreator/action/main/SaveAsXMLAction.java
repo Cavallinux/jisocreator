@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -30,19 +31,22 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     @Override
     public void run() {
         setFile();
-        if (path == null) {
+        if (StringUtils.isNotBlank(path)) {
+            iso = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                    .getInput();
+            iso.setIsoLength();
+            iso.setIsoPaths(null);
+            try {
+                ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(
+                        GUIManager.INSTANCE.getMainWindow().getShell());
+                saveProgress.run(true, false, this);
+                saveProgress.close();
+            } catch (InvocationTargetException | InterruptedException e) {
+                log.error("Error saving layout as xml", e);
+            }
+        } else {
+            log.info("Iso layout xml saving aborted");
             return;
-        }
-        iso = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput();
-        iso.setIsoLength();
-        iso.setIsoPaths(null);
-        try {
-            ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(
-                    GUIManager.INSTANCE.getMainWindow().getShell());
-            saveProgress.run(true, false, this);
-            saveProgress.close();
-        } catch (InvocationTargetException | InterruptedException e) {
-            log.error("Error saving layout as xml", e);
         }
 
     }

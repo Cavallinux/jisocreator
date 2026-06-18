@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -24,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 public class SaveAsIsoAction extends Action {
+    private static final String ISO_FILE_EXTENSION = ".iso";
+    private static final String ISO_FILE_NAMES = "ISO9660 CD-ROM Files";
     private List<String> mkisofsCommand;
     private String inputXMLLayoutFile;
     private String outputISOFile;
@@ -38,16 +41,22 @@ public class SaveAsIsoAction extends Action {
     @Override
     public void run() {
         try {
-            String isoFilePath = obtainIsoFilePath(commandLineMode);
-            deleteIsoFileIfExists(isoFilePath);
             IsoFileSystem root = obtainIsoFileSystem();
-            root.parse();
-            setMkisofsCommand(isoFilePath, root.getPaths());
-            ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
-            Process isoProcess = mkisofsProcessBuilder.start();
-            SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream(),
-                    commandLineMode);
-            saveThread.start();
+            String isoFilePath = obtainIsoFilePath(root);
+            if (StringUtils.isNotBlank(isoFilePath)) {
+                deleteIsoFileIfExists(isoFilePath);
+                root.parse();
+                setMkisofsCommand(isoFilePath, root.getPaths());
+                ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
+                Process isoProcess = mkisofsProcessBuilder.start();
+                SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream(),
+                        commandLineMode);
+                saveThread.start();
+            } else {
+                log.info("File not selected, aborting saving");
+                return;
+            }
+            
         } catch (IOException e) {
             log.error("Error executing command", e);
         }
@@ -62,18 +71,30 @@ public class SaveAsIsoAction extends Action {
         }
     }
 
-    private String obtainIsoFilePath(boolean commandLineMode) {
+    private String obtainIsoFilePath(IsoFileSystem isoFileSystem) {
         if (commandLineMode) {
             return outputISOFile;
         } else {
             FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.SAVE);
             openXMLDialog.setText("Choose a iso file to save");
             openXMLDialog.setOverwrite(true);
-            openXMLDialog.setFileName("iso.iso");
-            openXMLDialog.setFilterExtensions(new String[] { "*.iso" });
-            openXMLDialog.setFilterNames(new String[] { "ISO9660 CD-ROM Files" });
+            openXMLDialog.setFileName(isoFileSystem.getVolumeID().concat(ISO_FILE_EXTENSION));
+            openXMLDialog.setFilterExtensions(obtainIsoFileDialogExtensions());
+            openXMLDialog.setFilterNames(obtainIsoFileFilterNames());
             return openXMLDialog.open();
         }
+    }
+
+    private String[] obtainIsoFileFilterNames() {
+        List<String> isoFileFilterNamesList = new ArrayList<>();
+        isoFileFilterNamesList.add(ISO_FILE_NAMES);
+        return isoFileFilterNamesList.toArray(String[]::new);
+    }
+
+    private String[] obtainIsoFileDialogExtensions() {
+        List<String> isoFileExtensionsList = new ArrayList<>();
+        isoFileExtensionsList.add("*".concat(ISO_FILE_EXTENSION));
+        return isoFileExtensionsList.toArray(String[]::new);
     }
 
     private void deleteIsoFileIfExists(String path) {
@@ -82,7 +103,7 @@ public class SaveAsIsoAction extends Action {
         }
     }
 
-    private void setMkisofsCommand(String path, List<String> rootPaths) {
+    private void setMkisofsCommand(String isoOutputFileAbsolutePath, List<String> parsedIsoPaths) {
         mkisofsCommand = new ArrayList<String>();
         IOUtils storeInstance = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = storeInstance.getStore();
@@ -104,9 +125,9 @@ public class SaveAsIsoAction extends Action {
         mkisofsCommand.add("-D");
         mkisofsCommand.add("-no-bak");
         mkisofsCommand.add("-iso-level");
-        mkisofsCommand.add("2");
+        mkisofsCommand.add(preferenceStore.getString("mkisofs.iso.level"));
         mkisofsCommand.add("-o");
-        mkisofsCommand.add(path);
-        mkisofsCommand.addAll(rootPaths);
+        mkisofsCommand.add(isoOutputFileAbsolutePath);
+        mkisofsCommand.addAll(parsedIsoPaths);
     }
 }

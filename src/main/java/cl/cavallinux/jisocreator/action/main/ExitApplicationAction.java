@@ -52,12 +52,6 @@ public class ExitApplicationAction extends Action {
             default:
                 return;
         }
-        /*boolean confirmExit = MessageDialog.openConfirm(shell, "Confirm", "Are you sure to exit JIsocreator?");
-        if (confirmExit) {
-            exit();
-        } else {
-            return;
-        }*/
     }
     
     private void exit() {

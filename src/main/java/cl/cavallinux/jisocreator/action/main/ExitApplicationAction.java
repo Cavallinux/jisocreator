@@ -1,7 +1,8 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -39,12 +40,24 @@ public class ExitApplicationAction extends Action {
 
     private void openConfirmExitAppDialog() {
         Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
-        boolean confirmExit = MessageDialog.openConfirm(shell, "Confirm", "Are you sure to exit JIsocreator?");
+        MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(shell, "JISOCreator",
+                "Are you sure to exit?", "Ask always",
+                IOManager.INSTANCE.getIoUtils().getStore().getBoolean("general.exit.confirm"), null, null);
+        
+        IOManager.INSTANCE.getIoUtils().getStore().setValue("general.exit.confirm", dialog.getToggleState());
+        IOManager.INSTANCE.getIoUtils().saveStore();
+        switch (dialog.getReturnCode()) {
+            case IDialogConstants.YES_ID:
+                exit();
+            default:
+                return;
+        }
+        /*boolean confirmExit = MessageDialog.openConfirm(shell, "Confirm", "Are you sure to exit JIsocreator?");
         if (confirmExit) {
             exit();
         } else {
             return;
-        }
+        }*/
     }
     
     private void exit() {

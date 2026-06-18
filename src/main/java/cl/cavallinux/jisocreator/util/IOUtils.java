@@ -96,6 +96,15 @@ public class IOUtils {
 
         return store;
     }
+    
+    public void saveStore() {
+        try {
+            store.save();
+        } catch (IOException e) {
+            log.warn("Loading defaults", e);
+            loadPreferencesFromBackup();
+        }
+    }
 
     private void loadXMLParser() {
         xStreamParser = new XStream(new DomDriver());
@@ -135,6 +144,8 @@ public class IOUtils {
             store.setValue("general.exit.confirm",
                     Boolean.parseBoolean(defaultProperties.getProperty("general.exit.confirm")));
             store.setValue("mkisofs.path", obtainMkisofsPath(SWT.getPlatform()));
+            store.setValue("mkisofs.iso.level", defaultProperties.getProperty("mkisofs.iso.level"));
+            store.setValue("jisocreator.language", defaultProperties.getProperty("jisocreator.language"));
             store.save();
         } catch (IOException e) {
             log.error("Error saving properties", e);

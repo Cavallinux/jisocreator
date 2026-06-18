@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.FileDialog;
 
+import cl.cavallinux.jisocreator.action.IFileManagementAction;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
@@ -24,9 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
-public class SaveAsIsoAction extends Action {
+public class SaveAsIsoAction extends Action implements IFileManagementAction {
     private static final String ISO_FILE_EXTENSION = ".iso";
     private static final String ISO_FILE_NAMES = "ISO9660 CD-ROM Files";
+    private static final String ISO_DIALOG_TITLE = "Choose a xml file name to save";
     private List<String> mkisofsCommand;
     private String inputXMLLayoutFile;
     private String outputISOFile;
@@ -75,26 +76,9 @@ public class SaveAsIsoAction extends Action {
         if (commandLineMode) {
             return outputISOFile;
         } else {
-            FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.SAVE);
-            openXMLDialog.setText("Choose a iso file to save");
-            openXMLDialog.setOverwrite(true);
-            openXMLDialog.setFileName(isoFileSystem.getVolumeID().concat(ISO_FILE_EXTENSION));
-            openXMLDialog.setFilterExtensions(obtainIsoFileDialogExtensions());
-            openXMLDialog.setFilterNames(obtainIsoFileFilterNames());
-            return openXMLDialog.open();
+            return obtainAbsolutePathFile(isoFileSystem.getVolumeID().concat(ISO_FILE_EXTENSION),
+                    "*".concat(ISO_FILE_EXTENSION), ISO_DIALOG_TITLE, ISO_FILE_NAMES, SWT.SAVE);
         }
-    }
-
-    private String[] obtainIsoFileFilterNames() {
-        List<String> isoFileFilterNamesList = new ArrayList<>();
-        isoFileFilterNamesList.add(ISO_FILE_NAMES);
-        return isoFileFilterNamesList.toArray(String[]::new);
-    }
-
-    private String[] obtainIsoFileDialogExtensions() {
-        List<String> isoFileExtensionsList = new ArrayList<>();
-        isoFileExtensionsList.add("*".concat(ISO_FILE_EXTENSION));
-        return isoFileExtensionsList.toArray(String[]::new);
     }
 
     private void deleteIsoFileIfExists(String path) {

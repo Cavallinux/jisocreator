@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -10,8 +11,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 
+import cl.cavallinux.jisocreator.action.IFileManagementAction;
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
@@ -21,7 +22,10 @@ import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress {
+public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress, IFileManagementAction {
+    private static final String XML_FILE_EXTENSION = ".xml";
+    private static final String XML_FILE_NAMES = "XML Files";
+    private static final String XML_DIALOG_TITLE = "Choose a xml file name to load";
     private Object object;
     private String path;
 
@@ -34,14 +38,17 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
     @Override
     public void run() {
         try {
-            executeOpenFile();
-            if (path == null) {
-                return;
+            path = obtainAbsolutePathFile("layout.xml", "*".concat(XML_FILE_EXTENSION), XML_DIALOG_TITLE,
+                    XML_FILE_NAMES, SWT.OPEN);
+            if (StringUtils.isNotBlank(path)) {
+                ProgressMonitorDialog openProgressDialog = new BaseProgressMonitorDialog(
+                        GUIManager.INSTANCE.getMainWindow().getShell());
+                openProgressDialog.run(true, false, this);
+                openProgressDialog.close();
+            } else {
+                log.info("Aborted xml load process");
             }
-            ProgressMonitorDialog openProgressDialog = new BaseProgressMonitorDialog(
-                    GUIManager.INSTANCE.getMainWindow().getShell());
-            openProgressDialog.run(true, false, this);
-            openProgressDialog.close();
+            
         } catch (InvocationTargetException | InterruptedException e) {
             log.error("Error opening file", e);
             MessageDialog.openError(GUIManager.INSTANCE.getMainWindow().getShell(), "Error", e.getMessage());
@@ -68,15 +75,5 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
         } finally {
             monitor.done();
         }
-    }
-
-    private void executeOpenFile() {
-        FileDialog openXMLDialog = new FileDialog(GUIManager.INSTANCE.getMainWindow().getShell(), SWT.OPEN);
-        openXMLDialog.setText("Choose a xml file to open");
-        openXMLDialog.setOverwrite(true);
-        openXMLDialog.setFileName("layout.xml");
-        openXMLDialog.setFilterExtensions(new String[] { "*.xml" });
-        openXMLDialog.setFilterNames(new String[] { "XML Files" });
-        path = openXMLDialog.open();
     }
 }

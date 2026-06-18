@@ -1,12 +1,15 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -20,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
+    private static final String XML_FILE_EXTENSION = ".xml";
+    private static final String XML_FILE_NAMES = "XML Files";
     private String path;
     private IsoFileSystem iso;
 
@@ -30,12 +35,12 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
 
     @Override
     public void run() {
-        setFile();
+        TreeViewer isoDirectoriesTree = GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree();
+        iso = (IsoFileSystem) isoDirectoriesTree.getInput();
+        iso.setIsoLength();
+        iso.setIsoPaths(null);
+        setFile(iso);
         if (StringUtils.isNotBlank(path)) {
-            iso = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
-                    .getInput();
-            iso.setIsoLength();
-            iso.setIsoPaths(null);
             try {
                 ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(
                         GUIManager.INSTANCE.getMainWindow().getShell());
@@ -63,13 +68,25 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
         }
     }
 
-    private void setFile() {
+    private void setFile(IsoFileSystem isoFileSystem) {
         FileDialog saveXMLDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.SAVE);
         saveXMLDialog.setText("Choose a xml file name to save");
         saveXMLDialog.setOverwrite(true);
-        saveXMLDialog.setFileName("layout.xml");
-        saveXMLDialog.setFilterExtensions(new String[] { "*.xml" });
-        saveXMLDialog.setFilterNames(new String[] { "XML Files" });
+        saveXMLDialog.setFileName(isoFileSystem.getVolumeID().concat(XML_FILE_EXTENSION));
+        saveXMLDialog.setFilterExtensions(obtainXmlFileDialogExtensions());
+        saveXMLDialog.setFilterNames(obtainXmlFileFilterNames());
         path = saveXMLDialog.open();
+    }
+
+    private String[] obtainXmlFileFilterNames() {
+        List<String> isoFileFilterNamesList = new ArrayList<>();
+        isoFileFilterNamesList.add(XML_FILE_NAMES);
+        return isoFileFilterNamesList.toArray(String[]::new);
+    }
+
+    private String[] obtainXmlFileDialogExtensions() {
+        List<String> isoFileExtensionsList = new ArrayList<>();
+        isoFileExtensionsList.add("*".concat(XML_FILE_EXTENSION));
+        return isoFileExtensionsList.toArray(String[]::new);
     }
 }

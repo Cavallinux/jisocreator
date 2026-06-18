@@ -103,8 +103,8 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
-        createButton(parent, IDialogConstants.OK_ID, "Aceptar", true);
-        createButton(parent, IDialogConstants.CANCEL_ID, "Cancelar", false);
+        createButton(parent, IDialogConstants.OK_ID, "Accept", true);
+        createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
     }
 
     @Override
@@ -124,7 +124,6 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
                     volumeIDText.setFocus();
                     return;
                 }
-                
             } else {
                 setErrorMessage("VolumeID is required");
                 errorIndicator.setText("This field is required to complete request");

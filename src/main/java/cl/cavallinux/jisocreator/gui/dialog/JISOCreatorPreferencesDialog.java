@@ -15,10 +15,11 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PreferencesDialog extends PreferenceDialog {
-    public PreferencesDialog(Shell parentShell, PreferenceManager manager) {
+public class JISOCreatorPreferencesDialog extends PreferenceDialog {
+    public JISOCreatorPreferencesDialog(Shell parentShell, PreferenceManager manager) {
         super(parentShell, manager);
-        log.info("Initializing PreferencesDialog");
+        log.info("Initializing JISOCreatorPreferencesDialog");
+        getPreferenceManager().removeAll();
         getPreferenceManager().addToRoot(new PreferenceNode("preferences.mkisofs", "ISO options",
                 ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.png"),
                 MKISOFSPreferencePage.class.getName()));
@@ -30,7 +31,7 @@ public class PreferencesDialog extends PreferenceDialog {
 
     @Override
     protected void configureShell(Shell newShell) {
-        log.info("Configuring shell for PreferencesDialog");
+        log.info("Configuring shell for JISOCreatorPreferencesDialog");
         super.configureShell(newShell);
         newShell.setText("JIsocreator Preferences");
     }
@@ -44,7 +45,7 @@ public class PreferencesDialog extends PreferenceDialog {
         } catch (IOException e) {
             log.error("Failed to save preferences", e);
         } finally {
-            log.info("Closing PreferencesDialog");
+            log.info("Closing JISOCreatorPreferencesDialog");
             super.okPressed();
         }
     }

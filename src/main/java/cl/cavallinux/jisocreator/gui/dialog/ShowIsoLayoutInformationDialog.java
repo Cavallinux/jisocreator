@@ -1,7 +1,5 @@
 package cl.cavallinux.jisocreator.gui.dialog;
 
-import java.util.Objects;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -109,29 +107,27 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        if (Objects.nonNull(volumeIDText) && !volumeIDText.isDisposed()) {
-            String volumeIdInput = volumeIDText.getText();
-            if (StringUtils.isNotBlank(volumeIdInput)) {
-                if (volumeIdInput.length() <= IOUtils.MKISOFS_VOLUMEID_MAXLENGTH) {
-                    setErrorMessage(null);
-                    errorIndicator.setText("");
-                    volumeIDResponse = volumeIdInput;
-                } else {
-                    setErrorMessage("VolumeID is greater than 32 characters");
-                    errorIndicator.setText("This field must be 32 chars length");
-                    getShell().layout(true, true);
-                    getShell().pack();
-                    volumeIDText.setFocus();
-                    return;
-                }
+        String volumeIdInput = volumeIDText.getText();
+        if (StringUtils.isNotBlank(volumeIdInput)) {
+            if (volumeIdInput.length() <= IOUtils.MKISOFS_VOLUMEID_MAXLENGTH) {
+                setErrorMessage(null);
+                errorIndicator.setText("");
+                volumeIDResponse = volumeIdInput;
             } else {
-                setErrorMessage("VolumeID is required");
-                errorIndicator.setText("This field is required to complete request");
+                setErrorMessage("VolumeID is greater than 32 characters");
+                errorIndicator.setText("This field must be 32 chars length");
                 getShell().layout(true, true);
                 getShell().pack();
                 volumeIDText.setFocus();
                 return;
             }
+        } else {
+            setErrorMessage("VolumeID is required");
+            errorIndicator.setText("This field is required to complete request");
+            getShell().layout(true, true);
+            getShell().pack();
+            volumeIDText.setFocus();
+            return;
         }
         super.okPressed();
     }

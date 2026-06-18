@@ -15,6 +15,13 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
         super(GRID);
         setDescription("MKISOFS parameters configuration");
     }
+    
+    @Override
+    public void createControl(Composite parent) {
+        super.createControl(parent);
+        getDefaultsButton().setText("Restore");
+        getApplyButton().setText("Apply");
+    }
 
     @Override
     protected void createFieldEditors() {

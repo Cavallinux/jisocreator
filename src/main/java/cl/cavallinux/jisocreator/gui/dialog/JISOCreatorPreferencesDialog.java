@@ -1,11 +1,10 @@
 package cl.cavallinux.jisocreator.gui.dialog;
 
-import java.io.IOException;
-
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
-import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.preference.GeneralPreferencesPage;
@@ -37,16 +36,9 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
     }
 
     @Override
-    protected void okPressed() {
-        try {
-            log.info("Saving preferences");
-            ((PreferenceStore) getPreferenceStore()).save();
-            log.info("Preferences saved successfully");
-        } catch (IOException e) {
-            log.error("Failed to save preferences", e);
-        } finally {
-            log.info("Closing JISOCreatorPreferencesDialog");
-            super.okPressed();
-        }
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setText("Accept");
+        getButton(IDialogConstants.CANCEL_ID).setText("Cancel");
     }
 }

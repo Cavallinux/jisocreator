@@ -1,15 +1,16 @@
 package cl.cavallinux.jisocreator.action.main;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.preference.PreferenceNode;
 
 import cl.cavallinux.jisocreator.gui.dialog.JISOCreatorPreferencesDialog;
-import cl.cavallinux.jisocreator.gui.preference.GeneralPreferencesPage;
-import cl.cavallinux.jisocreator.gui.preference.MKISOFSPreferencePage;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.PreferencesNodeManager;
 
 public class PreferencesAction extends Action {
 
@@ -20,8 +21,8 @@ public class PreferencesAction extends Action {
 
     @Override
     public void run() {
-        JISOCreatorPreferencesDialog dialog = new JISOCreatorPreferencesDialog(
-                GUIManager.INSTANCE.getMainWindow().getShell(), createPreferenceManager());
+        PreferenceDialog dialog = new JISOCreatorPreferencesDialog(GUIManager.INSTANCE.getMainWindow().getShell(),
+                createPreferenceManager());
         dialog.setPreferenceStore(IOManager.INSTANCE.getIoUtils().getStore());
         dialog.open();
         dialog.close();
@@ -29,13 +30,9 @@ public class PreferencesAction extends Action {
 
     private PreferenceManager createPreferenceManager() {
         PreferenceManager preferenceManager = new PreferenceManager();
-        //preferenceManager.removeAll();
-        preferenceManager.addToRoot(new PreferenceNode("preferences.mkisofs", "ISO options",
-                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.png"),
-                MKISOFSPreferencePage.class.getName()));
-        preferenceManager.addToRoot(new PreferenceNode("preferences.general", "General options",
-                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.png"),
-                GeneralPreferencesPage.class.getName()));
+        Arrays.asList(PreferencesNodeManager.values()).forEach(preferenceNodeManager -> {
+            preferenceManager.addToRoot(preferenceNodeManager.getPreferenceNode());
+        });
         return preferenceManager;
     }
 }

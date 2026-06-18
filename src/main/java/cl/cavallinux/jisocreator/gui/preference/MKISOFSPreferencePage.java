@@ -6,6 +6,7 @@ import java.util.Map;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
@@ -28,9 +29,10 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
         Composite parent = getFieldEditorParent();
         GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns = 2;
+        addField(new FileFieldEditor("mkisofs.path", "MKISOFS Path", true, parent));
         addField(new BooleanFieldEditor("mkisofs.rockridge.use", "Use Rock Ridge extension", parent));
         addField(new BooleanFieldEditor("mkisofs.joliet.use", "Use Joliet extension", parent));
-        addField(new BooleanFieldEditor("mkisofs.symlinks.follow", "Follow symlinks)", parent));
+        addField(new BooleanFieldEditor("mkisofs.symlinks.follow", "Follow symlinks", parent));
         addField(new ComboFieldEditor("mkisofs.iso.level", "ISO Level:", buildIsoLevelOptionsArray(), parent));
     }
 

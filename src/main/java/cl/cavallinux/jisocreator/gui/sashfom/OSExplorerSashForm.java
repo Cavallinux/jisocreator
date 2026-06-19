@@ -11,6 +11,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -57,7 +58,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         fillTableColumnValues(osDirectoriesTable.getTable());
         addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.OSEXPLORER_INSTANCE.getDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.OSEXPLORER_INSTANCE, osDirectoriesTable, osDirectoriesTree);
-        osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer());
+        osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots());
     }
 
     @Override

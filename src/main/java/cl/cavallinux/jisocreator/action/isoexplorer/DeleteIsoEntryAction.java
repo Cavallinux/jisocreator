@@ -45,7 +45,7 @@ public class DeleteIsoEntryAction extends Action implements IRunnableWithProgres
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         try {
             monitor.beginTask("Deleting node", IProgressMonitor.UNKNOWN);
-            parent.deleteNode(node, monitor);
+            parent.deleteNode(node);
         } finally {
             monitor.done();
         }

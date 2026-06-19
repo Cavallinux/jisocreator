@@ -1,7 +1,6 @@
 package cl.cavallinux.jisocreator.model.isoexplorer.decl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -98,18 +97,16 @@ public interface ITreeNode {
     /**
      * Agrega el nodo como hijo al sistema de archivos ISO
      * 
-     * @param node    Nodo a ser agregado.
-     * @param monitor monitor de progreso asociado.
+     * @param node Nodo a ser agregado.
      */
-    default void addNode(ITreeNode node, IProgressMonitor monitor) {
+    default void addNode(ITreeNode node) {
     }
 
     /**
      * Borra el nodo asociado.
      * 
-     * @param node    nodo a ser borrado
-     * @param monitor monitor de progreso asociado.
+     * @param node nodo a ser borrado
      */
-    default void deleteNode(ITreeNode node, IProgressMonitor monitor) {
+    default void deleteNode(ITreeNode node) {
     };
 }

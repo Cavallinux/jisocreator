@@ -52,6 +52,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
                 Process isoProcess = mkisofsProcessBuilder.start();
                 SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream(),
                         commandLineMode);
+                saveThread.setMkisofsProcess(isoProcess);
                 saveThread.start();
             } else {
                 log.info("File not selected, aborting saving");

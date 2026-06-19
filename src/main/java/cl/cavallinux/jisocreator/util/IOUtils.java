@@ -10,11 +10,11 @@ import java.util.Properties;
 import java.util.UUID;
 
 import org.apache.commons.lang3.Strings;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
@@ -74,9 +74,8 @@ public class IOUtils {
         }
     }
 
-    public boolean saveObjectToXML(Object objectToParse, String path, IProgressMonitor monitor) {
+    public boolean saveObjectToXML(Object objectToParse, String path) {
         try (FileOutputStream fos = new FileOutputStream(path)) {
-            monitor.subTask("Parsing XML...");
             xStreamParser.toXML(objectToParse, fos);
             return true;
         } catch (IOException e) {
@@ -107,7 +106,7 @@ public class IOUtils {
     }
 
     private void loadXMLParser() {
-        xStreamParser = new XStream(new DomDriver());
+        xStreamParser = new XStream(new PureJavaReflectionProvider(), new DomDriver());
         xStreamParser.addPermission(NoTypePermission.NONE);
         xStreamParser.addPermission(NullPermission.NULL);
         xStreamParser.addPermission(PrimitiveTypePermission.PRIMITIVES);

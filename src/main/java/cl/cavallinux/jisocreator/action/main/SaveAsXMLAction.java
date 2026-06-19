@@ -5,13 +5,13 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
-import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -39,16 +39,16 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IF
         iso.setIsoPaths(null);
         path = obtainAbsolutePathFile(iso.getVolumeID().concat(XML_FILE_EXTENSION), "*".concat(XML_FILE_EXTENSION),
                 XML_DIALOG_TITLE, XML_FILE_NAMES, SWT.SAVE);
-        // setFile(iso);
         if (StringUtils.isNotBlank(path)) {
-            try {
-                ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(
-                        GUIManager.INSTANCE.getMainWindow().getShell());
-                saveProgress.run(true, false, this);
-                saveProgress.close();
-            } catch (InvocationTargetException | InterruptedException e) {
-                log.error("Error saving layout as xml", e);
-            }
+            Display.getDefault().asyncExec(() -> {
+                try {
+                    IProgressMonitor progressMonitor = GUIManager.INSTANCE.getMainWindow().getProgressMonitor();
+                    GUIManager.INSTANCE.getMainWindow().setStatusLineActiveCancelButton(true);
+                    ModalContext.run(SaveAsXMLAction.this, true, progressMonitor, Display.getCurrent());
+                } catch (InvocationTargetException | InterruptedException e) {
+                    log.error("Error saving ISO image", e);
+                }
+            });
         } else {
             log.info("Iso layout xml saving aborted");
             return;
@@ -60,7 +60,8 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IF
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
         log.info("Saving layout as xml to path: {}", path);
-        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path, monitor)) {
+        monitor.subTask(String.format("Saving layout as xml to path: %s", path));
+        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path)) {
             monitor.done();
             log.info("Layout saved successfully as xml to path: {}", path);
         } else {

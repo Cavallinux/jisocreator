@@ -36,7 +36,7 @@ public class IsoFileSystem {
     }
 
     public ITreeNode[] toArray() {
-        return new ITreeNode[] { root };
+        return List.of(root).toArray(ITreeNode[]::new);
     }
 
     public ITreeNode getRoot() {

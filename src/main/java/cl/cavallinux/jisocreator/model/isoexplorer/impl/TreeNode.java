@@ -21,6 +21,10 @@ public abstract class TreeNode implements ITreeNode {
         this.parent = parent;
         children = new ArrayList<ITreeNode>();
     }
+    
+    protected TreeNode() {
+        this(null);
+    }
 
     @Override
     public Object[] getChildren() {

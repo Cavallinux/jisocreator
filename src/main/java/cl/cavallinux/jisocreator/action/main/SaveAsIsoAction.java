@@ -10,7 +10,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 
-import cl.cavallinux.jisocreator.action.IFileManagementAction;
+import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;

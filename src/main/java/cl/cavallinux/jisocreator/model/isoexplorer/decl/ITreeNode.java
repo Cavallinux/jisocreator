@@ -1,5 +1,6 @@
 package cl.cavallinux.jisocreator.model.isoexplorer.decl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Image;
 
@@ -16,49 +17,63 @@ public interface ITreeNode {
      * 
      * @return un {@link Object}
      */
-    Object getElement();
+    default Object getElement() {
+        return null;
+    }
 
     /**
      * Obtiene el nombre reducido del archivo o directorio
      * 
      * @return un {@link String}
      */
-    String getShortName();
+    default String getShortName() {
+        return StringUtils.EMPTY;
+    }
 
     /**
      * Obtiene el nombre completo del archivo o directorio
      * 
      * @return un {@link String}
      */
-    String getExtendedName();
+    default String getExtendedName() {
+        return StringUtils.EMPTY;
+    }
 
     /**
      * Obtiene el nombre ISO del nodo
      * 
      * @return un {@link String}
      */
-    String getIsoName();
+    default String getIsoName() {
+        return StringUtils.EMPTY;
+    }
 
     /**
      * Obtiene el nodo padre.
      * 
      * @return un {@link ITreeNode}
      */
-    ITreeNode getParent();
+    default ITreeNode getParent() {
+        return null;
+    }
 
     /**
      * Obtiene los nodos hijos
      * 
      * @return un arreglo con los nodos hijos
      */
-    Object[] getChildren();
+    default Object[] getChildren() {
+        return null;
+    }
 
     /**
      * Obtiene la imagen asociada al nodo
      * 
      * @return una {@link Image}
      */
-    Image getImage();
+    default Image getImage() {
+        return null;
+    }
 
     /**
      * Verifica si el nodo tiene hijos
@@ -66,7 +81,9 @@ public interface ITreeNode {
      * @return <code>true</code> si el nodo tiene hijos o <code>false</code> en caso
      *         contrario.
      */
-    boolean hasChildren();
+    default boolean hasChildren() {
+        return false;
+    }
 
     /**
      * Verifica si el nodo es la raiz del sistema de archivos ISO
@@ -74,7 +91,9 @@ public interface ITreeNode {
      * @return <code>true</code> si el nodo es raiz o <code>false</code> en caso
      *         contrario,
      */
-    boolean isRoot();
+    default boolean isRoot() {
+        return false;
+    }
 
     /**
      * Agrega el nodo como hijo al sistema de archivos ISO
@@ -82,7 +101,8 @@ public interface ITreeNode {
      * @param node    Nodo a ser agregado.
      * @param monitor monitor de progreso asociado.
      */
-    void addNode(ITreeNode node, IProgressMonitor monitor);
+    default void addNode(ITreeNode node, IProgressMonitor monitor) {
+    }
 
     /**
      * Borra el nodo asociado.
@@ -90,5 +110,6 @@ public interface ITreeNode {
      * @param node    nodo a ser borrado
      * @param monitor monitor de progreso asociado.
      */
-    void deleteNode(ITreeNode node, IProgressMonitor monitor);
+    default void deleteNode(ITreeNode node, IProgressMonitor monitor) {
+    };
 }

@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
-import cl.cavallinux.jisocreator.action.IFileManagementAction;
+import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;

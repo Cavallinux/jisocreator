@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.action;
+package cl.cavallinux.jisocreator.action.decl;
 
 import java.util.ArrayList;
 import java.util.List;

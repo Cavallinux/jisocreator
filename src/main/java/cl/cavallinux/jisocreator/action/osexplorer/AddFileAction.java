@@ -60,7 +60,7 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
         monitor.beginTask("Adding selected files", i);
         files.forEach(file -> {
             ITreeNode dirEntry = new IsoTreeNode(isoNode, file);
-            isoNode.addNode(dirEntry, monitor);
+            isoNode.addNode(dirEntry);
         });
         monitor.subTask("Refreshing GUI...");
         Display.getDefault().asyncExec(new Thread(() -> {

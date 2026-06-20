@@ -1,10 +1,12 @@
 package cl.cavallinux.jisocreator.action.main;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Shell;
 
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -39,20 +41,42 @@ public class ExitApplicationAction extends Action {
 
     private void openConfirmExitAppDialog() {
         Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
-        boolean confirmExit = MessageDialog.openConfirm(shell, "Confirm", "Are you sure to exit JIsocreator?");
-        if (confirmExit) {
+        MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(shell, "JISOCreator",
+                "Are you sure to exit?", "Ask always",
+                IOManager.INSTANCE.getIoUtils().getStore().getBoolean("general.exit.confirm"), null, null);
+
+        IOManager.INSTANCE.getIoUtils().getStore().setValue("general.exit.confirm", dialog.getToggleState());
+        IOManager.INSTANCE.getIoUtils().saveStore();
+        switch (dialog.getReturnCode()) {
+        case IDialogConstants.YES_ID:
             exit();
-        } else {
+        default:
             return;
         }
     }
-    
+
     private void exit() {
         log.info("Exiting application");
-        Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
-        shell.setVisible(false);
-        GUIManager.INSTANCE.getMainWindow().close();
-        Display.getCurrent().dispose();
+        cancelAliveIsoProcessIfNeeded();
+        closeMainWindow();
+        halt();
+    }
+
+    private void closeMainWindow() {
+        log.info("Closing main window");
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        mainWindow.setVisible(false);
+        mainWindow.close();
+        log.info("Main window closed");
+    }
+
+    private void cancelAliveIsoProcessIfNeeded() {
+        log.info("Forcing killing iso saving process");
+        IProgressMonitor mainWindowProgressMonitor = GUIManager.INSTANCE.getMainWindow().getProgressMonitor();
+        mainWindowProgressMonitor.setCanceled(true);
+    }
+    
+    private void halt() {
         System.exit(0);
     }
 }

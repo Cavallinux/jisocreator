@@ -161,4 +161,15 @@ public class MainWindow extends ApplicationWindow {
     public IProgressMonitor getProgressMonitor() {
         return getStatusLineManager().getProgressMonitor();
     }
+    
+    public void setStatusLineActiveCancelButton(boolean activeCancelButton) {
+        getStatusLineManager().setCancelEnabled(activeCancelButton);
+    }
+    
+    public void setVisible(boolean shellVisible) {
+        Shell windowShell = getShell();
+        if (Objects.nonNull(windowShell)) {
+            windowShell.setVisible(shellVisible);
+        }
+    }
 }

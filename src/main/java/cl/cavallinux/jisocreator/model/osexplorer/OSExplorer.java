@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.swt.program.Program;
 
 import lombok.Getter;
@@ -43,7 +44,9 @@ public class OSExplorer {
 
     @Deprecated(since = "0.2.0", forRemoval = true)
     private static File[] loadLegacyOSRoots() {
-        return File.listRoots();
+        return Strings.CI.containsAny(System.getProperty("os.name"), "Windows")
+                ? new File(System.getProperty("user.home")).listFiles()
+                : File.listRoots();
     }
 
     private static Path[] loadOSRoots() {

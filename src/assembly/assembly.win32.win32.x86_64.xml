@@ -27,6 +27,7 @@
         <includes>
           <include>*.exe</include>
           <include>*.dll</include>
+          <include>*.ini</include>
         </includes>
     </fileSet>
   </fileSets>
@@ -35,7 +36,6 @@
       <outputDirectory>lib</outputDirectory>
       <excludes>
         <exclude>${project.groupId}:${project.artifactId}:jar:*</exclude>
-        <exclude>org.projectlombok:lombok</exclude>
       </excludes>
     </dependencySet>
   </dependencySets>

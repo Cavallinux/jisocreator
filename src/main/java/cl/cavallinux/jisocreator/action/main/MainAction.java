@@ -3,14 +3,14 @@ package cl.cavallinux.jisocreator.action.main;
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
+import cl.cavallinux.jisocreator.instances.CommandLineParserManager;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.util.JISOCreatorCommandLineParser;
+import cl.cavallinux.jisocreator.util.cmdline.ICommandLineParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,12 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 public class MainAction extends Action {
-    private JISOCreatorCommandLineParser parser;
-    
+    private ICommandLineParser parser;
+
     public MainAction() {
-        parser = buildParser();
+        parser = CommandLineParserManager.INSTANCE.getParser();
     }
-    
+
     @Override
     public void run() {
         log.info("Executing app in GUI mode");
@@ -64,8 +64,9 @@ public class MainAction extends Action {
 
     public void handleCommandLine(String[] args) throws ParseException, IOException {
         CommandLine cmd = parser.parse(args);
+        boolean isSaveToIsoOptions = cmd.hasOption(CommandLineOptionsManager.ISOINPUT.getOption())
+                && cmd.hasOption(CommandLineOptionsManager.ISOOUTPUT.getOption());
         if (cmd.hasOption(CommandLineOptionsManager.LOAD.getOption())) {
-            parser.validateLoadXMLFile(cmd, CommandLineOptionsManager.LOAD.getOption());
             run(cmd.getOptionValue(CommandLineOptionsManager.LOAD.getOption()));
             System.exit(0);
         } else if (cmd.hasOption(CommandLineOptionsManager.VERSION.getOption())) {
@@ -74,7 +75,8 @@ public class MainAction extends Action {
         } else if (cmd.hasOption(CommandLineOptionsManager.HELP.getOption())) {
             parser.printHelp("jisocreator");
             System.exit(0);
-        } else if (parser.handleCommandLineMode(cmd)) {
+        } else if (isSaveToIsoOptions) {
+            parser.handleCommandLine(cmd);
             SaveAsIsoAction saveAsIsoAction = (SaveAsIsoAction) ActionsManager.SAVEASISOACTION.getAction();
             saveAsIsoAction.setOutputISOFile(cmd.getOptionValue(CommandLineOptionsManager.ISOOUTPUT.getOption()));
             saveAsIsoAction.setInputXMLLayoutFile(cmd.getOptionValue(CommandLineOptionsManager.ISOINPUT.getOption()));
@@ -83,22 +85,6 @@ public class MainAction extends Action {
         } else {
             run();
         }
-    }
 
-    public JISOCreatorCommandLineParser buildParser() {
-        String APP_NAME = MainAction.class.getPackage().getSpecificationTitle();
-        String APP_VERSION = MainAction.class.getPackage().getImplementationVersion();
-        String PROGRAM_NAME = "jisocreator";
-        JISOCreatorCommandLineParser parser = JISOCreatorCommandLineParser.builder().applicationName(APP_NAME)
-                .applicationVersion(APP_VERSION)
-                .header("  " + APP_NAME + " is a Java-based desktop application that simplifies\n "
-                        + "the process of creating and editing ISO images. It features dual file\n explorers "
-                        + "for managing both the operating system file system and ISO\n" + " image contents.\n")
-                .footer("\nExamples:\n" + "  " + PROGRAM_NAME + " -v\n" + "  " + PROGRAM_NAME + " -h\n" + "  "
-                        + PROGRAM_NAME + " -i /path/image -o image.iso\n" + "  " + PROGRAM_NAME
-                        + " --input /data --output /output/image.iso\n" + "  " + PROGRAM_NAME + " ")
-                .options(new Options()).build();
-        parser.addOptions();
-        return parser;
     }
 }

@@ -7,14 +7,15 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.apache.commons.lang3.Strings;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
@@ -34,6 +35,8 @@ public class IOUtils {
     private final static String GTK_PLATFORM;
     private final static String WIN32_PLATFORM;
     private final static String WIN32_MKISOFS_BASE_PATH;
+    public final static int MKISOFS_VOLUMEID_MAXLENGTH;
+    private final static String MKISOFS_ISOFILESYSTEM_APPLICATIONID;
 
     static {
         JISOCREATOR_CONFIG_DIR = System.getProperty("user.home").concat("/.config/jisocreator/");
@@ -42,10 +45,22 @@ public class IOUtils {
         GTK_PLATFORM = "gtk";
         WIN32_PLATFORM = "win32";
         WIN32_MKISOFS_BASE_PATH="<mkisofs.base.path>";
+        MKISOFS_VOLUMEID_MAXLENGTH = 32;
+        MKISOFS_ISOFILESYSTEM_APPLICATIONID = "jisocreator";
     }
 
     public IOUtils() {
         loadXMLParser();
+    }
+    
+    public String generateInitialVolumeID() {
+        String isoFileSystemVolumeID = UUID.randomUUID().toString();
+        isoFileSystemVolumeID = isoFileSystemVolumeID.replace("-", "");
+        return isoFileSystemVolumeID.substring(0, Math.min(isoFileSystemVolumeID.length(), MKISOFS_VOLUMEID_MAXLENGTH));
+    }
+    
+    public String generateIsoFilesystemApplicationID() {
+        return MKISOFS_ISOFILESYSTEM_APPLICATIONID;
     }
 
     public Object parseXMLFileToObject(String path) {
@@ -53,15 +68,14 @@ public class IOUtils {
             IsoFileSystem iso = new IsoFileSystem();
             xStreamParser.fromXML(fis, iso);
             return iso;
-        } catch (IOException e) {
+        } catch (IOException | XStreamException e) {
             log.error("Error parsing XML", e);
             return null;
         }
     }
 
-    public boolean saveObjectToXML(Object objectToParse, String path, IProgressMonitor monitor) {
+    public boolean saveObjectToXML(Object objectToParse, String path) {
         try (FileOutputStream fos = new FileOutputStream(path)) {
-            monitor.subTask("Parsing XML...");
             xStreamParser.toXML(objectToParse, fos);
             return true;
         } catch (IOException e) {
@@ -81,9 +95,18 @@ public class IOUtils {
 
         return store;
     }
+    
+    public void saveStore() {
+        try {
+            store.save();
+        } catch (IOException e) {
+            log.warn("Loading defaults", e);
+            loadPreferencesFromBackup();
+        }
+    }
 
     private void loadXMLParser() {
-        xStreamParser = new XStream(new DomDriver());
+        xStreamParser = new XStream(new PureJavaReflectionProvider());
         xStreamParser.addPermission(NoTypePermission.NONE);
         xStreamParser.addPermission(NullPermission.NULL);
         xStreamParser.addPermission(PrimitiveTypePermission.PRIMITIVES);
@@ -120,6 +143,8 @@ public class IOUtils {
             store.setValue("general.exit.confirm",
                     Boolean.parseBoolean(defaultProperties.getProperty("general.exit.confirm")));
             store.setValue("mkisofs.path", obtainMkisofsPath(SWT.getPlatform()));
+            store.setValue("mkisofs.iso.level", defaultProperties.getProperty("mkisofs.iso.level"));
+            store.setValue("jisocreator.language", defaultProperties.getProperty("jisocreator.language"));
             store.save();
         } catch (IOException e) {
             log.error("Error saving properties", e);

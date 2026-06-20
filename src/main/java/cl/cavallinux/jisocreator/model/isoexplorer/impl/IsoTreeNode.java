@@ -2,7 +2,6 @@ package cl.cavallinux.jisocreator.model.isoexplorer.impl;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Image;
 
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -62,28 +61,25 @@ public class IsoTreeNode extends TreeNode {
     }
 
     @Override
-    public void addNode(ITreeNode node, IProgressMonitor monitor) {
+    public void addNode(ITreeNode node) {
         if (children.contains(node)) {
             return;
         } else {
-            monitor.subTask("Adding file: ".concat(node.getExtendedName()));
             children.add(node);
-
             File[] childs = ((File) node.getElement()).listFiles();
-            monitor.worked(1);
             if (childs == null) {
                 return;
             } else {
                 for (File child : childs) {
                     ITreeNode newNode = new IsoTreeNode(node, child);
-                    node.addNode(newNode, monitor);
+                    node.addNode(newNode);
                 }
             }
         }
     }
 
     @Override
-    public void deleteNode(ITreeNode node, IProgressMonitor monitor) {
+    public void deleteNode(ITreeNode node) {
         if (children.contains(node)) {
             children.remove(node);
         } else {

@@ -2,15 +2,16 @@ package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.operation.ModalContext;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 
-import cl.cavallinux.jisocreator.gui.dialog.BaseProgressMonitorDialog;
+import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -18,7 +19,10 @@ import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
+public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IFileManagementAction {
+    private static final String XML_FILE_EXTENSION = ".xml";
+    private static final String XML_FILE_NAMES = "XML Files";
+    private static final String XML_DIALOG_TITLE = "Choose a xml file name to save";
     private String path;
     private IsoFileSystem iso;
 
@@ -29,20 +33,25 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
 
     @Override
     public void run() {
-        setFile();
-        if (path == null) {
-            return;
-        }
-        iso = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput();
+        TreeViewer isoDirectoriesTree = GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree();
+        iso = (IsoFileSystem) isoDirectoriesTree.getInput();
         iso.setIsoLength();
         iso.setIsoPaths(null);
-        try {
-            ProgressMonitorDialog saveProgress = new BaseProgressMonitorDialog(
-                    GUIManager.INSTANCE.getMainWindow().getShell());
-            saveProgress.run(true, false, this);
-            saveProgress.close();
-        } catch (InvocationTargetException | InterruptedException e) {
-            log.error("Error saving layout as xml", e);
+        path = obtainAbsolutePathFile(iso.getVolumeID().concat(XML_FILE_EXTENSION), "*".concat(XML_FILE_EXTENSION),
+                XML_DIALOG_TITLE, XML_FILE_NAMES, SWT.SAVE);
+        if (StringUtils.isNotBlank(path)) {
+            Display.getDefault().asyncExec(() -> {
+                try {
+                    IProgressMonitor progressMonitor = GUIManager.INSTANCE.getMainWindow().getProgressMonitor();
+                    GUIManager.INSTANCE.getMainWindow().setStatusLineActiveCancelButton(true);
+                    ModalContext.run(SaveAsXMLAction.this, true, progressMonitor, Display.getCurrent());
+                } catch (InvocationTargetException | InterruptedException e) {
+                    log.error("Error saving ISO image", e);
+                }
+            });
+        } else {
+            log.info("Iso layout xml saving aborted");
+            return;
         }
 
     }
@@ -51,7 +60,8 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
         log.info("Saving layout as xml to path: {}", path);
-        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path, monitor)) {
+        monitor.subTask(String.format("Saving layout as xml to path: %s", path));
+        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path)) {
             monitor.done();
             log.info("Layout saved successfully as xml to path: {}", path);
         } else {
@@ -59,13 +69,4 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress {
         }
     }
 
-    private void setFile() {
-        FileDialog saveXMLDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.SAVE);
-        saveXMLDialog.setText("Choose a xml file name to save");
-        saveXMLDialog.setOverwrite(true);
-        saveXMLDialog.setFileName("layout.xml");
-        saveXMLDialog.setFilterExtensions(new String[] { "*.xml" });
-        saveXMLDialog.setFilterNames(new String[] { "XML Files" });
-        path = saveXMLDialog.open();
-    }
 }

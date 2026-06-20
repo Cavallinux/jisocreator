@@ -51,7 +51,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addFeatures() {
         log.info("Adding IsoExplorerSashForm features");
-        setWeights(new int[] { 25, 75 });
+        setWeights(25, 75 );
         fillCoolbarAndToolbars();
         fillTableColumnValues(isoDirectoriesTable.getTable());
         addPopMenuToTable(isoDirectoriesTable, JFaceResourcesManager.ISOEXPLORER_INSTANCE.getDirectoriesMenuListener());

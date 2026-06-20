@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.action.main;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
@@ -13,9 +14,9 @@ public class LoadCommandLineISOLayoutAction extends Action {
     public void run(String layoutFilePath) {
         log.info("Loading iso layout from file: {}", layoutFilePath);
         IsoFileSystem iso = (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(layoutFilePath);
-        GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(iso);
-        GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
-                .setSelection(new StructuredSelection(iso.getRoot()), true);
-        GUIManager .INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(iso.getRoot(), 1);
+        TreeViewer isoDirectoriesTree = GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree();
+        isoDirectoriesTree.setInput(iso);
+        isoDirectoriesTree.setSelection(new StructuredSelection(iso.getRoot()), true);
+        isoDirectoriesTree.expandToLevel(iso.getRoot(), 1);
     }
 }

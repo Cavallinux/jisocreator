@@ -14,8 +14,8 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
@@ -68,7 +68,7 @@ public class IOUtils {
             IsoFileSystem iso = new IsoFileSystem();
             xStreamParser.fromXML(fis, iso);
             return iso;
-        } catch (IOException e) {
+        } catch (IOException | XStreamException e) {
             log.error("Error parsing XML", e);
             return null;
         }
@@ -106,7 +106,7 @@ public class IOUtils {
     }
 
     private void loadXMLParser() {
-        xStreamParser = new XStream(new PureJavaReflectionProvider(), new DomDriver());
+        xStreamParser = new XStream(new PureJavaReflectionProvider());
         xStreamParser.addPermission(NoTypePermission.NONE);
         xStreamParser.addPermission(NullPermission.NULL);
         xStreamParser.addPermission(PrimitiveTypePermission.PRIMITIVES);

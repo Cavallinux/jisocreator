@@ -1,10 +1,12 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -50,19 +52,28 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
             monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
             monitor.subTask("Parsing xml...");
             object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
-            monitor.subTask("Inserting into tree...");
-            Display.getDefault().asyncExec(() -> {
-                GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(object);
-                ITreeNode node = ((IsoFileSystem) object).getRoot();
-                GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
-                        .setSelection(new StructuredSelection(node), true);
-                GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);
-            });
+            if (Objects.nonNull(object)) {
+                monitor.subTask("Inserting into tree...");
+                Display.getDefault().asyncExec(() -> {
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(object);
+                    ITreeNode node = ((IsoFileSystem) object).getRoot();
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                            .setSelection(new StructuredSelection(node), true);
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);
+                });
+            } else {
+                Display.getDefault().asyncExec(() -> {
+                    monitor.setCanceled(true);
+                    MessageDialog.openError(GUIManager.INSTANCE.getMainWindow().getShell(), "JISOCREATOR",
+                            "XML Selected is not loaded");
+                });
+            }
+
         } finally {
             monitor.done();
         }
     }
-    
+
     private void populatePath() {
         Display.getDefault().asyncExec(() -> {
             try {

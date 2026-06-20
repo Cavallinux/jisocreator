@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,10 +32,9 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
     private Process mkisofsProcess;
     private boolean commandLineMode;
 
-    public SaveISO9660ImageThread(InputStream saveProgressInputStream, boolean commandLineMode) {
+    @lombok.Builder
+    private SaveISO9660ImageThread() {
         super("cl.cavallinux.jisocreator.iso.save.thread");
-        this.saveProgressInputStream = saveProgressInputStream;
-        this.commandLineMode = commandLineMode;
     }
 
     @Override
@@ -58,8 +58,6 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
                     Double progress = Double.parseDouble(ellapsedPercentage.replace(',', '.'));
                     Integer currentProgress = progress.intValue();
                     int deltaWork = currentProgress - reportedProgress.get();
-                    log.info("Ellapsed percentage: {}, reported progress: {}, deltaWork: {}", ellapsedPercentage,
-                            reportedProgress, deltaWork);
                     if (deltaWork > 0) {
                         monitor.worked(deltaWork);
                         reportedProgress.set(currentProgress);
@@ -86,8 +84,10 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
     }
 
     private void killISOSavingProcess() {
-        if (mkisofsProcess != null && mkisofsProcess.isAlive()) {
+        if (Objects.nonNull(mkisofsProcess) && mkisofsProcess.isAlive()) {
+            log.info("Killing OS saving ISO process");
             mkisofsProcess.destroy();
+            log.info("Process successfully killed!");
         }
     }
 
@@ -98,7 +98,7 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
                 GUIManager.INSTANCE.getMainWindow().setStatusLineActiveCancelButton(true);
                 ModalContext.run(SaveISO9660ImageThread.this, true, progressMonitor, Display.getCurrent());
             } catch (InvocationTargetException | InterruptedException e) {
-                log.error("Error saving ISO image", e);
+                log.error("Error saving iso image", e);
             }
         });
     }

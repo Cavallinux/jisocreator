@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
@@ -27,8 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SaveAsIsoAction extends Action implements IFileManagementAction {
     private static final String ISO_FILE_EXTENSION = ".iso";
     private static final String ISO_FILE_NAMES = "ISO9660 CD-ROM Files";
-    private static final String ISO_DIALOG_TITLE = "Choose a xml file name to save";
-    private List<String> mkisofsCommand;
+    private static final String ISO_DIALOG_TITLE = "Choose a iso file name to save";
     private String inputXMLLayoutFile;
     private String outputISOFile;
     private boolean commandLineMode;
@@ -41,26 +41,35 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
 
     @Override
     public void run() {
-        try {
-            IsoFileSystem root = obtainIsoFileSystem();
+        IsoFileSystem root = obtainIsoFileSystem();
+        if (Objects.nonNull(root)) {
             String isoFilePath = obtainIsoFilePath(root);
             if (StringUtils.isNotBlank(isoFilePath)) {
-                deleteIsoFileIfExists(isoFilePath);
-                root.parse();
-                setMkisofsCommand(isoFilePath, root.getPaths());
-                ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
-                Process isoProcess = mkisofsProcessBuilder.start();
-                SaveISO9660ImageThread saveThread = new SaveISO9660ImageThread(isoProcess.getErrorStream(),
-                        commandLineMode);
-                saveThread.setMkisofsProcess(isoProcess);
-                saveThread.start();
+                parseAndStartIsoSaveProcess(root, isoFilePath);
             } else {
                 log.info("File not selected, aborting saving");
                 return;
             }
-            
+        } else {
+            log.error("Error loading iso filesystem");
+        }
+    }
+
+    private void parseAndStartIsoSaveProcess(IsoFileSystem root, String isoFilePath) {
+        try {
+            deleteIsoFileIfExists(isoFilePath);
+            root.parse();
+            List<String> mkisofsCommand = setMkisofsCommand(isoFilePath, root.getPaths());
+            ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
+            log.info("Process to be started: {}", String.join(" ", mkisofsProcessBuilder.command()));
+            Process isoProcess = mkisofsProcessBuilder.start();
+            SaveISO9660ImageThread saveThread = SaveISO9660ImageThread.builder().build();
+            saveThread.setSaveProgressInputStream(isoProcess.getErrorStream());
+            saveThread.setMkisofsProcess(isoProcess);
+            saveThread.setCommandLineMode(commandLineMode);
+            saveThread.start();
         } catch (IOException e) {
-            log.error("Error executing command", e);
+            log.error("Error saving iso filesystem", e);
         }
     }
 
@@ -88,8 +97,8 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         }
     }
 
-    private void setMkisofsCommand(String isoOutputFileAbsolutePath, List<String> parsedIsoPaths) {
-        mkisofsCommand = new ArrayList<String>();
+    private List<String> setMkisofsCommand(String isoOutputFileAbsolutePath, List<String> parsedIsoPaths) {
+        List<String> mkisofsCommand = new ArrayList<>();
         IOUtils storeInstance = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = storeInstance.getStore();
         mkisofsCommand.add(preferenceStore.getString("mkisofs.path"));
@@ -114,5 +123,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         mkisofsCommand.add("-o");
         mkisofsCommand.add(isoOutputFileAbsolutePath);
         mkisofsCommand.addAll(parsedIsoPaths);
+        
+        return mkisofsCommand;
     }
 }

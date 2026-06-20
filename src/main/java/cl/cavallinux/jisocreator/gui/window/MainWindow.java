@@ -165,4 +165,11 @@ public class MainWindow extends ApplicationWindow {
     public void setStatusLineActiveCancelButton(boolean activeCancelButton) {
         getStatusLineManager().setCancelEnabled(activeCancelButton);
     }
+    
+    public void setVisible(boolean shellVisible) {
+        Shell windowShell = getShell();
+        if (Objects.nonNull(windowShell)) {
+            windowShell.setVisible(shellVisible);
+        }
+    }
 }

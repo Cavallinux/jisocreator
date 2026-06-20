@@ -58,12 +58,11 @@
 							<arguments>
 								<argument>--add-opens</argument>
 								<argument>java.base/java.util=ALL-UNNAMED</argument>
-								<argument>${maven.exec.plugin.classpath.config}</argument>
-								<classpath />
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
-								<argument>${jisocreator.main.class}</argument>
-								<argument>-v</argument>
+								<argument>-jar</argument>
+								<argument>${project.build.directory}/${project.artifactId}.jar</argument>
+								<argument>-h</argument>
 							</arguments>
 						</configuration>
 					</plugin>
@@ -130,11 +129,10 @@
 							<arguments>
 								<argument>--add-opens</argument>
 								<argument>java.base/java.util=ALL-UNNAMED</argument>
-								<argument>${maven.exec.plugin.classpath.config}</argument>
-								<classpath />
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
-								<argument>${jisocreator.main.class}</argument>
+								<argument>-jar</argument>
+								<argument>${project.build.directory}/${project.artifactId}.jar</argument>
 								<argument>-h</argument>
 							</arguments>
 						</configuration>
@@ -151,8 +149,7 @@
 		<maven.exec.plugin.classpath.config>-classpath</maven.exec.plugin.classpath.config>
 		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
 		<maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
-		<maven.assembly.plugin.descriptor>
-			src/assembly/assembly.${swt.platform}.xml</maven.assembly.plugin.descriptor>
+		<maven.assembly.plugin.descriptor>src/assembly/assembly.${swt.platform}.xml</maven.assembly.plugin.descriptor>
 		<maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
 		<junit.version>5.10.2</junit.version>
 		<mockito.version>5.7.0</mockito.version>
@@ -172,8 +169,7 @@
 		<commons-cli.version>1.11.0</commons-cli.version>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<debug.port>5005</debug.port>
-		<debug.jvm.args>
-			-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
+		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
@@ -244,11 +240,10 @@
 					<arguments>
 						<argument>--add-opens</argument>
 						<argument>java.base/java.util=ALL-UNNAMED</argument>
-						<argument>${maven.exec.plugin.classpath.config}</argument>
-						<classpath />
 						<argument>${debug.jvm.args}</argument>
 						<argument>${jvm.nativeacess.arg}</argument>
-						<argument>${jisocreator.main.class}</argument>
+						<argument>-jar</argument>
+						<argument>${project.build.directory}/${project.artifactId}.jar</argument>
 					</arguments>
 				</configuration>
 			</plugin>
@@ -266,8 +261,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<finalName>
-						${project.artifactId}-${project.version}-${swt.platform}</finalName>
+					<finalName>${project.artifactId}-${project.version}-${swt.platform}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
 						<descriptor>${maven.assembly.plugin.descriptor}</descriptor>
@@ -285,6 +279,21 @@
 					</includes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -293,7 +302,8 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>

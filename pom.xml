@@ -61,7 +61,8 @@
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>-jar</argument>
-								<argument>${project.build.directory}/${project.artifactId}.jar</argument>
+								<argument>
+									${project.build.directory}/${project.artifactId}.jar</argument>
 								<argument>-h</argument>
 							</arguments>
 						</configuration>
@@ -132,7 +133,8 @@
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>-jar</argument>
-								<argument>${project.build.directory}/${project.artifactId}.jar</argument>
+								<argument>
+									${project.build.directory}/${project.artifactId}.jar</argument>
 								<argument>-h</argument>
 							</arguments>
 						</configuration>
@@ -149,7 +151,8 @@
 		<maven.exec.plugin.classpath.config>-classpath</maven.exec.plugin.classpath.config>
 		<maven.enforcer.plugin>3.6.2</maven.enforcer.plugin>
 		<maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
-		<maven.assembly.plugin.descriptor>src/assembly/assembly.${swt.platform}.xml</maven.assembly.plugin.descriptor>
+		<maven.assembly.plugin.descriptor>
+			src/assembly/assembly.${swt.platform}.xml</maven.assembly.plugin.descriptor>
 		<maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
 		<junit.version>5.10.2</junit.version>
 		<mockito.version>5.7.0</mockito.version>
@@ -167,9 +170,11 @@
 		<org.eclipse.jface.version>3.39.0</org.eclipse.jface.version>
 		<commons-lang3.version>3.20.0</commons-lang3.version>
 		<commons-cli.version>1.11.0</commons-cli.version>
+		<jackson.version>2.22.0</jackson.version>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<debug.port>5005</debug.port>
-		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
+		<debug.jvm.args>
+			-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
@@ -243,7 +248,8 @@
 						<argument>${debug.jvm.args}</argument>
 						<argument>${jvm.nativeacess.arg}</argument>
 						<argument>-jar</argument>
-						<argument>${project.build.directory}/${project.artifactId}.jar</argument>
+						<argument>
+							${project.build.directory}/${project.artifactId}.jar</argument>
 					</arguments>
 				</configuration>
 			</plugin>
@@ -261,7 +267,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<finalName>${project.artifactId}-${project.version}-${swt.platform}</finalName>
+					<finalName>
+						${project.artifactId}-${project.version}-${swt.platform}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
 						<descriptor>${maven.assembly.plugin.descriptor}</descriptor>
@@ -364,6 +371,11 @@
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.ui.workbench</artifactId>
 			<version>${org.eclipse.ui.workbench.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

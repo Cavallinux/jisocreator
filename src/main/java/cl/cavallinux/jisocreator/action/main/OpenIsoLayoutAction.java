@@ -1,7 +1,6 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +26,7 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
     private static final String XML_FILE_EXTENSION = ".xml";
     private static final String XML_FILE_NAMES = "XML Files";
     private static final String XML_DIALOG_TITLE = "Choose a xml file name to load";
-    private Object object;
+    //private Object object;
     private String path;
 
     public OpenIsoLayoutAction() {
@@ -55,12 +54,13 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
             Optional<IsoFileSystem> deserializedIsoFilesystem = IOManager.INSTANCE.getIsoFilesystemParser()
                     .deserialize(path);
             log.info("Deserialized Isofilesystem: {}", deserializedIsoFilesystem);
-            object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
-            if (Objects.nonNull(object)) {
+            if (deserializedIsoFilesystem.isPresent()) {
                 monitor.subTask("Inserting into tree...");
                 Display.getDefault().asyncExec(() -> {
-                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(object);
-                    ITreeNode node = ((IsoFileSystem) object).getRoot();
+                    IsoFileSystem isoFileSystem = deserializedIsoFilesystem.get();
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                            .setInput(isoFileSystem);
+                    ITreeNode node = isoFileSystem.getRoot();
                     GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
                             .setSelection(new StructuredSelection(node), true);
                     GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);

@@ -2,8 +2,6 @@ package cl.cavallinux.jisocreator.model.parser;
 
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 
 /**
@@ -28,16 +26,11 @@ public interface IsoFilesystemParser<T extends IsoFileSystem> {
      * @param isoFilesystem Filesystem to serialize
      * @param filePath
      */
-    default void serialize(T isoFilesystem, String filePath) {
-        
+    default boolean serialize(T isoFilesystem, String filePath) {
+        return false;
     }
-
-    /**
-     * Obtain the object mapper
-     * 
-     * @return the {@link ObjectMapper}
-     */
-    default ObjectMapper obtainObjectMapper() {
-        return new ObjectMapper();
+    
+    default Object obtainParser() {
+        return null;
     }
 }

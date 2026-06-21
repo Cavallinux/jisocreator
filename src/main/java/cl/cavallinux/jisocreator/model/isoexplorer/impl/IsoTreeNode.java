@@ -4,9 +4,6 @@ import java.io.File;
 
 import org.eclipse.swt.graphics.Image;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 
@@ -18,13 +15,9 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
  * @version 0.1.5
  * @since 0.0.2
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class IsoTreeNode extends TreeNode {
-    @JacksonXmlProperty(isAttribute = true)
     private File file;
-    @JacksonXmlProperty(isAttribute = true)
     private String isoName;
-    @JacksonXmlProperty(isAttribute = true)
     private boolean isRoot;
     private static final String ROOT_ISO_NAME = "/";
 

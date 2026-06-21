@@ -168,7 +168,6 @@
 		<org.eclipse.jface.version>3.39.0</org.eclipse.jface.version>
 		<commons-lang3.version>3.20.0</commons-lang3.version>
 		<commons-cli.version>1.11.0</commons-cli.version>
-		<jackson.version>2.22.0</jackson.version>
 		<exec.maven.plugin>3.6.3</exec.maven.plugin>
 		<debug.port>5005</debug.port>
 		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
@@ -368,11 +367,6 @@
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.ui.workbench</artifactId>
 			<version>${org.eclipse.ui.workbench.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 
@@ -20,19 +16,12 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
  * @version 0.1.5
  * @since 0.0.1
  */
-@JacksonXmlRootElement(localName = "iso9660")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class IsoFileSystem {
     private List<String> isoPaths;
-    @JacksonXmlProperty(localName = "RootEntry")
     private ITreeNode root;
-    @JacksonXmlProperty(isAttribute = true)
     private String volumeID;
-    @JacksonXmlProperty(isAttribute = true)
     private String applicationID;
-    @JacksonXmlProperty(isAttribute = true)
     private String publisherID;
-    @JacksonXmlProperty(isAttribute = true)
     private long isoLength;
 
     public IsoFileSystem(String volumeID, String applicationID, String publisherID) {

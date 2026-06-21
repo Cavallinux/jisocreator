@@ -61,8 +61,7 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IF
         monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
         log.info("Saving layout as xml to path: {}", path);
         monitor.subTask(String.format("Saving layout as xml to path: %s", path));
-        IOManager.INSTANCE.getIsoFilesystemParser().serialize(iso, path);
-        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path)) {
+        if (IOManager.INSTANCE.getIsoFilesystemParser().serialize(iso, path)) {
             monitor.done();
             log.info("Layout saved successfully as xml to path: {}", path);
         } else {

@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +53,9 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
             monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
             monitor.subTask("Parsing xml...");
             object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
+            Optional<IsoFileSystem> deserializedIsoFilesystem = IOManager.INSTANCE.getIsoFilesystemParser()
+                    .deserialize(path);
+            log.info("Deserialized Isofilesystem: {}", deserializedIsoFilesystem);
             if (Objects.nonNull(object)) {
                 monitor.subTask("Inserting into tree...");
                 Display.getDefault().asyncExec(() -> {

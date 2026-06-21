@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
@@ -75,6 +76,9 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
 
     private IsoFileSystem obtainIsoFileSystem() {
         if (commandLineMode) {
+            Optional<IsoFileSystem> deserializedISOFileSystem = IOManager.INSTANCE.getIsoFilesystemParser()
+                    .deserialize(inputXMLLayoutFile);
+            log.info("Deserialized isofilesystem: {}", deserializedISOFileSystem);
             return (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(inputXMLLayoutFile);
         } else {
             return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()

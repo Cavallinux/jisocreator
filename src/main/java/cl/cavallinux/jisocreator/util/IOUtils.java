@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IOUtils {
     private PreferenceStore store;
     private Properties defaultProperties;
+    @Deprecated(since = "0.1.6", forRemoval = true)
     private XStream xStreamParser;
     private final static String JISOCREATOR_CONFIG_DIR;
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
@@ -48,9 +49,7 @@ public class IOUtils {
         WIN32_PLATFORM = "win32";
         WIN32_MKISOFS_BASE_PATH = "<mkisofs.base.path>";
         MKISOFS_VOLUMEID_MAXLENGTH = 32;
-        MKISOFS_ISOFILESYSTEM_APPLICATIONID = String.format("%s version %s",
-                IOUtils.class.getPackage().getImplementationTitle(),
-                IOUtils.class.getPackage().getImplementationVersion());
+        MKISOFS_ISOFILESYSTEM_APPLICATIONID = String.format("%s", IOUtils.class.getPackage().getImplementationTitle());
     }
 
     public IOUtils() {
@@ -67,6 +66,7 @@ public class IOUtils {
         return MKISOFS_ISOFILESYSTEM_APPLICATIONID;
     }
 
+    @Deprecated(since = "0.1.6", forRemoval = true)
     public Object parseXMLFileToObject(String path) {
         try (FileInputStream fis = new FileInputStream(path)) {
             IsoFileSystem iso = (IsoFileSystem) xStreamParser.fromXML(fis);
@@ -78,6 +78,7 @@ public class IOUtils {
         }
     }
 
+    @Deprecated(since = "0.1.6", forRemoval = true)
     public boolean saveObjectToXML(Object objectToParse, String path) {
         try (FileOutputStream fos = new FileOutputStream(path)) {
             xStreamParser.toXML(objectToParse, fos);
@@ -109,6 +110,7 @@ public class IOUtils {
         }
     }
 
+    @Deprecated(since = "0.1.6", forRemoval = true)
     private void loadXMLParser() {
         xStreamParser = new XStream(new PureJavaReflectionProvider());
         xStreamParser.addPermission(NoTypePermission.NONE);
@@ -122,11 +124,14 @@ public class IOUtils {
         xStreamParser.aliasAttribute(IsoFileSystem.class, "volumeID", "volumeid");
         xStreamParser.aliasAttribute(IsoFileSystem.class, "applicationID", "applicationid");
         xStreamParser.aliasAttribute(IsoFileSystem.class, "isoLength", "isolength");
+        xStreamParser.aliasAttribute(IsoFileSystem.class, "publisherID", "publisherid");
+        xStreamParser.aliasAttribute(IsoFileSystem.class, "isoLength", "isolength");
         xStreamParser.aliasAttribute(IsoTreeNode.class, "isRoot", "root");
         xStreamParser.aliasAttribute(IsoTreeNode.class, "isoName", "isoname");
         xStreamParser.useAttributeFor(IsoFileSystem.class, "volumeID");
         xStreamParser.useAttributeFor(IsoFileSystem.class, "applicationID");
         xStreamParser.useAttributeFor(IsoFileSystem.class, "isoLength");
+        xStreamParser.useAttributeFor(IsoFileSystem.class, "publisherID");
         xStreamParser.useAttributeFor(IsoTreeNode.class, "file");
         xStreamParser.useAttributeFor(IsoTreeNode.class, "isRoot");
         xStreamParser.useAttributeFor(IsoTreeNode.class, "isoName");
@@ -166,13 +171,13 @@ public class IOUtils {
         }
         return mkisofsPath.toString();
     }
-    
+
     private void repairApplicationIDAndPublisherID(IsoFileSystem iso) {
         if (Objects.nonNull(iso)) {
             if (StringUtils.isBlank(iso.getPublisherID())) {
                 iso.setPublisherID(UUID.randomUUID().toString());
             }
-            if (Strings.CI.equalsAny(MKISOFS_ISOFILESYSTEM_APPLICATIONID, iso.getApplicationID())) {
+            if (!Strings.CI.equalsAny(MKISOFS_ISOFILESYSTEM_APPLICATIONID, iso.getApplicationID())) {
                 iso.setApplicationID(MKISOFS_ISOFILESYSTEM_APPLICATIONID);
             }
         }

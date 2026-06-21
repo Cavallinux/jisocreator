@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
-import cl.cavallinux.jisocreator.util.IOUtils;
+import cl.cavallinux.jisocreator.model.parser.IsoFilesystemParser;
 import lombok.Getter;
 
 @Getter
@@ -112,7 +112,7 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
     protected void okPressed() {
         String volumeIdInput = volumeIDText.getText();
         if (StringUtils.isNotBlank(volumeIdInput)) {
-            if (volumeIdInput.length() <= IOUtils.MKISOFS_VOLUMEID_MAXLENGTH) {
+            if (volumeIdInput.length() <= IsoFilesystemParser.MKISOFS_VOLUMEID_MAXLENGTH) {
                 setErrorMessage(null);
                 errorIndicator.setText("");
                 volumeIDResponse = volumeIdInput;

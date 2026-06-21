@@ -34,8 +34,9 @@ public class IsoFileSystem {
     }
 
     public IsoFileSystem() {
-        this(IOManager.INSTANCE.getIoUtils().generateInitialVolumeID(),
-                IOManager.INSTANCE.getIoUtils().generateIsoFilesystemApplicationID(), UUID.randomUUID().toString());
+        this(IOManager.INSTANCE.getIsoFilesystemParser().generateInitialVolumeID(),
+                IOManager.INSTANCE.getIsoFilesystemParser().generateIsoFilesystemApplicationID(),
+                UUID.randomUUID().toString());
     }
     
     public String getPublisherID() {

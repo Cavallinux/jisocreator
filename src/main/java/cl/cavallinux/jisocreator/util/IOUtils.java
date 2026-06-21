@@ -5,26 +5,27 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.UUID;
 
 import org.apache.commons.lang3.Strings;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
+@Builder
 @Slf4j
+@AllArgsConstructor
 public class IOUtils {
     private PreferenceStore store;
     private Properties defaultProperties;
-    private final static String JISOCREATOR_CONFIG_DIR;
+    public final static String JISOCREATOR_CONFIG_DIR;
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
-    private final static String JISOCREATOR_CONFIG_FILENAME;
+    public final static String JISOCREATOR_CONFIG_FILENAME;
     private final static String GTK_PLATFORM;
     private final static String WIN32_PLATFORM;
     private final static String WIN32_MKISOFS_BASE_PATH;
-    public final static int MKISOFS_VOLUMEID_MAXLENGTH;
-    private final static String MKISOFS_ISOFILESYSTEM_APPLICATIONID;
 
     static {
         JISOCREATOR_CONFIG_DIR = System.getProperty("user.home").concat("/.config/jisocreator/");
@@ -33,22 +34,9 @@ public class IOUtils {
         GTK_PLATFORM = "gtk";
         WIN32_PLATFORM = "win32";
         WIN32_MKISOFS_BASE_PATH = "<mkisofs.base.path>";
-        MKISOFS_VOLUMEID_MAXLENGTH = 32;
-        MKISOFS_ISOFILESYSTEM_APPLICATIONID = String.format("%s", IOUtils.class.getPackage().getImplementationTitle());
-    }
-
-    public String generateInitialVolumeID() {
-        String isoFileSystemVolumeID = UUID.randomUUID().toString();
-        isoFileSystemVolumeID = isoFileSystemVolumeID.replace("-", "");
-        return isoFileSystemVolumeID.substring(0, Math.min(isoFileSystemVolumeID.length(), MKISOFS_VOLUMEID_MAXLENGTH));
-    }
-
-    public String generateIsoFilesystemApplicationID() {
-        return MKISOFS_ISOFILESYSTEM_APPLICATIONID;
     }
 
     public PreferenceStore getStore() {
-        store = new PreferenceStore(JISOCREATOR_CONFIG_DIR.concat(JISOCREATOR_CONFIG_FILENAME));
         try {
             store.load();
         } catch (IOException e) {

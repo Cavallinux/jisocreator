@@ -59,7 +59,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         try {
             deleteIsoFileIfExists(isoFilePath);
             root.parse();
-            List<String> mkisofsCommand = setMkisofsCommand(isoFilePath, root.getPaths());
+            List<String> mkisofsCommand = setMkisofsCommand(isoFilePath, root);
             ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
             log.info("Process to be started: {}", String.join(" ", mkisofsProcessBuilder.command()));
             Process isoProcess = mkisofsProcessBuilder.start();
@@ -97,21 +97,26 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         }
     }
 
-    private List<String> setMkisofsCommand(String isoOutputFileAbsolutePath, List<String> parsedIsoPaths) {
+    private List<String> setMkisofsCommand(String isoOutputFileAbsolutePath, IsoFileSystem isoFileSystem) {
         List<String> mkisofsCommand = new ArrayList<>();
         IOUtils storeInstance = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = storeInstance.getStore();
         mkisofsCommand.add(preferenceStore.getString("mkisofs.path"));
+        mkisofsCommand.add("-publisher");
+        mkisofsCommand.add(isoFileSystem.getPublisherID());
+        mkisofsCommand.add("-A");
+        mkisofsCommand.add(isoFileSystem.getApplicationID());
+        mkisofsCommand.add("-V");
+        mkisofsCommand.add(isoFileSystem.getVolumeID());
         mkisofsCommand.add("-graft-points");
         mkisofsCommand.add("-gui");
         if (preferenceStore.getBoolean("mkisofs.joliet.use")) {
             mkisofsCommand.add("-J");
             mkisofsCommand.add("-joliet-long");
-            if (preferenceStore.getBoolean("mkisofs.rockridge.use")) {
-                mkisofsCommand.add("-r");
-            }
         }
-
+        if (preferenceStore.getBoolean("mkisofs.rockridge.use")) {
+            mkisofsCommand.add("-r");
+        }
         if (preferenceStore.getBoolean("mkisofs.symlinks.follow")) {
             mkisofsCommand.add("-f");
         }
@@ -122,7 +127,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         mkisofsCommand.add(preferenceStore.getString("mkisofs.iso.level"));
         mkisofsCommand.add("-o");
         mkisofsCommand.add(isoOutputFileAbsolutePath);
-        mkisofsCommand.addAll(parsedIsoPaths);
+        mkisofsCommand.addAll(isoFileSystem.getPaths());
         
         return mkisofsCommand;
     }

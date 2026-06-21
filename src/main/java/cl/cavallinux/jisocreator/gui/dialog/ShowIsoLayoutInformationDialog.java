@@ -25,18 +25,21 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
     private final String isoFilesystemVolumeID;
     private final String isoFilesystemApplicationID;
     private final String isoFilesystemLength;
+    private final String isoFilesystemPublisherID;
     private Text volumeIDText;
     private Label errorIndicator;
     private String volumeIDResponse;
 
     public ShowIsoLayoutInformationDialog(Shell parentShell, String windowTitle, String bannerInfo,
-            String isoFilesysteVolumeID, String isoFilesystemApplicationID, String isoFilesystemLength) {
+            String isoFilesysteVolumeID, String isoFilesystemApplicationID, String isoFilesystemLength,
+            String isoFilesystemPublisherID) {
         super(parentShell);
         this.windowTitle = windowTitle;
         this.bannerInfo = bannerInfo;
         this.isoFilesystemVolumeID = isoFilesysteVolumeID;
         this.isoFilesystemApplicationID = isoFilesystemLength;
         this.isoFilesystemLength = isoFilesystemApplicationID;
+        this.isoFilesystemPublisherID = isoFilesystemPublisherID;
     }
 
     @Override
@@ -66,28 +69,28 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
         volumeIDText.addSelectionListener(new EnterKeySubmitAdapter(this::okPressed));
 
         Label lblAppId = new Label(container, SWT.NONE);
-        lblAppId.setText("Application ID:");
+        lblAppId.setText("Application ID ");
         lblAppId.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
         Label txtAppIdDummy = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
         txtAppIdDummy.setText(isoFilesystemApplicationID);
         txtAppIdDummy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-        Label lblCreationDate = new Label(container, SWT.NONE);
-        lblCreationDate.setText("Creation date:");
-        lblCreationDate.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+        Label publisherIDLabel = new Label(container, SWT.NONE);
+        publisherIDLabel.setText("Publisher ID ");
+        publisherIDLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
-        Label txtCreationDateDummy = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
-        txtCreationDateDummy.setText("2026-06-17 11:44:00 UTC");
-        txtCreationDateDummy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        Label publisherIDDataLabel = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
+        publisherIDDataLabel.setText(isoFilesystemPublisherID);
+        publisherIDDataLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         Label lblImageSize = new Label(container, SWT.NONE);
-        lblImageSize.setText("Iso layout size");
+        lblImageSize.setText("Iso layout size ");
         lblImageSize.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
-        Label txtImageSizeDummy = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
-        txtImageSizeDummy.setText(isoFilesystemLength.concat(" bytes"));
-        txtImageSizeDummy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        Label txtImageSize = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
+        txtImageSize.setText(isoFilesystemLength.concat(" bytes"));
+        txtImageSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         errorIndicator = new Label(container, SWT.NONE);
         errorIndicator.setText("");

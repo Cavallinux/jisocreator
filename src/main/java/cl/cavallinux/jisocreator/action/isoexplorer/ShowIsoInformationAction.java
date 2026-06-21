@@ -28,16 +28,18 @@ public class ShowIsoInformationAction extends Action {
         String valorInicialVol = isoFileSystem.getVolumeID();
         String applicationID = isoFileSystem.getApplicationID();
         String isoFilesystemSize = String.valueOf(isoFileSystem.getIsoLength());
-
+        String publisherID = isoFileSystem.getPublisherID();
+        
         ShowIsoLayoutInformationDialog dialog = new ShowIsoLayoutInformationDialog(
                 GUIManager.INSTANCE.getMainWindow().getShell(), windowTitle, staticInfo, valorInicialVol,
-                isoFilesystemSize, applicationID);
+                isoFilesystemSize, applicationID, publisherID);
         
         switch (dialog.open()) {
         case Window.OK: {
             String nuevoVolumeId = dialog.getVolumeIDResponse();
             isoFileSystem.setVolumeID(nuevoVolumeId);
             log.info("Confirmed operation, new volume id: {} ", isoFileSystem.getVolumeID());
+            break;
         }
         default:
             log.info("User cancelled operation");

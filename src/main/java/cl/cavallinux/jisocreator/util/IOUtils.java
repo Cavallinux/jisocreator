@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -44,29 +46,31 @@ public class IOUtils {
         JISOCREATOR_CONFIG_FILENAME = "jisocreator.properties";
         GTK_PLATFORM = "gtk";
         WIN32_PLATFORM = "win32";
-        WIN32_MKISOFS_BASE_PATH="<mkisofs.base.path>";
+        WIN32_MKISOFS_BASE_PATH = "<mkisofs.base.path>";
         MKISOFS_VOLUMEID_MAXLENGTH = 32;
-        MKISOFS_ISOFILESYSTEM_APPLICATIONID = "jisocreator";
+        MKISOFS_ISOFILESYSTEM_APPLICATIONID = String.format("%s version %s",
+                IOUtils.class.getPackage().getImplementationTitle(),
+                IOUtils.class.getPackage().getImplementationVersion());
     }
 
     public IOUtils() {
         loadXMLParser();
     }
-    
+
     public String generateInitialVolumeID() {
         String isoFileSystemVolumeID = UUID.randomUUID().toString();
         isoFileSystemVolumeID = isoFileSystemVolumeID.replace("-", "");
         return isoFileSystemVolumeID.substring(0, Math.min(isoFileSystemVolumeID.length(), MKISOFS_VOLUMEID_MAXLENGTH));
     }
-    
+
     public String generateIsoFilesystemApplicationID() {
         return MKISOFS_ISOFILESYSTEM_APPLICATIONID;
     }
 
     public Object parseXMLFileToObject(String path) {
         try (FileInputStream fis = new FileInputStream(path)) {
-            IsoFileSystem iso = new IsoFileSystem();
-            xStreamParser.fromXML(fis, iso);
+            IsoFileSystem iso = (IsoFileSystem) xStreamParser.fromXML(fis);
+            repairApplicationIDAndPublisherID(iso);
             return iso;
         } catch (IOException | XStreamException e) {
             log.error("Error parsing XML", e);
@@ -95,7 +99,7 @@ public class IOUtils {
 
         return store;
     }
-    
+
     public void saveStore() {
         try {
             store.save();
@@ -111,7 +115,7 @@ public class IOUtils {
         xStreamParser.addPermission(NullPermission.NULL);
         xStreamParser.addPermission(PrimitiveTypePermission.PRIMITIVES);
         xStreamParser.allowTypesByWildcard(new String[] { "cl.cavallinux.jisocreator.model.isoexplorer.impl.**" });
-        
+
         xStreamParser.alias("iso9660", IsoFileSystem.class);
         xStreamParser.alias("entry", IsoTreeNode.class);
         xStreamParser.aliasAttribute(IsoFileSystem.class, "root", "RootEntry");
@@ -129,7 +133,8 @@ public class IOUtils {
     }
 
     private void loadPreferencesFromBackup() {
-        try (InputStream stream = getClass().getResourceAsStream("res/conf/".concat(JISOCREATOR_DEFAULTCONFIG_FILENAME))) {
+        try (InputStream stream = getClass()
+                .getResourceAsStream("res/conf/".concat(JISOCREATOR_DEFAULTCONFIG_FILENAME))) {
             Files.createDirectories(Paths.get(JISOCREATOR_CONFIG_DIR));
             defaultProperties = new Properties();
             defaultProperties.load(stream);
@@ -160,5 +165,16 @@ public class IOUtils {
                     WIN32_MKISOFS_BASE_PATH, Paths.get("").toAbsolutePath().toString()));
         }
         return mkisofsPath.toString();
+    }
+    
+    private void repairApplicationIDAndPublisherID(IsoFileSystem iso) {
+        if (Objects.nonNull(iso)) {
+            if (StringUtils.isBlank(iso.getPublisherID())) {
+                iso.setPublisherID(UUID.randomUUID().toString());
+            }
+            if (Strings.CI.equalsAny(MKISOFS_ISOFILESYSTEM_APPLICATIONID, iso.getApplicationID())) {
+                iso.setApplicationID(MKISOFS_ISOFILESYSTEM_APPLICATIONID);
+            }
+        }
     }
 }

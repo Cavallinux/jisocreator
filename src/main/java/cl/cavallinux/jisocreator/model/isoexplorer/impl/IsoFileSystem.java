@@ -3,6 +3,7 @@ package cl.cavallinux.jisocreator.model.isoexplorer.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
@@ -20,19 +21,29 @@ public class IsoFileSystem {
     private ITreeNode root;
     private String volumeID;
     private String applicationID;
+    private String publisherID;
     private long isoLength;
 
-    public IsoFileSystem(String volumeID, String applicationID) {
+    public IsoFileSystem(String volumeID, String applicationID, String publisherID) {
         root = new IsoTreeNode();
         this.isoPaths = null;
         this.volumeID = volumeID;
         this.applicationID = applicationID;
+        this.publisherID = publisherID;
         setIsoLength();
     }
 
     public IsoFileSystem() {
         this(IOManager.INSTANCE.getIoUtils().generateInitialVolumeID(),
-                IOManager.INSTANCE.getIoUtils().generateIsoFilesystemApplicationID());
+                IOManager.INSTANCE.getIoUtils().generateIsoFilesystemApplicationID(), UUID.randomUUID().toString());
+    }
+    
+    public String getPublisherID() {
+        return publisherID;
+    }
+
+    public void setPublisherID(String publisherID) {
+        this.publisherID = publisherID;
     }
 
     public ITreeNode[] toArray() {

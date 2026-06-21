@@ -52,10 +52,10 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
         try {
             monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
             monitor.subTask("Parsing xml...");
-            object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
             Optional<IsoFileSystem> deserializedIsoFilesystem = IOManager.INSTANCE.getIsoFilesystemParser()
                     .deserialize(path);
             log.info("Deserialized Isofilesystem: {}", deserializedIsoFilesystem);
+            object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
             if (Objects.nonNull(object)) {
                 monitor.subTask("Inserting into tree...");
                 Display.getDefault().asyncExec(() -> {

@@ -25,9 +25,19 @@ public abstract class TreeNode implements ITreeNode {
     protected TreeNode() {
         this(null);
     }
+    
+    @Override
+    public List<ITreeNode> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ITreeNode> children) {
+        this.children = children;
+    }
 
     @Override
-    public Object[] getChildren() {
+    public Object[] toArray() {
+        // TODO Auto-generated method stub
         return children.toArray();
     }
     

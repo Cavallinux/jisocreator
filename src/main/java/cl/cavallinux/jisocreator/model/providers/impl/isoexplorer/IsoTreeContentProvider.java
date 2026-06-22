@@ -15,7 +15,7 @@ public class IsoTreeContentProvider extends TreeContentAdapter {
         if (arg0 instanceof IsoFileSystem) {
             return ((IsoFileSystem) arg0).toArray();
         } else {
-            return ((ITreeNode) arg0).getChildren();
+            return ((ITreeNode) arg0).toArray();
         }
     }
 

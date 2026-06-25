@@ -10,7 +10,7 @@ import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineParserManager;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.util.cmdline.ICommandLineParser;
+import cl.cavallinux.jisocreator.model.cmdline.ICommandLineParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

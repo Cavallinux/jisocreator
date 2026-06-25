@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.util;
+package cl.cavallinux.jisocreator.model.cmdline;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import org.apache.commons.cli.help.HelpFormatter;
 
 import cl.cavallinux.jisocreator.action.main.MainAction;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
-import cl.cavallinux.jisocreator.util.cmdline.AbstractJISOCreatorCommandLineParser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -53,41 +52,18 @@ public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLine
 
     @Override
     public void handleCommandLine(CommandLine cmd) throws ParseException {
-        String inputPath = null;
-        String outputFile = null;
-
-        if (cmd.hasOption(CommandLineOptionsManager.ISOINPUT.getOption())
-                && cmd.hasOption(CommandLineOptionsManager.ISOOUTPUT.getOption())) {
-            inputPath = cmd.getOptionValue(CommandLineOptionsManager.ISOINPUT.getOption());
-            outputFile = cmd.getOptionValue(CommandLineOptionsManager.ISOOUTPUT.getOption());
-        }
-
-        if ((inputPath == null && outputFile != null) || (inputPath != null && outputFile == null)) {
-            throw new ParseException("Options -i and -o required");
-        }
-
-        if (inputPath == null && outputFile == null) {
-            throw new ParseException("Input file doesn't exist" + inputPath);
-        }
+        String inputPath = cmd.getOptionValue(CommandLineOptionsManager.ISOINPUT.getOption());
+        String outputFile = cmd.getOptionValue(CommandLineOptionsManager.ISOOUTPUT.getOption());
 
         File inputDir = new File(inputPath);
-        if (!inputDir.exists()) {
-            throw new ParseException("Input file doesn't exist" + inputPath);
-        }
-
-        if (!inputDir.canRead()) {
-            throw new ParseException("Read and write permissions denied: " + inputPath);
+        if (!inputDir.exists() || !inputDir.canRead()) {
+            throw new ParseException("Input file doesn't exist or read and write permissions denied: ");
         }
 
         File outputFileObj = new File(outputFile);
-        File outputDir = outputFileObj.getParentFile();
-
-        if (outputDir != null && !outputDir.exists()) {
-            throw new ParseException("Output directory doesn't exists " + outputDir.getAbsolutePath());
-        }
-
-        if (outputDir != null && !outputDir.canWrite()) {
-            throw new ParseException("Read and write permissions denied: " + outputDir.getAbsolutePath());
+        if (!outputFileObj.exists() || !outputFileObj.canWrite()) {
+            throw new ParseException("Output directory doesn't exists or Read and write permissions denied: "
+                    + outputFileObj.getAbsolutePath());
         }
     }
 

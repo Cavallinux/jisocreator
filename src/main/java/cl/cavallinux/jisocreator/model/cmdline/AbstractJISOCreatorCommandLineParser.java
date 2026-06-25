@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.util.cmdline;
+package cl.cavallinux.jisocreator.model.cmdline;
 
 import org.apache.commons.cli.CommandLineParser;
 

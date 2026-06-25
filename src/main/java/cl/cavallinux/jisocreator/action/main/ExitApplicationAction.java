@@ -76,7 +76,7 @@ public class ExitApplicationAction extends Action {
         mainWindowProgressMonitor.setCanceled(true);
     }
     
-    private void halt() {
+    public void halt() {
         System.exit(0);
     }
 }

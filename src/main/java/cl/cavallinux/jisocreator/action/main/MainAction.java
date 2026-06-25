@@ -52,6 +52,8 @@ public class MainAction extends Action {
      * @param args Argumentos recibidos desde el sistema operativo.
      */
     public static void main(String[] args) throws IOException {
+        /*Runtime.getRuntime().addShutdownHook(HaltApplicationThread.builder().name("halt Action")
+                .action((ExitApplicationAction) ActionsManager.EXITACTION.getAction()).build());*/
         MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
         try {
             mainAction.handleCommandLine(args);

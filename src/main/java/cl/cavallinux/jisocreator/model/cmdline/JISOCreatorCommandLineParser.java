@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -13,9 +15,9 @@ import org.apache.commons.cli.help.HelpFormatter;
 
 import cl.cavallinux.jisocreator.action.main.MainAction;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Clase interna que encapsula el parser configurado.
@@ -23,11 +25,16 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
-public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLineParser {
-    private final Options options;
-    private final String header;
-    private final String footer;
+@Builder
+public class JISOCreatorCommandLineParser implements ICommandLineParser {
+    @Builder.Default
+    private final Options options = buildOptions();
+    @Builder.Default
+    private final String header = buildHelpHeader();
+    @Builder.Default
+    private final String footer = buildHelpFooter();
+    @Builder.Default
+    private final CommandLineParser commandLineParser = DefaultParser.builder().get();
 
     public CommandLine parse(String... args) throws ParseException {
         return commandLineParser.parse(options, args);
@@ -67,7 +74,7 @@ public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLine
         }
     }
 
-    public static String buildHelpHeader() {
+    protected static String buildHelpHeader() {
         StringBuilder builder = new StringBuilder();
         builder.append("  ");
         builder.append(JISOCreatorCommandLineParser.class.getPackage().getSpecificationTitle());
@@ -77,7 +84,7 @@ public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLine
         return builder.toString();
     }
 
-    public static String buildHelpFooter() {
+    protected static String buildHelpFooter() {
         StringBuilder builder = new StringBuilder();
         builder.append("\nExamples:\n jisocreator -v");
         builder.append("\njisocreator -h");
@@ -87,7 +94,7 @@ public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLine
         return builder.toString();
     }
 
-    public static Options buildOptions() {
+    protected static Options buildOptions() {
         Options options = new Options();
         options.addOption(CommandLineOptionsManager.ISOINPUT.getOption());
         options.addOption(CommandLineOptionsManager.ISOOUTPUT.getOption());

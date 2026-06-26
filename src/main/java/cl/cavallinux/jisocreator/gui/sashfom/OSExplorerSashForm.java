@@ -3,6 +3,7 @@ package cl.cavallinux.jisocreator.gui.sashfom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
@@ -103,7 +105,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     }
 
     private void fillToolbarAndCoolbars() {
-        osTreeCLabel.setText("File explorer");
+        osTreeCLabel.setText(OSExplorerMessages.osExplorerSashFormTitle);
         osTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("drive.png"));
 
         CoolBarManager coolbar = new CoolBarManager(osTableCoolBar);
@@ -121,6 +123,20 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osTableText.pack();
         coolItem.setSize(osTableText.getSize());
         coolItem.setControl(osTableText);
+    }
+    
+    @Override
+    public Map<String, String> obtainTableColumnsTextAndTooltips() {
+        Map<String, String> tableColumnsTextAndTooltips = ICompositeCreator.super.obtainTableColumnsTextAndTooltips();
+        tableColumnsTextAndTooltips.put(OSExplorerMessages.tableColumnsFileNameText,
+                OSExplorerMessages.tableColumnsFileNameTooltip);
+        tableColumnsTextAndTooltips.put(OSExplorerMessages.tableColumnsFileTypeText,
+                OSExplorerMessages.tableColumnsFileTypeTooltip);
+        tableColumnsTextAndTooltips.put(OSExplorerMessages.tableColumnsFileSizeText,
+                OSExplorerMessages.tableColumnsFileSizeTooltip);
+        tableColumnsTextAndTooltips.put(OSExplorerMessages.tableColumnsFileModifiedDateText,
+                OSExplorerMessages.tableColumnsFileModifiedDateTooltip);
+        return tableColumnsTextAndTooltips;
     }
 
     public IStructuredSelection getTableSelection() {

@@ -20,9 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IFileManagementAction {
-    private static final String XML_FILE_EXTENSION = ".xml";
-    private static final String XML_FILE_NAMES = "XML Files";
-    private static final String XML_DIALOG_TITLE = "Choose a xml file name to save";
     private String path;
     private IsoFileSystem iso;
 

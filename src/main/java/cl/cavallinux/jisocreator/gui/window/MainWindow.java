@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.action.main.LoadCommandLineISOLayoutAction;
+import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
@@ -54,7 +55,7 @@ public class MainWindow extends ApplicationWindow {
     protected void configureShell(Shell shell) {
         log.info("Configuring shell");
         super.configureShell(shell);
-        shell.setText("JIsoCreator");
+        shell.setText(MainWindowMessages.windowTitle);
         shell.setSize(1024, 768);
         shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
 
@@ -96,15 +97,15 @@ public class MainWindow extends ApplicationWindow {
         log.info("creating menu managers");
         MenuManager mainMenuManager = new MenuManager();
 
-        MenuManager fileMenu = new MenuManager("&File");
-        MenuManager toolsMenu = new MenuManager("&Tools");
-        MenuManager helpMenu = new MenuManager("&Help");
+        MenuManager fileMenu = new MenuManager(MainWindowMessages.fileMenuName);
+        MenuManager toolsMenu = new MenuManager(MainWindowMessages.toolsMenuName);
+        MenuManager helpMenu = new MenuManager(MainWindowMessages.helpMenuName);
 
         mainMenuManager.add(fileMenu);
         mainMenuManager.add(toolsMenu);
         mainMenuManager.add(helpMenu);
 
-        MenuManager saveAsMenu = new MenuManager("&Save as",
+        MenuManager saveAsMenu = new MenuManager(MainWindowMessages.fileSaveAsName,
                 ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("saveas.png"), "saveAs");
         saveAsMenu.add(ActionsManager.SAVEASXMLACTION.getAction());
         saveAsMenu.add(ActionsManager.SAVEASISOACTION.getAction());

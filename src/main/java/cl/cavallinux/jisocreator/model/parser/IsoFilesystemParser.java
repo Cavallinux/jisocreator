@@ -35,10 +35,6 @@ public interface IsoFilesystemParser<T extends IsoFileSystem> {
         return false;
     }
     
-    default Object obtainParser() {
-        return null;
-    }
-    
     default String generateInitialVolumeID() {
         String isoFileSystemVolumeID = UUID.randomUUID().toString();
         isoFileSystemVolumeID = isoFileSystemVolumeID.replace("-", "");

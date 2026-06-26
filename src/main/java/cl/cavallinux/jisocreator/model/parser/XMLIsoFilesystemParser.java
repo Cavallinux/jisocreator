@@ -21,7 +21,6 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
 import cl.cavallinux.jisocreator.util.IOUtils;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @Getter
 @Slf4j
-@AllArgsConstructor
 public class XMLIsoFilesystemParser implements IsoFilesystemParser<IsoFileSystem> {
     private final static String MKISOFS_ISOFILESYSTEM_APPLICATIONID;
+    @Builder.Default
+    private final XStream parser = obtainParser();
     
     static {
         MKISOFS_ISOFILESYSTEM_APPLICATIONID = String.format("%s", IOUtils.class.getPackage().getImplementationTitle());
@@ -40,7 +40,7 @@ public class XMLIsoFilesystemParser implements IsoFilesystemParser<IsoFileSystem
     @Override
     public Optional<IsoFileSystem> deserialize(String filePath) {
         try (InputStream fis = new FileInputStream(filePath)) {
-            IsoFileSystem iso = (IsoFileSystem) ((XStream) obtainParser()).fromXML(fis);
+            IsoFileSystem iso = (IsoFileSystem) parser.fromXML(fis);
             repairApplicationIDAndPublisherID(iso);
             return Optional.of(iso);
         } catch (IOException | XStreamException e) {
@@ -52,7 +52,7 @@ public class XMLIsoFilesystemParser implements IsoFilesystemParser<IsoFileSystem
     @Override
     public boolean serialize(IsoFileSystem isoFilesystem, String filePath) {
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            ((XStream) obtainParser()).toXML(isoFilesystem, fos);
+            parser.toXML(isoFilesystem, fos);
             return true;
         } catch (IOException e) {
             log.error("Error saving XML", e);
@@ -71,8 +71,7 @@ public class XMLIsoFilesystemParser implements IsoFilesystemParser<IsoFileSystem
         }
     }
     
-    @Override
-    public Object obtainParser() {
+    private static XStream obtainParser() {
         XStream xStreamParser = new XStream(new PureJavaReflectionProvider());
         xStreamParser.addPermission(NoTypePermission.NONE);
         xStreamParser.addPermission(NullPermission.NULL);

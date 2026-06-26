@@ -6,4 +6,5 @@ public interface INLSBundleMessages {
     final String OSEXPLORER_BUNDLE_MESSAGE = "cl.cavallinux.jisocreator.util.res.i18n.osexplorer.messages";
     final String ISOEXPLORER_BUNDLE_MESSAGE = "cl.cavallinux.jisocreator.util.res.i18n.isoexplorer.messages";
     final String SHOWISOINFO_BUNDLE_MESSAGE = "cl.cavallinux.jisocreator.util.res.i18n.showisoinfodialog.messages";
+    final String PREFERENCEDIALOG_BUNDLE_MESSAGE = "cl.cavallinux.jisocreator.util.res.i18n.preferencedialog.messages";
 }

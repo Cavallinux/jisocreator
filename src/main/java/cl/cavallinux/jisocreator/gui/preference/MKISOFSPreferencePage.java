@@ -1,5 +1,6 @@
 package cl.cavallinux.jisocreator.gui.preference;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,18 +11,22 @@ import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
+import cl.cavallinux.jisocreator.instances.JISOCreatorISOLevelOptions;
+
 public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
+    public static final String NODE_NAME = "preferences.general";
 
     public MKISOFSPreferencePage() {
         super(GRID);
-        setDescription("MKISOFS parameters configuration");
+        setDescription(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeDescription);
     }
-    
+
     @Override
     public void createControl(Composite parent) {
         super.createControl(parent);
-        getDefaultsButton().setText("Restore");
-        getApplyButton().setText("Apply");
+        getApplyButton().setText(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeApplyButton);
+        getDefaultsButton().setText(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeRestoreButton);
     }
 
     @Override
@@ -29,19 +34,27 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
         Composite parent = getFieldEditorParent();
         GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns = 2;
-        addField(new FileFieldEditor("mkisofs.path", "MKISOFS Path", true, parent));
-        addField(new BooleanFieldEditor("mkisofs.rockridge.use", "Use Rock Ridge extension", parent));
-        addField(new BooleanFieldEditor("mkisofs.joliet.use", "Use Joliet extension", parent));
-        addField(new BooleanFieldEditor("mkisofs.symlinks.follow", "Follow symlinks", parent));
-        addField(new ComboFieldEditor("mkisofs.iso.level", "ISO Level:", buildIsoLevelOptionsArray(), parent));
+        FileFieldEditor mkisofsPathBrowser = new FileFieldEditor("mkisofs.path",
+                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeMKISOFSPath, true, parent);
+        mkisofsPathBrowser.setChangeButtonText(
+                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeMKISOFSPathBrowseButtonText);
+        addField(mkisofsPathBrowser);
+        addField(new BooleanFieldEditor("mkisofs.rockridge.use",
+                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeRockRidgeExtension, parent));
+        addField(new BooleanFieldEditor("mkisofs.joliet.use",
+                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeJolietExtension, parent));
+        addField(new BooleanFieldEditor("mkisofs.symlinks.follow",
+                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeFollowSymlinks, parent));
+        addField(new ComboFieldEditor("mkisofs.iso.level",
+                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeIsoLevel, buildIsoLevelOptionsArray(), parent));
     }
 
     private String[][] buildIsoLevelOptionsArray() {
-        Map<String, String> isoLevelOptionsMap = new LinkedHashMap<>(4);
-        isoLevelOptionsMap.put("Level 1 (8.3 names, files max 4GB", "1");
-        isoLevelOptionsMap.put("Level 2 (Large names, files max 4GB", "2");
-        isoLevelOptionsMap.put("Level 3 (Large names, files > 4GB", "3");
-        isoLevelOptionsMap.put("Level 4 (Large names, files > 4GB", "4");
+        JISOCreatorISOLevelOptions[] isoLevels = JISOCreatorISOLevelOptions.values();
+        Map<String, String> isoLevelOptionsMap = LinkedHashMap.newLinkedHashMap(isoLevels.length);
+        Arrays.asList(isoLevels).forEach(isoLevel -> {
+            isoLevelOptionsMap.put(isoLevel.getIsoLevelText(), isoLevel.getIsoLevelValue());
+        });
 
         return isoLevelOptionsMap.entrySet().stream().map(e -> new String[] { e.getKey(), e.getValue() })
                 .toArray(String[][]::new);

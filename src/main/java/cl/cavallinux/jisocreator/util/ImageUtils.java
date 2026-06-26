@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import lombok.Builder;
 
 public class ImageUtils {
     private ImageRegistry imageRegistry;
@@ -24,6 +25,7 @@ public class ImageUtils {
     private static final String ROOT_ISO_FILENAME = "iso.png";
     private static final String GENERIC_FILENAME = "file.png";
 
+    @Builder
     public ImageUtils() {
         imageRegistry = new ImageRegistry(Display.getDefault());
     }

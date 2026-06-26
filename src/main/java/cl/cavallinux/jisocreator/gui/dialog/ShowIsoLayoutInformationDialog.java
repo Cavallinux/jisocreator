@@ -14,82 +14,80 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import cl.cavallinux.jisocreator.gui.i18n.ShowIsoInformationDialogMessages;
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
+import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.parser.IsoFilesystemParser;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
+@Setter
 public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
-    private final String windowTitle;
-    private final String bannerInfo;
-    private final String isoFilesystemVolumeID;
-    private final String isoFilesystemApplicationID;
-    private final String isoFilesystemLength;
-    private final String isoFilesystemPublisherID;
+    private IsoFileSystem isoFileSystem;
     private Text volumeIDText;
     private Label errorIndicator;
     private String volumeIDResponse;
-
-    public ShowIsoLayoutInformationDialog(Shell parentShell, String windowTitle, String bannerInfo,
-            String isoFilesysteVolumeID, String isoFilesystemApplicationID, String isoFilesystemLength,
-            String isoFilesystemPublisherID) {
+    
+    @Builder
+    protected ShowIsoLayoutInformationDialog(Shell parentShell, IsoFileSystem isoFileSystem) {
         super(parentShell);
-        this.windowTitle = windowTitle;
-        this.bannerInfo = bannerInfo;
-        this.isoFilesystemVolumeID = isoFilesysteVolumeID;
-        this.isoFilesystemApplicationID = isoFilesystemLength;
-        this.isoFilesystemLength = isoFilesystemApplicationID;
-        this.isoFilesystemPublisherID = isoFilesystemPublisherID;
+        this.isoFileSystem = isoFileSystem;
     }
 
     @Override
     protected void configureShell(Shell newShell) {
+        log.info("Configuring show info layout shell");
         super.configureShell(newShell);
-        newShell.setText(windowTitle);
+        newShell.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
+        log.info("Creating show info layout dialog area components");
         Composite area = (Composite) super.createDialogArea(parent);
 
-        setTitle(windowTitle);
-        setMessage(bannerInfo);
+        setTitle(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
+        setMessage(ShowIsoInformationDialogMessages.showIsoInfoDialogStaticInfo);
 
         Composite container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         container.setLayout(new GridLayout(2, false));
 
         Label lblVolumeId = new Label(container, SWT.NONE);
-        lblVolumeId.setText("Volume id:");
+        lblVolumeId.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogVolumeID);
         lblVolumeId.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
         volumeIDText = new Text(container, SWT.BORDER | SWT.SINGLE);
-        volumeIDText.setText(isoFilesystemVolumeID);
+        volumeIDText.setText(isoFileSystem.getVolumeID());
         volumeIDText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         volumeIDText.addSelectionListener(new EnterKeySubmitAdapter(this::okPressed));
 
         Label lblAppId = new Label(container, SWT.NONE);
-        lblAppId.setText("Application ID ");
+        lblAppId.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogApplicationID);
         lblAppId.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
         Label txtAppIdDummy = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
-        txtAppIdDummy.setText(isoFilesystemApplicationID);
+        txtAppIdDummy.setText(isoFileSystem.getApplicationID());
         txtAppIdDummy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         Label publisherIDLabel = new Label(container, SWT.NONE);
-        publisherIDLabel.setText("Publisher ID ");
+        publisherIDLabel.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogPublisherID);
         publisherIDLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
         Label publisherIDDataLabel = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
-        publisherIDDataLabel.setText(isoFilesystemPublisherID);
+        publisherIDDataLabel.setText(isoFileSystem.getPublisherID());
         publisherIDDataLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         Label lblImageSize = new Label(container, SWT.NONE);
-        lblImageSize.setText("Iso layout size ");
+        lblImageSize.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogIsoSize);
         lblImageSize.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
         Label txtImageSize = new Label(container, SWT.SINGLE | SWT.READ_ONLY);
-        txtImageSize.setText(isoFilesystemLength.concat(" bytes"));
+        txtImageSize.setText(String.valueOf(isoFileSystem.getIsoLength()).concat(" bytes"));
         txtImageSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         errorIndicator = new Label(container, SWT.NONE);

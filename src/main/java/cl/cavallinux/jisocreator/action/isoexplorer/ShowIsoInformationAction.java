@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.action.isoexplorer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.dialog.ShowIsoLayoutInformationDialog;
 import cl.cavallinux.jisocreator.instances.GUIManager;
@@ -13,26 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 public class ShowIsoInformationAction extends Action {
     public ShowIsoInformationAction() {
         super("Iso layout information", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("properties.png"));
-        setToolTipText(
-                "Show and/or modify iso layout information\n, the volume id field must be minor to 32 chars to be acepted");
+        setToolTipText("Show and/or modify iso layout information");
         setEnabled(true);
     }
 
     @Override
     public void run() {
         log.info("Show iso information action executed");
-        String windowTitle = getText();
-        String staticInfo = getToolTipText();
         IsoFileSystem isoFileSystem = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer()
                 .getIsoDirectoriesTree().getInput();
-        String valorInicialVol = isoFileSystem.getVolumeID();
-        String applicationID = isoFileSystem.getApplicationID();
-        String isoFilesystemSize = String.valueOf(isoFileSystem.getIsoLength());
-        String publisherID = isoFileSystem.getPublisherID();
-        
-        ShowIsoLayoutInformationDialog dialog = new ShowIsoLayoutInformationDialog(
-                GUIManager.INSTANCE.getMainWindow().getShell(), windowTitle, staticInfo, valorInicialVol,
-                isoFilesystemSize, applicationID, publisherID);
+        Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
+        ShowIsoLayoutInformationDialog dialog = ShowIsoLayoutInformationDialog.builder().parentShell(shell)
+                .isoFileSystem(isoFileSystem).build();
         
         switch (dialog.open()) {
         case Window.OK: {

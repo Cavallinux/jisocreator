@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import lombok.Builder;
 
 /**
  * Sistema de archivos ISO, que parte con el nodo raiz y algunos atributos
@@ -24,6 +25,7 @@ public class IsoFileSystem {
     private String publisherID;
     private long isoLength;
 
+    @Builder
     public IsoFileSystem(String volumeID, String applicationID, String publisherID) {
         root = new IsoTreeNode();
         this.isoPaths = null;
@@ -33,6 +35,7 @@ public class IsoFileSystem {
         setIsoLength();
     }
 
+    @Builder
     public IsoFileSystem() {
         this(IOManager.INSTANCE.getIsoFilesystemParser().generateInitialVolumeID(),
                 IOManager.INSTANCE.getIsoFilesystemParser().generateIsoFilesystemApplicationID(),

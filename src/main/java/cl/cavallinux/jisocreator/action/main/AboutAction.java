@@ -24,7 +24,7 @@ public class AboutAction extends Action {
 
     @Override
     public void run() {
-        AboutDialog dialog = new AboutDialog(GUIManager.INSTANCE.getMainWindow().getShell());
+        AboutDialog dialog = AboutDialog.builder().parentShell(GUIManager.INSTANCE.getMainWindow().getShell()).build();
         dialog.open();
         dialog.close();
     }

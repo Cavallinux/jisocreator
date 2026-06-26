@@ -12,21 +12,28 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
+import cl.cavallinux.jisocreator.gui.i18n.AboutDialogMessages;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AboutDialog extends TitleAreaDialog {
+    private String formattedProgramVersion;
 
-    public AboutDialog(Shell parentShell) {
+    @Builder
+    protected AboutDialog(Shell parentShell) {
         super(parentShell);
+        formattedProgramVersion = String.format(AboutDialogMessages.aboutDialogProgramVersion,
+                AboutDialog.class.getPackage().getImplementationVersion(), System.getProperty("os.name"),
+                System.getProperty("os.version"));
     }
 
     @Override
     protected void configureShell(Shell newShell) {
         log.info("Configuring about dialog shell");
         super.configureShell(newShell);
-        newShell.setText("About");
+        newShell.setText(AboutDialogMessages.aboutDialogWindowTitle);
     }
 
     @Override
@@ -36,41 +43,26 @@ public class AboutDialog extends TitleAreaDialog {
 
     private Control createAboutPanel(Composite parent) {
         log.info("Creating about panel");
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("Version: ");
-        stringBuffer.append(AboutDialog.class.getPackage().getImplementationVersion());
-        stringBuffer.append("\n");
-        stringBuffer.append("Running in ");
-        stringBuffer.append(System.getProperty("os.name"));
-        stringBuffer.append(" ");
-        stringBuffer.append(System.getProperty("os.version"));
-
         Composite composite = new Composite(parent, SWT.NONE);
         setTitle("JIsocreator");
-        setMessage(stringBuffer.toString());
+        setMessage(formattedProgramVersion);
         setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso72.png"));
 
         TabFolder tabFolder = new TabFolder(composite, SWT.NONE);
         TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
-        tabItem.setText("About");
+        tabItem.setText(AboutDialogMessages.aboutDialogAboutTabText);
         Composite aboutComposite = new Composite(tabFolder, SWT.NONE);
         Label label = new Label(aboutComposite, SWT.NONE);
         label.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso128.png"));
         Label textClabel = new Label(aboutComposite, SWT.NONE);
-
-        stringBuffer = new StringBuffer();
-        stringBuffer.append("JIsoCreator is a ISO9660 CD Image creator, frontend of MKISOFS");
-        stringBuffer.append(
-                "\nIt combines the platform independent of Java,\nwith a fast native graphical user interface.");
-        stringBuffer.append("\n\n\nThis program use the following third-party libraries");
-        textClabel.setText(stringBuffer.toString());
+        textClabel.setText(AboutDialogMessages.aboutDialogAboutCompositeText);
 
         GridDataFactory.defaultsFor(label).grab(true, true).span(1, 2).applyTo(label);
         GridDataFactory.defaultsFor(textClabel).grab(true, true).span(1, 2).applyTo(textClabel);
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(aboutComposite);
         tabItem.setControl(aboutComposite);
-
-        stringBuffer = new StringBuffer();
+        
+        /*StringBuffer stringBuffer = new StringBuffer();stringBuffer = new StringBuffer();
         stringBuffer.append("This program is free software: you can redistribute it and/or modify\n");
         stringBuffer.append("it under the terms of the GNU General Public License as published by\n");
         stringBuffer.append("the Free Software Foundation, either version 3 of the License, or\n");
@@ -80,13 +72,13 @@ public class AboutDialog extends TitleAreaDialog {
         stringBuffer.append("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
         stringBuffer.append("GNU General Public License for more details.\n\n");
         stringBuffer.append("You should have received a copy of the GNU General Public License\n");
-        stringBuffer.append("along with this program.  If not, see <http://www.gnu.org/licenses/>.");
+        stringBuffer.append("along with this program.  If not, see <http://www.gnu.org/licenses/>.");*/
 
         tabItem = new TabItem(tabFolder, SWT.NONE);
         Label styledText = new Label(tabFolder, SWT.V_SCROLL | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
-        styledText.setText(stringBuffer.toString());
+        styledText.setText(AboutDialogMessages.aboutDialogLicenseCompositeText);
 
-        tabItem.setText("License");
+        tabItem.setText(AboutDialogMessages.aboutDialogLicenseTabText);
         tabItem.setControl(styledText);
 
         GridDataFactory.defaultsFor(tabFolder).grab(true, true).applyTo(tabFolder);

@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.eclipse.swt.program.Program;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,8 @@ public class OSExplorer {
         this.setRoots(roots);
         this.setRootPaths(rootsPath);
     }
-
+    
+    @Builder
     public OSExplorer() {
         this(loadLegacyOSRoots(), loadOSRoots());
     }

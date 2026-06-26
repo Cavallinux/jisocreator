@@ -20,7 +20,7 @@ public class NewIsoLayoutAction extends Action {
     @Override
     public void run() {
         log.info("Loading new iso file system");
-        IsoFileSystem iso = new IsoFileSystem();
+        IsoFileSystem iso = IsoFileSystem.builder().build();
         GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(iso);
         GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
                 .setSelection(new StructuredSelection(iso.getRoot()), true);

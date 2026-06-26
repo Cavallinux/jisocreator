@@ -27,6 +27,7 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -156,5 +157,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     public void refresh() {
         getIsoDirectoriesTree().refresh();
         getIsoDirectoriesTable().refresh();
+        IsoFileSystem fileSystem = (IsoFileSystem) getIsoDirectoriesTree().getInput();
+        fileSystem.setIsoLength();
     }
 }

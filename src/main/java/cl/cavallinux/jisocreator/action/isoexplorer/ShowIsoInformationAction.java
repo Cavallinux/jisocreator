@@ -5,16 +5,20 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.dialog.ShowIsoLayoutInformationDialog;
+import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ShowIsoInformationAction extends Action {
-    public ShowIsoInformationAction() {
-        super("Iso layout information", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("properties.png"));
-        setToolTipText("Show and/or modify iso layout information");
+    @Builder
+    private ShowIsoInformationAction() {
+        super(IsoExplorerMessages.isoExplorerShowIsoInfoActionName,
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("properties.png"));
+        setToolTipText(IsoExplorerMessages.isoExplorerShowIsoInfoActionTooltip);
         setEnabled(true);
     }
 
@@ -26,7 +30,7 @@ public class ShowIsoInformationAction extends Action {
         Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
         ShowIsoLayoutInformationDialog dialog = ShowIsoLayoutInformationDialog.builder().parentShell(shell)
                 .isoFileSystem(isoFileSystem).build();
-        
+
         switch (dialog.open()) {
         case Window.OK: {
             String nuevoVolumeId = dialog.getVolumeIDResponse();

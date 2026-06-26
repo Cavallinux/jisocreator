@@ -126,7 +126,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         mkisofsCommand.add(preferenceStore.getString("mkisofs.iso.level"));
         mkisofsCommand.add("-o");
         mkisofsCommand.add(isoOutputFileAbsolutePath);
-        mkisofsCommand.addAll(isoFileSystem.getPaths());
+        mkisofsCommand.addAll(isoFileSystem.getIsoPaths());
         
         return mkisofsCommand;
     }

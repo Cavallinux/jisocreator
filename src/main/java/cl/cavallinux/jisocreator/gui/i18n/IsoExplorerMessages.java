@@ -12,7 +12,15 @@ public class IsoExplorerMessages extends NLS implements INLSBundleMessages {
     public static String tableColumnsFileSizeTooltip;
     public static String tableColumnsFileModifiedDateText;
     public static String tableColumnsFileModifiedDateTooltip;
-    
+    public static String isoExplorerOpenEntryActionName;
+    public static String isoExplorerOpenEntryActionTooltip;
+    public static String isoExplorerGoToIsoParentActionName;
+    public static String isoExplorerGoToIsoParentActionTooltip;
+    public static String isoExplorerShowIsoInfoActionName;
+    public static String isoExplorerShowIsoInfoActionTooltip;
+    public static String isoExplorerDeleteEntryActionName;
+    public static String isoExplorerDeleteEntryActionTooltip;
+
     static {
         initializeMessages(ISOEXPLORER_BUNDLE_MESSAGE, IsoExplorerMessages.class);
     }

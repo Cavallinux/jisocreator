@@ -1,16 +1,20 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.preference.PreferenceStore;
 
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineParserManager;
 import cl.cavallinux.jisocreator.instances.GUIManager;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.cmdline.ICommandLineParser;
+import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,8 +56,7 @@ public class MainAction extends Action {
      * @param args Argumentos recibidos desde el sistema operativo.
      */
     public static void main(String[] args) throws IOException {
-        /*Runtime.getRuntime().addShutdownHook(HaltApplicationThread.builder().name("halt Action")
-                .action((ExitApplicationAction) ActionsManager.EXITACTION.getAction()).build());*/
+        configureLanguage();
         MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
         try {
             mainAction.handleCommandLine(args);
@@ -87,6 +90,13 @@ public class MainAction extends Action {
         } else {
             run();
         }
-
+    }
+    
+    private static void configureLanguage() {
+        IOUtils ioUtils = IOManager.INSTANCE.getIoUtils();
+        PreferenceStore preferenceStore = ioUtils.getStore();
+        String language = preferenceStore.getString("jisocreator.language");
+        Locale locale = Locale.of(language);
+        Locale.setDefault(locale);
     }
 }

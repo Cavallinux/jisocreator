@@ -24,10 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress, IFileManagementAction {
-    private static final String XML_FILE_EXTENSION = ".xml";
-    private static final String XML_FILE_NAMES = "XML Files";
-    private static final String XML_DIALOG_TITLE = "Choose a xml file name to load";
-    //private Object object;
     private String path;
 
     public OpenIsoLayoutAction() {
@@ -38,8 +34,8 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
 
     @Override
     public void run() {
-        path = obtainAbsolutePathFile("layout.xml", "*".concat(XML_FILE_EXTENSION), XML_DIALOG_TITLE, XML_FILE_NAMES,
-                SWT.OPEN);
+        path = obtainAbsolutePathFile("layout.xml", "*".concat(XML_FILE_EXTENSION), LOAD_XML_DIALOG_TITLE,
+                LOAD_XML_FILE_NAMES, SWT.OPEN);
         if (StringUtils.isNotBlank(path)) {
             populatePath();
         } else {

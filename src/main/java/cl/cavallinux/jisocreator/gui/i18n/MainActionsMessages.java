@@ -17,6 +17,8 @@ public class MainActionsMessages extends NLS implements INLSBundleMessages {
     public static String saveAsIsoActionTooltip;
     public static String saveAsIsoActionFileNameText;
     public static String saveAsIsoActionFileDialogTitle;
+    public static String loadIsoLayoutActionFileDialogTitle;
+    public static String loadIsoLayoutActionFileNameText;
     public static String saveAsXMLActionName;
     public static String saveAsXMLActionTooltip;
     public static String saveAsXMLActionFileNameText;

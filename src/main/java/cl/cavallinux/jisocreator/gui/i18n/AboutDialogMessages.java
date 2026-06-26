@@ -10,6 +10,7 @@ public class AboutDialogMessages extends NLS implements INLSBundleMessages {
     public static String aboutDialogAboutCompositeText;
     public static String aboutDialogLicenseTabText;
     public static String aboutDialogLicenseCompositeText;
+    public static String aboutDialogOKButtonText;
     
     static {
         initializeMessages(ABOUTDIALOG_BUNDLE_MESSAGE, AboutDialogMessages.class);

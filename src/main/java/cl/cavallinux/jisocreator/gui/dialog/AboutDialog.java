@@ -61,18 +61,6 @@ public class AboutDialog extends TitleAreaDialog {
         GridDataFactory.defaultsFor(textClabel).grab(true, true).span(1, 2).applyTo(textClabel);
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(aboutComposite);
         tabItem.setControl(aboutComposite);
-        
-        /*StringBuffer stringBuffer = new StringBuffer();stringBuffer = new StringBuffer();
-        stringBuffer.append("This program is free software: you can redistribute it and/or modify\n");
-        stringBuffer.append("it under the terms of the GNU General Public License as published by\n");
-        stringBuffer.append("the Free Software Foundation, either version 3 of the License, or\n");
-        stringBuffer.append("(at your option) any later version.\n\n");
-        stringBuffer.append("This program is distributed in the hope that it will be useful,\n");
-        stringBuffer.append("but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
-        stringBuffer.append("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
-        stringBuffer.append("GNU General Public License for more details.\n\n");
-        stringBuffer.append("You should have received a copy of the GNU General Public License\n");
-        stringBuffer.append("along with this program.  If not, see <http://www.gnu.org/licenses/>.");*/
 
         tabItem = new TabItem(tabFolder, SWT.NONE);
         Label styledText = new Label(tabFolder, SWT.V_SCROLL | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
@@ -92,6 +80,6 @@ public class AboutDialog extends TitleAreaDialog {
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         log.info("Creating buttons for about dialog");
-        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+        createButton(parent, IDialogConstants.OK_ID, AboutDialogMessages.aboutDialogOKButtonText, true);
     }
 }

@@ -86,7 +86,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
             return outputISOFile;
         } else {
             return obtainAbsolutePathFile(isoFileSystem.getVolumeID().concat(ISO_FILE_EXTENSION),
-                    "*".concat(ISO_FILE_EXTENSION), ISO_DIALOG_TITLE, ISO_FILE_NAMES, SWT.SAVE);
+                    "*".concat(ISO_FILE_EXTENSION), SAVE_AS_ISO_DIALOG_TITLE, SAVE_AS_ISO_FILE_NAMES, SWT.SAVE);
         }
     }
 

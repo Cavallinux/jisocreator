@@ -14,6 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -30,8 +31,8 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
     private String path;
 
     public OpenIsoLayoutAction() {
-        super("Open layout");
-        setToolTipText("Open a iso layout");
+        super(MainActionsMessages.openIsoLayoutActionName);
+        setToolTipText(MainActionsMessages.openIsoLayoutActionTooltip);
         setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("open.png"));
     }
 

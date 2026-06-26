@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
@@ -114,7 +115,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     }
 
     private void fillCoolbarAndToolbars() {
-        isoTreeCLabel.setText("Iso explorer");
+        isoTreeCLabel.setText(IsoExplorerMessages.isoExplorerSashFormTitle);
         isoTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
         CoolBarManager coolbar = new CoolBarManager(isoTableCoolBar);
         ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);

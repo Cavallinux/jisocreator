@@ -13,6 +13,7 @@ import org.eclipse.swt.SWT;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -26,16 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 public class SaveAsIsoAction extends Action implements IFileManagementAction {
-    private static final String ISO_FILE_EXTENSION = ".iso";
-    private static final String ISO_FILE_NAMES = "ISO9660 CD-ROM Files";
-    private static final String ISO_DIALOG_TITLE = "Choose a iso file name to save";
     private String inputXMLLayoutFile;
     private String outputISOFile;
     private boolean commandLineMode;
 
     public SaveAsIsoAction() {
-        super("ISO9660 File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
-        setToolTipText("Save the actual layout into a ISO9660 file");
+        super(MainActionsMessages.saveAsIsoActionName,
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
+        setToolTipText(MainActionsMessages.saveAsIsoActionTooltip);
         this.commandLineMode = false;
     }
 
@@ -75,7 +74,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
 
     private IsoFileSystem obtainIsoFileSystem() {
         if (commandLineMode) {
-            return (IsoFileSystem) IOManager.INSTANCE.getIsoFilesystemParser().deserialize(inputXMLLayoutFile).get();
+            return IOManager.INSTANCE.getIsoFilesystemParser().deserialize(inputXMLLayoutFile).get();
         } else {
             return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
                     .getInput();

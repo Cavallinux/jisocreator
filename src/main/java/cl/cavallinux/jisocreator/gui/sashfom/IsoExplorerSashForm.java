@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
 import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
-import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
@@ -120,13 +119,13 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     public Map<String, String> obtainTableColumnsTextAndTooltips() {
         Map<String, String> tableColumnsTextAndTooltips = ICompositeCreator.super.obtainTableColumnsTextAndTooltips();
         tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileNameText,
-                OSExplorerMessages.tableColumnsFileNameTooltip);
+                IsoExplorerMessages.tableColumnsFileNameTooltip);
         tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileTypeText,
-                OSExplorerMessages.tableColumnsFileTypeTooltip);
+                IsoExplorerMessages.tableColumnsFileTypeTooltip);
         tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileSizeText,
-                OSExplorerMessages.tableColumnsFileSizeTooltip);
+                IsoExplorerMessages.tableColumnsFileSizeTooltip);
         tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileModifiedDateText,
-                OSExplorerMessages.tableColumnsFileModifiedDateTooltip);
+                IsoExplorerMessages.tableColumnsFileModifiedDateTooltip);
         return tableColumnsTextAndTooltips;
     }
 

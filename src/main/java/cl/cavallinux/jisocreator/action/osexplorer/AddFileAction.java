@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.dialog.ADDFileToIsoLayoutDialog;
+import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
@@ -23,6 +24,7 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,8 +32,10 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
     private ITreeNode isoNode;
     private List<File> files;
 
-    public AddFileAction() {
-        super("Add", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
+    @Builder
+    private AddFileAction() {
+        super(OSExplorerMessages.osExplorerAddActionName);
+        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
         setToolTipText("Add selected files to ISO9660 layout");
     }
 

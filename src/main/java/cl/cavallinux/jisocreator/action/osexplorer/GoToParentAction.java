@@ -6,19 +6,26 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
+import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
+import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GoToParentAction extends Action {
-    public GoToParentAction() {
-        super("Go to Parent File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("up.png"));
-        setToolTipText("Go to parent file");
+    @Builder
+    private GoToParentAction() {
+        super(OSExplorerMessages.osExplorerGoToParentActionName,
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("up.png"));
+        setToolTipText(OSExplorerMessages.osExplorerGoToParentActionToolTip);
         setEnabled(false);
     }
 
     @Override
     public void run() {
+        log.info("Running go to parent action");
         IStructuredSelection selection = (IStructuredSelection) GUIManager.INSTANCE.getMainWindow().getOsExplorer()
                 .getTreeSelection();
         File file = (File) selection.getFirstElement();

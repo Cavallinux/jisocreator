@@ -13,7 +13,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OSExplorerActionsManager {
-    ADDFILEACTION(new AddFileAction()), OPENFILEACTION(new OpenAction()), GOTOPARENTACTION(new GoToParentAction()),
-    REFRESHACTION(new RefreshExplorerAction()), SHOWHIDDENFILES(new ShowHiddenFilesAction());
+    ADDFILEACTION(AddFileAction.builder().build()), OPENFILEACTION(OpenAction.builder().build()),
+    GOTOPARENTACTION(GoToParentAction.builder().build()), REFRESHACTION(RefreshExplorerAction.builder().build()),
+    SHOWHIDDENFILES(new ShowHiddenFilesAction());
+
     private Action action;
 }

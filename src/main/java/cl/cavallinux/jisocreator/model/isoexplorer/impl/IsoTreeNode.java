@@ -8,10 +8,11 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 
 /**
- * Extension de la clase {@link TreeNode}, implementacion de un nodo del arbol de directorios ISO
+ * Extension de la clase {@link TreeNode}, implementacion de un nodo del arbol
+ * de directorios ISO
  * 
  * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
- * @version 0.0.2
+ * @version 0.1.5
  * @since 0.0.2
  */
 public class IsoTreeNode extends TreeNode {
@@ -26,7 +27,7 @@ public class IsoTreeNode extends TreeNode {
         this.isRoot = isRoot;
         this.isoName = isRoot ? ROOT_ISO_NAME : setIsoName();
     }
-    
+
     private String setIsoName() {
         String parentIsoShortName = this.parent.getIsoName().concat(getShortName());
         return this.file.isDirectory() ? parentIsoShortName.concat("/") : parentIsoShortName;

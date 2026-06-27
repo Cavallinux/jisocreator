@@ -1,5 +1,7 @@
 package cl.cavallinux.jisocreator.model.isoexplorer.decl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Image;
 
@@ -55,13 +57,12 @@ public interface ITreeNode {
     default ITreeNode getParent() {
         return null;
     }
-
-    /**
-     * Obtiene los nodos hijos
-     * 
-     * @return un arreglo con los nodos hijos
-     */
-    default Object[] getChildren() {
+    
+    default List<ITreeNode> getChildren() {
+        return List.of();
+    }
+    
+    default Object[] toArray() {
         return null;
     }
 

@@ -13,6 +13,7 @@ import org.eclipse.swt.SWT;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -26,16 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 public class SaveAsIsoAction extends Action implements IFileManagementAction {
-    private static final String ISO_FILE_EXTENSION = ".iso";
-    private static final String ISO_FILE_NAMES = "ISO9660 CD-ROM Files";
-    private static final String ISO_DIALOG_TITLE = "Choose a iso file name to save";
     private String inputXMLLayoutFile;
     private String outputISOFile;
     private boolean commandLineMode;
 
     public SaveAsIsoAction() {
-        super("ISO9660 File", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
-        setToolTipText("Save the actual layout into a ISO9660 file");
+        super(MainActionsMessages.saveAsIsoActionName,
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
+        setToolTipText(MainActionsMessages.saveAsIsoActionTooltip);
         this.commandLineMode = false;
     }
 
@@ -59,7 +58,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         try {
             deleteIsoFileIfExists(isoFilePath);
             root.parse();
-            List<String> mkisofsCommand = setMkisofsCommand(isoFilePath, root.getPaths());
+            List<String> mkisofsCommand = setMkisofsCommand(isoFilePath, root);
             ProcessBuilder mkisofsProcessBuilder = new ProcessBuilder(mkisofsCommand);
             log.info("Process to be started: {}", String.join(" ", mkisofsProcessBuilder.command()));
             Process isoProcess = mkisofsProcessBuilder.start();
@@ -75,7 +74,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
 
     private IsoFileSystem obtainIsoFileSystem() {
         if (commandLineMode) {
-            return (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(inputXMLLayoutFile);
+            return IOManager.INSTANCE.getIsoFilesystemParser().deserialize(inputXMLLayoutFile).get();
         } else {
             return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
                     .getInput();
@@ -87,7 +86,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
             return outputISOFile;
         } else {
             return obtainAbsolutePathFile(isoFileSystem.getVolumeID().concat(ISO_FILE_EXTENSION),
-                    "*".concat(ISO_FILE_EXTENSION), ISO_DIALOG_TITLE, ISO_FILE_NAMES, SWT.SAVE);
+                    "*".concat(ISO_FILE_EXTENSION), SAVE_AS_ISO_DIALOG_TITLE, SAVE_AS_ISO_FILE_NAMES, SWT.SAVE);
         }
     }
 
@@ -97,21 +96,26 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         }
     }
 
-    private List<String> setMkisofsCommand(String isoOutputFileAbsolutePath, List<String> parsedIsoPaths) {
+    private List<String> setMkisofsCommand(String isoOutputFileAbsolutePath, IsoFileSystem isoFileSystem) {
         List<String> mkisofsCommand = new ArrayList<>();
         IOUtils storeInstance = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = storeInstance.getStore();
         mkisofsCommand.add(preferenceStore.getString("mkisofs.path"));
+        mkisofsCommand.add("-publisher");
+        mkisofsCommand.add(isoFileSystem.getPublisherID());
+        mkisofsCommand.add("-A");
+        mkisofsCommand.add(isoFileSystem.getApplicationID());
+        mkisofsCommand.add("-V");
+        mkisofsCommand.add(isoFileSystem.getVolumeID());
         mkisofsCommand.add("-graft-points");
         mkisofsCommand.add("-gui");
         if (preferenceStore.getBoolean("mkisofs.joliet.use")) {
             mkisofsCommand.add("-J");
             mkisofsCommand.add("-joliet-long");
-            if (preferenceStore.getBoolean("mkisofs.rockridge.use")) {
-                mkisofsCommand.add("-r");
-            }
         }
-
+        if (preferenceStore.getBoolean("mkisofs.rockridge.use")) {
+            mkisofsCommand.add("-r");
+        }
         if (preferenceStore.getBoolean("mkisofs.symlinks.follow")) {
             mkisofsCommand.add("-f");
         }
@@ -122,7 +126,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         mkisofsCommand.add(preferenceStore.getString("mkisofs.iso.level"));
         mkisofsCommand.add("-o");
         mkisofsCommand.add(isoOutputFileAbsolutePath);
-        mkisofsCommand.addAll(parsedIsoPaths);
+        mkisofsCommand.addAll(isoFileSystem.getIsoPaths());
         
         return mkisofsCommand;
     }

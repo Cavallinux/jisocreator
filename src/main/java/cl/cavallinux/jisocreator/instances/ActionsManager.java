@@ -18,7 +18,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ActionsManager {
     MAINACTION(new MainAction()), EXITACTION(new ExitApplicationAction()), ABOUTACTION(new AboutAction()),
-    PREFERENCESACTION(new PreferencesAction()), SAVEASXMLACTION(new SaveAsXMLAction()),
+    PREFERENCESACTION(PreferencesAction.builder().build()), SAVEASXMLACTION(new SaveAsXMLAction()),
     SAVEASISOACTION(new SaveAsIsoAction()), NEWISOLAYOUTACTION(new NewIsoLayoutAction()),
     OPENISOLAYOUTACTION(new OpenIsoLayoutAction()), LOADISOFROMLAYOUT(new LoadCommandLineISOLayoutAction());
 

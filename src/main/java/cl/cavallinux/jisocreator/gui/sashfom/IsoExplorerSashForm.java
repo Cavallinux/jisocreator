@@ -3,6 +3,7 @@ package cl.cavallinux.jisocreator.gui.sashfom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
@@ -21,10 +22,12 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
+import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -112,9 +115,23 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
                 .applyTo(isoDirectoriesTable.getControl());
         GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
     }
+    
+    @Override
+    public Map<String, String> obtainTableColumnsTextAndTooltips() {
+        Map<String, String> tableColumnsTextAndTooltips = ICompositeCreator.super.obtainTableColumnsTextAndTooltips();
+        tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileNameText,
+                IsoExplorerMessages.tableColumnsFileNameTooltip);
+        tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileTypeText,
+                IsoExplorerMessages.tableColumnsFileTypeTooltip);
+        tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileSizeText,
+                IsoExplorerMessages.tableColumnsFileSizeTooltip);
+        tableColumnsTextAndTooltips.put(IsoExplorerMessages.tableColumnsFileModifiedDateText,
+                IsoExplorerMessages.tableColumnsFileModifiedDateTooltip);
+        return tableColumnsTextAndTooltips;
+    }
 
     private void fillCoolbarAndToolbars() {
-        isoTreeCLabel.setText("Iso explorer");
+        isoTreeCLabel.setText(IsoExplorerMessages.isoExplorerSashFormTitle);
         isoTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
         CoolBarManager coolbar = new CoolBarManager(isoTableCoolBar);
         ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);
@@ -140,5 +157,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     public void refresh() {
         getIsoDirectoriesTree().refresh();
         getIsoDirectoriesTable().refresh();
+        IsoFileSystem fileSystem = (IsoFileSystem) getIsoDirectoriesTree().getInput();
+        fileSystem.setIsoLength();
     }
 }

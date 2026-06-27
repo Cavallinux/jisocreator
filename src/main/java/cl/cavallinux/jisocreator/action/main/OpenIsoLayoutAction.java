@@ -1,7 +1,7 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -14,6 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -23,22 +24,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress, IFileManagementAction {
-    private static final String XML_FILE_EXTENSION = ".xml";
-    private static final String XML_FILE_NAMES = "XML Files";
-    private static final String XML_DIALOG_TITLE = "Choose a xml file name to load";
-    private Object object;
     private String path;
 
     public OpenIsoLayoutAction() {
-        super("Open layout");
-        setToolTipText("Open a iso layout");
+        super(MainActionsMessages.openIsoLayoutActionName);
+        setToolTipText(MainActionsMessages.openIsoLayoutActionTooltip);
         setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("open.png"));
     }
 
     @Override
     public void run() {
-        path = obtainAbsolutePathFile("layout.xml", "*".concat(XML_FILE_EXTENSION), XML_DIALOG_TITLE, XML_FILE_NAMES,
-                SWT.OPEN);
+        path = obtainAbsolutePathFile("layout.xml", "*".concat(XML_FILE_EXTENSION), LOAD_XML_DIALOG_TITLE,
+                LOAD_XML_FILE_NAMES, SWT.OPEN);
         if (StringUtils.isNotBlank(path)) {
             populatePath();
         } else {
@@ -51,12 +48,16 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
         try {
             monitor.beginTask("Opening file", IProgressMonitor.UNKNOWN);
             monitor.subTask("Parsing xml...");
-            object = IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(path);
-            if (Objects.nonNull(object)) {
+            Optional<IsoFileSystem> deserializedIsoFilesystem = IOManager.INSTANCE.getIsoFilesystemParser()
+                    .deserialize(path);
+            log.info("Deserialized Isofilesystem: {}", deserializedIsoFilesystem);
+            if (deserializedIsoFilesystem.isPresent()) {
                 monitor.subTask("Inserting into tree...");
                 Display.getDefault().asyncExec(() -> {
-                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().setInput(object);
-                    ITreeNode node = ((IsoFileSystem) object).getRoot();
+                    IsoFileSystem isoFileSystem = deserializedIsoFilesystem.get();
+                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
+                            .setInput(isoFileSystem);
+                    ITreeNode node = isoFileSystem.getRoot();
                     GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
                             .setSelection(new StructuredSelection(node), true);
                     GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);

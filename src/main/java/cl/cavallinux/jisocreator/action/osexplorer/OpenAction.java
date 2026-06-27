@@ -4,9 +4,11 @@ import java.io.File;
 
 import org.eclipse.jface.action.Action;
 
+import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 public class OpenAction extends Action {
     private File file;
 
-    public OpenAction() {
-        super("Open", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
-        setToolTipText("Open a file or folder");
+    @Builder
+    private OpenAction() {
+        super(OSExplorerMessages.osExplorerOpenActionName,
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
+        setToolTipText(OSExplorerMessages.osExplorerOpenActionToolTip);
         setEnabled(false);
     }
 

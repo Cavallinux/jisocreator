@@ -3,80 +3,49 @@ package cl.cavallinux.jisocreator.model.isoexplorer.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Sistema de archivos ISO, que parte con el nodo raiz y algunos atributos
  * propios de la imagen ISO
  * 
  * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
- * @version 0.0.1
+ * @version 0.1.5
  * @since 0.0.1
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class IsoFileSystem {
-    private List<String> isoPaths;
-    private ITreeNode root;
-    private String volumeID;
-    private String applicationID;
-    private long isoLength;
-
-    public IsoFileSystem(String volumeID, String applicationID) {
-        root = new IsoTreeNode();
-        this.isoPaths = null;
-        this.volumeID = volumeID;
-        this.applicationID = applicationID;
-        setIsoLength();
-    }
-
-    public IsoFileSystem() {
-        this(IOManager.INSTANCE.getIoUtils().generateInitialVolumeID(),
-                IOManager.INSTANCE.getIoUtils().generateIsoFilesystemApplicationID());
-    }
+    @Builder.Default
+    private List<String> isoPaths = null;
+    @Builder.Default
+    private ITreeNode root = new IsoTreeNode();
+    @Builder.Default
+    private String volumeID = IOManager.INSTANCE.getIsoFilesystemParser().generateInitialVolumeID();
+    @Builder.Default
+    private String applicationID = IOManager.INSTANCE.getIsoFilesystemParser().generateIsoFilesystemApplicationID();
+    @Builder.Default
+    private String publisherID = UUID.randomUUID().toString();
+    @Builder.Default
+    private long isoLength = 0;
 
     public ITreeNode[] toArray() {
         return List.of(root).toArray(ITreeNode[]::new);
     }
 
-    public ITreeNode getRoot() {
-        return root;
-    }
-
-    public String getVolumeID() {
-        return volumeID;
-    }
-
-    public void setVolumeID(String volumeID) {
-        this.volumeID = volumeID;
-    }
-
-    public String getApplicationID() {
-        return applicationID;
-    }
-
-    public void setApplicationID(String applicationID) {
-        this.applicationID = applicationID;
-    }
-
-    public long getIsoLength() {
-        return isoLength;
-    }
-
-    public void setIsoLength(long isoLength) {
-        this.isoLength = isoLength;
-    }
-
     public void setIsoLength() {
         isoLength = calculateIsoSize(root);
-    }
-
-    public List<String> getPaths() {
-        return isoPaths;
-    }
-
-    public void setIsoPaths(List<String> isoPaths) {
-        this.isoPaths = isoPaths;
     }
 
     /**

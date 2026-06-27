@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cl.cavallinux</groupId>
 	<artifactId>jisocreator</artifactId>
-	<version>0.1.4</version>
+	<version>0.1.5</version>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
 
@@ -61,7 +61,8 @@
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>-jar</argument>
-								<argument>${project.build.directory}/${project.artifactId}.jar</argument>
+								<argument>
+									${project.build.directory}/${project.artifactId}.jar</argument>
 								<argument>-h</argument>
 							</arguments>
 						</configuration>
@@ -143,6 +144,8 @@
 	</profiles>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.java.version>21</maven.compiler.java.version>
 		<maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
 		<maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
@@ -243,7 +246,8 @@
 						<argument>${debug.jvm.args}</argument>
 						<argument>${jvm.nativeacess.arg}</argument>
 						<argument>-jar</argument>
-						<argument>${project.build.directory}/${project.artifactId}.jar</argument>
+						<argument>
+							${project.build.directory}/${project.artifactId}.jar</argument>
 					</arguments>
 				</configuration>
 			</plugin>
@@ -261,7 +265,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<finalName>${project.artifactId}-${project.version}-${swt.platform}</finalName>
+					<finalName>
+						${project.artifactId}-${project.version}-${swt.platform}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
 						<descriptor>${maven.assembly.plugin.descriptor}</descriptor>

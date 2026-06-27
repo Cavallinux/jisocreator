@@ -56,7 +56,7 @@ public class IsoTableProvider extends TableProviderAdapter {
      */
     @Override
     public Object[] getElements(Object inputElement) {
-        return ((ITreeNode) inputElement).getChildren();
+        return ((ITreeNode) inputElement).toArray();
     }
 
     /**

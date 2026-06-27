@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OSAndIsoExplorerManager {
-    INSTANCE(new OSExplorer());
+    INSTANCE(OSExplorer.builder().build());
 
     private OSExplorer osExplorer;
 }

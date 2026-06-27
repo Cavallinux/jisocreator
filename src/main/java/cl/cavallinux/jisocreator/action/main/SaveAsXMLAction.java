@@ -12,6 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -20,15 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IFileManagementAction {
-    private static final String XML_FILE_EXTENSION = ".xml";
-    private static final String XML_FILE_NAMES = "XML Files";
-    private static final String XML_DIALOG_TITLE = "Choose a xml file name to save";
     private String path;
     private IsoFileSystem iso;
 
     public SaveAsXMLAction() {
-        super("XML Layout", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png"));
-        setToolTipText("Save iso layout as xml file");
+        super(MainActionsMessages.saveAsXMLActionName,
+                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png"));
+        setToolTipText(MainActionsMessages.saveAsXMLActionTooltip);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IF
         iso.setIsoLength();
         iso.setIsoPaths(null);
         path = obtainAbsolutePathFile(iso.getVolumeID().concat(XML_FILE_EXTENSION), "*".concat(XML_FILE_EXTENSION),
-                XML_DIALOG_TITLE, XML_FILE_NAMES, SWT.SAVE);
+                SAVE_AS_XML_DIALOG_TITLE, SAVE_AS_XML_FILE_NAMES, SWT.SAVE);
         if (StringUtils.isNotBlank(path)) {
             Display.getDefault().asyncExec(() -> {
                 try {
@@ -61,7 +60,7 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IF
         monitor.beginTask("Saving layout", IProgressMonitor.UNKNOWN);
         log.info("Saving layout as xml to path: {}", path);
         monitor.subTask(String.format("Saving layout as xml to path: %s", path));
-        if (IOManager.INSTANCE.getIoUtils().saveObjectToXML(iso, path)) {
+        if (IOManager.INSTANCE.getIsoFilesystemParser().serialize(iso, path)) {
             monitor.done();
             log.info("Layout saved successfully as xml to path: {}", path);
         } else {

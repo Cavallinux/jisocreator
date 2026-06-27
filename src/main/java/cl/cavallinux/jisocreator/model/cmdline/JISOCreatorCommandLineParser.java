@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.util;
+package cl.cavallinux.jisocreator.model.cmdline;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -13,10 +15,9 @@ import org.apache.commons.cli.help.HelpFormatter;
 
 import cl.cavallinux.jisocreator.action.main.MainAction;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
-import cl.cavallinux.jisocreator.util.cmdline.AbstractJISOCreatorCommandLineParser;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Clase interna que encapsula el parser configurado.
@@ -24,11 +25,16 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
-public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLineParser {
-    private final Options options;
-    private final String header;
-    private final String footer;
+@Builder
+public class JISOCreatorCommandLineParser implements ICommandLineParser {
+    @Builder.Default
+    private final Options options = buildOptions();
+    @Builder.Default
+    private final String header = buildHelpHeader();
+    @Builder.Default
+    private final String footer = buildHelpFooter();
+    @Builder.Default
+    private final CommandLineParser commandLineParser = DefaultParser.builder().get();
 
     public CommandLine parse(String... args) throws ParseException {
         return commandLineParser.parse(options, args);
@@ -53,45 +59,22 @@ public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLine
 
     @Override
     public void handleCommandLine(CommandLine cmd) throws ParseException {
-        String inputPath = null;
-        String outputFile = null;
-
-        if (cmd.hasOption(CommandLineOptionsManager.ISOINPUT.getOption())
-                && cmd.hasOption(CommandLineOptionsManager.ISOOUTPUT.getOption())) {
-            inputPath = cmd.getOptionValue(CommandLineOptionsManager.ISOINPUT.getOption());
-            outputFile = cmd.getOptionValue(CommandLineOptionsManager.ISOOUTPUT.getOption());
-        }
-
-        if ((inputPath == null && outputFile != null) || (inputPath != null && outputFile == null)) {
-            throw new ParseException("Options -i and -o required");
-        }
-
-        if (inputPath == null && outputFile == null) {
-            throw new ParseException("Input file doesn't exist" + inputPath);
-        }
+        String inputPath = cmd.getOptionValue(CommandLineOptionsManager.ISOINPUT.getOption());
+        String outputFile = cmd.getOptionValue(CommandLineOptionsManager.ISOOUTPUT.getOption());
 
         File inputDir = new File(inputPath);
-        if (!inputDir.exists()) {
-            throw new ParseException("Input file doesn't exist" + inputPath);
-        }
-
-        if (!inputDir.canRead()) {
-            throw new ParseException("Read and write permissions denied: " + inputPath);
+        if (!inputDir.exists() || !inputDir.canRead()) {
+            throw new ParseException("Input file doesn't exist or read and write permissions denied: ");
         }
 
         File outputFileObj = new File(outputFile);
-        File outputDir = outputFileObj.getParentFile();
-
-        if (outputDir != null && !outputDir.exists()) {
-            throw new ParseException("Output directory doesn't exists " + outputDir.getAbsolutePath());
-        }
-
-        if (outputDir != null && !outputDir.canWrite()) {
-            throw new ParseException("Read and write permissions denied: " + outputDir.getAbsolutePath());
+        if (!outputFileObj.exists() || !outputFileObj.canWrite()) {
+            throw new ParseException("Output directory doesn't exists or Read and write permissions denied: "
+                    + outputFileObj.getAbsolutePath());
         }
     }
 
-    public static String buildHelpHeader() {
+    protected static String buildHelpHeader() {
         StringBuilder builder = new StringBuilder();
         builder.append("  ");
         builder.append(JISOCreatorCommandLineParser.class.getPackage().getSpecificationTitle());
@@ -101,7 +84,7 @@ public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLine
         return builder.toString();
     }
 
-    public static String buildHelpFooter() {
+    protected static String buildHelpFooter() {
         StringBuilder builder = new StringBuilder();
         builder.append("\nExamples:\n jisocreator -v");
         builder.append("\njisocreator -h");
@@ -111,7 +94,7 @@ public class JISOCreatorCommandLineParser extends AbstractJISOCreatorCommandLine
         return builder.toString();
     }
 
-    public static Options buildOptions() {
+    protected static Options buildOptions() {
         Options options = new Options();
         options.addOption(CommandLineOptionsManager.ISOINPUT.getOption());
         options.addOption(CommandLineOptionsManager.ISOOUTPUT.getOption());

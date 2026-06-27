@@ -12,14 +12,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.eclipse.swt.widgets.Shell;
 
+import cl.cavallinux.jisocreator.gui.dialog.ADDFileToIsoLayoutDialog;
+import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
+import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,19 +32,22 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
     private ITreeNode isoNode;
     private List<File> files;
 
-    public AddFileAction() {
-        super("Add", ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
+    @Builder
+    private AddFileAction() {
+        super(OSExplorerMessages.osExplorerAddActionName);
+        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
         setToolTipText("Add selected files to ISO9660 layout");
     }
 
     @Override
     public void run() {
-        ElementTreeSelectionDialog isoTreeSelectionDialog = new ElementTreeSelectionDialog(
-                Display.getDefault().getActiveShell(), new IsoTreeLabelProvider(), new IsoTreeContentProvider());
-        isoTreeSelectionDialog.setTitle("Iso tree");
-        isoTreeSelectionDialog.setMessage("Select the destination directory to place the selected files.");
-        isoTreeSelectionDialog
-                .setInput(GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().getInput());
+        JFaceResourcesManager instance = JFaceResourcesManager.ISOEXPLORER_INSTANCE;
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        Shell shell = mainWindow.getShell();
+        ADDFileToIsoLayoutDialog isoTreeSelectionDialog = ADDFileToIsoLayoutDialog.builder().parent(shell)
+                .contentProvider(instance.getTreeContentProvider()).labelProvider(instance.getTreeLabelProvider())
+                .build();
+        isoTreeSelectionDialog.setInput(mainWindow.getIsoExplorer().getIsoDirectoriesTree().getInput());
 
         switch (isoTreeSelectionDialog.open()) {
         case Window.OK:
@@ -64,26 +72,26 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
         });
         monitor.subTask("Refreshing GUI...");
         Display.getDefault().asyncExec(new Thread(() -> {
-            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
-                    .setSelection(new StructuredSelection(isoNode), true);
-            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(isoNode, 1);
-            GUIManager.INSTANCE.getMainWindow().getIsoExplorer().refresh();
+            IsoExplorerSashForm isoExplorer = GUIManager.INSTANCE.getMainWindow().getIsoExplorer();
+            isoExplorer.getIsoDirectoriesTree().setSelection(new StructuredSelection(isoNode), true);
+            isoExplorer.getIsoDirectoriesTree().expandToLevel(isoNode, 1);
+            isoExplorer.refresh();
         }));
         monitor.done();
     }
 
     @SuppressWarnings("unchecked")
     private void executeAddFiles(ITreeNode node) {
-        IStructuredSelection selection = (IStructuredSelection) GUIManager.INSTANCE.getMainWindow().getOsExplorer()
-                .getTableSelection();
+        OSExplorerSashForm osExplorer = GUIManager.INSTANCE.getMainWindow().getOsExplorer();
+        IStructuredSelection selection = (IStructuredSelection) osExplorer.getTableSelection();
         files = selection.toList();
         isoNode = node;
     }
 
     private void executeAction() {
         try {
-            ModalContext.run(this, true, GUIManager.INSTANCE.getMainWindow().getProgressMonitor(),
-                    Display.getCurrent());
+            IProgressMonitor progressMonitor = GUIManager.INSTANCE.getMainWindow().getProgressMonitor();
+            ModalContext.run(this, true, progressMonitor, Display.getCurrent());
         } catch (InvocationTargetException | InterruptedException e) {
             log.error("Error executing AddFileAction", e);
             return;

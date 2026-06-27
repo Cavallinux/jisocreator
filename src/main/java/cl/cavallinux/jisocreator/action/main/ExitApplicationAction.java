@@ -6,6 +6,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Shell;
 
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
@@ -22,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExitApplicationAction extends Action {
     public ExitApplicationAction() {
-        super("Exit");
-        setToolTipText("Create new iso layout");
+        super(MainActionsMessages.exitActionName);
+        setToolTipText(MainActionsMessages.exitActionTooltip);
         setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("exit.png"));
     }
 
@@ -76,7 +77,7 @@ public class ExitApplicationAction extends Action {
         mainWindowProgressMonitor.setCanceled(true);
     }
     
-    private void halt() {
+    public void halt() {
         System.exit(0);
     }
 }

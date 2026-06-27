@@ -85,13 +85,9 @@ public interface ICompositeCreator {
      * @param table the SWT Table to be filled with columns
      */
     default void fillTableColumnValues(Table table) {
-        Map<String, String> columnTooltips = LinkedHashMap.newLinkedHashMap(4);
-        columnTooltips.put("Name", "File name");
-        columnTooltips.put("Type", "File type");
-        columnTooltips.put("Size", "File size, in bytes");
-        columnTooltips.put("Last Modified Date", "File last modified date");
+        Map<String, String> tableColumnsTextAndTooltips = obtainTableColumnsTextAndTooltips();
 
-        columnTooltips.forEach((columnName, tooltip) -> {
+        tableColumnsTextAndTooltips.forEach((columnName, tooltip) -> {
             TableColumn tvc = new TableColumn(table, SWT.LEFT);
             tvc.setText(columnName);
             tvc.setToolTipText(tooltip);
@@ -100,6 +96,10 @@ public interface ICompositeCreator {
             tvc.setResizable(true);
         });
         table.setHeaderVisible(true);
+    }
+    
+    default Map<String, String> obtainTableColumnsTextAndTooltips() {
+        return LinkedHashMap.newLinkedHashMap(4);
     }
 
     default void addPopMenuToTable(TableViewer table, IMenuListener menuListener) {

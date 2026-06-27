@@ -14,6 +14,7 @@ import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@lombok.Builder
 public class ToggleHiddenFilesOSExplorerThread extends Thread {
     @Override
     public void run() {

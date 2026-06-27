@@ -13,7 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 public class LoadCommandLineISOLayoutAction extends Action {
     public void run(String layoutFilePath) {
         log.info("Loading iso layout from file: {}", layoutFilePath);
-        IsoFileSystem iso = (IsoFileSystem) IOManager.INSTANCE.getIoUtils().parseXMLFileToObject(layoutFilePath);
+        IsoFileSystem iso = (IsoFileSystem) IOManager.INSTANCE.getIsoFilesystemParser().deserialize(layoutFilePath)
+                .get();
         TreeViewer isoDirectoriesTree = GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree();
         isoDirectoriesTree.setInput(iso);
         isoDirectoriesTree.setSelection(new StructuredSelection(iso.getRoot()), true);

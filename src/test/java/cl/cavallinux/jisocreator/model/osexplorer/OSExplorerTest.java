@@ -1,18 +1,22 @@
 package cl.cavallinux.jisocreator.model.osexplorer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("OSExplorer Tests")
 class OSExplorerTest {

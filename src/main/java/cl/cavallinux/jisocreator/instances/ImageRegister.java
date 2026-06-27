@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ImageRegister {
-    INSTANCE(new ImageUtils());
+    INSTANCE(ImageUtils.builder().build());
 
     private ImageUtils imageUtils;
 }

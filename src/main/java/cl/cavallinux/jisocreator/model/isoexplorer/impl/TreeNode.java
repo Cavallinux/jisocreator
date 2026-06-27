@@ -10,7 +10,7 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
  * de un arbol con multiples hijos.
  * 
  * @author Paolo Mezzano Barahona
- * @version 0.0.2
+ * @version 0.1.5
  * @version 0.0.2
  */
 public abstract class TreeNode implements ITreeNode {
@@ -25,12 +25,22 @@ public abstract class TreeNode implements ITreeNode {
     protected TreeNode() {
         this(null);
     }
-
+    
     @Override
-    public Object[] getChildren() {
-        return children.toArray();
+    public List<ITreeNode> getChildren() {
+        return children;
     }
 
+    public void setChildren(List<ITreeNode> children) {
+        this.children = children;
+    }
+
+    @Override
+    public Object[] toArray() {
+        // TODO Auto-generated method stub
+        return children.toArray();
+    }
+    
     @Override
     public ITreeNode getParent() {
         return parent;

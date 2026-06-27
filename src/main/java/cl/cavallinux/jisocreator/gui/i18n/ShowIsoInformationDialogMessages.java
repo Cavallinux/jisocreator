@@ -9,6 +9,8 @@ public class ShowIsoInformationDialogMessages extends NLS implements INLSBundleM
     public static String showIsoInfoDialogApplicationID;
     public static String showIsoInfoDialogPublisherID;
     public static String showIsoInfoDialogIsoSize;
+    public static String showIsoInfoDialogIncompleteVolumeIDMessage;
+    public static String showIsoInfoDialogVolumeIDGreaterThanMaxMessage;
     
     static {
         initializeMessages(SHOWISOINFO_BUNDLE_MESSAGE, ShowIsoInformationDialogMessages.class);

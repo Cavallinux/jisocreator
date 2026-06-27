@@ -111,20 +111,17 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
         String volumeIdInput = volumeIDText.getText();
         if (StringUtils.isNotBlank(volumeIdInput)) {
             if (volumeIdInput.length() <= IsoFilesystemParser.MKISOFS_VOLUMEID_MAXLENGTH) {
-                setErrorMessage(null);
-                errorIndicator.setText("");
+                errorIndicator.setText(StringUtils.EMPTY);
                 volumeIDResponse = volumeIdInput;
             } else {
-                setErrorMessage("VolumeID is greater than 32 characters");
-                errorIndicator.setText("This field must be 32 chars length");
+                errorIndicator.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogVolumeIDGreaterThanMaxMessage);
                 getShell().layout(true, true);
                 getShell().pack();
                 volumeIDText.setFocus();
                 return;
             }
         } else {
-            setErrorMessage("VolumeID is required");
-            errorIndicator.setText("This field is required to complete request");
+            errorIndicator.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogIncompleteVolumeIDMessage);
             getShell().layout(true, true);
             getShell().pack();
             volumeIDText.setFocus();

@@ -29,6 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IsoFileSystem {
+    private static String ISOFILESYSTEM_INFO = "ISO 9660 Layout -> Volume ID: <volume_id>, Length: <length> bytes";
     @Builder.Default
     private List<String> isoPaths = null;
     @Builder.Default

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.Strings;
+
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IsoFileSystem {
+    private static String ISOFILESYSTEM_INFO = "ISO 9660 Layout -> Volume ID: <volume_id>, Length: <length> bytes";
     @Builder.Default
     private List<String> isoPaths = null;
     @Builder.Default
@@ -38,7 +41,7 @@ public class IsoFileSystem {
     @Builder.Default
     private String publisherID = UUID.randomUUID().toString();
     @Builder.Default
-    private long isoLength = 0;
+    private Long isoLength = 0l;
 
     public ITreeNode[] toArray() {
         return List.of(root).toArray(ITreeNode[]::new);
@@ -46,6 +49,14 @@ public class IsoFileSystem {
 
     public void setIsoLength() {
         isoLength = calculateIsoSize(root);
+    }
+    
+    public String printIsoFileSystemInfo() {
+        ISOFILESYSTEM_INFO = Strings.CI.replace(ISOFILESYSTEM_INFO, "<volume_id>", volumeID);
+        ISOFILESYSTEM_INFO = Strings.CI.replace(ISOFILESYSTEM_INFO, "<length>", String.valueOf(isoLength));
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(ISOFILESYSTEM_INFO);
+        return buffer.toString();
     }
 
     /**

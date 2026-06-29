@@ -160,4 +160,9 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         IsoFileSystem fileSystem = (IsoFileSystem) getIsoDirectoriesTree().getInput();
         fileSystem.setIsoLength();
     }
+    
+    public String printISOFileSystemInfo() {
+        IsoFileSystem isoFileSystem = (IsoFileSystem) getIsoDirectoriesTree().getInput();
+        return isoFileSystem.printIsoFileSystemInfo();
+    }
 }

@@ -76,6 +76,7 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
             isoExplorer.getIsoDirectoriesTree().setSelection(new StructuredSelection(isoNode), true);
             isoExplorer.getIsoDirectoriesTree().expandToLevel(isoNode, 1);
             isoExplorer.refresh();
+            GUIManager.INSTANCE.getMainWindow().setStatus(isoExplorer.printISOFileSystemInfo());
         }));
         monitor.done();
     }

@@ -15,4 +15,6 @@ public interface ICommandLineParser {
     void printVersion();
 
     void printHelp(String programName) throws IOException;
+    
+    void printLicense();
 }

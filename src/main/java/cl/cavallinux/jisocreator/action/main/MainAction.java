@@ -80,6 +80,9 @@ public class MainAction extends Action {
         } else if (cmd.hasOption(CommandLineOptionsManager.HELP.getOption())) {
             parser.printHelp("jisocreator");
             System.exit(0);
+        } else if (cmd.hasOption(CommandLineOptionsManager.LICENSE.getOption())) {
+            parser.printLicense();
+            System.exit(0);
         } else if (isSaveToIsoOptions) {
             parser.handleCommandLine(cmd);
             SaveAsIsoAction saveAsIsoAction = (SaveAsIsoAction) ActionsManager.SAVEASISOACTION.getAction();
@@ -91,7 +94,7 @@ public class MainAction extends Action {
             run();
         }
     }
-    
+
     private static void configureLanguage() {
         IOUtils ioUtils = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = ioUtils.getStore();

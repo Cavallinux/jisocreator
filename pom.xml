@@ -58,6 +58,7 @@
 							<arguments>
 								<argument>--add-opens</argument>
 								<argument>java.base/java.util=ALL-UNNAMED</argument>
+								<argument>--sun-misc-unsafe-memory-access=allow</argument>
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>-jar</argument>
@@ -130,6 +131,7 @@
 							<arguments>
 								<argument>--add-opens</argument>
 								<argument>java.base/java.util=ALL-UNNAMED</argument>
+								<argument>--sun-misc-unsafe-memory-access=allow</argument>
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>-jar</argument>
@@ -144,6 +146,7 @@
 	</profiles>
 
 	<properties>
+		<maintainer.principal>Paolo Mezzano Barahona (pmezzano@gmail.com)</maintainer.principal>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.java.version>21</maven.compiler.java.version>
@@ -231,6 +234,9 @@
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
+						<manifestEntries>
+							<Maintainer>${maintainer.principal}</Maintainer>
+						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
@@ -243,6 +249,7 @@
 					<arguments>
 						<argument>--add-opens</argument>
 						<argument>java.base/java.util=ALL-UNNAMED</argument>
+						<argument>--sun-misc-unsafe-memory-access=allow</argument>
 						<argument>${debug.jvm.args}</argument>
 						<argument>${jvm.nativeacess.arg}</argument>
 						<argument>-jar</argument>

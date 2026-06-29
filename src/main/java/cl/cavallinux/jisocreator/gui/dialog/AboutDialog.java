@@ -11,8 +11,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.i18n.AboutDialogMessages;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -63,11 +65,11 @@ public class AboutDialog extends TitleAreaDialog {
         tabItem.setControl(aboutComposite);
 
         tabItem = new TabItem(tabFolder, SWT.NONE);
-        Label styledText = new Label(tabFolder, SWT.V_SCROLL | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
-        styledText.setText(AboutDialogMessages.aboutDialogLicenseCompositeText);
-
+        Text licenseText = new Text(tabFolder, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        licenseText.setText(IOManager.INSTANCE.getIoUtils().loadFormattedLicenseFile());
         tabItem.setText(AboutDialogMessages.aboutDialogLicenseTabText);
-        tabItem.setControl(styledText);
+        GridDataFactory.defaultsFor(licenseText).grab(true, true).applyTo(licenseText);
+        tabItem.setControl(licenseText);
 
         GridDataFactory.defaultsFor(tabFolder).grab(true, true).applyTo(tabFolder);
         GridLayoutFactory.swtDefaults().generateLayout(composite);

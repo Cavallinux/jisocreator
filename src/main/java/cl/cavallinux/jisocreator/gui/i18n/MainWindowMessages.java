@@ -7,7 +7,8 @@ public class MainWindowMessages extends NLS implements INLSBundleMessages {
     public static String toolsMenuName;
     public static String helpMenuName;
     public static String fileSaveAsName;
-    public static String windowTitle;;
+    public static String windowTitle;
+    public static String isoFileSystemInfoStatusMessage;
     
     static {
         initializeMessages(MAIN_WINDOW_BUNDLE_MESSAGE, MainWindowMessages.class);

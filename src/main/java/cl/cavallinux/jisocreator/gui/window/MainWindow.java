@@ -27,6 +27,7 @@ import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,8 +47,9 @@ public class MainWindow extends ApplicationWindow {
         addStatusLine();
         showTopSeperator();
     }
-
-    public MainWindow() {
+    
+    @Builder
+    protected MainWindow() {
         this(null);
     }
 
@@ -77,6 +79,7 @@ public class MainWindow extends ApplicationWindow {
         isoExplorer = new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         loadIsoLayout(isoFilePath);
+        setStatus(isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage));
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         return composite;
@@ -151,7 +154,8 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected StatusLineManager createStatusLineManager() {
-        return new StatusLineManager();
+        log.info("Creating status line manager");
+        return super.createStatusLineManager();
     }
 
     @Override
@@ -166,7 +170,7 @@ public class MainWindow extends ApplicationWindow {
     public void setStatusLineActiveCancelButton(boolean activeCancelButton) {
         getStatusLineManager().setCancelEnabled(activeCancelButton);
     }
-    
+
     public void setVisible(boolean shellVisible) {
         Shell windowShell = getShell();
         if (Objects.nonNull(windowShell)) {

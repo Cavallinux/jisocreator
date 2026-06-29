@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum GUIManager {
-    INSTANCE(new MainWindow());
+    INSTANCE(MainWindow.builder().build());
 
     private MainWindow mainWindow;
 }

@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.dialog.ADDFileToIsoLayoutDialog;
+import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
@@ -76,6 +77,8 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
             isoExplorer.getIsoDirectoriesTree().setSelection(new StructuredSelection(isoNode), true);
             isoExplorer.getIsoDirectoriesTree().expandToLevel(isoNode, 1);
             isoExplorer.refresh();
+            GUIManager.INSTANCE.getMainWindow()
+                    .setStatus(isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage));
         }));
         monitor.done();
     }

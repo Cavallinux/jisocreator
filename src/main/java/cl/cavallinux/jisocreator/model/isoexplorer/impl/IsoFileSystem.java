@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang3.Strings;
 
@@ -14,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Sistema de archivos ISO, que parte con el nodo raiz y algunos atributos
@@ -28,8 +30,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Slf4j
 public class IsoFileSystem {
-    private static String ISOFILESYSTEM_INFO = "ISO 9660 Layout -> Volume ID: <volume_id>, Length: <length> bytes";
     @Builder.Default
     private List<String> isoPaths = null;
     @Builder.Default
@@ -49,6 +51,7 @@ public class IsoFileSystem {
 
     public void setIsoLength() {
         isoLength = calculateIsoSize(root);
+        log.info("Atomic iso layout length: {}", isoLength);
     }
     
     public String printIsoFileSystemInfo(String isoLayoutInfoTemplate) {
@@ -84,14 +87,15 @@ public class IsoFileSystem {
     }
 
     private long calculateIsoSize(ITreeNode node) {
-        long size = 0;
+        AtomicLong length = new AtomicLong(0);
         if (node.isRoot() || node.hasChildren()) {
-            for (Object child : node.getChildren()) {
-                size += calculateIsoSize((ITreeNode) child);
-            }
+            node.getChildren().forEach(children -> {
+                length.addAndGet(calculateIsoSize(children));
+            });
         } else {
-            size += ((File) node.getElement()).length();
+            File file = (File) node.getElement();
+            length.addAndGet(file.length());
         }
-        return size;
+        return length.get();
     }
 }

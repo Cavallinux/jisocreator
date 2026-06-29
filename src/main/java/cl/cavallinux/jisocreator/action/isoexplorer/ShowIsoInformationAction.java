@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.dialog.ShowIsoLayoutInformationDialog;
 import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
+import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
@@ -25,9 +27,9 @@ public class ShowIsoInformationAction extends Action {
     @Override
     public void run() {
         log.info("Show iso information action executed");
-        IsoFileSystem isoFileSystem = (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer()
-                .getIsoDirectoriesTree().getInput();
-        Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        IsoFileSystem isoFileSystem = (IsoFileSystem) mainWindow.getIsoExplorer().getIsoDirectoriesTree().getInput();
+        Shell shell = mainWindow.getShell();
         ShowIsoLayoutInformationDialog dialog = ShowIsoLayoutInformationDialog.builder().parentShell(shell)
                 .isoFileSystem(isoFileSystem).build();
 
@@ -36,6 +38,8 @@ public class ShowIsoInformationAction extends Action {
             String nuevoVolumeId = dialog.getVolumeIDResponse();
             isoFileSystem.setVolumeID(nuevoVolumeId);
             log.info("Confirmed operation, new volume id: {} ", isoFileSystem.getVolumeID());
+            mainWindow.setStatus(mainWindow.getIsoExplorer()
+                    .printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage));
             break;
         }
         default:

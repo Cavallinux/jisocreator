@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
+import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
+import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -55,12 +57,13 @@ public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress
                 monitor.subTask("Inserting into tree...");
                 Display.getDefault().asyncExec(() -> {
                     IsoFileSystem isoFileSystem = deserializedIsoFilesystem.get();
-                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
-                            .setInput(isoFileSystem);
+                    IsoExplorerSashForm isoExplorer = GUIManager.INSTANCE.getMainWindow().getIsoExplorer();
+                    isoExplorer.getIsoDirectoriesTree().setInput(isoFileSystem);
                     ITreeNode node = isoFileSystem.getRoot();
-                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
-                            .setSelection(new StructuredSelection(node), true);
-                    GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree().expandToLevel(node, 1);
+                    isoExplorer.getIsoDirectoriesTree().setSelection(new StructuredSelection(node), true);
+                    isoExplorer.getIsoDirectoriesTree().expandToLevel(node, 1);
+                    GUIManager.INSTANCE.getMainWindow().setStatus(
+                            isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage));
                 });
             } else {
                 Display.getDefault().asyncExec(() -> {

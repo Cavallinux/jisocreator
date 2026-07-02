@@ -16,7 +16,11 @@ src/test/java/
 ├── cl/
 │   └── cavallinux/
 │       └── jisocreator/
+│           ├── instances/
+│           │   └── CommandLineOptionsManagerTest.java
 │           ├── model/
+│           │   ├── cmdline/
+│           │   │   └── JISOCreatorCommandLineParserTest.java
 │           │   └── osexplorer/
 │           │       └── OSExplorerTest.java
 │           └── util/
@@ -59,6 +63,40 @@ Tests file path operations and configurations:
 - **testFileOperationsInConfigDir**: Verifies file operations in configuration directories
 - **testXMLFileExistence**: Validates XML file handling
 - **testFilePathConcatenation**: Tests string path concatenation
+
+### 3. CommandLineOptionsManagerTest (7 tests)
+**Location**: `src/test/java/cl/cavallinux/jisocreator/instances/CommandLineOptionsManagerTest.java`
+
+Tests the `CommandLineOptionsManager` enum that declares all CLI options (short/long names, argument requirements):
+
+- **testLoadOption**: Verifies the `-l`/`--load` option requires an `xmllayout` argument
+- **testHelpOption**: Verifies the `-h`/`--help` option takes no argument
+- **testVersionOption**: Verifies the `-v`/`--version` option takes no argument
+- **testLicenseOption**: Verifies the `-L`/`--license` option takes no argument
+- **testIsoInputOption**: Verifies the `-i`/`--input` option requires an `xmllayout` argument
+- **testIsoOutputOption**: Verifies the `-o`/`--output` option requires an `isoFile` argument
+- **testAllOptionsDeclared**: Confirms exactly six options are declared
+
+### 4. JISOCreatorCommandLineParserTest (19 tests)
+**Location**: `src/test/java/cl/cavallinux/jisocreator/model/cmdline/JISOCreatorCommandLineParserTest.java`
+
+Tests the `JISOCreatorCommandLineParser` (Apache Commons CLI based parser):
+
+- **testBuildOptions**: Confirms all six options are registered in the built `Options` instance
+- **testBuildHelpHeaderAndFooter**: Validates help header/footer text contain all documented usage examples
+- **testParseShortHelpOption / testParseLongHelpOption**: Parses `-h` / `--help`
+- **testParseShortVersionOption / testParseLongVersionOption**: Parses `-v` / `--version`
+- **testParseShortLicenseOption / testParseLongLicenseOption**: Parses `-L` / `--license`
+- **testParseLoadOptionWithArgument**: Parses `-l layout.xml` and validates the argument value
+- **testParseInputAndOutputOptions**: Parses `-i input.xml -o output.iso` together
+- **testParseWithNoArguments**: Confirms parsing an empty argument list succeeds with no options set
+- **testParseMutuallyExclusiveOptionsThrows**: Confirms combining `-h -v` (same `OptionGroup`) throws `ParseException`
+- **testParseLoadOptionMissingArgumentThrows**: Confirms `-l` without its required argument throws `ParseException`
+- **testParseUnrecognizedOptionThrows**: Confirms an unknown option throws `ParseException`
+- **testPrintVersionDoesNotThrow / testPrintHelpDoesNotThrow**: Confirms these output methods execute safely
+- **testHandleCommandLineWithValidPaths**: Confirms `handleCommandLine` succeeds with a readable input file and writable output file
+- **testHandleCommandLineWithNonExistentInputThrows**: Confirms a missing input file throws `ParseException`
+- **testHandleCommandLineWithNonExistentOutputThrows**: Confirms a missing output file throws `ParseException`
 
 ## Running Tests
 
@@ -148,18 +186,20 @@ class MyClassTest {
 ```
 
 ## Current Test Statistics (as of v0.1.6-SNAPSHOT)
-- **Total Tests**: 18
-- **Test Classes**: 2
+- **Total Tests**: 44
+- **Test Classes**: 4
 - **All Tests Passing**: ✓
 
-The test suite has not changed in scope since v0.1.2; no new automated tests have been added yet for the i18n, command-line interface, or ISO metadata (Volume/Publisher/Application ID) features introduced in v0.1.3-v0.1.5. See "Future Testing Enhancements" below.
+The command-line interface (`CommandLineOptionsManager` and `JISOCreatorCommandLineParser`) introduced in v0.1.3 now has dedicated test coverage. i18n message bundle loading and ISO metadata (Volume/Publisher/Application ID) handling remain untested; see "Future Testing Enhancements" below.
 
 ### Test Statistics Summary
 ```
-OSExplorerTest.java:      13 tests
-IOUtilsPathTest.java:      5 tests
-─────────────────────────────────
-Total:                    18 tests
+OSExplorerTest.java:                      13 tests
+IOUtilsPathTest.java:                      5 tests
+CommandLineOptionsManagerTest.java:        7 tests
+JISOCreatorCommandLineParserTest.java:    19 tests
+─────────────────────────────────────────────────
+Total:                                    44 tests
 ```
 
 ## Best Practices
@@ -211,8 +251,7 @@ void setUp() {
 3. Add tests for action classes (utilizing centralized `ActionsManager`)
 4. Add tests for provider implementations
 5. Add tests for new manager components (`GUIManager`, `ImageRegister`)
-6. Add tests for the command line parser (`CommandLineParserManager`, `JISOCreatorCommandLineParser`)
-7. Add tests for i18n message bundle loading (`INLSBundleMessages` and per-component message classes)
-8. Add tests for XML layout parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
-9. Consider adding code coverage reporting with JaCoCo
-10. Add performance benchmarks for large file operations
+6. Add tests for i18n message bundle loading (`INLSBundleMessages` and per-component message classes)
+7. Add tests for XML layout parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
+8. Consider adding code coverage reporting with JaCoCo
+9. Add performance benchmarks for large file operations

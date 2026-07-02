@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 0.1.6-SNAPSHOT
 
 ### Added
+- **Unit tests for command line interface**: New test classes covering `CommandLineOptionsManager` (7 tests) and `JISOCreatorCommandLineParser` (19 tests) - option declarations, short/long option parsing, mutually exclusive options, missing/invalid arguments, help/version output, and `handleCommandLine` input/output path validation. Total test count now 44 (up from 18)
 - **License printing from CLI**: New `--license` / `-L` command line option prints the bundled GPLv3 license text (`ICommandLineParser#printLicense`, backed by `IOManager`/`IOUtils` loading `files/license.txt`)
 - **ISO filesystem status info**: Main window status bar now shows ISO filesystem information (volume/size) after loading or saving a layout, via `IsoFileSystem` and `MainWindow`
 

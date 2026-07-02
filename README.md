@@ -94,13 +94,18 @@ mvn clean package -DskipTests
 
 ```
 src/test/java/cl/cavallinux/jisocreator/
-├── model/osexplorer/
-│   └── OSExplorerTest.java      # File system operations (13 tests)
+├── instances/
+│   └── CommandLineOptionsManagerTest.java  # CLI option declarations (7 tests)
+├── model/
+│   ├── cmdline/
+│   │   └── JISOCreatorCommandLineParserTest.java  # CLI parsing behavior (19 tests)
+│   └── osexplorer/
+│       └── OSExplorerTest.java      # File system operations (13 tests)
 └── util/
-    └── IOUtilsPathTest.java     # File path utilities (5 tests)
+    └── IOUtilsPathTest.java         # File path utilities (5 tests)
 ```
 
-**Current Test Statistics**: 18 tests total, all passing
+**Current Test Statistics**: 44 tests total, all passing
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations

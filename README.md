@@ -4,7 +4,7 @@ A **MKISOFS Frontend** built with Eclipse technologies, providing a graphical us
 
 ## Overview
 
-JisoCreator is a Java-based desktop application that simplifies the process of creating and editing ISO images. It features dual file explorers for managing both the operating system file system and ISO image contents.
+JisoCreator is a Java-based desktop application that simplifies the process of creating and editing ISO images. It features dual file explorers for managing both the operating system file system and ISO image contents, a command-line interface for scripted usage, and multi-language (i18n) support.
 
 ## Requirements
 
@@ -24,8 +24,9 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 
 ### Utilities & Libraries
 - **Lombok 1.18.44** - Annotation processor for code generation (getters, setters, etc.)
-- **XStream 1.4.21** - XML serialization library for configuration management
+- **XStream 1.4.21** - XML serialization library for ISO layout and configuration management
 - **Apache Commons Lang3 3.20.0** - Utility functions for Java language operations
+- **Apache Commons CLI 1.11.0** - Command-line argument parsing
 - **JSVG 2.1.0** - SVG rendering support
 - **SWT SVG 3.132.0** - SWT integration for SVG graphics
 
@@ -153,14 +154,37 @@ This command uses the exec-maven-plugin configured in pom.xml and includes:
 
 ### From Command Line (after packaging)
 ```bash
-java --enable-native-access=ALL-UNNAMED -jar target/jisocreator-0.1.2.jar
+java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
 ```
 
 ### With Debug Mode
 ```bash
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
      --enable-native-access=ALL-UNNAMED \
-     -jar target/jisocreator-0.1.2.jar
+     -jar target/jisocreator.jar
+```
+
+## Command Line Interface
+
+In addition to the GUI, JisoCreator exposes a command-line interface (backed by Apache Commons CLI) for scripted/headless usage:
+
+```bash
+java -jar target/jisocreator.jar [OPTIONS]
+```
+
+| Short | Long        | Description                                  |
+|-------|-------------|-----------------------------------------------|
+| `-l`  | `--load`    | Load an existing XML layout file into the GUI |
+| `-i`  | `--input`   | ISO XML layout file to load (headless mode)   |
+| `-o`  | `--output`  | ISO file output path (headless mode)          |
+| `-h`  | `--help`    | Show the help message                         |
+| `-v`  | `--version` | Show application and JVM version              |
+| `-L`  | `--license` | Show the application's GPLv3 license          |
+
+Example:
+```bash
+jisocreator --license
+jisocreator --load /path/to/layout.xml
 ```
 
 ## Project Structure
@@ -170,49 +194,68 @@ jisocreator/
 ├── src/main/java/cl/cavallinux/jisocreator/
 │   ├── action/           # Action handlers and commands
 │   │   ├── decl/         # Action declarations
-│   │   ├── main/         # Main application actions
+│   │   ├── main/         # Main application actions (incl. MainAction / CLI entrypoint)
 │   │   ├── isoexplorer/  # ISO explorer specific actions
 │   │   ├── osexplorer/   # OS explorer specific actions
 │   │   └── jobs/         # Background job threads
 │   ├── gui/              # GUI components and windows
 │   │   ├── decl/         # GUI declarations
 │   │   ├── dialog/       # Dialog components
+│   │   ├── i18n/         # NLS message bundles (About, ISO/OS explorer, preferences, etc.)
 │   │   ├── listeners/    # Event listeners
-│   │   ├── preference/   # Preference dialogs
+│   │   ├── preference/   # Preference pages (general, MKISOFS options)
 │   │   ├── sashfom/      # Sash form components
 │   │   └── window/       # Main window components
 │   ├── instances/        # Singleton managers
-│   │   ├── ActionsManager.java       # Centralized action management
-│   │   ├── GUIManager.java           # GUI component management
-│   │   ├── ImageRegister.java        # Image resource registry
-│   │   ├── IOManager.java            # I/O operations management
+│   │   ├── ActionsManager.java            # Centralized action management
+│   │   ├── GUIManager.java                # GUI component management
+│   │   ├── ImageRegister.java             # Image resource registry
+│   │   ├── IOManager.java                 # I/O operations management
+│   │   ├── CommandLineParserManager.java  # Command-line parser singleton
+│   │   ├── CommandLineOptionsManager.java # Command-line options definitions
+│   │   ├── JISOCreatorLanguageOptions.java# Supported UI languages (EN/ES)
+│   │   ├── JISOCreatorISOLevelOptions.java# Supported ISO 9660 levels (1-4)
+│   │   ├── PreferencesNodeManager.java    # Preference page nodes
 │   │   └── ...
 │   ├── model/            # Data models and providers
+│   │   ├── cmdline/      # Command-line parser implementation
 │   │   ├── comparators/  # Custom comparators
 │   │   ├── filters/      # File filters
 │   │   ├── isoexplorer/  # ISO explorer models
 │   │   ├── osexplorer/   # OS explorer models
+│   │   ├── parser/       # XML layout parsing
 │   │   └── providers/    # Data providers
 │   └── util/             # Utility classes
 ├── src/main/resources/   # Configuration and resources
-│   └── log4j2.xml       # Logging configuration
-├── pom.xml              # Maven configuration
-└── README.md            # This file
+│   ├── i18n/             # Message bundles per component (messages_en/es.properties)
+│   ├── img/              # Icons and SVG assets
+│   ├── conf/             # Default configuration files
+│   ├── files/            # Bundled files (e.g. license.txt)
+│   └── log4j2.xml        # Logging configuration
+├── res/                  # Native launch scripts and bundled mkisofs binaries
+│   ├── linux/            # Linux launch script
+│   └── mkisofs/          # Windows mkisofs binary and launch script
+├── pom.xml               # Maven configuration
+└── README.md             # This file
 ```
 
 ## Features
 
 - **Dual File Explorers**: Browse OS file system and ISO contents simultaneously
 - **ISO Management**: Create, edit, and explore ISO 9660 images
-- **Layout Editor**: Design ISO layouts before creation
-- **Preferences**: Customizable application settings
+- **ISO Metadata**: Configure Volume ID, Publisher ID and Application ID for generated images
+- **ISO Level Selection**: Choose the ISO 9660 conformance level (1-4) via preferences
+- **Layout Editor**: Design ISO layouts before creation, with XML save/load support
+- **Command Line Interface**: Load layouts, build ISOs, print version/help/license headlessly
+- **Internationalization (i18n)**: English and Spanish UI languages, switchable via preferences
+- **Preferences**: Customizable application settings (general options, MKISOFS options)
 - **Logging**: Comprehensive logging to track operations
 
-## Architecture Highlights (v0.1.2+)
+## Architecture Highlights
 
 ### Singleton Manager Pattern
 
-The application uses enum-based singleton managers for centralized component management:
+The application uses enum-based singleton managers for centralized component management (`ActionsManager`, `GUIManager`, `IsoExplorerActionsManager`, `OSExplorerActionsManager`, `OSAndIsoExplorerManager`, `ImageRegister`, `IOManager`, `CommandLineParserManager`, `PreferencesNodeManager`, among others):
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -230,9 +273,9 @@ The application uses enum-based singleton managers for centralized component man
     │                 │                  │
     ▼                 ▼                  ▼
  Actions           GUI Comps        Explorers
- (18 types)      (SashForms,       (OS/ISO)
-                  Dialogs,
-                  Windows)
+ (18+ types)      (SashForms,       (OS/ISO)
+                   Dialogs,
+                   Windows)
 ```
 
 ### Benefits of Manager Pattern
@@ -243,124 +286,19 @@ The application uses enum-based singleton managers for centralized component man
 4. **Maintainability**: Simplified dependency tracking and initialization order
 5. **Scalability**: Easy to add new managed components
 
+### Internationalization (i18n)
+
+UI text is externalized into per-component NLS message bundles under `src/main/resources/i18n/` (e.g. `mainwindow`, `mainactions`, `osexplorer`, `isoexplorer`, `preferencedialog`, `aboutdialog`, `showisoinfodialog`), each with `messages_en.properties` and `messages_es.properties`. The active language is selectable from the General preferences page (`JISOCreatorLanguageOptions`) and applied at startup via `MainAction`.
+
+### Command Line Interface
+
+`CommandLineParserManager` wraps a `JISOCreatorCommandLineParser` (built on Apache Commons CLI) exposing `--load`, `--input`, `--output`, `--help`, `--version` and `--license` options, allowing the application to be launched in headless/scripted scenarios in addition to its GUI mode.
+
 ## Version
 
-Current version: **0.1.2-SNAPSHOT**
+Current version: **0.1.6-SNAPSHOT**
 
-### Version 0.1.2 Changes
-
-This version introduces significant architectural refactoring focused on improving code maintainability and following better design patterns:
-
-#### Key Architectural Improvements
-
-**Centralized Singleton Managers**:
-- **ActionsManager**: Enum-based centralized management of all 18 application actions
-   - Provides clean, consistent access patterns across the application
-   - Ensures proper initialization and lifecycle management
-   - Integrated with MainWindow for menu and toolbar management
-- **IsoExplorerActionsManager**: Manages ISO explorer specific actions (4 actions)
-   - OPENISOENTRY, GOTOISOPARENT, SHOWISOINFO, DELETEISOENTRY
-   - Integrated with IsoExplorerSashForm toolbar and listeners
-- **OSExplorerActionsManager**: Manages OS explorer specific actions (5 actions)
-   - OPENFILEACTION, GOTOPARENTACTION, REFRESHACTION, ADDFILEACTION, SHOWHIDDENFILES
-   - Integrated with OSExplorerSashForm toolbar and listeners
-- **OSAndIsoExplorerManager**: Unified management of file system and ISO explorers
-   - Provides controlled access to OSExplorer and IsoExplorer instances
-   - Used by OSExplorerSashForm to initialize tree input
-- **ImageRegister**: Centralized image resource management
-   - Enum-based singleton for thread-safe image loading
-   - Used by all GUI components for consistent image access
-
-**Refactored Components** (37+ files):
-- **18 Action Classes**: All action classes now centrally managed through `ActionsManager`, `IsoExplorerActionsManager`, and `OSExplorerActionsManager`
-- **8 GUI Components**: Updated to use centralized managers and improved patterns:
-   - **IsoExplorerSashForm**: Uses `IsoExplorerActionsManager` for toolbar actions and listeners
-   - **OSExplorerSashForm**: Uses `OSExplorerActionsManager` for toolbar actions with dynamic action loading via `Arrays.stream()`, includes private `fillToolbarAndCoolbars()` method, and provides `getTableSelection()`/`getTreeSelection()` helper methods
-   - **MainWindow**: Uses `ActionsManager` for menu and toolbar management with enhanced multi-monitor support
-- **Event Listeners**: Complete refactoring with 6 dedicated listener classes for improved separation of concerns:
-   - **Double-Click Listeners**:
-     - `ISOExplorerSashFormDoubleClickListener`: Implements `IDoubleClickListener` for ISO explorer navigation and content opening
-     - `OSExplorerSashFormDoubleClickListener`: Implements `IDoubleClickListener` for file system navigation
-   - **Selection Changed Listeners**:
-     - `ISOExplorerSashFormSelectionChangedListener`: Implements `ISelectionChangedListener` with intelligent ISO explorer action state management
-     - `OSExplorerSashFormSelectionChangedListener`: Implements `ISelectionChangedListener` with intelligent file system action state management
-   - **Menu Listeners**: ISODirectoriesMenuListener, OSDirectoriesMenuListener (existing)
-- **2 Utility Classes**: `ImageUtils` and `IOUtils` refactored to use enum singleton pattern
-- **1 Test Suite**: Updated to verify singleton management patterns
-
-**Enhanced Multi-Monitor Support**:
-- Improved monitor detection logic in `MainWindow`
-- Better handling of active shell detection
-- Fallback to primary monitor when needed
-- More reliable window positioning across multiple displays
-
-**Improved Code Quality**:
-- Removed scattered singleton implementations
-- Unified approach to dependency management
-- Better encapsulation and controlled access
-- Enhanced testability with centralized manager pattern
-
-#### Benefits
-- **Cleaner Architecture**: Single point of access for singletons through enum-based managers
-- **Thread Safety**: Enum singleton pattern provides inherent thread safety
-- **Maintainability**: Centralized initialization and configuration of application components
-- **Testability**: Easier to mock and test components through manager interfaces
-- **Separation of Concerns**: Clear separation between action handlers, GUI components, and utilities
-- **Code Consistency**: Unified approach to singleton pattern across the codebase
-- **Better Encapsulation**: Manager enums provide controlled access to singleton instances
-
-### Event Listener Integration with Managers
-
-The application features complete separation of concerns with dedicated listener classes that leverage centralized managers to provide intelligent, context-aware behavior:
-
-#### Double-Click Listeners
-
-**OSExplorerSashFormDoubleClickListener**:
-- Implements `IDoubleClickListener` for file system navigation
-- **Smart Navigation**:
-   - TreeViewer double-click: Expands/collapses directory nodes for hierarchical navigation
-   - TableViewer double-click: Opens files using `OPENFILEACTION` through `OSExplorerActionsManager`
-- **Manager Integration**:
-   - `OSExplorerActionsManager`: Access to OpenAction for file opening
-   - `GUIManager`: Access to UI components for tree state management
-- **Enhanced Debugging**: JSON logging of all double-click events
-
-**ISOExplorerSashFormDoubleClickListener**:
-- Implements `IDoubleClickListener` for ISO content navigation
-- **Smart Navigation**:
-   - TreeViewer double-click: Expands/collapses ISO directory nodes with state tracking
-   - TableViewer double-click: Opens ISO entries using `OPENISOENTRY` action
-- **Tree State Tracking**: Maintains expanded/collapsed state for improved UX
-- **Manager Integration**: Uses `IsoExplorerActionsManager` and `GUIManager`
-
-#### Selection Changed Listeners
-
-**OSExplorerSashFormSelectionChangedListener**:
-- Implements `ISelectionChangedListener` for monitoring file system selection events
-- **Smart Action Management**:
-   - Uses `OSExplorerActionsManager` to enable/disable toolbar actions dynamically
-   - OPENFILEACTION: Enabled only when a file is selected in TableViewer
-   - ADDFILEACTION: Enabled when a valid directory is selected in TreeViewer
-   - GOTOPARENTACTION: Enabled only when current directory is not file system root
-- **Manager Integration**:
-   - `GUIManager`: Access to MainWindow and OSExplorer UI components to update path display and directory listings
-   - `OSAndIsoExplorerManager`: Check if current path is file system root
-   - `OSExplorerActionsManager`: Dynamic action state management
-- **Robust Event Handling**:
-   - Distinguishes between TreeViewer (directory navigation) and TableViewer (file selection) events
-   - Handles SWT library edge cases gracefully
-   - Comprehensive JSON logging for debugging selection flows
-
-**ISOExplorerSashFormSelectionChangedListener**:
-- Implements `ISelectionChangedListener` for ISO explorer selection events
-- **Smart Action Management**:
-   - Uses `IsoExplorerActionsManager` for intelligent action state control
-   - OPENISOENTRY and DELETEISOENTRY: Enabled only for TableViewer selections
-   - GOTOISOPARENT: Conditionally enabled based on node hierarchy
-- **Manager Integration**:
-   - `GUIManager`: Access to UI components for path text and table updates
-   - `IsoExplorerActionsManager`: Dynamic action enablement based on context
-- **Edge Case Handling**: Graceful handling of SWT library edge cases with appropriate logging
+For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

@@ -5,9 +5,67 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] - 0.1.6-SNAPSHOT
 
-## [0.1.2-SNAPSHOT] - 2026-06-13
+### Added
+- **License printing from CLI**: New `--license` / `-L` command line option prints the bundled GPLv3 license text (`ICommandLineParser#printLicense`, backed by `IOManager`/`IOUtils` loading `files/license.txt`)
+- **ISO filesystem status info**: Main window status bar now shows ISO filesystem information (volume/size) after loading or saving a layout, via `IsoFileSystem` and `MainWindow`
+
+### Changed
+- **Resource reorganization**: Images (`img/`), i18n bundles (`i18n/`) and default configuration (`conf/defaultconfig.properties`) moved out of `util/res` into `src/main/resources` top-level folders for clearer separation between code and resources
+- **ISO length/info calculation**: Refactored `IsoFileSystem` and `ShowIsoInformationAction`/`OpenIsoLayoutAction` to compute and print ISO size/info more accurately
+- `AddFileAction` and `IsoExplorerSashForm` updated to keep the status bar in sync with ISO filesystem changes
+
+## [0.1.5] - 2026-06-26
+
+### Added
+- **Internationalization (i18n)**: Full NLS support with English and Spanish message bundles for About dialog, main window, main actions, OS/ISO explorer actions, preferences dialog and Show ISO Info dialog (`INLSBundleMessages` + per-component `*Messages` classes)
+- **Language preference**: New `JISOCreatorLanguageOptions` enum and General preferences page option to switch the application UI language at runtime/startup
+- **ISO metadata support**: Added Volume ID, Publisher ID and Application ID fields when generating ISO images, exposed through the Show ISO Layout Information dialog
+- **XML layout serialization**: Added/refined serialization and deserialization hooks for saving and loading ISO layouts as XML
+
+### Changed
+- Refactored `ShowIsoLayoutInformationDialog` with I18N messages and updated volume ID validation logic
+- Refactored Preferences dialog instantiation and preference node management (`PreferencesNodeManager`)
+- Refactored the XML ISO filesystem parser (`model/parser`) for improved robustness
+- Refactored command line parser (`JISOCreatorCommandLineParser`) and fixed related parsing bugs
+
+### Fixed
+- Fixed UTF-8 encoding issues when reading/writing files
+- Fixed command line parser manager bugs
+
+## [0.1.4] - 2026-06-20
+
+### Added
+- Bundled `mkisofs.exe` 3.02a10 for the Windows distribution
+- Error handling and user feedback when loading an XML layout via the GUI fails
+
+### Fixed
+- Fixed bug where the `mkisofs` child process could remain alive after exiting the application
+- Fixed bug in OS explorer initial root file system loading
+- Fixed bug in Save As XML action
+
+### Changed
+- Refactored XML layout management, ISO/OS explorer model class hierarchy, and load/save XML and ISO file handling
+- Refactored ISO image saving progress reporting
+- Refactored Save As ISO and Save As XML Layout actions
+
+## [0.1.3] - 2026-06-15
+
+### Added
+- **Command line interface**: First implementation of the JisoCreator command line arguments parser (`CommandLineParserManager`, `CommandLineOptionsManager`) supporting `--load`, `--input`, `--output`, `--help` and `--version`
+- Support for a `JISOCREATOR_LOGS_PATH` environment variable to customize the logs directory
+- `--add-opens` JVM option added to startup scripts for Java module compatibility
+
+### Changed
+- Refactored usage/help text and command line parsing logic
+- Refactored exception handling during load-XML-arguments validation
+
+### Fixed
+- Fixed assembly ID configuration issue in the Maven Assembly plugin (Windows/GTK packaging)
+- Fixed dependency management issue affecting the GTK (Linux) distribution
+
+## [0.1.2] - 2026-06-14
 
 ### Added
 - **Centralized Singleton Managers**: Introduced enum-based managers for consistent singleton pattern across the application
@@ -248,7 +306,11 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com/) forma
 
 ## Version Links
 
-- [0.1.2-SNAPSHOT](https://github.com/Cavallinux/jisocreator/compare/0.1.1...feature/v0.1.2) - Unreleased, in development
+- [0.1.6-SNAPSHOT](https://github.com/Cavallinux/jisocreator/compare/v0.1.5...feature/v0.1.6) - Unreleased, in development
+- [0.1.5](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.5) - i18n support, ISO metadata (Volume/Publisher/Application ID)
+- [0.1.4](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.4) - Windows mkisofs update, XML layout fixes
+- [0.1.3](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.3) - Command line interface
+- [0.1.2](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.2) - Centralized singleton manager architecture
 - [0.1.1](https://github.com/Cavallinux/jisocreator/releases/tag/0.1.1) - First major release with testing framework
 
 ---

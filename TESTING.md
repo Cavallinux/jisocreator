@@ -147,10 +147,12 @@ class MyClassTest {
 }
 ```
 
-## Current Test Statistics (v0.1.2)
+## Current Test Statistics (as of v0.1.6-SNAPSHOT)
 - **Total Tests**: 18
 - **Test Classes**: 2
 - **All Tests Passing**: ✓
+
+The test suite has not changed in scope since v0.1.2; no new automated tests have been added yet for the i18n, command-line interface, or ISO metadata (Volume/Publisher/Application ID) features introduced in v0.1.3-v0.1.5. See "Future Testing Enhancements" below.
 
 ### Test Statistics Summary
 ```
@@ -209,5 +211,8 @@ void setUp() {
 3. Add tests for action classes (utilizing centralized `ActionsManager`)
 4. Add tests for provider implementations
 5. Add tests for new manager components (`GUIManager`, `ImageRegister`)
-6. Consider adding code coverage reporting with JaCoCo
-7. Add performance benchmarks for large file operations
+6. Add tests for the command line parser (`CommandLineParserManager`, `JISOCreatorCommandLineParser`)
+7. Add tests for i18n message bundle loading (`INLSBundleMessages` and per-component message classes)
+8. Add tests for XML layout parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
+9. Consider adding code coverage reporting with JaCoCo
+10. Add performance benchmarks for large file operations

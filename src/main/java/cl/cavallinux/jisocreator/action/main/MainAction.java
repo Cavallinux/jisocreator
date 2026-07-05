@@ -61,8 +61,8 @@ public class MainAction extends JISOCreatorBaseAction {
      * @param args Argumentos recibidos desde el sistema operativo.
      */
     public static void main(String[] args) throws IOException {
+        configureLanguage();
         MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
-        mainAction.configureLanguage();
         try {
             mainAction.handleCommandLine(args);
         } catch (ParseException e) {
@@ -100,7 +100,7 @@ public class MainAction extends JISOCreatorBaseAction {
         }
     }
 
-    private void configureLanguage() {
+    private static void configureLanguage() {
         IOUtils ioUtils = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = ioUtils.getStore();
         String language = preferenceStore.getString("jisocreator.language");

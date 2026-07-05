@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -67,25 +68,26 @@ public class IOUtils {
     }
 
     public String loadFileContentFromClasspath(String filePath) {
-        StringBuffer license = new StringBuffer();
         try (
             InputStream fileInputStream = ClassLoader.getSystemResourceAsStream(filePath);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
             BufferedReader br = new BufferedReader(inputStreamReader)
         ) {
+            StringBuffer license = new StringBuffer();
             br.lines().forEach(line -> {
                 license.append(line);
                 license.append("\n");
             });
+            return license.toString();
         } catch (IOException | NullPointerException e) {
             log.error("Error loading file", e);
+            return StringUtils.EMPTY;
         }
-        return license.toString();
     }
     
     public String loadFormattedLicenseFile() {
         String loadedLicenseFile = loadFileContentFromClasspath(IOUtils.JISOCREATOR_LICENSE_FILENAME);
-        try (InputStream stream = getClass().getResource("/META-INF/MANIFEST.MF").openStream()) {
+        try (InputStream stream = getClass().getResourceAsStream(JISOCREATOR_MANIFEST_FILE)) {
             Attributes manifestAttributes = new Manifest(stream).getMainAttributes();
             String maintainerAttribute = manifestAttributes.getValue("Maintainer");
             String programName = manifestAttributes.getValue("Implementation-Title");
@@ -95,11 +97,11 @@ public class IOUtils {
             loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<maintainer>", maintainerAttribute);
             loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<year>",
                     String.valueOf(LocalDate.now().getYear()));
-            return loadedLicenseFile;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             log.error("Error loading manifest file", e);
-            return StringUtils.EMPTY;
         }
+
+        return loadedLicenseFile;
     }
 
     private void loadPreferencesFromBackup() {

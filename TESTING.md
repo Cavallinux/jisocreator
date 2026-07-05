@@ -185,7 +185,7 @@ class MyClassTest {
 }
 ```
 
-## Current Test Statistics (as of v0.1.6-SNAPSHOT)
+## Current Test Statistics (as of v0.1.6)
 - **Total Tests**: 44
 - **Test Classes**: 4
 - **All Tests Passing**: ✓

@@ -65,7 +65,7 @@ public class AboutDialog extends TitleAreaDialog {
         tabItem.setControl(aboutComposite);
 
         tabItem = new TabItem(tabFolder, SWT.NONE);
-        Text licenseText = new Text(tabFolder, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        Text licenseText = new Text(tabFolder, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY | SWT.MULTI);
         licenseText.setText(IOManager.INSTANCE.getIoUtils().loadFormattedLicenseFile());
         tabItem.setText(AboutDialogMessages.aboutDialogLicenseTabText);
         GridDataFactory.defaultsFor(licenseText).grab(true, true).applyTo(licenseText);

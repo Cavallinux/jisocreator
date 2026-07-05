@@ -58,7 +58,6 @@
 							<arguments>
 								<argument>--add-opens</argument>
 								<argument>java.base/java.util=ALL-UNNAMED</argument>
-								<argument>--sun-misc-unsafe-memory-access=allow</argument>
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>-jar</argument>
@@ -131,7 +130,6 @@
 							<arguments>
 								<argument>--add-opens</argument>
 								<argument>java.base/java.util=ALL-UNNAMED</argument>
-								<argument>--sun-misc-unsafe-memory-access=allow</argument>
 								<argument>${debug.jvm.args}</argument>
 								<argument>${jvm.nativeacess.arg}</argument>
 								<argument>-jar</argument>
@@ -251,7 +249,6 @@
 					<arguments>
 						<argument>--add-opens</argument>
 						<argument>java.base/java.util=ALL-UNNAMED</argument>
-						<argument>--sun-misc-unsafe-memory-access=allow</argument>
 						<argument>${debug.jvm.args}</argument>
 						<argument>${jvm.nativeacess.arg}</argument>
 						<argument>-jar</argument>

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -67,20 +68,21 @@ public class IOUtils {
     }
 
     public String loadFileContentFromClasspath(String filePath) {
-        StringBuffer license = new StringBuffer();
         try (
             InputStream fileInputStream = ClassLoader.getSystemResourceAsStream(filePath);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
             BufferedReader br = new BufferedReader(inputStreamReader)
         ) {
+            StringBuffer license = new StringBuffer();
             br.lines().forEach(line -> {
                 license.append(line);
                 license.append("\n");
             });
+            return license.toString();
         } catch (IOException | NullPointerException e) {
             log.error("Error loading file", e);
+            return StringUtils.EMPTY;
         }
-        return license.toString();
     }
     
     public String loadFormattedLicenseFile() {

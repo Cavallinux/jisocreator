@@ -87,7 +87,7 @@ public class IOUtils {
     
     public String loadFormattedLicenseFile() {
         String loadedLicenseFile = loadFileContentFromClasspath(IOUtils.JISOCREATOR_LICENSE_FILENAME);
-        try (InputStream stream = getClass().getResource("/META-INF/MANIFEST.MF").openStream()) {
+        try (InputStream stream = getClass().getResourceAsStream(JISOCREATOR_MANIFEST_FILE)) {
             Attributes manifestAttributes = new Manifest(stream).getMainAttributes();
             String maintainerAttribute = manifestAttributes.getValue("Maintainer");
             String programName = manifestAttributes.getValue("Implementation-Title");
@@ -97,11 +97,11 @@ public class IOUtils {
             loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<maintainer>", maintainerAttribute);
             loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<year>",
                     String.valueOf(LocalDate.now().getYear()));
-            return loadedLicenseFile;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             log.error("Error loading manifest file", e);
-            return StringUtils.EMPTY;
         }
+
+        return loadedLicenseFile;
     }
 
     private void loadPreferencesFromBackup() {

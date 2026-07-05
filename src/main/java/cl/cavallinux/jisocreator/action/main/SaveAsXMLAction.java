@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -13,26 +12,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@AllArgsConstructor
-public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IFileManagementAction {
+public class SaveAsXMLAction extends JISOCreatorBaseAction implements IRunnableWithProgress, IFileManagementAction {
     private String path;
     private IsoFileSystem iso;
 
     @Builder
     protected SaveAsXMLAction(String message, String toolTip, ImageDescriptor imageDescriptor) {
-        super(message);
-        setImageDescriptor(imageDescriptor);
-        setToolTipText(toolTip);
+        super(message, toolTip, imageDescriptor);
         path = StringUtils.EMPTY;
         iso = null;
     }

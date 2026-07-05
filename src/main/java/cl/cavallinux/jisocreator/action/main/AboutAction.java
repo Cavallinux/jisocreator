@@ -1,12 +1,11 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 import cl.cavallinux.jisocreator.gui.dialog.AboutDialog;
-import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.Builder;
 
 /**
@@ -15,10 +14,13 @@ import lombok.Builder;
  */
 public class AboutAction extends Action {
     @Builder
-    protected AboutAction() {
-        super(MainActionsMessages.aboutActionName);
-        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("about.png"));
-        setToolTipText(MainActionsMessages.aboutActionTooltip);
+    protected AboutAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        //message(MainActionsMessages.aboutActionName).tooltip(MainActionsMessages.aboutActionTooltip).imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("about.png"));
+        //(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("about.png"));
+        //tooltip(MainActionsMessages.aboutActionTooltip);
+        super(message);
+        setImageDescriptor(imageDescriptor);
+        setToolTipText(tooltip);
     }
 
     @Override

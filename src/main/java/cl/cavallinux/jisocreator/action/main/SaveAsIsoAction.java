@@ -38,12 +38,8 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
 
     @Builder
     protected SaveAsIsoAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
-        //super(MainActionsMessages.saveAsIsoActionName);
         super(message);
-        //ImageUtils imageUtils = ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png");
-        //setImageDescriptor(imageUtils.loadImageDescriptor("x-cd-image.png"));
         setImageDescriptor(imageDescriptor);
-        //setToolTipText(MainActionsMessages.saveAsIsoActionTooltip);
         setToolTipText(tooltip);
         inputXMLLayoutFile = StringUtils.EMPTY;
         outputISOFile = StringUtils.EMPTY;

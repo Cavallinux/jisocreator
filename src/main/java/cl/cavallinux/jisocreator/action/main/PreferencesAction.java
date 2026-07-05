@@ -5,25 +5,24 @@ import java.util.Arrays;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.dialog.JISOCreatorPreferencesDialog;
-import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.PreferencesNodeManager;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.Builder;
 
 public class PreferencesAction extends Action {
     
     @Builder
-    protected PreferencesAction() {
-        super(MainActionsMessages.preferencesActionName);
-        ImageUtils imageUtils = ImageRegister.INSTANCE.getImageUtils();
-        setImageDescriptor(imageUtils.loadImageDescriptor("preferences.png"));
-        setToolTipText(MainActionsMessages.preferencesActionTooltip);
+    protected PreferencesAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message);
+        setImageDescriptor(imageDescriptor);
+        setToolTipText(tooltip);
+        /*message(MainActionsMessages.preferencesActionName).tooltip(MainActionsMessages.preferencesActionTooltip).imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("preferences.png"))
+        ;*/
     }
 
     @Override

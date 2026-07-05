@@ -19,15 +19,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ActionsManager {
     MAINACTION(MainAction.builder().build()), EXITACTION(ExitApplicationAction.builder().build()),
-    ABOUTACTION(AboutAction.builder().build()), PREFERENCESACTION(PreferencesAction.builder().build()),
-    SAVEASXMLACTION(SaveAsXMLAction.builder()
-            .message(MainActionsMessages.saveAsXMLActionName)
+    ABOUTACTION(AboutAction.builder().message(MainActionsMessages.aboutActionName)
+            .tooltip(MainActionsMessages.aboutActionTooltip)
+            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("about.png")).build()),
+    PREFERENCESACTION(PreferencesAction.builder()
+            .message(MainActionsMessages.preferencesActionName)
+            .tooltip(MainActionsMessages.preferencesActionTooltip)
+            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("preferences.png")).build()),
+    SAVEASXMLACTION(SaveAsXMLAction.builder().message(MainActionsMessages.saveAsXMLActionName)
             .toolTip(MainActionsMessages.saveAsXMLActionTooltip)
             .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png")).build()),
-    SAVEASISOACTION(SaveAsIsoAction.builder()
-            .message(MainActionsMessages.saveAsIsoActionName)
+    SAVEASISOACTION(SaveAsIsoAction.builder().message(MainActionsMessages.saveAsIsoActionName)
             .tooltip(MainActionsMessages.saveAsIsoActionTooltip)
-            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png")).build()), 
+            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png")).build()),
     NEWISOLAYOUTACTION(NewIsoLayoutAction.builder().build()),
     OPENISOLAYOUTACTION(OpenIsoLayoutAction.builder().message(MainActionsMessages.openIsoLayoutActionName)
             .tooltip(MainActionsMessages.openIsoLayoutActionTooltip)

@@ -20,7 +20,10 @@ public enum IsoExplorerActionsManager {
     GOTOISOPARENT(GoToIsoEntryParentAction.builder().message(IsoExplorerMessages.isoExplorerGoToIsoParentActionName)
             .tooltip(IsoExplorerMessages.isoExplorerGoToIsoParentActionTooltip)
             .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("up.png")).build()),
-    SHOWISOINFO(ShowIsoInformationAction.builder().build()),
+    SHOWISOINFO(ShowIsoInformationAction.builder()
+            .message(IsoExplorerMessages.isoExplorerShowIsoInfoActionName)
+            .tooltip(IsoExplorerMessages.isoExplorerShowIsoInfoActionTooltip)
+            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("properties.png")).build()),
     DELETEISOENTRY(DeleteIsoEntryAction.builder().message(IsoExplorerMessages.isoExplorerDeleteEntryActionName)
             .tooltip(IsoExplorerMessages.isoExplorerDeleteEntryActionTooltip)
             .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("delete.png")).build());

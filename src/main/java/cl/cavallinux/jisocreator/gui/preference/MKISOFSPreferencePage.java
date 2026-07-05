@@ -13,17 +13,21 @@ import org.eclipse.swt.widgets.Composite;
 
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
 import cl.cavallinux.jisocreator.instances.JISOCreatorISOLevelOptions;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
     public static final String NODE_NAME = "preferences.general";
 
     public MKISOFSPreferencePage() {
         super(GRID);
+        log.info("Initializing MKISOFSPreferencePage");
         setDescription(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeDescription);
     }
 
     @Override
     public void createControl(Composite parent) {
+        log.info("Creating control for MKISOFSPreferencePage");
         super.createControl(parent);
         getApplyButton().setText(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeApplyButton);
         getDefaultsButton().setText(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeRestoreButton);
@@ -31,6 +35,7 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
 
     @Override
     protected void createFieldEditors() {
+        log.info("Creating field editors for MKISOFSPreferencePage");
         Composite parent = getFieldEditorParent();
         GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns = 2;

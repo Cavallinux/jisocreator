@@ -35,4 +35,16 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
         getButton(IDialogConstants.OK_ID).setText(PreferenceDialogMessages.preferenceDialogOKButton);
         getButton(IDialogConstants.CANCEL_ID).setText(PreferenceDialogMessages.preferenceDialogCancelButton);
     }
+    
+    @Override
+    protected void okPressed() {
+        log.info("OK button pressed in JISOCreatorPreferencesDialog");
+        super.okPressed();
+    }
+    
+    @Override
+    protected void cancelPressed() {
+        log.info("Cancel button pressed in JISOCreatorPreferencesDialog");
+        super.cancelPressed();
+    }
 }

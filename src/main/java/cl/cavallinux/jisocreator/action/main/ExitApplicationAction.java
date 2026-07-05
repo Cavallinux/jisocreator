@@ -1,16 +1,15 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 
-import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +22,10 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.2
  */
 @Slf4j
-public class ExitApplicationAction extends Action {
+public class ExitApplicationAction extends JISOCreatorBaseAction {
     @Builder
-    protected ExitApplicationAction() {
-        super(MainActionsMessages.exitActionName);
-        setToolTipText(MainActionsMessages.exitActionTooltip);
-        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("exit.png"));
+    protected ExitApplicationAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
     }
 
     @Override

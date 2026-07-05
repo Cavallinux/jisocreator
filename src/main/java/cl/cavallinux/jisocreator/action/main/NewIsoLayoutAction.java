@@ -1,27 +1,24 @@
 package cl.cavallinux.jisocreator.action.main;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Builder
-public class NewIsoLayoutAction extends Action {
-    protected NewIsoLayoutAction() {
-        super(MainActionsMessages.newIsoLayoutActionName);
-        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("new.png"));
-        setToolTipText(MainActionsMessages.newIsoLayoutActionTooltip);
+public class NewIsoLayoutAction extends JISOCreatorBaseAction {
+    @Builder
+    protected NewIsoLayoutAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
     }
 
     @Override

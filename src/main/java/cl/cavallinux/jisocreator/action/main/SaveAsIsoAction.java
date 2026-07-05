@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
@@ -21,7 +21,6 @@ import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.parser.IsoFilesystemParser;
 import cl.cavallinux.jisocreator.util.IOUtils;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,21 +29,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
-@AllArgsConstructor
-public class SaveAsIsoAction extends Action implements IFileManagementAction {
+public class SaveAsIsoAction extends JISOCreatorBaseAction implements IFileManagementAction {
     private String inputXMLLayoutFile;
     private String outputISOFile;
     private boolean commandLineMode;
 
     @Builder
     protected SaveAsIsoAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
-        //super(MainActionsMessages.saveAsIsoActionName);
-        super(message);
-        //ImageUtils imageUtils = ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png");
-        //setImageDescriptor(imageUtils.loadImageDescriptor("x-cd-image.png"));
-        setImageDescriptor(imageDescriptor);
-        //setToolTipText(MainActionsMessages.saveAsIsoActionTooltip);
-        setToolTipText(tooltip);
+        super(message, tooltip, imageDescriptor);
         inputXMLLayoutFile = StringUtils.EMPTY;
         outputISOFile = StringUtils.EMPTY;
         commandLineMode = false;

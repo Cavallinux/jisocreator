@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgress {
     private static final Pattern LOG_PATTERN = Pattern.compile("([\\d,]+)% done, estimate finish (.+)");
+    private static String SAVING_IMAGE_LINE = "Saving image: %s";
     private static final Integer SUCCESSFULLY_ISO_IMAGE_CREATION_PROGRESS = 100;
     private static final Integer INITIAL_ISO_IMAGE_CREATION_PROGRESS = 0;
     private InputStream saveProgressInputStream;
@@ -84,11 +85,15 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
     }
 
     private void killISOSavingProcess() {
-        if (Objects.nonNull(mkisofsProcess) && mkisofsProcess.isAlive()) {
+        if (isAliveMKIsofsProcess()) {
             log.info("Killing OS saving ISO process");
             mkisofsProcess.destroy();
             log.info("Process successfully killed!");
         }
+    }
+
+    private boolean isAliveMKIsofsProcess() {
+        return Objects.nonNull(mkisofsProcess) && mkisofsProcess.isAlive();
     }
 
     private void printGUIMode() {
@@ -105,9 +110,8 @@ public class SaveISO9660ImageThread extends Thread implements IRunnableWithProgr
 
     private void printCommandLineMode() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(saveProgressInputStream))) {
-            System.out.println("Saving image");
-            br.lines().forEach(line -> {
-                System.out.println(line);
+            br.lines().takeWhile(line -> isAliveMKIsofsProcess()).forEach(line -> {
+                System.out.println(String.format(SAVING_IMAGE_LINE, line));
             });
         } catch (IOException e) {
             log.error("Error reading save progress", e);

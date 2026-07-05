@@ -11,16 +11,28 @@ import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.PreferencesAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsIsoAction;
 import cl.cavallinux.jisocreator.action.main.SaveAsXMLAction;
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public enum ActionsManager {
-    MAINACTION(new MainAction()), EXITACTION(new ExitApplicationAction()), ABOUTACTION(new AboutAction()),
-    PREFERENCESACTION(PreferencesAction.builder().build()), SAVEASXMLACTION(new SaveAsXMLAction()),
-    SAVEASISOACTION(new SaveAsIsoAction()), NEWISOLAYOUTACTION(new NewIsoLayoutAction()),
-    OPENISOLAYOUTACTION(new OpenIsoLayoutAction()), LOADISOFROMLAYOUT(new LoadCommandLineISOLayoutAction());
+    MAINACTION(MainAction.builder().build()), EXITACTION(ExitApplicationAction.builder().build()),
+    ABOUTACTION(AboutAction.builder().build()), PREFERENCESACTION(PreferencesAction.builder().build()),
+    SAVEASXMLACTION(SaveAsXMLAction.builder()
+            .message(MainActionsMessages.saveAsXMLActionName)
+            .toolTip(MainActionsMessages.saveAsXMLActionTooltip)
+            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png")).build()),
+    SAVEASISOACTION(SaveAsIsoAction.builder()
+            .message(MainActionsMessages.saveAsIsoActionName)
+            .tooltip(MainActionsMessages.saveAsIsoActionTooltip)
+            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png")).build()), 
+    NEWISOLAYOUTACTION(NewIsoLayoutAction.builder().build()),
+    OPENISOLAYOUTACTION(OpenIsoLayoutAction.builder().message(MainActionsMessages.openIsoLayoutActionName)
+            .tooltip(MainActionsMessages.openIsoLayoutActionTooltip)
+            .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("open.png")).build()),
+    LOADISOFROMLAYOUT(LoadCommandLineISOLayoutAction.builder().build());
 
     private Action action;
 }

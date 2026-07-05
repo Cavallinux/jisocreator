@@ -67,9 +67,9 @@ public class IsoFileSystem {
      */
     public void parse() {
         isoPaths = new ArrayList<String>();
-        for (Object child : root.getChildren()) {
-            parse((ITreeNode) child);
-        }
+        root.getChildren().forEach(child -> {
+            parse(child);
+        });
     }
 
     /**
@@ -77,9 +77,9 @@ public class IsoFileSystem {
      */
     private void parse(ITreeNode node) {
         if (node.hasChildren()) {
-            for (Object child : node.getChildren()) {
-                parse((ITreeNode) child);
-            }
+            node.getChildren().forEach(child -> {
+                parse(child);
+            });
         } else {
             String isoPath = node.getIsoName().concat("=").concat(node.getExtendedName());
             isoPaths.add(isoPath);

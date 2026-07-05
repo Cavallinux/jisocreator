@@ -74,12 +74,11 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected Control createContents(Composite parent) {
         log.info("Creating main window contents");
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite composite = (Composite) super.createContents(parent);
         SashForm mainPanel = new SashForm(composite, SWT.VERTICAL);
         isoExplorer = new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         loadIsoLayout(isoFilePath);
-        setStatus(isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage));
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         return composite;
@@ -98,7 +97,7 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected MenuManager createMenuManager() {
         log.info("creating menu managers");
-        MenuManager mainMenuManager = new MenuManager();
+        MenuManager mainMenuManager = super.createMenuManager();
 
         MenuManager fileMenu = new MenuManager(MainWindowMessages.fileMenuName);
         MenuManager toolsMenu = new MenuManager(MainWindowMessages.toolsMenuName);
@@ -128,7 +127,7 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected ToolBarManager createToolBarManager(int style) {
         log.info("creating tool bar manager");
-        ToolBarManager tool = new ToolBarManager(style);
+        ToolBarManager tool = super.createToolBarManager(style);
         tool.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
         tool.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
         tool.add(separator);
@@ -161,6 +160,11 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected void handleShellCloseEvent() {
         ActionsManager.EXITACTION.getAction().run();
+    }
+    
+    @Override
+    public void setStatus(String message) {
+        super.setStatus(message);
     }
 
     public IProgressMonitor getProgressMonitor() {

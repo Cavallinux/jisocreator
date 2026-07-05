@@ -5,9 +5,11 @@ import java.util.Locale;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
 
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineParserManager;
@@ -15,7 +17,9 @@ import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.cmdline.ICommandLineParser;
 import cl.cavallinux.jisocreator.util.IOUtils;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,23 +35,21 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Getter
+@Setter
+@Builder
 public class MainAction extends Action {
-    private ICommandLineParser parser;
-
-    public MainAction() {
-        parser = CommandLineParserManager.INSTANCE.getParser();
-    }
+    @Builder.Default
+    private ICommandLineParser parser = CommandLineParserManager.INSTANCE.getParser();
+    @Builder.Default
+    private String layoutFilePath = StringUtils.EMPTY;
 
     @Override
     public void run() {
         log.info("Executing app in GUI mode");
-        GUIManager.INSTANCE.getMainWindow().setBlockOnOpen(true);
-        GUIManager.INSTANCE.getMainWindow().open();
-    }
-
-    private void run(String layoutFilePath) {
-        GUIManager.INSTANCE.getMainWindow().setBlockOnOpen(true);
-        GUIManager.INSTANCE.getMainWindow().open(layoutFilePath);
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        mainWindow.setBlockOnOpen(true);
+        int exitCode = StringUtils.isNotBlank(layoutFilePath) ? mainWindow.open(layoutFilePath) : mainWindow.open();
+        log.info("Application exited with code: {}", exitCode);
     }
 
     /**
@@ -56,13 +58,13 @@ public class MainAction extends Action {
      * @param args Argumentos recibidos desde el sistema operativo.
      */
     public static void main(String[] args) throws IOException {
-        configureLanguage();
         MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
+        mainAction.configureLanguage();
         try {
             mainAction.handleCommandLine(args);
         } catch (ParseException e) {
             log.error("Error parsing arguments", e);
-            mainAction.getParser().printHelp("jisocreator");
+            mainAction.printHelp();
             System.exit(1);
         }
     }
@@ -72,13 +74,13 @@ public class MainAction extends Action {
         boolean isSaveToIsoOptions = cmd.hasOption(CommandLineOptionsManager.ISOINPUT.getOption())
                 && cmd.hasOption(CommandLineOptionsManager.ISOOUTPUT.getOption());
         if (cmd.hasOption(CommandLineOptionsManager.LOAD.getOption())) {
-            run(cmd.getOptionValue(CommandLineOptionsManager.LOAD.getOption()));
-            System.exit(0);
+            setLayoutFilePath(cmd.getOptionValue(CommandLineOptionsManager.LOAD.getOption()));
+            run();
         } else if (cmd.hasOption(CommandLineOptionsManager.VERSION.getOption())) {
             parser.printVersion();
             System.exit(0);
         } else if (cmd.hasOption(CommandLineOptionsManager.HELP.getOption())) {
-            parser.printHelp("jisocreator");
+            printHelp();
             System.exit(0);
         } else if (cmd.hasOption(CommandLineOptionsManager.LICENSE.getOption())) {
             parser.printLicense();
@@ -95,11 +97,14 @@ public class MainAction extends Action {
         }
     }
 
-    private static void configureLanguage() {
+    private void configureLanguage() {
         IOUtils ioUtils = IOManager.INSTANCE.getIoUtils();
         PreferenceStore preferenceStore = ioUtils.getStore();
         String language = preferenceStore.getString("jisocreator.language");
-        Locale locale = Locale.of(language);
-        Locale.setDefault(locale);
+        Locale.setDefault(Locale.of(language));
+    }
+    
+    private void printHelp() throws IOException {
+        parser.printHelp("jisocreator");
     }
 }

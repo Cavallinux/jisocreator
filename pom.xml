@@ -162,7 +162,6 @@
 		<swt.platform.name>org.eclipse.swt.${swt.platform}</swt.platform.name>
 		<jackson.version>2.20.0</jackson.version>
 		<woodstox.version>7.1.1</woodstox.version>
-		<xstream.version>1.4.21</xstream.version>
 		<slf4j.version>2.26.0</slf4j.version>
 		<swt.version>3.133.0</swt.version>
 		<swt.svg.version>3.132.0</swt.svg.version>
@@ -324,11 +323,6 @@
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
 			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.thoughtworks.xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>${xstream.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.woodstox</groupId>

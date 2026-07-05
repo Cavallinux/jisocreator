@@ -116,8 +116,6 @@ public class IOUtils {
                     Boolean.parseBoolean(defaultProperties.getProperty("mkisofs.symlinks.follow")));
             store.setValue("general.exit.confirm",
                     Boolean.parseBoolean(defaultProperties.getProperty("general.exit.confirm")));
-            store.setValue("xml.parser.fallback.enabled",
-                    Boolean.parseBoolean(defaultProperties.getProperty("xml.parser.fallback.enabled")));
             store.setValue("mkisofs.path", obtainMkisofsPath(SWT.getPlatform()));
             store.setValue("mkisofs.iso.level", defaultProperties.getProperty("mkisofs.iso.level"));
             store.setValue("jisocreator.language", defaultProperties.getProperty("jisocreator.language"));

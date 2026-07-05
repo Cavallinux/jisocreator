@@ -24,8 +24,7 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 
 ### Utilities & Libraries
 - **Lombok 1.18.44** - Annotation processor for code generation (getters, setters, etc.)
-- **Jackson XML 2.20.0** - Primary XML serialization library for ISO layout and configuration management
-- **XStream 1.4.21** - Legacy fallback parser for XML compatibility testing and transitional support
+- **Jackson XML 2.20.0** - XML serialization library for ISO layout and configuration management
 - **Apache Commons Lang3 3.20.0** - Utility functions for Java language operations
 - **Apache Commons CLI 1.11.0** - Command-line argument parsing
 - **JSVG 2.1.0** - SVG rendering support
@@ -161,15 +160,6 @@ This command uses the exec-maven-plugin configured in pom.xml and includes:
 ### From Command Line (after packaging)
 ```bash
 java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
-```
-
-### XML parser fallback flag
-
-By default, XML parsing uses Jackson first and falls back to the legacy XStream parser when needed.
-You can disable fallback parser behavior for compatibility testing with:
-
-```bash
-java -Djisocreator.xml.fallback.enabled=false -jar target/jisocreator.jar
 ```
 
 ### With Debug Mode

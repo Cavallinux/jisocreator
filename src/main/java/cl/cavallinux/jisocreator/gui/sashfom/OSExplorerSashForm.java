@@ -146,6 +146,10 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     public IStructuredSelection getTreeSelection() {
         return (IStructuredSelection) osDirectoriesTree.getSelection();
     }
+    
+    public void setTreeSelection(IStructuredSelection selection) {
+        osDirectoriesTree.setSelection(selection);
+    }
 
     public void refresh() {
         osDirectoriesTree.refresh();

@@ -2,17 +2,15 @@ package cl.cavallinux.jisocreator.action.isoexplorer;
 
 import java.io.File;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
-import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
-import cl.cavallinux.jisocreator.util.ImageUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,15 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
-public class OpenIsoEntryAction extends Action /* implements IDoubleClickListener, ISelectionChangedListener */ {
+public class OpenIsoEntryAction extends JISOCreatorBaseAction{
     private ITreeNode node;
 
     @Builder
-    private OpenIsoEntryAction() {
-        super(IsoExplorerMessages.isoExplorerOpenEntryActionName);
-        ImageUtils imageUtils = ImageRegister.INSTANCE.getImageUtils();
-        setImageDescriptor(imageUtils.loadImageDescriptor("run.png"));
-        setToolTipText(IsoExplorerMessages.isoExplorerOpenEntryActionTooltip);
+    private OpenIsoEntryAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
         setEnabled(false);
     }
 

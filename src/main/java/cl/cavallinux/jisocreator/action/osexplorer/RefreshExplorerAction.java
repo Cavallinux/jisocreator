@@ -1,20 +1,17 @@
 package cl.cavallinux.jisocreator.action.osexplorer;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
-import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class RefreshExplorerAction extends Action {
+public class RefreshExplorerAction extends JISOCreatorBaseAction {
     @Builder
-    private RefreshExplorerAction() {
-        super(OSExplorerMessages.osExplorerRefreshActionName,
-                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("refresh.png"));
-        setToolTipText(OSExplorerMessages.osExplorerRefreshActionToolTip);
+    private RefreshExplorerAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
     }
 
     @Override

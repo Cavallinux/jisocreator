@@ -6,13 +6,12 @@ import java.util.Locale;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
 
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
-import cl.cavallinux.jisocreator.instances.CommandLineParserManager;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.cmdline.ICommandLineParser;
@@ -36,12 +35,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
-@Builder
-public class MainAction extends Action {
-    @Builder.Default
-    private ICommandLineParser parser = CommandLineParserManager.INSTANCE.getParser();
-    @Builder.Default
-    private String layoutFilePath = StringUtils.EMPTY;
+public class MainAction extends JISOCreatorBaseAction {
+    private ICommandLineParser parser;
+    private String layoutFilePath;
+    
+    @Builder
+    protected MainAction(ICommandLineParser parser, String layoutFilePath) {
+        super();
+        this.parser = parser;
+        this.layoutFilePath = layoutFilePath;
+    }
 
     @Override
     public void run() {

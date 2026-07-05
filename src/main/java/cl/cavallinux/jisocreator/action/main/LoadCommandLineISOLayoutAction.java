@@ -1,9 +1,9 @@
 package cl.cavallinux.jisocreator.action.main;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
@@ -15,8 +15,11 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Builder
-public class LoadCommandLineISOLayoutAction extends Action {
+public class LoadCommandLineISOLayoutAction extends JISOCreatorBaseAction {
+    @Builder
+    protected LoadCommandLineISOLayoutAction() {
+        super();
+    }
     
     public void run(String layoutFilePath) {
         log.info("Loading iso layout from file: {}", layoutFilePath);

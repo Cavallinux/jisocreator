@@ -31,7 +31,7 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
     private Text volumeIDText;
     private Label errorIndicator;
     private String volumeIDResponse;
-    
+
     @Builder
     protected ShowIsoLayoutInformationDialog(Shell parentShell, IsoFileSystem isoFileSystem) {
         super(parentShell);
@@ -102,8 +102,10 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
-        createButton(parent, IDialogConstants.OK_ID, "Accept", true);
-        createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
+        createButton(parent, IDialogConstants.OK_ID, ShowIsoInformationDialogMessages.showIsoInfoDialogAcceptText,
+                true);
+        createButton(parent, IDialogConstants.CANCEL_ID, ShowIsoInformationDialogMessages.showIsoInfoDialogCancelText,
+                false);
     }
 
     @Override

@@ -22,9 +22,6 @@ public class OpenAction extends JISOCreatorBaseAction {
     private OpenAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
         super(message, tooltip, imageDescriptor);
         setEnabled(false);
-        /*
-                ;
-        ;*/
     }
 
     @Override

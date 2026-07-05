@@ -1,0 +1,1508 @@
+<iso9660 volumeid="c267b1a84ea9429088ce5530122e5c8a" applicationid="JisoCreator" publisherid="7572bb96-157d-4ef3-a901-73bddd2f88c8" isolength="11128451724">
+  <RootEntry class="entry" isoname="/" root="true">
+    <children>
+      <entry file="/media/data/music/Black Sabbath" isoname="/Black Sabbath/" root="false">
+        <parent class="entry" reference="../../.."/>
+        <children>
+          <entry file="/media/data/music/Black Sabbath/1975 - Sabotage" isoname="/Black Sabbath/1975 - Sabotage/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/05 - The Thrill Of It All.flac" isoname="/Black Sabbath/1975 - Sabotage/05 - The Thrill Of It All.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/08 - The Writ.flac" isoname="/Black Sabbath/1975 - Sabotage/08 - The Writ.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/06 - Supertzar.flac" isoname="/Black Sabbath/1975 - Sabotage/06 - Supertzar.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/04 - Megalomania.flac" isoname="/Black Sabbath/1975 - Sabotage/04 - Megalomania.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/03 - Symptom Of The Universe.flac" isoname="/Black Sabbath/1975 - Sabotage/03 - Symptom Of The Universe.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/01 - Hole In The Sky.flac" isoname="/Black Sabbath/1975 - Sabotage/01 - Hole In The Sky.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/07 - Am I Going Insane (Radio).flac" isoname="/Black Sabbath/1975 - Sabotage/07 - Am I Going Insane (Radio).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1975 - Sabotage/02 - Don&apos;t Start (Too Late).flac" isoname="/Black Sabbath/1975 - Sabotage/02 - Don&apos;t Start (Too Late).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/04 - Sabbra Cadabra.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/04 - Sabbra Cadabra.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/03 - Fluff.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/03 - Fluff.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/05 - Killing Yourself To Live.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/05 - Killing Yourself To Live.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/01 - Sabbath Bloody Sabbath.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/01 - Sabbath Bloody Sabbath.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/06 - Who Are You.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/06 - Who Are You.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/07 - Looking For Today.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/07 - Looking For Today.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/02 - A National Acrobat.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/02 - A National Acrobat.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1973 - Sabbath Bloody Sabbath/08 - Spiral Architect.flac" isoname="/Black Sabbath/1973 - Sabbath Bloody Sabbath/08 - Spiral Architect.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath" isoname="/Black Sabbath/1970 - Black Sabbath/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/06 - Sleeping Village.flac" isoname="/Black Sabbath/1970 - Black Sabbath/06 - Sleeping Village.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/02 - The Wizard.flac" isoname="/Black Sabbath/1970 - Black Sabbath/02 - The Wizard.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/08 - Wicked World.flac" isoname="/Black Sabbath/1970 - Black Sabbath/08 - Wicked World.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/07 - The Warning.flac" isoname="/Black Sabbath/1970 - Black Sabbath/07 - The Warning.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/01 - Black Sabbath.flac" isoname="/Black Sabbath/1970 - Black Sabbath/01 - Black Sabbath.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/03 - Behind The Wall Of Sleep.flac" isoname="/Black Sabbath/1970 - Black Sabbath/03 - Behind The Wall Of Sleep.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/05 - Evil Woman.flac" isoname="/Black Sabbath/1970 - Black Sabbath/05 - Evil Woman.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Black Sabbath/04 - N.I.B_.flac" isoname="/Black Sabbath/1970 - Black Sabbath/04 - N.I.B_.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes" isoname="/Black Sabbath/1994 - Cross Purposes/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/09 - Cardinal Sin.flac" isoname="/Black Sabbath/1994 - Cross Purposes/09 - Cardinal Sin.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/04 - Virtual Death.flac" isoname="/Black Sabbath/1994 - Cross Purposes/04 - Virtual Death.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/10 - Evil Eye.flac" isoname="/Black Sabbath/1994 - Cross Purposes/10 - Evil Eye.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/08 - The Hand That Rocks The Cradle.flac" isoname="/Black Sabbath/1994 - Cross Purposes/08 - The Hand That Rocks The Cradle.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/05 - Immaculate Deception.flac" isoname="/Black Sabbath/1994 - Cross Purposes/05 - Immaculate Deception.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/07 - Back To Eden.flac" isoname="/Black Sabbath/1994 - Cross Purposes/07 - Back To Eden.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/02 - Cross Of Thorns.flac" isoname="/Black Sabbath/1994 - Cross Purposes/02 - Cross Of Thorns.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/01 - I Witness.flac" isoname="/Black Sabbath/1994 - Cross Purposes/01 - I Witness.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/06 - Dying For Love.flac" isoname="/Black Sabbath/1994 - Cross Purposes/06 - Dying For Love.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1994 - Cross Purposes/03 - Psychophobia.flac" isoname="/Black Sabbath/1994 - Cross Purposes/03 - Psychophobia.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules" isoname="/Black Sabbath/1981 - Mob Rules/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/01 - Turn Up The Night.flac" isoname="/Black Sabbath/1981 - Mob Rules/01 - Turn Up The Night.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/04 - E5150.flac" isoname="/Black Sabbath/1981 - Mob Rules/04 - E5150.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/05 - The Mob Rules.flac" isoname="/Black Sabbath/1981 - Mob Rules/05 - The Mob Rules.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/07 - Slipping Away.flac" isoname="/Black Sabbath/1981 - Mob Rules/07 - Slipping Away.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/06 - Country Girl.flac" isoname="/Black Sabbath/1981 - Mob Rules/06 - Country Girl.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/09 - Over And Over.flac" isoname="/Black Sabbath/1981 - Mob Rules/09 - Over And Over.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/02 - Voodoo.flac" isoname="/Black Sabbath/1981 - Mob Rules/02 - Voodoo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/03 - The Sign Of The Southern Cross.flac" isoname="/Black Sabbath/1981 - Mob Rules/03 - The Sign Of The Southern Cross.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1981 - Mob Rules/08 - Falling Off The Edge Of The World.flac" isoname="/Black Sabbath/1981 - Mob Rules/08 - Falling Off The Edge Of The World.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy" isoname="/Black Sabbath/1976 - Technical Ecstasy/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/05 - All Moving Parts (Stand Still).flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/05 - All Moving Parts (Stand Still).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/04 - Gypsy.flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/04 - Gypsy.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/01 - Back Street Kids.flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/01 - Back Street Kids.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/07 - She&apos;s Gone.flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/07 - She&apos;s Gone.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/08 - Dirty Women.flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/08 - Dirty Women.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/06 - Rock &apos;n&apos; Roll Doctor.flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/06 - Rock &apos;n&apos; Roll Doctor.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/03 - It&apos;s Alright.flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/03 - It&apos;s Alright.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1976 - Technical Ecstasy/02 - You Won&apos;t Change Me.flac" isoname="/Black Sabbath/1976 - Technical Ecstasy/02 - You Won&apos;t Change Me.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/2013 - 13" isoname="/Black Sabbath/2013 - 13/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/03 - Loner.flac" isoname="/Black Sabbath/2013 - 13/03 - Loner.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/08 - Dear Father.flac" isoname="/Black Sabbath/2013 - 13/08 - Dear Father.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/06 - Live Forever.flac" isoname="/Black Sabbath/2013 - 13/06 - Live Forever.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/04 - Zeitgeist.flac" isoname="/Black Sabbath/2013 - 13/04 - Zeitgeist.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/02 - God Is Dead_.flac" isoname="/Black Sabbath/2013 - 13/02 - God Is Dead_.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/07 - Damaged Soul.flac" isoname="/Black Sabbath/2013 - 13/07 - Damaged Soul.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/01 - End Of The Beginning.flac" isoname="/Black Sabbath/2013 - 13/01 - End Of The Beginning.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/2013 - 13/05 - Age Of Reason.flac" isoname="/Black Sabbath/2013 - 13/05 - Age Of Reason.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol" isoname="/Black Sabbath/1987 - The Eternal Idol/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/09 - Eternal Idol.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/09 - Eternal Idol.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/07 - Scarlet Pimpernel.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/07 - Scarlet Pimpernel.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/03 - Hard Life To Live.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/03 - Hard Life To Live.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/06 - Nightmare.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/06 - Nightmare.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/01 - The Shining.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/01 - The Shining.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/02 - Ancient Warrior.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/02 - Ancient Warrior.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/08 - Lost Forever.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/08 - Lost Forever.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/05 - Born To Lose.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/05 - Born To Lose.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1987 - The Eternal Idol/04 - Glory Ride.flac" isoname="/Black Sabbath/1987 - The Eternal Idol/04 - Glory Ride.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell" isoname="/Black Sabbath/1980 - Heaven and Hell/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/08 - Lonely Is the Word.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/08 - Lonely Is the Word.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/02 - Children of the Sea.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/02 - Children of the Sea.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/01 - Neon Knights.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/01 - Neon Knights.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/04 - Heaven and Hell.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/04 - Heaven and Hell.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/07 - Walk Away.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/07 - Walk Away.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/03 - Lady Evil.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/03 - Lady Evil.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/06 - Die Young.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/06 - Die Young.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1980 - Heaven and Hell/05 - Wishing Well.flac" isoname="/Black Sabbath/1980 - Heaven and Hell/05 - Wishing Well.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer" isoname="/Black Sabbath/1992 - Dehumanizer/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/08 - Too Late.flac" isoname="/Black Sabbath/1992 - Dehumanizer/08 - Too Late.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/06 - Time Machine.flac" isoname="/Black Sabbath/1992 - Dehumanizer/06 - Time Machine.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/03 - Tv Crimes.flac" isoname="/Black Sabbath/1992 - Dehumanizer/03 - Tv Crimes.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/05 - Master Of Insanity.flac" isoname="/Black Sabbath/1992 - Dehumanizer/05 - Master Of Insanity.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/10 - Buried Alive.flac" isoname="/Black Sabbath/1992 - Dehumanizer/10 - Buried Alive.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/01 - Computer God.flac" isoname="/Black Sabbath/1992 - Dehumanizer/01 - Computer God.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/09 - I.flac" isoname="/Black Sabbath/1992 - Dehumanizer/09 - I.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/07 - Sins Of The Father.flac" isoname="/Black Sabbath/1992 - Dehumanizer/07 - Sins Of The Father.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/04 - Letters From Earth.flac" isoname="/Black Sabbath/1992 - Dehumanizer/04 - Letters From Earth.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1992 - Dehumanizer/02 - After All (The Dead).flac" isoname="/Black Sabbath/1992 - Dehumanizer/02 - After All (The Dead).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1990 - Tyr" isoname="/Black Sabbath/1990 - Tyr/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/06 - Odin&apos;s Court.flac" isoname="/Black Sabbath/1990 - Tyr/06 - Odin&apos;s Court.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/02 - The Law Maker.flac" isoname="/Black Sabbath/1990 - Tyr/02 - The Law Maker.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/04 - The Sabbath Stones.flac" isoname="/Black Sabbath/1990 - Tyr/04 - The Sabbath Stones.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/09 - Heaven In Black.flac" isoname="/Black Sabbath/1990 - Tyr/09 - Heaven In Black.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/07 - Valhalla.flac" isoname="/Black Sabbath/1990 - Tyr/07 - Valhalla.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/01 - Anno Mundi.flac" isoname="/Black Sabbath/1990 - Tyr/01 - Anno Mundi.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/08 - Feels Good To Me.flac" isoname="/Black Sabbath/1990 - Tyr/08 - Feels Good To Me.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/03 - Jerusalem.flac" isoname="/Black Sabbath/1990 - Tyr/03 - Jerusalem.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1990 - Tyr/05 - The Battle Of Tyr.flac" isoname="/Black Sabbath/1990 - Tyr/05 - The Battle Of Tyr.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1972 - Vol 4" isoname="/Black Sabbath/1972 - Vol 4/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/02 - Tomorrows Dream.flac" isoname="/Black Sabbath/1972 - Vol 4/02 - Tomorrows Dream.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/09 - St. Vitus Dance.flac" isoname="/Black Sabbath/1972 - Vol 4/09 - St. Vitus Dance.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/10 - Under the Sun.flac" isoname="/Black Sabbath/1972 - Vol 4/10 - Under the Sun.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/05 - Supernaut.flac" isoname="/Black Sabbath/1972 - Vol 4/05 - Supernaut.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/07 - Cornucopia.flac" isoname="/Black Sabbath/1972 - Vol 4/07 - Cornucopia.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/08 - Laguna Sunrise.flac" isoname="/Black Sabbath/1972 - Vol 4/08 - Laguna Sunrise.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/01 - Wheels of Confusion.flac" isoname="/Black Sabbath/1972 - Vol 4/01 - Wheels of Confusion.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/03 - Changes.flac" isoname="/Black Sabbath/1972 - Vol 4/03 - Changes.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/04 - FX.flac" isoname="/Black Sabbath/1972 - Vol 4/04 - FX.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1972 - Vol 4/06 - Snowblind.flac" isoname="/Black Sabbath/1972 - Vol 4/06 - Snowblind.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star" isoname="/Black Sabbath/1986 - Seventh Star/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/08 - Angry Heart.flac" isoname="/Black Sabbath/1986 - Seventh Star/08 - Angry Heart.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/05 - Seventh Star.flac" isoname="/Black Sabbath/1986 - Seventh Star/05 - Seventh Star.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/07 - Heart Like A Wheel.flac" isoname="/Black Sabbath/1986 - Seventh Star/07 - Heart Like A Wheel.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/06 - Danger Zone.flac" isoname="/Black Sabbath/1986 - Seventh Star/06 - Danger Zone.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/01 - In For The Kill.flac" isoname="/Black Sabbath/1986 - Seventh Star/01 - In For The Kill.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/09 - In Memory.._.flac" isoname="/Black Sabbath/1986 - Seventh Star/09 - In Memory.._.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/02 - No Stranger To Love.flac" isoname="/Black Sabbath/1986 - Seventh Star/02 - No Stranger To Love.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/04 - Sphinx (The Guardian).flac" isoname="/Black Sabbath/1986 - Seventh Star/04 - Sphinx (The Guardian).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1986 - Seventh Star/03 - Turn To Stone.flac" isoname="/Black Sabbath/1986 - Seventh Star/03 - Turn To Stone.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality" isoname="/Black Sabbath/1971 - Master of Reality/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/08 - Into The Void.flac" isoname="/Black Sabbath/1971 - Master of Reality/08 - Into The Void.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/04 - Children Of The Grave.flac" isoname="/Black Sabbath/1971 - Master of Reality/04 - Children Of The Grave.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/07 - Solitude.flac" isoname="/Black Sabbath/1971 - Master of Reality/07 - Solitude.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/03 - Embryo.flac" isoname="/Black Sabbath/1971 - Master of Reality/03 - Embryo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/05 - Orchid.flac" isoname="/Black Sabbath/1971 - Master of Reality/05 - Orchid.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/02 - After Forever.flac" isoname="/Black Sabbath/1971 - Master of Reality/02 - After Forever.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/06 - Lord Of This World.flac" isoname="/Black Sabbath/1971 - Master of Reality/06 - Lord Of This World.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1971 - Master of Reality/01 - Sweet Leaf.flac" isoname="/Black Sabbath/1971 - Master of Reality/01 - Sweet Leaf.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross" isoname="/Black Sabbath/1989 - Headless Cross/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/07 - Black Moon.flac" isoname="/Black Sabbath/1989 - Headless Cross/07 - Black Moon.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/02 - Headless Cross.flac" isoname="/Black Sabbath/1989 - Headless Cross/02 - Headless Cross.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/01 - The Gates Of Hell.flac" isoname="/Black Sabbath/1989 - Headless Cross/01 - The Gates Of Hell.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/04 - When Death Calls.flac" isoname="/Black Sabbath/1989 - Headless Cross/04 - When Death Calls.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/06 - Call Of The Wild.flac" isoname="/Black Sabbath/1989 - Headless Cross/06 - Call Of The Wild.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/05 - Kill In The Spirit World.flac" isoname="/Black Sabbath/1989 - Headless Cross/05 - Kill In The Spirit World.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/08 - Nightwing.flac" isoname="/Black Sabbath/1989 - Headless Cross/08 - Nightwing.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1989 - Headless Cross/03 - Devil &amp; Daughter.flac" isoname="/Black Sabbath/1989 - Headless Cross/03 - Devil &amp; Daughter.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!" isoname="/Black Sabbath/1978 - Never Say Die!/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/09 - Swinging The Chain.flac" isoname="/Black Sabbath/1978 - Never Say Die!/09 - Swinging The Chain.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/04 - A Hard Road.flac" isoname="/Black Sabbath/1978 - Never Say Die!/04 - A Hard Road.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/03 - Junior&apos;s Eyes.flac" isoname="/Black Sabbath/1978 - Never Say Die!/03 - Junior&apos;s Eyes.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/07 - Over To You.flac" isoname="/Black Sabbath/1978 - Never Say Die!/07 - Over To You.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/01 - Never Say Die.flac" isoname="/Black Sabbath/1978 - Never Say Die!/01 - Never Say Die.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/08 - Breakout.flac" isoname="/Black Sabbath/1978 - Never Say Die!/08 - Breakout.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/05 - Shock Wave.flac" isoname="/Black Sabbath/1978 - Never Say Die!/05 - Shock Wave.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/06 - Air Dance.flac" isoname="/Black Sabbath/1978 - Never Say Die!/06 - Air Dance.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1978 - Never Say Die!/02 - Johnny Blade.flac" isoname="/Black Sabbath/1978 - Never Say Die!/02 - Johnny Blade.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1995 - Forbidden" isoname="/Black Sabbath/1995 - Forbidden/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/01 - The Illusion Of Power.flac" isoname="/Black Sabbath/1995 - Forbidden/01 - The Illusion Of Power.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/09 - Forbidden.flac" isoname="/Black Sabbath/1995 - Forbidden/09 - Forbidden.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/05 - I Won&apos;t Cry For You.flac" isoname="/Black Sabbath/1995 - Forbidden/05 - I Won&apos;t Cry For You.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/02 - Get A Grip.flac" isoname="/Black Sabbath/1995 - Forbidden/02 - Get A Grip.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/07 - Sick And Tired.flac" isoname="/Black Sabbath/1995 - Forbidden/07 - Sick And Tired.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/06 - Guilty As Hell.flac" isoname="/Black Sabbath/1995 - Forbidden/06 - Guilty As Hell.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/08 - Rusty Angels.flac" isoname="/Black Sabbath/1995 - Forbidden/08 - Rusty Angels.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/10 - Kiss Of Death.flac" isoname="/Black Sabbath/1995 - Forbidden/10 - Kiss Of Death.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/04 - Shaking Off The Chains.flac" isoname="/Black Sabbath/1995 - Forbidden/04 - Shaking Off The Chains.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/11 - Loser Gets It All [Bonus Track For Japan].flac" isoname="/Black Sabbath/1995 - Forbidden/11 - Loser Gets It All [Bonus Track For Japan].flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1995 - Forbidden/03 - Can&apos;t Get Close Enough.flac" isoname="/Black Sabbath/1995 - Forbidden/03 - Can&apos;t Get Close Enough.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1970 - Paranoid" isoname="/Black Sabbath/1970 - Paranoid/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/02 - Paranoid (Alternative Lyrics Version).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/02 - Paranoid (Alternative Lyrics Version).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/04 - Iron Man (Instrumental).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/04 - Iron Man (Instrumental).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/05 - Electric Funeral (Instrumental).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/05 - Electric Funeral (Instrumental).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/08 - Fairies Wear Boots (Instrumental).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/08 - Fairies Wear Boots (Instrumental).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/07 - Rat Salad (Alternate Mix).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/07 - Rat Salad (Alternate Mix).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/01 - War Pigs (Instrumental).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/01 - War Pigs (Instrumental).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/03 - Planet Caravan (Alternative Lyrics Version).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/03 - Planet Caravan (Alternative Lyrics Version).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 02/06 - Hand Of Doom (Instrumental).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 02/06 - Hand Of Doom (Instrumental).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                </children>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/03 - Rat Salad (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/03 - Rat Salad (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/08 - War Pigs (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/08 - War Pigs (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/01 - Paranoid (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/01 - Paranoid (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/09 - Fairies Wear Boots (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/09 - Fairies Wear Boots (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/02 - Hand Of Doom (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/02 - Hand Of Doom (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/07 - Behind The Wall Of Sleep (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/07 - Behind The Wall Of Sleep (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/04 - Iron Man (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/04 - Iron Man (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/05 - Black Sabbath (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/05 - Black Sabbath (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 03/06 - N.I.B. (Live In Brussels 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 03/06 - N.I.B. (Live In Brussels 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                </children>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/02 - Paranoid (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/02 - Paranoid (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/03 - N.I.B. (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/03 - N.I.B. (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/08 - Hand Of Doom (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/08 - Hand Of Doom (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/04 - Behind The Wall Of Sleep (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/04 - Behind The Wall Of Sleep (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/07 - Fairies Wear Boots (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/07 - Fairies Wear Boots (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/06 - War Pigs (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/06 - War Pigs (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/05 - Iron Man (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/05 - Iron Man (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 04/01 - Intro (Live In Montreux 1970).flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 04/01 - Intro (Live In Montreux 1970).flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                </children>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/06 - Hand Of Doom.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/06 - Hand Of Doom.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/01 - War Pigs - Luke&apos;s Wall.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/01 - War Pigs - Luke&apos;s Wall.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/07 - Rat Salad.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/07 - Rat Salad.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/03 - Planet Caravan.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/03 - Planet Caravan.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/04 - Iron Man.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/04 - Iron Man.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/05 - Electric Funeral.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/05 - Electric Funeral.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/08 - Jack The Stripper - Fairies Wear Boots.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/08 - Jack The Stripper - Fairies Wear Boots.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                  <entry file="/media/data/music/Black Sabbath/1970 - Paranoid/Disc 01/02 - Paranoid.flac" isoname="/Black Sabbath/1970 - Paranoid/Disc 01/02 - Paranoid.flac" root="false">
+                    <parent class="entry" reference="../../.."/>
+                    <children/>
+                  </entry>
+                </children>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Black Sabbath/1983 - Born Again" isoname="/Black Sabbath/1983 - Born Again/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/06 - Trashed.flac" isoname="/Black Sabbath/1983 - Born Again/06 - Trashed.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/03 - The Fallen (Previously Unreleased Outtake).flac" isoname="/Black Sabbath/1983 - Born Again/03 - The Fallen (Previously Unreleased Outtake).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/04 - Digital Bitch.flac" isoname="/Black Sabbath/1983 - Born Again/04 - Digital Bitch.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/01 - Hot Line.flac" isoname="/Black Sabbath/1983 - Born Again/01 - Hot Line.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/08 - Born Again.flac" isoname="/Black Sabbath/1983 - Born Again/08 - Born Again.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/09 - Disturbing The Priest.flac" isoname="/Black Sabbath/1983 - Born Again/09 - Disturbing The Priest.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/05 - Stonehenge.flac" isoname="/Black Sabbath/1983 - Born Again/05 - Stonehenge.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/02 - Keep It Warm.flac" isoname="/Black Sabbath/1983 - Born Again/02 - Keep It Warm.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Black Sabbath/1983 - Born Again/07 - Zero The Hero.flac" isoname="/Black Sabbath/1983 - Born Again/07 - Zero The Hero.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+        </children>
+      </entry>
+      <entry file="/media/data/music/Chancho en Piedra" isoname="/Chancho en Piedra/" root="false">
+        <parent class="entry" reference="../../.."/>
+        <children>
+          <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show" isoname="/Chancho en Piedra/2009 - Combo Show/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/01 - Pregonero.flac" isoname="/Chancho en Piedra/2009 - Combo Show/01 - Pregonero.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/02 - Pulguitas.flac" isoname="/Chancho en Piedra/2009 - Combo Show/02 - Pulguitas.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/04 - Siameses.flac" isoname="/Chancho en Piedra/2009 - Combo Show/04 - Siameses.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/08 - Cuatro Vientos.flac" isoname="/Chancho en Piedra/2009 - Combo Show/08 - Cuatro Vientos.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/09 - Mona Chita.flac" isoname="/Chancho en Piedra/2009 - Combo Show/09 - Mona Chita.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/05 - Sex Shop.flac" isoname="/Chancho en Piedra/2009 - Combo Show/05 - Sex Shop.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/11 - Remedio Santo.flac" isoname="/Chancho en Piedra/2009 - Combo Show/11 - Remedio Santo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/12 - Robo Hormiga.flac" isoname="/Chancho en Piedra/2009 - Combo Show/12 - Robo Hormiga.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/03 - Ella Quiere.flac" isoname="/Chancho en Piedra/2009 - Combo Show/03 - Ella Quiere.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/07 - Asimov.flac" isoname="/Chancho en Piedra/2009 - Combo Show/07 - Asimov.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/10 - Una Aguja en un Pajar.flac" isoname="/Chancho en Piedra/2009 - Combo Show/10 - Una Aguja en un Pajar.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2009 - Combo Show/06 - De Amarillo y Gris.flac" isoname="/Chancho en Piedra/2009 - Combo Show/06 - De Amarillo y Gris.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/10 - Romance De Barco Y Junco.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/10 - Romance De Barco Y Junco.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/02 - La Quebra Del Aji.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/02 - La Quebra Del Aji.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/15 - Segun El Favor Del Viento.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/15 - Segun El Favor Del Viento.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/12 - Y Aun Sin Voz Queria Expresar.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/12 - Y Aun Sin Voz Queria Expresar.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/13 - Plegaria A Un Labrador.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/13 - Plegaria A Un Labrador.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/08 - Cirilo Murruchuca.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/08 - Cirilo Murruchuca.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/16 - Linda La Minga.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/16 - Linda La Minga.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/03 - La Gallina No.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/03 - La Gallina No.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/07 - Chingana Marrana 2.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/07 - Chingana Marrana 2.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/05 - Cartagena Años 20.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/05 - Cartagena Años 20.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/04 - O Oe Bahine Anhani Tamure.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/04 - O Oe Bahine Anhani Tamure.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/01 - Camino A Socoroma.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/01 - Camino A Socoroma.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/06 - Chingana Marrana 1.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/06 - Chingana Marrana 1.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/14 - Hijo Del Diluvio.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/14 - Hijo Del Diluvio.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/17 - Corazon De Escarcha.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/17 - Corazon De Escarcha.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/11 - La Vieja Julia.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/11 - La Vieja Julia.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/09 - Largo Tour.flac" isoname="/Chancho en Piedra/2011 - Otra Cosa Es Con Guitarra/09 - Largo Tour.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/10 - Maestro.... Las Casitas!.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/10 - Maestro.... Las Casitas!.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/05 - Gueina.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/05 - Gueina.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/09 - Sami.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/09 - Sami.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/04 - Edén.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/04 - Edén.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/02 - Hacia el Ovusol.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/02 - Hacia el Ovusol.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/11 - Cacho.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/11 - Cacho.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/17 - Voy y vuelvo.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/17 - Voy y vuelvo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/07 - Empresaurio.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/07 - Empresaurio.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/08 - Rojito veo el Mundo.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/08 - Rojito veo el Mundo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/16 - Del porqué se cohibe el ano en casa &apos;jena.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/16 - Del porqué se cohibe el ano en casa &apos;jena.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/13 - Comiendo Banana.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/13 - Comiendo Banana.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/06 - Realizo todo Bien.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/06 - Realizo todo Bien.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/03 - Huevos Revueltos.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/03 - Huevos Revueltos.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/01 - Mea Chucha.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/01 - Mea Chucha.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/14 - Da la claridad a nuestro Sol.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/14 - Da la claridad a nuestro Sol.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/12 - Huasónico.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/12 - Huasónico.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1997 - La Dieta del Lagarto/15 - Viejo Diablo.flac" isoname="/Chancho en Piedra/1997 - La Dieta del Lagarto/15 - Viejo Diablo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/12 - Inglishzong.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/12 - Inglishzong.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/11 - Invitacion.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/11 - Invitacion.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/13 - Completada Techno.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/13 - Completada Techno.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/10 - Niño Peo.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/10 - Niño Peo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/06 - Todo El Mundo Querra partir.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/06 - Todo El Mundo Querra partir.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/02 - Animales Disfrazados.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/02 - Animales Disfrazados.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/04 - Baldor.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/04 - Baldor.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/16 - El Juego.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/16 - El Juego.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/03 - El Impostor.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/03 - El Impostor.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/14 - Las Aventuras Del Perrito....(interludio).flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/14 - Las Aventuras Del Perrito....(interludio).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/18 - La Noche De San Juan.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/18 - La Noche De San Juan.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/05 - Tamalalacosa.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/05 - Tamalalacosa.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/01 - Allegro.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/01 - Allegro.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/09 - Eso Ya Se Ha Visto.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/09 - Eso Ya Se Ha Visto.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/07 - Hombres Pajaro (Interludio).flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/07 - Hombres Pajaro (Interludio).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/15 - Lassio.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/15 - Lassio.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/17 - Pa$cuero.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/17 - Pa$cuero.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2002 - El Tinto Elemento/08 - Porque El Chileno Es Asi.flac" isoname="/Chancho en Piedra/2002 - El Tinto Elemento/08 - Porque El Chileno Es Asi.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/01 - La Telaraña.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/01 - La Telaraña.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/02 - Multi-Ricachon.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/02 - Multi-Ricachon.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/13 - Ska del Peral.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/13 - Ska del Peral.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/08 - Entre la Fe y la Espada.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/08 - Entre la Fe y la Espada.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/09 - Insolencio.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/09 - Insolencio.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/10 - No Ha Sido Facil.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/10 - No Ha Sido Facil.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/12 - Imohtep.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/12 - Imohtep.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/05 - La Vida del Oso.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/05 - La Vida del Oso.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/04 - Jueves Locos.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/04 - Jueves Locos.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/03 - Cruz del Sur.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/03 - Cruz del Sur.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/14 - Barco de Papel.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/14 - Barco de Papel.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/11 - Pueblo Fantasma.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/11 - Pueblo Fantasma.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/06 - Almacén.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/06 - Almacén.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2005 - Desde el Batiscafo/07 - La Caravana de Simon.flac" isoname="/Chancho en Piedra/2005 - Desde el Batiscafo/07 - La Caravana de Simon.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/03 - Solo Contra El Mundo.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/03 - Solo Contra El Mundo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/18 - Locura Espacial.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/18 - Locura Espacial.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/19 - Voy A Resucitar.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/19 - Voy A Resucitar.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/12 - Cambio Total.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/12 - Cambio Total.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/17 - Hermano Maynard.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/17 - Hermano Maynard.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/15 - Ratones De Cola Pelá.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/15 - Ratones De Cola Pelá.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/16 - No Joda.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/16 - No Joda.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/13 - Mandinga.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/13 - Mandinga.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/10 - Oshcokota.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/10 - Oshcokota.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/04 - Volantín.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/04 - Volantín.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/11 - La Granja De Los Super Bebés.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/11 - La Granja De Los Super Bebés.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/08 - ¿Qué Puedo Hacer_.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/08 - ¿Qué Puedo Hacer_.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/02 - Moscardón.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/02 - Moscardón.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/01 - La Gran Pregunta.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/01 - La Gran Pregunta.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/05 - Ríndanse Terrícolas.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/05 - Ríndanse Terrícolas.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/14 - Marvin Moe.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/14 - Marvin Moe.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/09 - Somos Los Sin Onda.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/09 - Somos Los Sin Onda.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/07 - Discojapi.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/07 - Discojapi.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1998 - Ríndanse Terrícolas/06 - Yakuza.flac" isoname="/Chancho en Piedra/1998 - Ríndanse Terrícolas/06 - Yakuza.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/16 - Frito.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/16 - Frito.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/13 - Mala Yerba.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/13 - Mala Yerba.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/07 - Paquidermo.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/07 - Paquidermo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/04 - No Quiero Verte.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/04 - No Quiero Verte.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/14 - Guach Perry.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/14 - Guach Perry.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/08 - Lolin.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/08 - Lolin.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/02 - Chancho.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/02 - Chancho.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/10 - V. Airianstein.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/10 - V. Airianstein.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/11 - Airian.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/11 - Airian.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/06 - Sn Guijuela.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/06 - Sn Guijuela.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/12 - Funk Del Balsa.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/12 - Funk Del Balsa.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/09 - Socio.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/09 - Socio.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/15 - Fritanga.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/15 - Fritanga.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/01 - Peor Es Mascar Lauchas.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/01 - Peor Es Mascar Lauchas.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/03 - Sinfonia De Cuna.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/03 - Sinfonia De Cuna.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/1995 - Peor es Mascar Lauchas/05 - Funky Tu Madre.flac" isoname="/Chancho en Piedra/1995 - Peor es Mascar Lauchas/05 - Funky Tu Madre.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho" isoname="/Chancho en Piedra/2000 - Marca Chancho/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/08 - El Curanto.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/08 - El Curanto.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/15 - Patá En La Raja.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/15 - Patá En La Raja.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/12 - Hermanos Marranos.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/12 - Hermanos Marranos.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/09 - Mampato.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/09 - Mampato.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/01 - Popular Condimento.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/01 - Popular Condimento.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/11 - Los Huilles.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/11 - Los Huilles.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/02 - Buenos Dias A Todos.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/02 - Buenos Dias A Todos.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/13 - El Dia En Que Los Gatos Hicieron Las Paces Con Los Ratones.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/13 - El Dia En Que Los Gatos Hicieron Las Paces Con Los Ratones.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/05 - Historias De Amor Y Condon.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/05 - Historias De Amor Y Condon.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/10 - Brocacochi.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/10 - Brocacochi.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/06 - Kiltro Virtual.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/06 - Kiltro Virtual.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/03 - Eligiendo Una Reina.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/03 - Eligiendo Una Reina.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/04 - Lophophora.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/04 - Lophophora.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/07 - Quiero Comer.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/07 - Quiero Comer.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/14 - Me Vuelvo Mono.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/14 - Me Vuelvo Mono.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2000 - Marca Chancho/16 - Durazno Y El Melón.flac" isoname="/Chancho en Piedra/2000 - Marca Chancho/16 - Durazno Y El Melón.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+          <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/" root="false">
+            <parent class="entry" reference="../../.."/>
+            <children>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/09 - Toc.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/09 - Toc.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/08 - El Mundo que nos tocó vivir.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/08 - El Mundo que nos tocó vivir.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/07 - Llamas.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/07 - Llamas.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/10 - Solo.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/10 - Solo.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/01 - Vientre fuerte.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/01 - Vientre fuerte.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/03 - Mi mejor momento.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/03 - Mi mejor momento.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/12 - Y yo por qué tengo que parar.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/12 - Y yo por qué tengo que parar.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/02 - Funkybariútico.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/02 - Funkybariútico.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/11 - W.W.W (Weón, Weón, Weón).flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/11 - W.W.W (Weón, Weón, Weón).flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/06 - Selfie.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/06 - Selfie.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/04 - Tren ala Luna.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/04 - Tren ala Luna.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+              <entry file="/media/data/music/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/05 - Dejando libre El Amor.flac" isoname="/Chancho en Piedra/2016 - Funkybaritico Hedonico Fantastico/05 - Dejando libre El Amor.flac" root="false">
+                <parent class="entry" reference="../../.."/>
+                <children/>
+              </entry>
+            </children>
+          </entry>
+        </children>
+      </entry>
+    </children>
+  </RootEntry>
+</iso9660>

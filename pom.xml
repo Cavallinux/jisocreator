@@ -160,12 +160,15 @@
 		<junit.version>5.10.2</junit.version>
 		<mockito.version>5.7.0</mockito.version>
 		<swt.platform.name>org.eclipse.swt.${swt.platform}</swt.platform.name>
+		<jackson.version>2.20.0</jackson.version>
+		<woodstox.version>7.1.1</woodstox.version>
 		<xstream.version>1.4.21</xstream.version>
 		<slf4j.version>2.26.0</slf4j.version>
 		<swt.version>3.133.0</swt.version>
 		<swt.svg.version>3.132.0</swt.svg.version>
 		<jsvg.version>2.1.0</jsvg.version>
 		<lombok.version>1.18.44</lombok.version>
+		<xmlunit.version>2.11.0</xmlunit.version>
 		<org.eclipse.ui.workbench.version>3.138.0</org.eclipse.ui.workbench.version>
 		<org.eclipse.osgi.version>3.24.100</org.eclipse.osgi.version>
 		<org.eclipse.equinox.common>3.20.300</org.eclipse.equinox.common>
@@ -318,9 +321,19 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>${xstream.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.woodstox</groupId>
+			<artifactId>woodstox-core</artifactId>
+			<version>${woodstox.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -381,6 +394,12 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-core</artifactId>
+			<version>${xmlunit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -10,7 +10,7 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 
 - **Java**: JDK 21 or higher
 - **Maven**: 3.6 or higher
-- **Operating System**: Linux (currently configured for GTK on x86_64)
+- **Operating System**: Linux/Windows (x86_64 profiles available)
 
 ## Project Dependencies
 
@@ -43,6 +43,8 @@ The project uses Maven profiles to select the SWT platform dependency:
 
 - `linux` (active by default): `gtk.linux.x86_64`
 - `windows`: `win32.win32.x86_64`
+- `linux-cmdlinemode`: Linux runtime plus CLI smoke execution (`-h`) through `exec-maven-plugin`
+- `windows-cmdlinemode`: Windows runtime plus CLI smoke execution (`-h`) through `exec-maven-plugin`
 
 To activate `windows` profile add -Pwindows in maven command to be used.
 
@@ -119,27 +121,25 @@ For detailed testing information, see `TESTING.md`.
 
 ### GitHub Actions
 
-The project uses GitHub Actions for automated testing and building. The CI pipeline is configured in `.github/workflows/ci.yml` and includes:
+The project uses GitHub Actions for automated testing and building. The CI pipeline is configured in `.github/workflows/maven.yml` and includes:
 
 #### Workflow Triggers
-- **Push** to `main` branch
-- **Pull Requests** targeting `main` branch
+- **Push** (all branches)
+- **Pull requests** (all branches)
 
 #### CI Pipeline Steps
 1. **Setup Java**: Configures JDK 21 for the build environment
 2. **Dependency Caching**: Caches Maven dependencies for faster builds
-3. **Code Compilation**: Runs `mvn clean compile` to verify code compilation
-4. **Unit Tests**: Executes all unit tests with `mvn test`
-5. **Package Build**: Creates JAR artifacts with `mvn package -DskipTests`
+3. **Build + test lifecycle**: Runs `mvn -B compile package --file pom.xml`
 
 #### Workflow Status
-[![CI](https://github.com/Cavallinux/jisocreator/workflows/CI/badge.svg)](https://github.com/Cavallinux/jisocreator/actions)
+[![Java CI with Maven](https://github.com/Cavallinux/jisocreator/actions/workflows/maven.yml/badge.svg)](https://github.com/Cavallinux/jisocreator/actions/workflows/maven.yml)
 
 #### Local CI Simulation
 To simulate the CI pipeline locally:
 ```bash
 # Full CI simulation
-mvn clean compile test package -DskipTests
+mvn -B compile package --file pom.xml
 
 # Quick verification (compilation + tests only)
 mvn clean compile test
@@ -149,6 +149,7 @@ mvn clean compile test
 
 ### From Maven
 ```bash
+mvn clean package
 mvn exec:exec
 ```
 
@@ -167,6 +168,14 @@ java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
      --enable-native-access=ALL-UNNAMED \
      -jar target/jisocreator.jar
+```
+
+### Log Output Directory
+
+Log4j2 writes logs to `./logs` by default. You can override this directory with:
+
+```bash
+java -Dpath.logs=/custom/log/path --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
 ```
 
 ## Command Line Interface
@@ -190,7 +199,10 @@ Example:
 ```bash
 jisocreator --license
 jisocreator --load /path/to/layout.xml
+jisocreator --input /path/to/layout.xml --output /path/to/existing-output.iso
 ```
+
+> Note: in the current CLI validation, `--input` and `--output` are both checked as existing, accessible filesystem paths before ISO generation starts.
 
 ## Project Structure
 
@@ -301,7 +313,7 @@ UI text is externalized into per-component NLS message bundles under `src/main/r
 
 ## Version
 
-Current version: **0.1.6-SNAPSHOT**
+Current version: **0.1.6**
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

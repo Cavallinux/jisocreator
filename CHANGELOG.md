@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 0.1.6-SNAPSHOT
+## [Unreleased] - 0.1.6
 
 ### Added
 - **Unit tests for command line interface**: New test classes covering `CommandLineOptionsManager` (7 tests) and `JISOCreatorCommandLineParser` (19 tests) - option declarations, short/long option parsing, mutually exclusive options, missing/invalid arguments, help/version output, and `handleCommandLine` input/output path validation. Total test count now 44 (up from 18)
@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Resource reorganization**: Images (`img/`), i18n bundles (`i18n/`) and default configuration (`conf/defaultconfig.properties`) moved out of `util/res` into `src/main/resources` top-level folders for clearer separation between code and resources
 - **ISO length/info calculation**: Refactored `IsoFileSystem` and `ShowIsoInformationAction`/`OpenIsoLayoutAction` to compute and print ISO size/info more accurately
 - `AddFileAction` and `IsoExplorerSashForm` updated to keep the status bar in sync with ISO filesystem changes
+- **Project documentation synchronization**: Updated README/TESTING to reflect current versioning (`0.1.6`), current GitHub Actions workflow path (`.github/workflows/maven.yml`), actual CI trigger scope, Maven profile matrix, and runtime log-path configuration (`-Dpath.logs`)
 
 ## [0.1.5] - 2026-06-26
 
@@ -307,12 +308,12 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com/) forma
 
 ## Version Links
 
-- [0.1.6-SNAPSHOT](https://github.com/Cavallinux/jisocreator/compare/v0.1.5...feature/v0.1.6) - Unreleased, in development
+- [0.1.6](https://github.com/Cavallinux/jisocreator/compare/v0.1.5...HEAD) - Unreleased, in development
 - [0.1.5](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.5) - i18n support, ISO metadata (Volume/Publisher/Application ID)
 - [0.1.4](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.4) - Windows mkisofs update, XML layout fixes
 - [0.1.3](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.3) - Command line interface
 - [0.1.2](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.2) - Centralized singleton manager architecture
-- [0.1.1](https://github.com/Cavallinux/jisocreator/releases/tag/0.1.1) - First major release with testing framework
+- [0.1.1](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.1) - First major release with testing framework
 
 ---
 

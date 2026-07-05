@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
@@ -16,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
@@ -28,17 +28,13 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OpenIsoLayoutAction extends Action implements IRunnableWithProgress, IFileManagementAction {
-    private String path = StringUtils.EMPTY;
-    
+public class OpenIsoLayoutAction extends JISOCreatorBaseAction implements IRunnableWithProgress, IFileManagementAction {
+    private String path;
+
     @Builder
     protected OpenIsoLayoutAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
-        super(message);
-        //super(MainActionsMessages.openIsoLayoutActionName);
-        setToolTipText(tooltip);
-        //setToolTipText(MainActionsMessages.openIsoLayoutActionTooltip);
-        setImageDescriptor(imageDescriptor);
-        //setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("open.png"));
+        super(message, tooltip, imageDescriptor);
+        path = StringUtils.EMPTY;
     }
 
     @Override

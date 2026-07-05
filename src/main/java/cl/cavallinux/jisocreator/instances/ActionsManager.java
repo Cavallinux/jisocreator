@@ -38,7 +38,8 @@ public enum ActionsManager {
             .message(MainActionsMessages.newIsoLayoutActionName)
             .tooltip(MainActionsMessages.newIsoLayoutActionTooltip)
             .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("new.png")).build()),
-    OPENISOLAYOUTACTION(OpenIsoLayoutAction.builder().message(MainActionsMessages.openIsoLayoutActionName)
+    OPENISOLAYOUTACTION(OpenIsoLayoutAction.builder()
+            .message(MainActionsMessages.openIsoLayoutActionName)
             .tooltip(MainActionsMessages.openIsoLayoutActionTooltip)
             .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("open.png")).build()),
     LOADISOFROMLAYOUT(LoadCommandLineISOLayoutAction.builder().build());

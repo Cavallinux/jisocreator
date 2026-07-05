@@ -14,6 +14,8 @@ public enum CommandLineOptionsManager {
             .since(CommandLineOptionsManager.class.getPackage().getImplementationVersion()).get()),
     VERSION(Option.builder("v").longOpt("version").desc("Show application version and jvm version")
             .since(CommandLineOptionsManager.class.getPackage().getImplementationVersion()).get()),
+    LICENSE(Option.builder("L").longOpt("license").desc("Show application license")
+            .since(CommandLineOptionsManager.class.getPackage().getImplementationVersion()).get()),
     ISOINPUT(Option.builder("i").longOpt("input").desc("ISO XML Layout to load").hasArg().argName("xmllayout")
             .since(CommandLineOptionsManager.class.getPackage().getImplementationVersion()).get()),
     ISOOUTPUT(Option.builder("o").longOpt("output").desc("ISO File output path").hasArg().argName("isoFile")

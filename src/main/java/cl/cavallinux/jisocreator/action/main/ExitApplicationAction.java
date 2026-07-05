@@ -1,16 +1,17 @@
 package cl.cavallinux.jisocreator.action.main;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 
-import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.util.IOUtils;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,18 +22,17 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.2
  */
 @Slf4j
-public class ExitApplicationAction extends Action {
-    public ExitApplicationAction() {
-        super(MainActionsMessages.exitActionName);
-        setToolTipText(MainActionsMessages.exitActionTooltip);
-        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("exit.png"));
+public class ExitApplicationAction extends JISOCreatorBaseAction {
+    @Builder
+    protected ExitApplicationAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
     }
 
     @Override
     public void run() {
         log.info("Confirming exit application");
-        boolean openExitDialogConfirmation = IOManager.INSTANCE.getIoUtils().getStore()
-                .getBoolean("general.exit.confirm");
+        IOUtils ioUtils = IOManager.INSTANCE.getIoUtils();
+        boolean openExitDialogConfirmation = ioUtils.getStore().getBoolean("general.exit.confirm");
         if (openExitDialogConfirmation) {
             openConfirmExitAppDialog();
         } else {
@@ -41,13 +41,15 @@ public class ExitApplicationAction extends Action {
     }
 
     private void openConfirmExitAppDialog() {
-        Shell shell = GUIManager.INSTANCE.getMainWindow().getShell();
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        Shell shell = mainWindow.getShell();
+        IOUtils ioUtils = IOManager.INSTANCE.getIoUtils();
         MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(shell, "JISOCreator",
                 "Are you sure to exit?", "Ask always",
-                IOManager.INSTANCE.getIoUtils().getStore().getBoolean("general.exit.confirm"), null, null);
+                ioUtils.getStore().getBoolean("general.exit.confirm"), null, null);
 
-        IOManager.INSTANCE.getIoUtils().getStore().setValue("general.exit.confirm", dialog.getToggleState());
-        IOManager.INSTANCE.getIoUtils().saveStore();
+        ioUtils.getStore().setValue("general.exit.confirm", dialog.getToggleState());
+        ioUtils.saveStore();
         switch (dialog.getReturnCode()) {
         case IDialogConstants.YES_ID:
             exit();

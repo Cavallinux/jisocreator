@@ -2,11 +2,10 @@ package cl.cavallinux.jisocreator.action.osexplorer;
 
 import java.io.File;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
-import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,14 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
-public class OpenAction extends Action {
+public class OpenAction extends JISOCreatorBaseAction {
     private File file;
 
     @Builder
-    private OpenAction() {
-        super(OSExplorerMessages.osExplorerOpenActionName,
-                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
-        setToolTipText(OSExplorerMessages.osExplorerOpenActionToolTip);
+    private OpenAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
         setEnabled(false);
     }
 

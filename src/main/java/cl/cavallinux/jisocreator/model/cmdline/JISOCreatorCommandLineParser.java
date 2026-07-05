@@ -15,6 +15,7 @@ import org.apache.commons.cli.help.HelpFormatter;
 
 import cl.cavallinux.jisocreator.action.main.MainAction;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
+import cl.cavallinux.jisocreator.instances.IOManager;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -86,9 +87,16 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
 
     protected static String buildHelpFooter() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\nExamples:\n jisocreator -v");
+        builder.append("\nExamples:"); 
+        builder.append("\njisocreator -v");
+        builder.append("\njisocreator --version");
         builder.append("\njisocreator -h");
+        builder.append("\njisocreator --help");
         builder.append("\njisocreator -i /path/to/xml -o image.iso");
+        builder.append("\njisocreator -l layout.xml");
+        builder.append("\njisocreator --load layout.xml");
+        builder.append("\njisocreator -L");
+        builder.append("\njisocreator --license");
         builder.append("\njisocreator --input /path/to/xml --output image.iso");
         builder.append("\njisocreator");
         return builder.toString();
@@ -102,7 +110,14 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
         optionGroup.addOption(CommandLineOptionsManager.LOAD.getOption());
         optionGroup.addOption(CommandLineOptionsManager.HELP.getOption());
         optionGroup.addOption(CommandLineOptionsManager.VERSION.getOption());
+        optionGroup.addOption(CommandLineOptionsManager.LICENSE.getOption());
         options.addOptionGroup(optionGroup);
         return options;
     }
+    
+    @Override
+    public void printLicense() {
+        System.out.println(IOManager.INSTANCE.getIoUtils().loadFormattedLicenseFile());
+    }
+    
 }

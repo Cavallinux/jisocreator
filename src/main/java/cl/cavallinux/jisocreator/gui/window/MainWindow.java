@@ -27,6 +27,7 @@ import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,8 +47,9 @@ public class MainWindow extends ApplicationWindow {
         addStatusLine();
         showTopSeperator();
     }
-
-    public MainWindow() {
+    
+    @Builder
+    protected MainWindow() {
         this(null);
     }
 
@@ -72,7 +74,7 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected Control createContents(Composite parent) {
         log.info("Creating main window contents");
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite composite = (Composite) super.createContents(parent);
         SashForm mainPanel = new SashForm(composite, SWT.VERTICAL);
         isoExplorer = new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
@@ -95,7 +97,7 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected MenuManager createMenuManager() {
         log.info("creating menu managers");
-        MenuManager mainMenuManager = new MenuManager();
+        MenuManager mainMenuManager = super.createMenuManager();
 
         MenuManager fileMenu = new MenuManager(MainWindowMessages.fileMenuName);
         MenuManager toolsMenu = new MenuManager(MainWindowMessages.toolsMenuName);
@@ -125,7 +127,7 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected ToolBarManager createToolBarManager(int style) {
         log.info("creating tool bar manager");
-        ToolBarManager tool = new ToolBarManager(style);
+        ToolBarManager tool = super.createToolBarManager(style);
         tool.add(ActionsManager.NEWISOLAYOUTACTION.getAction());
         tool.add(ActionsManager.OPENISOLAYOUTACTION.getAction());
         tool.add(separator);
@@ -151,12 +153,18 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected StatusLineManager createStatusLineManager() {
-        return new StatusLineManager();
+        log.info("Creating status line manager");
+        return super.createStatusLineManager();
     }
 
     @Override
     protected void handleShellCloseEvent() {
         ActionsManager.EXITACTION.getAction().run();
+    }
+    
+    @Override
+    public void setStatus(String message) {
+        super.setStatus(message);
     }
 
     public IProgressMonitor getProgressMonitor() {
@@ -166,7 +174,7 @@ public class MainWindow extends ApplicationWindow {
     public void setStatusLineActiveCancelButton(boolean activeCancelButton) {
         getStatusLineManager().setCancelEnabled(activeCancelButton);
     }
-    
+
     public void setVisible(boolean shellVisible) {
         Shell windowShell = getShell();
         if (Objects.nonNull(windowShell)) {

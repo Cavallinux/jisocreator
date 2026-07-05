@@ -20,11 +20,13 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
 
     public GeneralPreferencesPage() {
         super(GRID);
+        log.info("Initializing GeneralPreferencesPage");
         setDescription(PreferenceDialogMessages.preferenceDialogGeneralOptionsNodeDescription);
     }
 
     @Override
     protected void createFieldEditors() {
+        log.info("Creating field editors for GeneralPreferencesPage");
         Composite parent = getFieldEditorParent();
         GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns = 2;
@@ -37,6 +39,7 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
 
     @Override
     public void createControl(Composite parent) {
+        log.info("Creating control for GeneralPreferencesPage");
         super.createControl(parent);
         getDefaultsButton().setText(PreferenceDialogMessages.preferenceDialogGeneralOptionsRestoreButton);
         getApplyButton().setText(PreferenceDialogMessages.preferenceDialogGeneralOptionsApplyButton);

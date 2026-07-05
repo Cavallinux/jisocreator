@@ -4,35 +4,40 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
-import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
+import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IFileManagementAction {
+public class SaveAsXMLAction extends JISOCreatorBaseAction implements IRunnableWithProgress, IFileManagementAction {
     private String path;
     private IsoFileSystem iso;
 
-    public SaveAsXMLAction() {
-        super(MainActionsMessages.saveAsXMLActionName,
-                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("xml.png"));
-        setToolTipText(MainActionsMessages.saveAsXMLActionTooltip);
+    @Builder
+    protected SaveAsXMLAction(String message, String toolTip, ImageDescriptor imageDescriptor) {
+        super(message, toolTip, imageDescriptor);
+        path = StringUtils.EMPTY;
+        iso = null;
     }
 
     @Override
     public void run() {
-        TreeViewer isoDirectoriesTree = GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree();
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        IsoExplorerSashForm isoExplorer = mainWindow.getIsoExplorer();
+        TreeViewer isoDirectoriesTree = isoExplorer.getIsoDirectoriesTree();
         iso = (IsoFileSystem) isoDirectoriesTree.getInput();
         iso.setIsoLength();
         iso.setIsoPaths(null);
@@ -41,8 +46,8 @@ public class SaveAsXMLAction extends Action implements IRunnableWithProgress, IF
         if (StringUtils.isNotBlank(path)) {
             Display.getDefault().asyncExec(() -> {
                 try {
-                    IProgressMonitor progressMonitor = GUIManager.INSTANCE.getMainWindow().getProgressMonitor();
-                    GUIManager.INSTANCE.getMainWindow().setStatusLineActiveCancelButton(true);
+                    IProgressMonitor progressMonitor = mainWindow.getProgressMonitor();
+                    mainWindow.setStatusLineActiveCancelButton(true);
                     ModalContext.run(SaveAsXMLAction.this, true, progressMonitor, Display.getCurrent());
                 } catch (InvocationTargetException | InterruptedException e) {
                     log.error("Error saving ISO image", e);

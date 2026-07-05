@@ -5,22 +5,22 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.dialog.ADDFileToIsoLayoutDialog;
-import cl.cavallinux.jisocreator.gui.i18n.OSExplorerMessages;
+import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
@@ -28,15 +28,15 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AddFileAction extends Action implements IRunnableWithProgress {
+public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWithProgress {
     private ITreeNode isoNode;
     private List<File> files;
 
     @Builder
-    private AddFileAction() {
-        super(OSExplorerMessages.osExplorerAddActionName);
-        setImageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("add.png"));
-        setToolTipText("Add selected files to ISO9660 layout");
+    private AddFileAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
+        files = null;
+        isoNode = null;
     }
 
     @Override
@@ -76,6 +76,8 @@ public class AddFileAction extends Action implements IRunnableWithProgress {
             isoExplorer.getIsoDirectoriesTree().setSelection(new StructuredSelection(isoNode), true);
             isoExplorer.getIsoDirectoriesTree().expandToLevel(isoNode, 1);
             isoExplorer.refresh();
+            GUIManager.INSTANCE.getMainWindow()
+                    .setStatus(isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage));
         }));
         monitor.done();
     }

@@ -2,14 +2,15 @@ package cl.cavallinux.jisocreator.action.isoexplorer;
 
 import java.io.File;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
-import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,14 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
-public class OpenIsoEntryAction extends Action /* implements IDoubleClickListener, ISelectionChangedListener */ {
+public class OpenIsoEntryAction extends JISOCreatorBaseAction{
     private ITreeNode node;
 
     @Builder
-    private OpenIsoEntryAction() {
-        super(IsoExplorerMessages.isoExplorerOpenEntryActionName,
-                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("run.png"));
-        setToolTipText(IsoExplorerMessages.isoExplorerOpenEntryActionTooltip);
+    private OpenIsoEntryAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
         setEnabled(false);
     }
 
@@ -33,9 +32,11 @@ public class OpenIsoEntryAction extends Action /* implements IDoubleClickListene
     public void run() {
         File element = (File) node.getElement();
         if (element.isFile()) {
-            OSAndIsoExplorerManager.INSTANCE.getOsExplorer().launch(element.toPath());
+            OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+            osExplorer.launch(element.toPath());
         } else {
-            IsoExplorerSashForm isoSashFormInstance = GUIManager.INSTANCE.getMainWindow().getIsoExplorer();
+            MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+            IsoExplorerSashForm isoSashFormInstance = mainWindow.getIsoExplorer();
             isoSashFormInstance.refresh(node);
         }
     }

@@ -19,7 +19,7 @@ import lombok.Builder;
 
 public class ImageUtils {
     private ImageRegistry imageRegistry;
-    private static final String IMAGES_FOLDER_PREFIX = "res/img/";
+    private static final String IMAGES_FOLDER_PREFIX = "img/";
     private static final String DRIVE_IMAGE_FILENAME = "drive.png";
     private static final String FOLDER_IMAGE_FILENAME = "folder.png";
     private static final String ROOT_ISO_FILENAME = "iso.png";
@@ -43,7 +43,7 @@ public class ImageUtils {
     public Image loadImage(String name) {
         Image image = (Image) imageRegistry.get(name);
         if (image == null) {
-            InputStream stream = getClass().getResourceAsStream(IMAGES_FOLDER_PREFIX.concat(name));
+            InputStream stream = ClassLoader.getSystemResourceAsStream(IMAGES_FOLDER_PREFIX.concat(name));
             image = new Image(Display.getDefault(), stream);
             imageRegistry.put(name, image);
         }

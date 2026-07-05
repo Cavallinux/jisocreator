@@ -7,18 +7,21 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
+import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.action.jobs.SaveISO9660ImageThread;
-import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
-import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
+import cl.cavallinux.jisocreator.model.parser.IsoFilesystemParser;
 import cl.cavallinux.jisocreator.util.IOUtils;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +29,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
-public class SaveAsIsoAction extends Action implements IFileManagementAction {
+public class SaveAsIsoAction extends JISOCreatorBaseAction implements IFileManagementAction {
     private String inputXMLLayoutFile;
     private String outputISOFile;
     private boolean commandLineMode;
 
-    public SaveAsIsoAction() {
-        super(MainActionsMessages.saveAsIsoActionName,
-                ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("x-cd-image.png"));
-        setToolTipText(MainActionsMessages.saveAsIsoActionTooltip);
-        this.commandLineMode = false;
+    @Builder
+    protected SaveAsIsoAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
+        super(message, tooltip, imageDescriptor);
+        inputXMLLayoutFile = StringUtils.EMPTY;
+        outputISOFile = StringUtils.EMPTY;
+        commandLineMode = false;
     }
 
     @Override
@@ -74,10 +78,12 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
 
     private IsoFileSystem obtainIsoFileSystem() {
         if (commandLineMode) {
-            return IOManager.INSTANCE.getIsoFilesystemParser().deserialize(inputXMLLayoutFile).get();
+            IsoFilesystemParser<IsoFileSystem> isoFilesystemParser = IOManager.INSTANCE.getIsoFilesystemParser();
+            return isoFilesystemParser.deserialize(inputXMLLayoutFile).get();
         } else {
-            return (IsoFileSystem) GUIManager.INSTANCE.getMainWindow().getIsoExplorer().getIsoDirectoriesTree()
-                    .getInput();
+            MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+            TreeViewer isoDirectoriesTree = mainWindow.getIsoExplorer().getIsoDirectoriesTree();
+            return (IsoFileSystem) isoDirectoriesTree.getInput();
         }
     }
 
@@ -85,14 +91,17 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         if (commandLineMode) {
             return outputISOFile;
         } else {
-            return obtainAbsolutePathFile(isoFileSystem.getVolumeID().concat(ISO_FILE_EXTENSION),
-                    "*".concat(ISO_FILE_EXTENSION), SAVE_AS_ISO_DIALOG_TITLE, SAVE_AS_ISO_FILE_NAMES, SWT.SAVE);
+            String isoFileName = isoFileSystem.getVolumeID().concat(ISO_FILE_EXTENSION);
+            String isoFileExtension = "*".concat(ISO_FILE_EXTENSION);
+            return obtainAbsolutePathFile(isoFileName, isoFileExtension, SAVE_AS_ISO_DIALOG_TITLE,
+                    SAVE_AS_ISO_FILE_NAMES, SWT.SAVE);
         }
     }
 
     private void deleteIsoFileIfExists(String path) {
-        if (new File(path).exists()) {
-            new File(path).delete();
+        File file = new File(path);
+        if (file.exists()) {
+            file.delete();
         }
     }
 
@@ -127,7 +136,7 @@ public class SaveAsIsoAction extends Action implements IFileManagementAction {
         mkisofsCommand.add("-o");
         mkisofsCommand.add(isoOutputFileAbsolutePath);
         mkisofsCommand.addAll(isoFileSystem.getIsoPaths());
-        
+
         return mkisofsCommand;
     }
 }

@@ -23,27 +23,46 @@ src/test/java/
 │           │   ├── CommandLineOptionsManagerTest.java
 │           │   ├── CommandLineParserManagerTest.java
 │           │   ├── JISOCreatorISOLevelOptionsTest.java
-│           │   └── JISOCreatorLanguageOptionsTest.java
+│           │   ├── JISOCreatorLanguageOptionsTest.java
+│           │   └── OSAndIsoExplorerManagerTest.java
 │           ├── model/
 │           │   ├── cmdline/
 │           │   │   └── JISOCreatorCommandLineParserTest.java
+│           │   ├── comparators/
+│           │   │   ├── ITreeNodeDirectoriesFirstComparatorTest.java
+│           │   │   └── OSDirectoriesComparatorTest.java
+│           │   ├── filters/
+│           │   │   ├── HideHiddenFilesFilterTest.java
+│           │   │   ├── ShowOnlyDirectoriesFilterTest.java
+│           │   │   └── isoexplorer/
+│           │   │       └── ShowOnlyIsoDirectoriesFilterTest.java
 │           │   ├── isoexplorer/
 │           │   │   └── impl/
 │           │   │       ├── IsoFileSystemTest.java
 │           │   │       └── TreeNodeTest.java
+│           │   ├── osexplorer/
+│           │   │   └── OSExplorerTest.java
 │           │   ├── parser/
+│           │   │   ├── decl/
+│           │   │   │   └── IsoFilesystemParserTest.java
 │           │   │   ├── xml/
 │           │   │   │   ├── XMLIsoFilesystemContractMapperTest.java
+│           │   │   │   ├── XMLIsoFilesystemContractTest.java
 │           │   │   │   └── XMLIsoFilesystemParserTest.java
 │           │   │   └── XMLIsoFilesystemParserCompatibilityTest.java
-│           │   ├── providers/
-│           │   │   └── impl/
-│           │   │       ├── isoexplorer/
-│           │   │       │   └── IsoTreeContentProviderTest.java
-│           │   │       └── osexplorer/
-│           │   │           └── OSTreeContentProviderTest.java
-│           │   └── osexplorer/
-│           │       └── OSExplorerTest.java
+│           │   └── providers/
+│           │       ├── decl/
+│           │       │   ├── TableProviderAdapterTest.java
+│           │       │   ├── TreeContentAdapterTest.java
+│           │       │   └── TreeLabelAdapterTest.java
+│           │       └── impl/
+│           │           ├── isoexplorer/
+│           │           │   ├── IsoTableProviderTest.java
+│           │           │   └── IsoTreeContentProviderTest.java
+│           │           └── osexplorer/
+│           │               ├── OsTableProviderTest.java
+│           │               ├── OSTreeLabelProviderTest.java
+│           │               └── OSTreeContentProviderTest.java
 │           └── util/
 │               └── IOUtilsPathTest.java
 ```
@@ -56,13 +75,28 @@ src/test/java/
 - `XMLIsoFilesystemParserCompatibilityTest` (2 tests)
 - `XMLIsoFilesystemParserTest` (4 tests)
 - `XMLIsoFilesystemContractMapperTest` (3 tests)
+- `XMLIsoFilesystemContractTest` (2 tests)
+- `IsoFilesystemParserTest` (3 tests)
 - `IsoFileSystemTest` (4 tests)
 - `TreeNodeTest` (3 tests)
 
 #### Explorer and provider coverage
 - `OSExplorerTest` (13 tests)
+- `IsoTableProviderTest` (3 tests)
 - `IsoTreeContentProviderTest` (2 tests)
+- `OsTableProviderTest` (3 tests)
+- `OSTreeLabelProviderTest` (1 test)
 - `OSTreeContentProviderTest` (3 tests)
+- `TableProviderAdapterTest` (2 tests)
+- `TreeContentAdapterTest` (2 tests)
+- `TreeLabelAdapterTest` (2 tests)
+
+#### Comparator and filter coverage
+- `OSDirectoriesComparatorTest` (1 test)
+- `ITreeNodeDirectoriesFirstComparatorTest` (2 tests)
+- `HideHiddenFilesFilterTest` (2 tests)
+- `ShowOnlyDirectoriesFilterTest` (3 tests)
+- `ShowOnlyIsoDirectoriesFilterTest` (2 tests)
 
 #### CLI and manager coverage
 - `CommandLineOptionsManagerTest` (7 tests)
@@ -70,6 +104,7 @@ src/test/java/
 - `CommandLineParserManagerTest` (1 test)
 - `JISOCreatorISOLevelOptionsTest` (2 tests)
 - `JISOCreatorLanguageOptionsTest` (2 tests)
+- `OSAndIsoExplorerManagerTest` (1 test)
 
 #### i18n coverage
 - `MessagesBundleTest` (2 tests)
@@ -168,8 +203,8 @@ class MyClassTest {
 ```
 
 ## Current Test Statistics (as of v0.2.0-SNAPSHOT)
-- **Total Tests**: 72
-- **Test Classes**: 15
+- **Total Tests**: 101
+- **Test Classes**: 29
 - **All Tests Passing**: ✓
 
 The project now includes dedicated coverage for parser/mapper logic, ISO filesystem metadata behavior, tree content providers, command line managers/options, and i18n bundle resolution.
@@ -178,21 +213,35 @@ The project now includes dedicated coverage for parser/mapper logic, ISO filesys
 ```
 MessagesBundleTest.java:                    2 tests
 OSExplorerTest.java:                       13 tests
+IsoTableProviderTest.java:                  3 tests
+OsTableProviderTest.java:                   3 tests
+OSTreeLabelProviderTest.java:               1 test
 OSTreeContentProviderTest.java:             3 tests
 IsoTreeContentProviderTest.java:            2 tests
+TableProviderAdapterTest.java:              2 tests
+TreeContentAdapterTest.java:                2 tests
+TreeLabelAdapterTest.java:                  2 tests
 JISOCreatorCommandLineParserTest.java:     19 tests
+OSDirectoriesComparatorTest.java:           1 test
+ITreeNodeDirectoriesFirstComparatorTest.java:2 tests
+HideHiddenFilesFilterTest.java:             2 tests
+ShowOnlyDirectoriesFilterTest.java:         3 tests
+ShowOnlyIsoDirectoriesFilterTest.java:      2 tests
 TreeNodeTest.java:                          3 tests
 IsoFileSystemTest.java:                     4 tests
 XMLIsoFilesystemContractMapperTest.java:    3 tests
+XMLIsoFilesystemContractTest.java:          2 tests
 XMLIsoFilesystemParserTest.java:            4 tests
 XMLIsoFilesystemParserCompatibilityTest:    2 tests
+IsoFilesystemParserTest.java:               3 tests
 JISOCreatorLanguageOptionsTest.java:        2 tests
 CommandLineParserManagerTest.java:          1 test
 CommandLineOptionsManagerTest.java:         7 tests
 JISOCreatorISOLevelOptionsTest.java:        2 tests
+OSAndIsoExplorerManagerTest.java:           1 test
 IOUtilsPathTest.java:                       5 tests
 ─────────────────────────────────────────────────
-Total:                                     72 tests
+Total:                                     101 tests
 ```
 
 ## Best Practices
@@ -242,7 +291,7 @@ void setUp() {
 1. Add integration tests for ISO file operations
 2. Add API tests for file system operations
 3. Add tests for action classes (utilizing centralized `ActionsManager`)
-4. Add remaining tests for SWT-dependent providers (`IsoTableProvider`, label providers, filters/comparators)
+4. Add negative/error-path tests for SWT-dependent providers (`IsoTableProvider`, `OSTreeLabelProvider`, `OsTableProvider`) including image loading fallbacks
 5. Add tests for new manager components (`GUIManager`, `ImageRegister`)
 6. Add deeper edge-case tests for XML parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
 7. Add negative/edge tests for `IsoFileSystem` with large directory trees and invalid node payloads

@@ -24,7 +24,7 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 
 ### Utilities & Libraries
 - **Lombok 1.18.44** - Annotation processor for code generation (getters, setters, etc.)
-- **XStream 1.4.21** - XML serialization library for ISO layout and configuration management
+- **Jackson XML 2.20.0** - XML serialization library for ISO layout and configuration management
 - **Apache Commons Lang3 3.20.0** - Utility functions for Java language operations
 - **Apache Commons CLI 1.11.0** - Command-line argument parsing
 - **JSVG 2.1.0** - SVG rendering support

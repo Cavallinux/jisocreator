@@ -1,7 +1,9 @@
-package cl.cavallinux.jisocreator.model.parser;
+package cl.cavallinux.jisocreator.model.parser.decl;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.util.IOUtils;
@@ -13,8 +15,8 @@ import cl.cavallinux.jisocreator.util.IOUtils;
  */
 public interface IsoFilesystemParser<T extends IsoFileSystem> {
     final int MKISOFS_VOLUMEID_MAXLENGTH = 32;
-    final String MKISOFS_ISOFILESYSTEM_APPLICATIONID = String.format("%s",
-            IOUtils.class.getPackage().getImplementationTitle());
+    final String DEFAULT_ISOFILESYSTEM_APPLICATIONID = "JisoCreator";
+    final String MKISOFS_ISOFILESYSTEM_APPLICATIONID = IOUtils.class.getPackage().getImplementationTitle();
     /**
      * Deserialize from path
      * 
@@ -42,6 +44,9 @@ public interface IsoFilesystemParser<T extends IsoFileSystem> {
     }
 
     default String generateIsoFilesystemApplicationID() {
+        if (StringUtils.isBlank(MKISOFS_ISOFILESYSTEM_APPLICATIONID)) {
+            return DEFAULT_ISOFILESYSTEM_APPLICATIONID;
+        }
         return MKISOFS_ISOFILESYSTEM_APPLICATIONID;
     }
 }

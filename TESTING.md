@@ -21,6 +21,8 @@ src/test/java/
 │           ├── model/
 │           │   ├── cmdline/
 │           │   │   └── JISOCreatorCommandLineParserTest.java
+│           │   ├── parser/
+│           │   │   └── XMLIsoFilesystemParserCompatibilityTest.java
 │           │   └── osexplorer/
 │           │       └── OSExplorerTest.java
 │           └── util/
@@ -97,6 +99,17 @@ Tests the `JISOCreatorCommandLineParser` (Apache Commons CLI based parser):
 - **testHandleCommandLineWithValidPaths**: Confirms `handleCommandLine` succeeds with a readable input file and writable output file
 - **testHandleCommandLineWithNonExistentInputThrows**: Confirms a missing input file throws `ParseException`
 - **testHandleCommandLineWithNonExistentOutputThrows**: Confirms a missing output file throws `ParseException`
+
+### 5. XMLIsoFilesystemParserCompatibilityTest (2 tests)
+**Location**: `src/test/java/cl/cavallinux/jisocreator/model/parser/XMLIsoFilesystemParserCompatibilityTest.java`
+
+Validates compatibility of the Jackson-based XML parser against an existing legacy layout fixture:
+
+- **shouldDeserializeLegacyXmlLayout**: Ensures an existing XML layout can still be deserialized and key fields are preserved
+- **shouldKeepXmlContractCompatibleAfterRoundTrip**: Deserializes + reserializes and compares XML similarity with XMLUnit
+
+Test fixture:
+- `src/test/resources/xml/c267b1a84ea9429088ce5530122e5c8a.xml`
 
 ## Running Tests
 
@@ -185,12 +198,12 @@ class MyClassTest {
 }
 ```
 
-## Current Test Statistics (as of v0.1.6)
-- **Total Tests**: 44
-- **Test Classes**: 4
+## Current Test Statistics (as of v0.2.0-SNAPSHOT)
+- **Total Tests**: 46
+- **Test Classes**: 5
 - **All Tests Passing**: ✓
 
-The command-line interface (`CommandLineOptionsManager` and `JISOCreatorCommandLineParser`) introduced in v0.1.3 now has dedicated test coverage. i18n message bundle loading and ISO metadata (Volume/Publisher/Application ID) handling remain untested; see "Future Testing Enhancements" below.
+The command-line interface (`CommandLineOptionsManager` and `JISOCreatorCommandLineParser`) introduced in v0.1.3 now has dedicated test coverage. XML parser compatibility now has regression coverage through `XMLIsoFilesystemParserCompatibilityTest`. i18n message bundle loading and ISO metadata (Volume/Publisher/Application ID) handling remain untested; see "Future Testing Enhancements" below.
 
 ### Test Statistics Summary
 ```
@@ -198,8 +211,9 @@ OSExplorerTest.java:                      13 tests
 IOUtilsPathTest.java:                      5 tests
 CommandLineOptionsManagerTest.java:        7 tests
 JISOCreatorCommandLineParserTest.java:    19 tests
+XMLIsoFilesystemParserCompatibilityTest:    2 tests
 ─────────────────────────────────────────────────
-Total:                                    44 tests
+Total:                                    46 tests
 ```
 
 ## Best Practices
@@ -252,6 +266,6 @@ void setUp() {
 4. Add tests for provider implementations
 5. Add tests for new manager components (`GUIManager`, `ImageRegister`)
 6. Add tests for i18n message bundle loading (`INLSBundleMessages` and per-component message classes)
-7. Add tests for XML layout parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
+7. Add deeper edge-case tests for XML parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
 8. Consider adding code coverage reporting with JaCoCo
 9. Add performance benchmarks for large file operations

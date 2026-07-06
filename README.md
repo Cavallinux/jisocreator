@@ -23,8 +23,9 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 - **Eclipse UI Workbench 3.138.0** - Workbench framework
 
 ### Utilities & Libraries
-- **Lombok 1.18.44** - Annotation processor for code generation (getters, setters, etc.)
+- **Lombok 1.18.46** - Annotation processor for code generation (getters, setters, etc.)
 - **Jackson XML 2.20.0** - XML serialization library for ISO layout and configuration management
+- **Woodstox 7.1.1** - StAX XML processor used by Jackson XML
 - **Apache Commons Lang3 3.20.0** - Utility functions for Java language operations
 - **Apache Commons CLI 1.11.0** - Command-line argument parsing
 - **JSVG 2.1.0** - SVG rendering support
@@ -72,6 +73,7 @@ mvn clean compile -DskipTests
 The project includes comprehensive unit tests using:
 - **JUnit 5 (Jupiter)**: Modern Java testing framework (v5.10.2)
 - **Mockito**: Mocking library for test doubles (v5.7.0)
+- **XMLUnit**: XML diff/assertion utilities for parser compatibility tests (v2.11.0)
 - **Maven Surefire Plugin**: Test execution plugin (v3.2.5)
 
 ### Running Tests
@@ -101,19 +103,22 @@ src/test/java/cl/cavallinux/jisocreator/
 ├── model/
 │   ├── cmdline/
 │   │   └── JISOCreatorCommandLineParserTest.java  # CLI parsing behavior (19 tests)
+│   ├── parser/
+│   │   └── XMLIsoFilesystemParserCompatibilityTest.java # Legacy XML round-trip compatibility (2 tests)
 │   └── osexplorer/
 │       └── OSExplorerTest.java      # File system operations (13 tests)
 └── util/
     └── IOUtilsPathTest.java         # File path utilities (5 tests)
 ```
 
-**Current Test Statistics**: 44 tests total, all passing
+**Current Test Statistics**: 46 tests total, all passing
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
 - **Singleton Pattern Testing**: Validates OSExplorer singleton implementation
 - **File System Operations**: Comprehensive testing of file and directory handling
 - **Path Manipulation**: Tests for file path concatenation and validation
+- **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison
 
 For detailed testing information, see `TESTING.md`.
 
@@ -240,7 +245,7 @@ jisocreator/
 │   │   ├── filters/      # File filters
 │   │   ├── isoexplorer/  # ISO explorer models
 │   │   ├── osexplorer/   # OS explorer models
-│   │   ├── parser/       # XML layout parsing
+│   │   ├── parser/       # XML layout parsing (decl/ + xml/ implementations)
 │   │   └── providers/    # Data providers
 │   └── util/             # Utility classes
 ├── src/main/resources/   # Configuration and resources
@@ -311,9 +316,13 @@ UI text is externalized into per-component NLS message bundles under `src/main/r
 
 `CommandLineParserManager` wraps a `JISOCreatorCommandLineParser` (built on Apache Commons CLI) exposing `--load`, `--input`, `--output`, `--help`, `--version` and `--license` options, allowing the application to be launched in headless/scripted scenarios in addition to its GUI mode.
 
+### XML Parser Layer
+
+XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/decl`) and the `XMLIsoFilesystemParser` implementation (`model/parser/xml`) backed by Jackson XML. Compatibility is validated with a legacy XML fixture under `src/test/resources/xml/`.
+
 ## Version
 
-Current version: **0.1.6**
+Current version: **0.2.0-SNAPSHOT**
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

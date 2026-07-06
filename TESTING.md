@@ -16,12 +16,20 @@ src/test/java/
 ├── cl/
 │   └── cavallinux/
 │       └── jisocreator/
+│           ├── action/
+│           │   ├── decl/
+│           │   │   └── JISOCreatorBaseActionTest.java
+│           │   ├── jobs/
+│           │       └── SaveISO9660ImageThreadTest.java
+│           │   └── main/
+│           │       └── MainActionTest.java
 │           ├── gui/
 │           │   └── i18n/
 │           │       └── MessagesBundleTest.java
 │           ├── instances/
 │           │   ├── CommandLineOptionsManagerTest.java
 │           │   ├── CommandLineParserManagerTest.java
+│           │   ├── IOManagerTest.java
 │           │   ├── JISOCreatorISOLevelOptionsTest.java
 │           │   ├── JISOCreatorLanguageOptionsTest.java
 │           │   └── OSAndIsoExplorerManagerTest.java
@@ -71,6 +79,11 @@ src/test/java/
 
 ### Current Unit Test Inventory
 
+#### Critical workflow coverage
+- `MainActionTest` (2 tests)
+- `JISOCreatorBaseActionTest` (4 tests)
+- `SaveISO9660ImageThreadTest` (4 tests)
+
 #### Core model and parser coverage
 - `XMLIsoFilesystemParserCompatibilityTest` (2 tests)
 - `XMLIsoFilesystemParserTest` (4 tests)
@@ -102,6 +115,7 @@ src/test/java/
 - `CommandLineOptionsManagerTest` (7 tests)
 - `JISOCreatorCommandLineParserTest` (19 tests)
 - `CommandLineParserManagerTest` (1 test)
+- `IOManagerTest` (2 tests)
 - `JISOCreatorISOLevelOptionsTest` (2 tests)
 - `JISOCreatorLanguageOptionsTest` (2 tests)
 - `OSAndIsoExplorerManagerTest` (1 test)
@@ -203,14 +217,17 @@ class MyClassTest {
 ```
 
 ## Current Test Statistics (as of v0.2.0-SNAPSHOT)
-- **Total Tests**: 101
-- **Test Classes**: 29
+- **Total Tests**: 113
+- **Test Classes**: 33
 - **All Tests Passing**: ✓
 
 The project now includes dedicated coverage for parser/mapper logic, ISO filesystem metadata behavior, tree content providers, command line managers/options, and i18n bundle resolution.
 
 ### Test Statistics Summary
 ```
+MainActionTest.java:                        2 tests
+JISOCreatorBaseActionTest.java:             4 tests
+SaveISO9660ImageThreadTest.java:            4 tests
 MessagesBundleTest.java:                    2 tests
 OSExplorerTest.java:                       13 tests
 IsoTableProviderTest.java:                  3 tests
@@ -236,12 +253,13 @@ XMLIsoFilesystemParserCompatibilityTest:    2 tests
 IsoFilesystemParserTest.java:               3 tests
 JISOCreatorLanguageOptionsTest.java:        2 tests
 CommandLineParserManagerTest.java:          1 test
+IOManagerTest.java:                         2 tests
 CommandLineOptionsManagerTest.java:         7 tests
 JISOCreatorISOLevelOptionsTest.java:        2 tests
 OSAndIsoExplorerManagerTest.java:           1 test
 IOUtilsPathTest.java:                       5 tests
 ─────────────────────────────────────────────────
-Total:                                     101 tests
+Total:                                     113 tests
 ```
 
 ## Best Practices

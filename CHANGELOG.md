@@ -7,13 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 0.2.0-SNAPSHOT
 
+## [0.1.6] - 2026-07-06
+
 ### Added
+- **Expanded unit test suite (multi-phase implementation)**:
+  - Added coverage for action layer (`MainAction`, `JISOCreatorBaseAction`, `SaveISO9660ImageThread`)
+  - Added coverage for managers/enums (`IOManager`, `OSAndIsoExplorerManager`, CLI/language/ISO options managers)
+  - Added coverage for parser contracts and XML DTO/mapper layers
+  - Added coverage for providers/comparators/filters in OS/ISO explorers
+  - Added coverage for i18n message bundle resolution
+  - Test suite now totals **113 tests in 33 test classes**, all passing
 - **Unit tests for command line interface**: New test classes covering `CommandLineOptionsManager` (7 tests) and `JISOCreatorCommandLineParser` (19 tests) - option declarations, short/long option parsing, mutually exclusive options, missing/invalid arguments, help/version output, and `handleCommandLine` input/output path validation. Total test count now 44 (up from 18)
 - **License printing from CLI**: New `--license` / `-L` command line option prints the bundled GPLv3 license text (`ICommandLineParser#printLicense`, backed by `IOManager`/`IOUtils` loading `files/license.txt`)
 - **ISO filesystem status info**: Main window status bar now shows ISO filesystem information (volume/size) after loading or saving a layout, via `IsoFileSystem` and `MainWindow`
 - **XML parser compatibility regression test**: Added `XMLIsoFilesystemParserCompatibilityTest` (2 tests) plus legacy fixture `src/test/resources/xml/c267b1a84ea9429088ce5530122e5c8a.xml` to ensure deserialize/serialize compatibility against historical layouts
 
 ### Changed
+- **Documentation sync after testing phases**:
+  - Updated `README.md` testing section to reflect current scope and statistics
+  - Rebuilt `TESTING.md` to match real test inventory and counts
+  - Resolved stale/merged content in testing documentation and aligned statistics with CI/local runs
 - **Resource reorganization**: Images (`img/`), i18n bundles (`i18n/`) and default configuration (`conf/defaultconfig.properties`) moved out of `util/res` into `src/main/resources` top-level folders for clearer separation between code and resources
 - **ISO length/info calculation**: Refactored `IsoFileSystem` and `ShowIsoInformationAction`/`OpenIsoLayoutAction` to compute and print ISO size/info more accurately
 - `AddFileAction` and `IsoExplorerSashForm` updated to keep the status bar in sync with ISO filesystem changes
@@ -312,7 +325,8 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com/) forma
 
 ## Version Links
 
-- [0.2.0-SNAPSHOT](https://github.com/Cavallinux/jisocreator/compare/v0.1.5...HEAD) - Unreleased, in development
+- [0.2.0-SNAPSHOT](https://github.com/Cavallinux/jisocreator/compare/v0.1.6...HEAD) - Unreleased, in development
+- [0.1.6](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.6) - Expanded unit testing and documentation synchronization
 - [0.1.5](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.5) - i18n support, ISO metadata (Volume/Publisher/Application ID)
 - [0.1.4](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.4) - Windows mkisofs update, XML layout fixes
 - [0.1.3](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.3) - Command line interface

@@ -98,20 +98,20 @@ mvn clean package -DskipTests
 
 ```
 src/test/java/cl/cavallinux/jisocreator/
-├── instances/
-│   └── CommandLineOptionsManagerTest.java  # CLI option declarations (7 tests)
-├── model/
-│   ├── cmdline/
-│   │   └── JISOCreatorCommandLineParserTest.java  # CLI parsing behavior (19 tests)
-│   ├── parser/
-│   │   └── XMLIsoFilesystemParserCompatibilityTest.java # Legacy XML round-trip compatibility (2 tests)
-│   └── osexplorer/
-│       └── OSExplorerTest.java      # File system operations (13 tests)
-└── util/
-    └── IOUtilsPathTest.java         # File path utilities (5 tests)
+├── action/      # Action-layer tests (main/jobs/base actions)
+├── gui/         # i18n message bundle tests
+├── instances/   # Manager and enum singleton tests
+├── model/       # Parser, providers, comparators, filters, explorers
+└── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 46 tests total, all passing
+**Current Test Statistics**: 113 tests total across 33 test classes, all passing.
+
+Current coverage includes:
+- Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`)
+- Parser/contract/mapper tests (`IsoFilesystemParser`, `XMLIsoFilesystem*`)
+- Explorer/provider/comparator/filter tests (OS and ISO)
+- CLI/manager/i18n tests (`CommandLine*`, `IOManager`, `OSAndIsoExplorerManager`, message bundles)
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
@@ -119,6 +119,7 @@ src/test/java/cl/cavallinux/jisocreator/
 - **File System Operations**: Comprehensive testing of file and directory handling
 - **Path Manipulation**: Tests for file path concatenation and validation
 - **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison
+- **Action and Workflow Validation**: Tests for command parsing branches and save-thread progress behavior
 
 For detailed testing information, see `TESTING.md`.
 
@@ -322,7 +323,8 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ## Version
 
-Current version: **0.2.0-SNAPSHOT**
+- Latest stable release: **0.1.6** (released 2026-07-06)
+- Current development version: **0.2.0-SNAPSHOT**
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

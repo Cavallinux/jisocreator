@@ -6,6 +6,10 @@ A **MKISOFS Frontend** built with Eclipse technologies, providing a graphical us
 
 JisoCreator is a Java-based desktop application that simplifies the process of creating and editing ISO images. It features dual file explorers for managing both the operating system file system and ISO image contents, a command-line interface for scripted usage, and multi-language (i18n) support.
 
+## Installation
+
+For full installation instructions (requirements, build, package install, and first-run setup), see [INSTALL](INSTALL).
+
 ## Requirements
 
 - **Java**: JDK 21 or higher
@@ -43,11 +47,29 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 The project uses Maven profiles to select the SWT platform dependency:
 
 - `linux` (active by default): `gtk.linux.x86_64`
-- `windows`: `win32.win32.x86_64`
-- `linux-cmdlinemode`: Linux runtime plus CLI smoke execution (`-h`) through `exec-maven-plugin`
-- `windows-cmdlinemode`: Windows runtime plus CLI smoke execution (`-h`) through `exec-maven-plugin`
+- `windows`: `win32.win32.x86_64` (excludes the `gtk.linux.x86_64` SWT artifact)
+- `linux-cmdlinemode`: Linux runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
+- `windows-cmdlinemode`: Windows runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
 
-To activate `windows` profile add -Pwindows in maven command to be used.
+To activate a non-default profile, pass `-P<profile-id>` in the Maven command, e.g. `-Pwindows` or `-Plinux-cmdlinemode`. Only one platform profile (`linux`/`windows`) or its `-cmdlinemode` variant should be active at a time, since they select mutually exclusive SWT platform dependencies.
+
+#### Using the Profiles
+
+```bash
+# Default (linux) platform build
+mvn clean package
+
+# Windows platform build
+mvn clean package -Pwindows
+
+# Linux build + CLI smoke execution (runs the packaged jar with -h)
+mvn clean package exec:exec -Plinux-cmdlinemode
+
+# Windows build + CLI smoke execution (runs the packaged jar with -h)
+mvn clean package exec:exec -Pwindows-cmdlinemode
+```
+
+The `*-cmdlinemode` profiles reuse the same `exec-maven-plugin` configuration as the default build (native access flags, optional debug agent) but append `-h` to the executed command, making them convenient for a quick post-build sanity check of the CLI in CI or locally.
 
 ### Clean Build
 ```bash
@@ -164,6 +186,26 @@ This command uses the exec-maven-plugin configured in pom.xml and includes:
 - Native access permissions (--enable-native-access=ALL-UNNAMED)
 - Debug port available on 5005 if needed
 
+### Using the Maven Execution Profiles
+
+The `-cmdlinemode` profiles bundle build + run into a single command, executing the packaged jar with `-h` as a CLI smoke test:
+
+```bash
+# Linux CLI smoke run
+mvn clean package exec:exec -Plinux-cmdlinemode
+
+# Windows CLI smoke run
+mvn clean package exec:exec -Pwindows-cmdlinemode
+```
+
+To run the GUI with the Windows SWT dependency instead of the default Linux one:
+
+```bash
+mvn clean package exec:exec -Pwindows
+```
+
+See [Maven Profiles](#maven-profiles) for the full list of available profiles.
+
 ### From Command Line (after packaging)
 ```bash
 java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
@@ -255,10 +297,26 @@ jisocreator/
 │   ├── conf/             # Default configuration files
 │   ├── files/            # Bundled files (e.g. license.txt)
 │   └── log4j2.xml        # Logging configuration
+├── src/test/java/cl/cavallinux/jisocreator/  # Unit tests (SWT-free where possible)
+│   ├── action/           # Action-layer tests (main/jobs/base actions)
+│   │   ├── decl/         # JISOCreatorBaseAction tests
+│   │   ├── jobs/         # SaveISO9660ImageThread tests
+│   │   └── main/         # MainAction tests
+│   ├── gui/i18n/         # Message bundle (i18n) tests
+│   ├── instances/        # Manager and enum singleton tests (CLI parser/options, IOManager, explorer manager)
+│   ├── model/            # Parsers, providers, comparators, filters, explorer models
+│   │   ├── comparators/  # OS/ISO directories-first comparator tests
+│   │   ├── filters/      # Hidden files / directories-only filter tests
+│   │   ├── isoexplorer/  # IsoFileSystem / TreeNode tests
+│   │   ├── parser/       # decl (IsoFilesystemParser) + xml (Jackson-backed parser/contract) tests
+│   │   └── providers/    # decl adapters + impl (OS/ISO tree/table/label providers) tests
+│   └── util/             # IO utility tests
+├── src/test/resources/   # Test fixtures (e.g. legacy XML layout for compatibility tests)
 ├── res/                  # Native launch scripts and bundled mkisofs binaries
 │   ├── linux/            # Linux launch script
 │   └── mkisofs/          # Windows mkisofs binary and launch script
 ├── pom.xml               # Maven configuration
+├── TESTING.md            # Detailed testing documentation and test inventory
 └── README.md             # This file
 ```
 
@@ -320,6 +378,15 @@ UI text is externalized into per-component NLS message bundles under `src/main/r
 ### XML Parser Layer
 
 XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/decl`) and the `XMLIsoFilesystemParser` implementation (`model/parser/xml`) backed by Jackson XML. Compatibility is validated with a legacy XML fixture under `src/test/resources/xml/`.
+
+### Testing Architecture
+
+The test suite (113 tests / 33 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+
+- **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
+- **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
+- **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`).
+- **XMLUnit-based compatibility checks**: legacy XML layout fixtures are diffed against round-tripped output to guarantee backward compatibility of the XML parser.
 
 ## Version
 

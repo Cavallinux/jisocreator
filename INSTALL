@@ -1,0 +1,125 @@
+JisoCreator Installation Guide
+==============================
+
+This document describes how to install and run JisoCreator from source or from
+the generated distribution package.
+
+
+1) Requirements
+---------------
+
+- Java JDK 21 or newer
+- Maven 3.6 or newer
+- Git
+
+ISO creation backend:
+- Linux: `mkisofs` must be installed and available in the configured path.
+  Default expected path: `/usr/bin/mkisofs`
+- Windows: the project package already includes `mkisofs.exe` under
+  `res/mkisofs/`
+
+
+2) Get the source code
+----------------------
+
+From GitHub:
+
+    git clone https://github.com/Cavallinux/jisocreator.git
+    cd jisocreator
+
+
+3) Build the application
+------------------------
+
+Linux build (default profile):
+
+    mvn clean package
+
+Windows build (from any OS, for packaging with Windows SWT artifacts):
+
+    mvn clean package -Pwindows
+
+Build output:
+- Main runnable jar: `target/jisocreator.jar`
+- Distribution zip:
+  - Linux: `target/jisocreator-<version>-gtk.linux.x86_64.zip`
+  - Windows: `target/jisocreator-<version>-win32.win32.x86_64.zip`
+
+
+4) Install from generated distribution zip (recommended)
+--------------------------------------------------------
+
+4.1 Linux
+
+1. Build with `mvn clean package`
+2. Extract `target/jisocreator-<version>-gtk.linux.x86_64.zip`
+3. Move extracted files to your install directory (for example `/opt/jisocreator`)
+4. Make launcher executable:
+
+       chmod +x /opt/jisocreator/jisocreator.sh
+
+5. Run:
+
+       cd /opt/jisocreator
+       ./jisocreator.sh
+
+4.2 Windows
+
+1. Build with `mvn clean package -Pwindows`
+2. Extract `target/jisocreator-<version>-win32.win32.x86_64.zip`
+3. Open a terminal in the extracted directory
+4. Run:
+
+       jisocreator.bat
+
+
+5) Run directly from build output (without zip install)
+-------------------------------------------------------
+
+After `mvn clean package`:
+
+    java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
+
+With debug port (5005):
+
+    java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
+         --enable-native-access=ALL-UNNAMED \
+         -jar target/jisocreator.jar
+
+
+6) First-run configuration
+--------------------------
+
+On first run, JisoCreator creates user configuration under:
+
+    ~/.config/jisocreator/
+
+If needed, edit:
+
+    ~/.config/jisocreator/jisocreator.properties
+
+Important property:
+- `mkisofs.path` (must point to a valid mkisofs executable)
+
+
+7) Verify installation
+----------------------
+
+Run:
+
+    java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar --version
+
+You can also validate CLI help:
+
+    java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar --help
+
+
+8) Optional: customize log directory
+------------------------------------
+
+Default log directory is `./logs`.
+
+Custom path:
+
+    java -Dpath.logs=/custom/log/path --enable-native-access=ALL-UNNAMED \
+         -jar target/jisocreator.jar

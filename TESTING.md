@@ -16,13 +16,32 @@ src/test/java/
 ├── cl/
 │   └── cavallinux/
 │       └── jisocreator/
+│           ├── gui/
+│           │   └── i18n/
+│           │       └── MessagesBundleTest.java
 │           ├── instances/
-│           │   └── CommandLineOptionsManagerTest.java
+│           │   ├── CommandLineOptionsManagerTest.java
+│           │   ├── CommandLineParserManagerTest.java
+│           │   ├── JISOCreatorISOLevelOptionsTest.java
+│           │   └── JISOCreatorLanguageOptionsTest.java
 │           ├── model/
 │           │   ├── cmdline/
 │           │   │   └── JISOCreatorCommandLineParserTest.java
+│           │   ├── isoexplorer/
+│           │   │   └── impl/
+│           │   │       ├── IsoFileSystemTest.java
+│           │   │       └── TreeNodeTest.java
 │           │   ├── parser/
+│           │   │   ├── xml/
+│           │   │   │   ├── XMLIsoFilesystemContractMapperTest.java
+│           │   │   │   └── XMLIsoFilesystemParserTest.java
 │           │   │   └── XMLIsoFilesystemParserCompatibilityTest.java
+│           │   ├── providers/
+│           │   │   └── impl/
+│           │   │       ├── isoexplorer/
+│           │   │       │   └── IsoTreeContentProviderTest.java
+│           │   │       └── osexplorer/
+│           │   │           └── OSTreeContentProviderTest.java
 │           │   └── osexplorer/
 │           │       └── OSExplorerTest.java
 │           └── util/
@@ -31,84 +50,34 @@ src/test/java/
 
 ## Test Classes
 
-### 1. OSExplorerTest (13 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/model/osexplorer/OSExplorerTest.java`
+### Current Unit Test Inventory
 
-Tests the OSExplorer singleton class which manages file system operations:
+#### Core model and parser coverage
+- `XMLIsoFilesystemParserCompatibilityTest` (2 tests)
+- `XMLIsoFilesystemParserTest` (4 tests)
+- `XMLIsoFilesystemContractMapperTest` (3 tests)
+- `IsoFileSystemTest` (4 tests)
+- `TreeNodeTest` (3 tests)
 
-- **testGetName**: Verifies file name extraction
-- **testGetAbsolutePath**: Validates absolute path retrieval
-- **testLength**: Tests file size conversion to string
-- **testLastModified**: Checks date formatting of last modification time
-- **testGetFileTypeForDirectory**: Confirms directory type detection
-- **testGetFileTypeForFileWithoutExtension**: Tests file type for extensionless files
-- **testIsRootForSystemRoot**: Validates system root detection
-- **testIsNotRoot**: Ensures non-root files are properly identified
-- **testGetExtensionForDirectory**: Tests extension retrieval for directories
-- **testGetExtensionForFile**: Validates file extension with dot notation
-- **testGetExtensionForFileWithoutExtension**: Tests empty extension for files without extension
-- **testSetAndGetRoots**: Verifies root directory setter and getter
-- **testGetInstance**: Confirms singleton pattern implementation via `OSAndIsoExplorerManager`
+#### Explorer and provider coverage
+- `OSExplorerTest` (13 tests)
+- `IsoTreeContentProviderTest` (2 tests)
+- `OSTreeContentProviderTest` (3 tests)
 
-#### v0.1.2 Updates
-- **Refactored Singleton Access**: Tests now access `OSExplorer` through the centralized `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` instead of direct `OSExplorer.getInstance()` calls
-- **Improved Manager Pattern**: Demonstrates proper usage of the new centralized singleton manager pattern
-- **Singleton Verification**: The `testGetInstance()` method now validates that instances retrieved through the manager are properly singleton-managed
+#### CLI and manager coverage
+- `CommandLineOptionsManagerTest` (7 tests)
+- `JISOCreatorCommandLineParserTest` (19 tests)
+- `CommandLineParserManagerTest` (1 test)
+- `JISOCreatorISOLevelOptionsTest` (2 tests)
+- `JISOCreatorLanguageOptionsTest` (2 tests)
 
-### 2. IOUtilsPathTest (5 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/util/IOUtilsPathTest.java`
+#### i18n coverage
+- `MessagesBundleTest` (2 tests)
 
-Tests file path operations and configurations:
+#### Utilities
+- `IOUtilsPathTest` (5 tests)
 
-- **testValidFilePath**: Validates handling of file paths
-- **testDirectoryCreation**: Tests directory creation operations
-- **testFileOperationsInConfigDir**: Verifies file operations in configuration directories
-- **testXMLFileExistence**: Validates XML file handling
-- **testFilePathConcatenation**: Tests string path concatenation
-
-### 3. CommandLineOptionsManagerTest (7 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/instances/CommandLineOptionsManagerTest.java`
-
-Tests the `CommandLineOptionsManager` enum that declares all CLI options (short/long names, argument requirements):
-
-- **testLoadOption**: Verifies the `-l`/`--load` option requires an `xmllayout` argument
-- **testHelpOption**: Verifies the `-h`/`--help` option takes no argument
-- **testVersionOption**: Verifies the `-v`/`--version` option takes no argument
-- **testLicenseOption**: Verifies the `-L`/`--license` option takes no argument
-- **testIsoInputOption**: Verifies the `-i`/`--input` option requires an `xmllayout` argument
-- **testIsoOutputOption**: Verifies the `-o`/`--output` option requires an `isoFile` argument
-- **testAllOptionsDeclared**: Confirms exactly six options are declared
-
-### 4. JISOCreatorCommandLineParserTest (19 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/model/cmdline/JISOCreatorCommandLineParserTest.java`
-
-Tests the `JISOCreatorCommandLineParser` (Apache Commons CLI based parser):
-
-- **testBuildOptions**: Confirms all six options are registered in the built `Options` instance
-- **testBuildHelpHeaderAndFooter**: Validates help header/footer text contain all documented usage examples
-- **testParseShortHelpOption / testParseLongHelpOption**: Parses `-h` / `--help`
-- **testParseShortVersionOption / testParseLongVersionOption**: Parses `-v` / `--version`
-- **testParseShortLicenseOption / testParseLongLicenseOption**: Parses `-L` / `--license`
-- **testParseLoadOptionWithArgument**: Parses `-l layout.xml` and validates the argument value
-- **testParseInputAndOutputOptions**: Parses `-i input.xml -o output.iso` together
-- **testParseWithNoArguments**: Confirms parsing an empty argument list succeeds with no options set
-- **testParseMutuallyExclusiveOptionsThrows**: Confirms combining `-h -v` (same `OptionGroup`) throws `ParseException`
-- **testParseLoadOptionMissingArgumentThrows**: Confirms `-l` without its required argument throws `ParseException`
-- **testParseUnrecognizedOptionThrows**: Confirms an unknown option throws `ParseException`
-- **testPrintVersionDoesNotThrow / testPrintHelpDoesNotThrow**: Confirms these output methods execute safely
-- **testHandleCommandLineWithValidPaths**: Confirms `handleCommandLine` succeeds with a readable input file and writable output file
-- **testHandleCommandLineWithNonExistentInputThrows**: Confirms a missing input file throws `ParseException`
-- **testHandleCommandLineWithNonExistentOutputThrows**: Confirms a missing output file throws `ParseException`
-
-### 5. XMLIsoFilesystemParserCompatibilityTest (2 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/model/parser/XMLIsoFilesystemParserCompatibilityTest.java`
-
-Validates compatibility of the Jackson-based XML parser against an existing legacy layout fixture:
-
-- **shouldDeserializeLegacyXmlLayout**: Ensures an existing XML layout can still be deserialized and key fields are preserved
-- **shouldKeepXmlContractCompatibleAfterRoundTrip**: Deserializes + reserializes and compares XML similarity with XMLUnit
-
-Test fixture:
+Test fixture for XML compatibility:
 - `src/test/resources/xml/c267b1a84ea9429088ce5530122e5c8a.xml`
 
 ## Running Tests
@@ -199,21 +168,31 @@ class MyClassTest {
 ```
 
 ## Current Test Statistics (as of v0.2.0-SNAPSHOT)
-- **Total Tests**: 46
-- **Test Classes**: 5
+- **Total Tests**: 72
+- **Test Classes**: 15
 - **All Tests Passing**: ✓
 
-The command-line interface (`CommandLineOptionsManager` and `JISOCreatorCommandLineParser`) introduced in v0.1.3 now has dedicated test coverage. XML parser compatibility now has regression coverage through `XMLIsoFilesystemParserCompatibilityTest`. i18n message bundle loading and ISO metadata (Volume/Publisher/Application ID) handling remain untested; see "Future Testing Enhancements" below.
+The project now includes dedicated coverage for parser/mapper logic, ISO filesystem metadata behavior, tree content providers, command line managers/options, and i18n bundle resolution.
 
 ### Test Statistics Summary
 ```
-OSExplorerTest.java:                      13 tests
-IOUtilsPathTest.java:                      5 tests
-CommandLineOptionsManagerTest.java:        7 tests
-JISOCreatorCommandLineParserTest.java:    19 tests
+MessagesBundleTest.java:                    2 tests
+OSExplorerTest.java:                       13 tests
+OSTreeContentProviderTest.java:             3 tests
+IsoTreeContentProviderTest.java:            2 tests
+JISOCreatorCommandLineParserTest.java:     19 tests
+TreeNodeTest.java:                          3 tests
+IsoFileSystemTest.java:                     4 tests
+XMLIsoFilesystemContractMapperTest.java:    3 tests
+XMLIsoFilesystemParserTest.java:            4 tests
 XMLIsoFilesystemParserCompatibilityTest:    2 tests
+JISOCreatorLanguageOptionsTest.java:        2 tests
+CommandLineParserManagerTest.java:          1 test
+CommandLineOptionsManagerTest.java:         7 tests
+JISOCreatorISOLevelOptionsTest.java:        2 tests
+IOUtilsPathTest.java:                       5 tests
 ─────────────────────────────────────────────────
-Total:                                    46 tests
+Total:                                     72 tests
 ```
 
 ## Best Practices
@@ -263,9 +242,9 @@ void setUp() {
 1. Add integration tests for ISO file operations
 2. Add API tests for file system operations
 3. Add tests for action classes (utilizing centralized `ActionsManager`)
-4. Add tests for provider implementations
+4. Add remaining tests for SWT-dependent providers (`IsoTableProvider`, label providers, filters/comparators)
 5. Add tests for new manager components (`GUIManager`, `ImageRegister`)
-6. Add tests for i18n message bundle loading (`INLSBundleMessages` and per-component message classes)
-7. Add deeper edge-case tests for XML parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
+6. Add deeper edge-case tests for XML parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
+7. Add negative/edge tests for `IsoFileSystem` with large directory trees and invalid node payloads
 8. Consider adding code coverage reporting with JaCoCo
 9. Add performance benchmarks for large file operations

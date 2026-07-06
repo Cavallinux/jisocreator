@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.parser;
+package cl.cavallinux.jisocreator.model.parser.xml;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
+import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

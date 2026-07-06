@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.parser;
+package cl.cavallinux.jisocreator.model.parser.decl;
 
 import java.util.Optional;
 import java.util.UUID;

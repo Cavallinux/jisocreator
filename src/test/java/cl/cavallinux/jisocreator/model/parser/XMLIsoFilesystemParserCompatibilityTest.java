@@ -20,6 +20,7 @@ import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
+import cl.cavallinux.jisocreator.model.parser.xml.XMLIsoFilesystemParser;
 
 @DisplayName("XMLIsoFilesystemParser compatibility tests")
 class XMLIsoFilesystemParserCompatibilityTest {

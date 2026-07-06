@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.parser;
+package cl.cavallinux.jisocreator.model.parser.xml;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,13 +8,12 @@ import java.util.Objects;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 final class XMLIsoFilesystemContractMapper {
     private static final String ENTRY_CLASS = "entry";
     private static final String PARENT_REFERENCE = "../../..";
-
-    private XMLIsoFilesystemContractMapper() {
-    }
 
     static XMLIsoFilesystemContract.Iso9660Document toDocument(IsoFileSystem isoFilesystem) {
         XMLIsoFilesystemContract.Iso9660Document document = new XMLIsoFilesystemContract.Iso9660Document();

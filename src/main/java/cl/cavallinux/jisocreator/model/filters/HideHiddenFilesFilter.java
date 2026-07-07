@@ -26,8 +26,11 @@ public class HideHiddenFilesFilter extends ViewerFilter {
             File file = (File) arg2;
             return !Files.isHidden(file.toPath());
         } catch (IOException e) {
-            log.error("Error selecting file: {}", e);
-            return false;
+            // Allow the element on IOException (e.g., access denied for system drives or root paths in Windows)
+            // This prevents system root drives from being filtered out due to permission issues
+            log.warn("Error checking if file is hidden for path: {}, allowing element to be displayed. Error: {}", 
+                    ((File) arg2).getAbsolutePath(), e.getMessage());
+            return true;
         }
     }
 }

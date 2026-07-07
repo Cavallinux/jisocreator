@@ -73,6 +73,8 @@ class OSExplorerTest {
 
         assertNotNull(lastModified);
         assertFalse(lastModified.isEmpty());
+        assertTrue(lastModified.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"),
+                "Expected format 'yyyy-MM-dd HH:mm:ss' but was: " + lastModified);
     }
 
     @Test

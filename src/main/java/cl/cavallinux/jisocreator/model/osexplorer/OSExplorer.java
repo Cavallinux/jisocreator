@@ -6,7 +6,11 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.text.DateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
@@ -29,6 +33,8 @@ public class OSExplorer {
     private static final String FILE_TYPE = "File";
     private static final int NO_EXTENSION_DOT = -1;
     private static final char EXTENSION_DOT_CHAR = '.';
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            .withZone(ZoneId.systemDefault());
 
 
     private OSExplorer(File[] roots, Path[] rootsPath) {
@@ -122,8 +128,10 @@ public class OSExplorer {
     // TODO use java time api.
     public String lastModified(Path path) {
         try {
-            return DateFormat.getDateTimeInstance()
-                    .format(new Date(Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS).toMillis()));
+            FileTime lastModifiedTime = Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS);
+            Instant lastModifiedInstant = lastModifiedTime.toInstant();
+            return FORMATTER.format(lastModifiedInstant);
+            //return DateFormat.getDateTimeInstance().format(new Date(lastModifiedTime.toMillis()));
         } catch (IOException e) {
             log.error("Error retrieving last modified time for path: {}", path, e);
             return DateFormat.getDateTimeInstance().format(new Date(path.toFile().lastModified()));

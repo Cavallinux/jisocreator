@@ -4,7 +4,9 @@ import java.io.File;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.providers.decl.TreeContentAdapter;
+import lombok.Builder;
 
+@Builder
 public class OSTreeContentProvider extends TreeContentAdapter {
 
     @Override

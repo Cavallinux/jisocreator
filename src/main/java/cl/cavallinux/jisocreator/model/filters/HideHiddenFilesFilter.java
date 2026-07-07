@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,8 +18,8 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.2
  */
 @Slf4j
+@Builder
 public class HideHiddenFilesFilter extends ViewerFilter {
-    // TODO cast directly element to Path
     @Override
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
         try {

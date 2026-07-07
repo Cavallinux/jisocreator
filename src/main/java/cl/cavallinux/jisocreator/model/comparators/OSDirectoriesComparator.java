@@ -7,6 +7,8 @@ import java.nio.file.Path;
 
 import org.eclipse.jface.viewers.ViewerComparator;
 
+import lombok.Builder;
+
 /**
  * Comparator para directorios nativos del sistema operativo
  * 
@@ -14,6 +16,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
  * @version 0.0.2
  * @since 0.0.2
  */
+@Builder
 public class OSDirectoriesComparator extends ViewerComparator {
     @Override
     //TODO cast directly element to Path

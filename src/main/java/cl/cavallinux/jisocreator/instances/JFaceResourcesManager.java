@@ -33,9 +33,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum JFaceResourcesManager {
-    OSEXPLORER_INSTANCE(new HideHiddenFilesFilter(), new ShowOnlyDirectoriesFilter(), new OSDirectoriesComparator(),
-            new OSTreeLabelProvider(), new OSTreeContentProvider(), new OsTableProvider(),
-            new OSDirectoriesMenuListener(),
+    OSEXPLORER_INSTANCE(HideHiddenFilesFilter.builder().build(), ShowOnlyDirectoriesFilter.builder().build(),
+            OSDirectoriesComparator.builder().build(), OSTreeLabelProvider.builder().build(),
+            OSTreeContentProvider.builder().build(), OsTableProvider.builder().build(),
+            OSDirectoriesMenuListener.builder().build(),
             SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
             SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
             new OSExplorerSashFormDoubleClickListener(), new OSExplorerSashFormSelectionChangedListener()),

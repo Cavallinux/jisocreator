@@ -9,7 +9,9 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.decl.TreeLabelAdapter;
+import lombok.Builder;
 
+@Builder
 public class OSTreeLabelProvider extends TreeLabelAdapter {
 
     @Override

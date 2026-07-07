@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import lombok.Builder;
 
 /**
  * Filtro utilizado solo para mostrar los directorios ISO
@@ -16,6 +17,7 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
  * @version <version>
  * @since <version>
  */
+@Builder
 public class ShowOnlyIsoDirectoriesFilter extends ViewerFilter {
 
     @Override

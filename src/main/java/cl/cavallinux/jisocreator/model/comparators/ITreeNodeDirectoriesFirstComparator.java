@@ -27,6 +27,7 @@ public class ITreeNodeDirectoriesFirstComparator extends ViewerComparator {
     private int category(ITreeNode element) {
         File file = (File) element.getElement();
         Path path = file.toPath();
-        return Files.isDirectory(path) ? BigInteger.ZERO.intValue() : BigInteger.ONE.intValue();
+        BigInteger compareResult = Files.isDirectory(path) ? BigInteger.ZERO : BigInteger.ONE;
+        return compareResult.intValue();
     }
 }

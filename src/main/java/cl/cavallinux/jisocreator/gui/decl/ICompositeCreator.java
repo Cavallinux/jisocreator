@@ -39,6 +39,8 @@ import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
  * @version 0.0.3
  */
 public interface ICompositeCreator {
+    final int COMPOSITE_SWT_OPTIONS = SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
+            | SWT.MULTI;
 
     /**
      * Creates all UI components for this composite.
@@ -69,10 +71,11 @@ public interface ICompositeCreator {
      * </p>
      */
     void addListeners();
-    
+
     default void applyConstraints() {
 
     }
+
     /**
      * Fills the given table with predefined columns and tooltips.
      * <p>
@@ -97,7 +100,7 @@ public interface ICompositeCreator {
         });
         table.setHeaderVisible(true);
     }
-    
+
     default Map<String, String> obtainTableColumnsTextAndTooltips() {
         return LinkedHashMap.newLinkedHashMap(4);
     }

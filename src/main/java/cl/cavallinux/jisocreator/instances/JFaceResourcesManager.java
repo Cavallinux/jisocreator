@@ -5,8 +5,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.SWT;
-
+import cl.cavallinux.jisocreator.gui.decl.ICompositeCreator;
 import cl.cavallinux.jisocreator.gui.listeners.isoexplorer.ISODirectoriesMenuListener;
 import cl.cavallinux.jisocreator.gui.listeners.isoexplorer.ISOExplorerSashFormDoubleClickListener;
 import cl.cavallinux.jisocreator.gui.listeners.isoexplorer.ISOExplorerSashFormSelectionChangedListener;
@@ -36,15 +35,14 @@ public enum JFaceResourcesManager {
     OSEXPLORER_INSTANCE(HideHiddenFilesFilter.builder().build(), ShowOnlyDirectoriesFilter.builder().build(),
             OSDirectoriesComparator.builder().build(), OSTreeLabelProvider.builder().build(),
             OSTreeContentProvider.builder().build(), OsTableProvider.builder().build(),
-            OSDirectoriesMenuListener.builder().build(),
-            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
-            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
-            new OSExplorerSashFormDoubleClickListener(), new OSExplorerSashFormSelectionChangedListener()),
-    ISOEXPLORER_INSTANCE(null, new ShowOnlyIsoDirectoriesFilter(), new ITreeNodeDirectoriesFirstComparator(),
+            OSDirectoriesMenuListener.builder().build(),ICompositeCreator.COMPOSITE_SWT_OPTIONS, 
+            ICompositeCreator.COMPOSITE_SWT_OPTIONS,
+            OSExplorerSashFormDoubleClickListener.builder().build(), 
+            OSExplorerSashFormSelectionChangedListener.builder().build()),
+    ISOEXPLORER_INSTANCE(null, ShowOnlyIsoDirectoriesFilter.builder().build(), new ITreeNodeDirectoriesFirstComparator(),
             new IsoTreeLabelProvider(), new IsoTreeContentProvider(), new IsoTableProvider(),
-            new ISODirectoriesMenuListener(),
-            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
-            SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI,
+            new ISODirectoriesMenuListener(), ICompositeCreator.COMPOSITE_SWT_OPTIONS,
+            ICompositeCreator.COMPOSITE_SWT_OPTIONS,
             new ISOExplorerSashFormDoubleClickListener(), new ISOExplorerSashFormSelectionChangedListener());
 
     private ViewerFilter toggleHiddenFilesFilter;

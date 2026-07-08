@@ -59,7 +59,8 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         fillTableColumnValues(osDirectoriesTable.getTable());
         addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.OSEXPLORER_INSTANCE.getDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.OSEXPLORER_INSTANCE, osDirectoriesTable, osDirectoriesTree);
-        osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots());
+        // Set input to null to let getElements() determine root elements from OSExplorer roots
+        osDirectoriesTree.setInput(null);
     }
 
     @Override

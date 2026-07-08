@@ -15,6 +15,11 @@ public class OSTreeContentProvider implements ITreeContentProvider {
 
     @Override
     public Object[] getElements(Object arg0) {
+        log.info("Arg received in getElements: {}", arg0);
+        // When input is null (initial display), return filesystem roots
+        if (arg0 == null) {
+            return OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
+        }
         return getChildren(arg0);
     }
 
@@ -39,7 +44,13 @@ public class OSTreeContentProvider implements ITreeContentProvider {
     @Override
     public boolean hasChildren(Object arg0) {
         log.info("Arg received in hasChildren: {}", arg0);
-        File[] files = ((File) arg0).listFiles();
-        return Objects.nonNull(files) && files.length > 0;
+        if (arg0 instanceof File) {
+            File[] files = ((File) arg0).listFiles();
+            return Objects.nonNull(files) && files.length > 0;
+        } else {
+            // If arg0 is not a File (e.g., initial input is File[]), check if roots exist
+            File[] roots = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
+            return Objects.nonNull(roots) && roots.length > 0;
+        }
     }
 }

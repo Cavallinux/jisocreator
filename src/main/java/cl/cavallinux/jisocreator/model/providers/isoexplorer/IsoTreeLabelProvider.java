@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
+package cl.cavallinux.jisocreator.model.providers.isoexplorer;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
+import cl.cavallinux.jisocreator.model.providers.isoexplorer.IsoTreeContentProvider;
 
 @DisplayName("IsoTreeContentProvider tests")
 class IsoTreeContentProviderTest {

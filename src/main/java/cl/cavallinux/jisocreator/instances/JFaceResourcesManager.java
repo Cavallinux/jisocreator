@@ -21,12 +21,12 @@ import cl.cavallinux.jisocreator.model.filters.HideHiddenFilesFilter;
 import cl.cavallinux.jisocreator.model.filters.ShowOnlyDirectoriesFilter;
 import cl.cavallinux.jisocreator.model.filters.isoexplorer.ShowOnlyIsoDirectoriesFilter;
 import cl.cavallinux.jisocreator.model.providers.decl.TableProviderAdapter;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTableProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeContentProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.isoexplorer.IsoTreeLabelProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeContentProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OSTreeLabelProvider;
-import cl.cavallinux.jisocreator.model.providers.impl.osexplorer.OsTableProvider;
+import cl.cavallinux.jisocreator.model.providers.isoexplorer.IsoTableProvider;
+import cl.cavallinux.jisocreator.model.providers.isoexplorer.IsoTreeContentProvider;
+import cl.cavallinux.jisocreator.model.providers.isoexplorer.IsoTreeLabelProvider;
+import cl.cavallinux.jisocreator.model.providers.osexplorer.OSTreeContentProvider;
+import cl.cavallinux.jisocreator.model.providers.osexplorer.OSTreeLabelProvider;
+import cl.cavallinux.jisocreator.model.providers.osexplorer.OsTableProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

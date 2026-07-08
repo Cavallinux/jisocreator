@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.osexplorer;
+package cl.cavallinux.jisocreator.model.providers.osexplorer;
 
 import java.io.File;
 import java.util.Objects;

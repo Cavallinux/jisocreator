@@ -15,9 +15,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import cl.cavallinux.jisocreator.model.providers.osexplorer.OsTableProvider;
+
 @DisplayName("OsTableProvider tests")
 class OsTableProviderTest {
-    private final OsTableProvider provider = new OsTableProvider();
+    private final OsTableProvider provider = OsTableProvider.builder().build();
 
     @Test
     @DisplayName("Should list directory entries from File input")

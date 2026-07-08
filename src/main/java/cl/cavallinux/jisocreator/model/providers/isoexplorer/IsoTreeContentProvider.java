@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
+package cl.cavallinux.jisocreator.model.providers.isoexplorer;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;

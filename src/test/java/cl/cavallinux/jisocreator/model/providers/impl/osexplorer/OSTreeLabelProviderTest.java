@@ -10,9 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import cl.cavallinux.jisocreator.model.providers.osexplorer.OSTreeLabelProvider;
+
 @DisplayName("OSTreeLabelProvider tests")
 class OSTreeLabelProviderTest {
-    private final OSTreeLabelProvider provider = new OSTreeLabelProvider();
+    private final OSTreeLabelProvider provider = OSTreeLabelProvider.builder().build();
 
     @Test
     @DisplayName("Should use OSExplorer naming for file elements")

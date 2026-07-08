@@ -19,10 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
+import cl.cavallinux.jisocreator.model.providers.osexplorer.OSTreeContentProvider;
 
 @DisplayName("OSTreeContentProvider tests")
 class OSTreeContentProviderTest {
-    private final OSTreeContentProvider provider = new OSTreeContentProvider();
+    private final OSTreeContentProvider provider = OSTreeContentProvider.builder().build();
 
     @Test
     @DisplayName("Should return filesystem roots for non-file input")

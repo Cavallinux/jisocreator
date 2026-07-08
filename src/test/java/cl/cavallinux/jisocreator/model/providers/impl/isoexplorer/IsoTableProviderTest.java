@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import cl.cavallinux.jisocreator.model.providers.isoexplorer.IsoTableProvider;
 
 @DisplayName("IsoTableProvider tests")
 class IsoTableProviderTest {

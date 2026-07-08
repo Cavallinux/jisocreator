@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
+package cl.cavallinux.jisocreator.model.providers.isoexplorer;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.model.providers.isoexplorer.IsoTableProvider;
 
 @DisplayName("IsoTableProvider tests")
 class IsoTableProviderTest {

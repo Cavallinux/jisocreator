@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
+package cl.cavallinux.jisocreator.model.providers.isoexplorer;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.model.providers.isoexplorer.IsoTreeContentProvider;
 
 @DisplayName("IsoTreeContentProvider tests")
 class IsoTreeContentProviderTest {

@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.osexplorer;
+package cl.cavallinux.jisocreator.model.providers.osxplorer;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;

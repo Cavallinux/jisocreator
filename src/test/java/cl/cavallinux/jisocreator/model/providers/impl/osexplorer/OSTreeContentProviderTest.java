@@ -55,7 +55,10 @@ class OSTreeContentProviderTest {
     void shouldHandleRegularFileInputWithNoChildren(@TempDir Path tempDir) throws IOException {
         Path file = Files.write(tempDir.resolve("plain.txt"), new byte[] { 1, 2 });
 
-        assertNull(provider.getChildren(file.toFile()));
+        // getChildren returns empty array instead of null to prevent NullPointerException
+        Object[] children = provider.getChildren(file.toFile());
+        assertNotNull(children, "getChildren should return empty array, not null");
+        assertEquals(0, children.length, "Regular file should have no children");
         assertNotNull(provider.getParent(file.toFile()));
         assertFalse(provider.hasChildren(file.toFile()));
     }

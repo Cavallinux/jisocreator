@@ -3,16 +3,16 @@ package cl.cavallinux.jisocreator.model.providers.impl.osexplorer;
 import java.io.File;
 import java.nio.file.Path;
 
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
-import cl.cavallinux.jisocreator.model.providers.decl.TreeLabelAdapter;
 import lombok.Builder;
 
 @Builder
-public class OSTreeLabelProvider extends TreeLabelAdapter {
+public class OSTreeLabelProvider extends LabelProvider {
 
     @Override
     public Image getImage(Object element) {

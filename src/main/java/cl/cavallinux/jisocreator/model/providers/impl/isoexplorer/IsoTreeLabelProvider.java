@@ -1,11 +1,11 @@
 package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
 
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
-import cl.cavallinux.jisocreator.model.providers.decl.TreeLabelAdapter;
 
-public class IsoTreeLabelProvider extends TreeLabelAdapter {
+public class IsoTreeLabelProvider extends LabelProvider {
     @Override
     public Image getImage(Object element) {
         return ((ITreeNode) element).getImage();

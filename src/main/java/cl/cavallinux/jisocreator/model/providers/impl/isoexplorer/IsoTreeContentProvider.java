@@ -2,9 +2,9 @@ package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.model.providers.decl.TreeContentAdapter;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 
-public class IsoTreeContentProvider extends TreeContentAdapter {
+public class IsoTreeContentProvider implements ITreeContentProvider {
     @Override
     public Object[] getElements(Object arg0) {
         return getChildren(arg0);

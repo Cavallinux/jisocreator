@@ -26,6 +26,7 @@ import cl.cavallinux.jisocreator.gui.i18n.IsoExplorerMessages;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.IsoExplorerActionsManager;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
+import cl.cavallinux.jisocreator.model.dnd.JISOCreatorViewerDropAdapter;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import lombok.Getter;
@@ -54,12 +55,15 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
     @Override
     public void addFeatures() {
         log.info("Adding IsoExplorerSashForm features");
-        setWeights(25, 75 );
+        setWeights(25, 75);
         fillCoolbarAndToolbars();
         fillTableColumnValues(isoDirectoriesTable.getTable());
         addPopMenuToTable(isoDirectoriesTable, JFaceResourcesManager.ISOEXPLORER_INSTANCE.getDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.ISOEXPLORER_INSTANCE, isoDirectoriesTable,
                 isoDirectoriesTree);
+        JISOCreatorViewerDropAdapter dropAdapter = JISOCreatorViewerDropAdapter.builder().viewer(isoDirectoriesTable)
+                .build();
+        isoDirectoriesTable.addDropSupport(COMPOSITE_SWT_OPTIONS, obtainDragAndDropTransferTypes(), dropAdapter);
     }
 
     @Override
@@ -115,7 +119,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
                 .applyTo(isoDirectoriesTable.getControl());
         GridLayoutFactory.fillDefaults().generateLayout(composites.get(1));
     }
-    
+
     @Override
     public Map<String, String> obtainTableColumnsTextAndTooltips() {
         Map<String, String> tableColumnsTextAndTooltips = ICompositeCreator.super.obtainTableColumnsTextAndTooltips();
@@ -160,7 +164,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
         IsoFileSystem fileSystem = (IsoFileSystem) getIsoDirectoriesTree().getInput();
         fileSystem.setIsoLength();
     }
-    
+
     public String printISOFileSystemInfo(String iso9660LayoutInfoTemplate) {
         IsoFileSystem isoFileSystem = (IsoFileSystem) getIsoDirectoriesTree().getInput();
         return isoFileSystem.printIsoFileSystemInfo(iso9660LayoutInfoTemplate);

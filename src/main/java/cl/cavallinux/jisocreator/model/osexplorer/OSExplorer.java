@@ -6,14 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.swt.program.Program;
 
 import lombok.Builder;
@@ -34,16 +34,18 @@ public class OSExplorer {
             .withZone(ZoneId.systemDefault());
 
     private OSExplorer(File[] roots) {
-        log.info("OS: {}, Legacy FileSystem roots: {}", System.getProperty("os.name"), roots);
+        log.info("OS: {}, FileSystem roots: {}", System.getProperty("os.name"), roots);
         this.setRoots(roots);
     }
 
     @Builder
     public OSExplorer() {
-        this(File.listRoots());
+        this(Strings.CI.equalsAny(System.getProperty("os.name"), "Windows")
+                ? new File(System.getProperty("user.home")).listFiles()
+                : File.listRoots());
     }
 
-    /**
+    /**ct pathnames denoting the files in the directory denoted by this abstract pathname.
      * Launches the default application associated with the specified file path.
      * This method utilizes the modern `Path` API, which is more efficient and
      * compatible with modern Java versions compared to the legacy `File` API. It is
@@ -109,17 +111,17 @@ public class OSExplorer {
      * @return The last modified time of the file as a formatted string. If an error
      *         occurs while retrieving the last modified time, it returns "0".
      */
-    // TODO use java time api.
     public String lastModified(Path path) {
+        return FORMATTER.format(lastModifiedInstant(path));
+    }
+    
+    private Instant lastModifiedInstant(Path path) {
         try {
             FileTime lastModifiedTime = Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS);
-            Instant lastModifiedInstant = lastModifiedTime.toInstant();
-            return FORMATTER.format(lastModifiedInstant);
-            // return DateFormat.getDateTimeInstance().format(new
-            // Date(lastModifiedTime.toMillis()));
+            return lastModifiedTime.toInstant();
         } catch (IOException e) {
-            log.error("Error retrieving last modified time for path: {}", path, e);
-            return DateFormat.getDateTimeInstance().format(new Date(path.toFile().lastModified()));
+            log.warn("Error retrieving last modified time for path: {}. Calculating via Java FILE Api", path, e);
+            return Instant.ofEpochMilli(path.toFile().lastModified());
         }
     }
 

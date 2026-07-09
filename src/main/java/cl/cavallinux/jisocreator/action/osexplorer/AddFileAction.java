@@ -58,6 +58,10 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
             return;
         }
     }
+    
+    public void run(List<File> files) {
+        log.info("Running AddFileAction with files: {}", files);
+    }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

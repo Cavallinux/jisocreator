@@ -112,7 +112,7 @@ public interface ICompositeCreator {
         return LinkedHashMap.newLinkedHashMap(4);
     }
     
-    default Transfer[] obtainDragAndDropTransferTypes() {
+    static Transfer[] obtainDragAndDropTransferTypes() {
         List<Transfer> transferTypes = new ArrayList<>();
         transferTypes.add(FileTransfer.getInstance());
         transferTypes.add(LocalSelectionTransfer.getTransfer());

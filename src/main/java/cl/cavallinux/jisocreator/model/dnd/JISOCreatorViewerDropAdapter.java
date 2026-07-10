@@ -26,6 +26,7 @@ public class JISOCreatorViewerDropAdapter extends ViewerDropAdapter {
     @Override
     public boolean performDrop(Object data) {
         try {
+            log.info("Performing drop with data: {}", data);
             AddFileAction addFileAction = (AddFileAction) OSExplorerActionsManager.ADDFILEACTION.getAction();
             List<File> files = Arrays.stream((String[]) data).map(File::new).toList();
             addFileAction.run(files);

@@ -62,8 +62,8 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.OSEXPLORER_INSTANCE.getDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.OSEXPLORER_INSTANCE, osDirectoriesTable, osDirectoriesTree);
         osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer());
-        DragSourceAdapter dragSourceAdapter = JISOCreatorDragSourceAdapter.builder().build();
-        osDirectoriesTable.addDragSupport(COMPOSITE_SWT_OPTIONS, ICompositeCreator.obtainDragAndDropTransferTypes(),
+        DragSourceAdapter dragSourceAdapter = JISOCreatorDragSourceAdapter.builder().viewer(osDirectoriesTable).build();
+        osDirectoriesTable.addDragSupport(ICompositeCreator.COMPOSITE_DND_OPTIONS, ICompositeCreator.obtainDragAndDropTransferTypes(),
                 dragSourceAdapter);
     }
 

@@ -49,7 +49,7 @@ import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 public interface ICompositeCreator {
     final int COMPOSITE_SWT_OPTIONS = SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
             | SWT.MULTI;
-    final int DRAG_AND_DROP_COMPOSITE_OPTIONS = DND.DROP_COPY | DND.DROP_MOVE;
+    final int COMPOSITE_DND_OPTIONS = DND.DROP_COPY | DND.DROP_MOVE;
 
     /**
      * Creates all UI components for this composite.

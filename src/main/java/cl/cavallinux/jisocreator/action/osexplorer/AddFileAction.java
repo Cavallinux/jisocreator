@@ -23,6 +23,7 @@ import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoTreeNode;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +60,39 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
         }
     }
     
-    public void run(List<File> files) {
-        log.info("Running AddFileAction with files: {}", files);
+    public void run(List<File> droppedFiles) {
+        log.info("Running AddFileAction with {} dropped files from drag & drop", droppedFiles != null ? droppedFiles.size() : 0);
+        
+        if (droppedFiles == null || droppedFiles.isEmpty()) {
+            log.warn("No files provided to AddFileAction");
+            return;
+        }
+
+        // Store the files for later processing in run(IProgressMonitor)
+        this.files = droppedFiles;
+        
+        // Get the ISO explorer to determine target node
+        IsoExplorerSashForm isoExplorer = GUIManager.INSTANCE.getMainWindow().getIsoExplorer();
+        IStructuredSelection isoSelection = (IStructuredSelection) isoExplorer.getIsoDirectoriesTable().getSelection();
+        
+        // If a specific node is selected in ISO tree, use it; otherwise use root
+        if (!isoSelection.isEmpty()) {
+            this.isoNode = (ITreeNode) isoSelection.getFirstElement();
+            log.info("Target ISO node selected from table: {}", isoNode);
+        } else {
+            // Get root node from ISO file system
+            IsoFileSystem isoFileSystem = (IsoFileSystem) isoExplorer.getIsoDirectoriesTree().getInput();
+            if (isoFileSystem != null) {
+                this.isoNode = isoFileSystem.getRoot();
+                log.info("Target ISO node set to root: {}", isoNode);
+            } else {
+                log.error("No ISO file system or target node available");
+                return;
+            }
+        }
+        
+        // Execute the action with progress monitor
+        executeAction();
     }
 
     @Override

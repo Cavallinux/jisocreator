@@ -25,16 +25,26 @@ public class JISOCreatorViewerDropAdapter extends ViewerDropAdapter {
 
     @Override
     public boolean performDrop(Object data) {
-        AddFileAction addFileAction = (AddFileAction) OSExplorerActionsManager.ADDFILEACTION.getAction();
-        List<File> files = Arrays.stream((String[]) data).map(File::new).toList();
-        addFileAction.run(files);
-        return true;
+        try {
+            AddFileAction addFileAction = (AddFileAction) OSExplorerActionsManager.ADDFILEACTION.getAction();
+            List<File> files = Arrays.stream((String[]) data).map(File::new).toList();
+            addFileAction.run(files);
+            return true;
+        } catch (Exception e) {
+            log.error("Error performing drop data", e);
+            return false;
+        }
     }
 
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
-        log.info("Validating drop for target: {}, operation: {}, transferType: {}", target, operation, transferType);
-        return Arrays.stream(ICompositeCreator.obtainDragAndDropTransferTypes())
-                .anyMatch(transfer -> transfer.isSupportedType(transferType));
+        try {
+            log.info("Validating drop for target: {}, operation: {}, transferType: {}", target, operation, transferType);
+            return Arrays.stream(ICompositeCreator.obtainDragAndDropTransferTypes())
+                    .anyMatch(transfer -> transfer.isSupportedType(transferType));
+        } catch (Exception e) {
+            log.error("Error validating drop data", e);
+            return false;
+        }
     }
 }

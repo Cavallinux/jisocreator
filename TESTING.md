@@ -74,9 +74,14 @@ src/test/java/
 
 ## Running Tests
 
-### Run All Tests
+### Run All Tests (Linux — default profile)
 ```bash
 mvn test
+```
+
+### Run All Tests on Windows
+```bash
+mvn test -Pwindows
 ```
 
 ### Run a Specific Test Class
@@ -139,6 +144,14 @@ Total:                                     113 tests
 
 ## Notes on SWT-Dependent Testing
 Some production classes depend on SWT/JFace runtime state (`Display`, images, widgets). Current suite prioritizes behavior that can be verified headless. UI-heavy integration tests are still pending.
+
+## Notes on Cross-Platform Testing
+
+The test suite runs on both Linux and Windows. Some platform-specific considerations:
+
+- **Hidden files (`HideHiddenFilesFilter`)**: On Windows, `Files.isHidden()` only detects files with the DOS hidden attribute. The filter also checks for Unix-style hidden files (names starting with `.`) so that `HideHiddenFilesFilterTest` passes on both platforms.
+- **Path separators (`XMLIsoFilesystemContractMapper`)**: `XMLIsoFilesystemContractMapper` normalizes file paths to forward slashes (`/`) before writing to XML. Tests compare paths using the same normalization to guarantee equality on both Linux and Windows.
+- **XML fixtures**: Test fixture files under `src/test/resources/xml/` use Unix (LF) line endings to ensure consistent XMLUnit diff results across platforms.
 
 ## Future Testing Enhancements
 1. Add integration tests for GUI actions and dialogs with SWT harness.

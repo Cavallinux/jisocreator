@@ -100,9 +100,14 @@ The project includes comprehensive unit tests using:
 
 ### Running Tests
 
-#### Run All Tests
+#### Run All Tests (Linux — default profile)
 ```bash
 mvn test
+```
+
+#### Run All Tests on Windows
+```bash
+mvn test -Pwindows
 ```
 
 #### Run Specific Test Class
@@ -140,7 +145,7 @@ Current coverage includes:
 - **Singleton Pattern Testing**: Validates OSExplorer singleton implementation
 - **File System Operations**: Comprehensive testing of file and directory handling
 - **Path Manipulation**: Tests for file path concatenation and validation
-- **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison
+- **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison, including cross-platform path separator normalization (Windows backslash → Unix forward slash)
 - **Action and Workflow Validation**: Tests for command parsing branches and save-thread progress behavior
 
 For detailed testing information, see `TESTING.md`.
@@ -377,7 +382,7 @@ UI text is externalized into per-component NLS message bundles under `src/main/r
 
 ### XML Parser Layer
 
-XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/decl`) and the `XMLIsoFilesystemParser` implementation (`model/parser/xml`) backed by Jackson XML. Compatibility is validated with a legacy XML fixture under `src/test/resources/xml/`.
+XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/decl`) and the `XMLIsoFilesystemParser` implementation (`model/parser/xml`) backed by Jackson XML. The mapper normalizes file path separators to forward slashes (`/`) before writing to XML, ensuring that layouts saved on Windows are byte-identical to those saved on Linux. Compatibility is validated with legacy XML fixtures under `src/test/resources/xml/`.
 
 ### Testing Architecture
 
@@ -385,6 +390,7 @@ The test suite (113 tests / 33 classes, see [TESTING.md](TESTING.md)) favors SWT
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
+- **Cross-platform compatibility**: `HideHiddenFilesFilter` detects both DOS hidden-attribute files (Windows) and Unix-style dot-prefix hidden files. `XMLIsoFilesystemContractMapper` normalizes path separators to forward slashes so serialized XML is portable across platforms. Tests run cleanly on both Linux (`mvn test`) and Windows (`mvn test -Pwindows`).
 - **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`).
 - **XMLUnit-based compatibility checks**: legacy XML layout fixtures are diffed against round-tripped output to guarantee backward compatibility of the XML parser.
 

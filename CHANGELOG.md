@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 0.2.0-SNAPSHOT
 
+### Fixed
+- **Cross-platform hidden-file detection in `HideHiddenFilesFilter`**: On Windows, `Files.isHidden()` only detects files with the DOS hidden attribute and ignores Unix-style hidden files (names starting with `.`). Added a secondary check `file.getName().startsWith(".")` so the filter works consistently on all platforms.
+- **Path separator normalization in `XMLIsoFilesystemContractMapper`**: When deserializing an XML layout on Windows, `File.getAbsolutePath()` returned backslash-separated paths, which broke XML round-trip compatibility (the re-serialized XML differed from the original). The mapper now normalizes path separators to forward slashes (`/`) using `file.getPath().replace(File.separatorChar, '/')`, making the serialized XML portable across Linux and Windows.
+
+### Changed
+- **`XMLIsoFilesystemContractMapperTest`**: Updated `shouldMapIsoEntryToXMLEntry` assertion to compare file paths using normalized forward-slash separators so the test passes on both Linux and Windows.
+- **XML test fixture `1560506077724c8e97f4d1664f851193.xml`**: Converted line endings from Windows CRLF to Unix LF for consistent cross-platform behaviour in the compatibility test suite.
+
 ## [0.1.6] - 2026-07-06
 
 ### Added

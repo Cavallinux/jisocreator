@@ -1,6 +1,7 @@
 package cl.cavallinux.jisocreator.gui.decl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -117,6 +119,11 @@ public interface ICompositeCreator {
         transferTypes.add(FileTransfer.getInstance());
         transferTypes.add(LocalSelectionTransfer.getTransfer());
         return transferTypes.toArray(Transfer[]::new);
+    }
+    
+    static boolean isDragAndDropTransferTypeSupported(TransferData transferType) {
+        return Arrays.stream(obtainDragAndDropTransferTypes())
+                .anyMatch(transfer -> transfer.isSupportedType(transferType));
     }
 
     default void addPopMenuToTable(TableViewer table, IMenuListener menuListener) {

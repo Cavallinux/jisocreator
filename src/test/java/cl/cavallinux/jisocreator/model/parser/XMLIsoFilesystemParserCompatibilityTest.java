@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.apache.commons.lang3.Strings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -25,6 +26,7 @@ import cl.cavallinux.jisocreator.model.parser.xml.XMLIsoFilesystemParser;
 @DisplayName("XMLIsoFilesystemParser compatibility tests")
 class XMLIsoFilesystemParserCompatibilityTest {
     private static final String LEGACY_SAMPLE_XML_CLASSPATH = "/xml/c267b1a84ea9429088ce5530122e5c8a.xml";
+    private static final String LEGACY_WIN32_SAMPLE_XML_CLASSPATH = "/xml/1560506077724c8e97f4d1664f851193.xml";
 
     @Test
     @DisplayName("Should deserialize existing legacy XML layout")
@@ -63,12 +65,15 @@ class XMLIsoFilesystemParserCompatibilityTest {
     }
 
     private static Path getLegacySampleXmlPath() {
-        URL resource = XMLIsoFilesystemParserCompatibilityTest.class.getResource(LEGACY_SAMPLE_XML_CLASSPATH);
-        assertNotNull(resource, "Missing test resource: " + LEGACY_SAMPLE_XML_CLASSPATH);
+        String xml = Strings.CI.containsAny(System.getProperty("os.name"), "Windiws")
+                ? LEGACY_WIN32_SAMPLE_XML_CLASSPATH
+                : LEGACY_SAMPLE_XML_CLASSPATH;
+        URL resource = XMLIsoFilesystemParserCompatibilityTest.class.getResource(xml);
+        assertNotNull(resource, "Missing test resource: " + xml);
         try {
             return Path.of(resource.toURI());
         } catch (URISyntaxException e) {
-            throw new IllegalStateException("Invalid test resource URI: " + LEGACY_SAMPLE_XML_CLASSPATH, e);
+            throw new IllegalStateException("Invalid test resource URI: " + xml, e);
         }
     }
 }

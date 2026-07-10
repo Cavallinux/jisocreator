@@ -49,7 +49,10 @@ final class XMLIsoFilesystemContractMapper {
         } else {
             Object element = node.getElement();
             if (element instanceof File file) {
-                entry.setFile(file.getAbsolutePath());
+                // Use getPath() and normalize path separators to forward slashes
+                // for cross-platform compatibility (e.g., ISO layouts created on Linux
+                // opened on Windows should preserve original Unix-style paths on round-trip)
+                entry.setFile(file.getPath().replace(File.separatorChar, '/'));
             }
             entry.setParent(defaultParentRef());
         }

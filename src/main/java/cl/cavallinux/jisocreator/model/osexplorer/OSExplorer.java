@@ -40,7 +40,7 @@ public class OSExplorer {
 
     @Builder
     public OSExplorer() {
-        this(Strings.CI.equalsAny(System.getProperty("os.name"), "Windows")
+       this(Strings.CI.containsAny(System.getProperty("os.name"), "Windows")
                 ? new File(System.getProperty("user.home")).listFiles()
                 : File.listRoots());
     }

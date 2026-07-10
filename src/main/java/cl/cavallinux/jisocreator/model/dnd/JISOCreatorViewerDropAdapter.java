@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.model.dnd;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,42 +28,19 @@ public class JISOCreatorViewerDropAdapter extends ViewerDropAdapter {
     @Override
     public boolean performDrop(Object data) {
         try {
-            log.info("Performing drop with data type: {}, data: {}", data != null ? data.getClass().getSimpleName() : "null", data);
-            
-            List<File> files = null;
-            
-            // Handle FileTransfer (from OS or FileTransfer source)
+            List<File> files = Collections.emptyList();
+
             if (data instanceof String[]) {
                 String[] paths = (String[]) data;
-                files = Arrays.stream(paths)
-                        .map(File::new)
-                        .toList();
-                log.info("Drop data interpreted as FileTransfer with {} paths", paths.length);
-            }
-            // Handle LocalSelectionTransfer (from intra-app drag, e.g., OSExplorer)
-            else if (data instanceof Object[]) {
-                Object[] objects = (Object[]) data;
-                files = Arrays.stream(objects)
-                        .filter(obj -> obj instanceof File)
-                        .map(obj -> (File) obj)
-                        .toList();
-                log.info("Drop data interpreted as LocalSelectionTransfer with {} files", files.size());
-            }
-            // Handle IStructuredSelection directly (fallback)
-            else if (data instanceof IStructuredSelection) {
+                files = Arrays.stream(paths).map(File::new).toList();
+            } else if (data instanceof IStructuredSelection) {
                 IStructuredSelection selection = (IStructuredSelection) data;
-                files = selection.toList();
-                log.info("Drop data interpreted as IStructuredSelection with {} items", files.size());
+                files = selection.stream().filter(obj -> obj instanceof File).map(obj -> (File) obj).toList();
             }
-            
-            if (files == null || files.isEmpty()) {
-                log.warn("No valid files found in drop data");
-                return false;
-            }
-            
+
+            log.info("Drop data interpreted as {}, with {} items", data.getClass().getSimpleName(), files.size());
             AddFileAction addFileAction = (AddFileAction) OSExplorerActionsManager.ADDFILEACTION.getAction();
             addFileAction.run(files);
-            log.info("AddFileAction executed successfully with {} files", files.size());
             return true;
         } catch (Exception e) {
             log.error("Error performing drop", e);
@@ -73,10 +51,10 @@ public class JISOCreatorViewerDropAdapter extends ViewerDropAdapter {
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
         try {
-            log.info("Validating drop for target: {}, operation: {}, transferType: {}", target, operation, transferType);
             boolean isValid = Arrays.stream(ICompositeCreator.obtainDragAndDropTransferTypes())
                     .anyMatch(transfer -> transfer.isSupportedType(transferType));
-            log.info("Drop validation result: {}", isValid);
+            log.info("Validate operation: {}, transferType: {}, validation result: {}", operation,
+                    transferType.getClass().getSimpleName(), isValid);
             return isValid;
         } catch (Exception e) {
             log.error("Error validating drop", e);

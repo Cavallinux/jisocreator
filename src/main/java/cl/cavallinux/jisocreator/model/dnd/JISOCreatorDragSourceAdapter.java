@@ -22,7 +22,6 @@ public class JISOCreatorDragSourceAdapter extends DragSourceAdapter {
     @Override
     public void dragStart(DragSourceEvent event) {
         log.info("Drag started from viewer: {}", viewer);
-        // Store the current selection in LocalSelectionTransfer for intra-application drags
         if (viewer != null) {
             IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
             LocalSelectionTransfer.getTransfer().setSelection(selection);

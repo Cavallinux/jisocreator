@@ -10,6 +10,7 @@ import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -90,37 +91,41 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
                 return;
             }
         }
-        
-        // Execute the action with progress monitor
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        mainWindow.setStatusLineActiveCancelButton(true);
         executeAction();
+        mainWindow.setStatusLineActiveCancelButton(true);
+        
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
         monitor.beginTask("Adding selected files", IProgressMonitor.UNKNOWN);
-        monitor.subTask("Calculating quantity of files to add...");
-        int i = calculateFileQuantity();
-        monitor.done();
-        monitor.beginTask("Adding selected files", i);
         files.forEach(file -> {
+            monitor.subTask(String.format("Adding file: %s", file.getAbsolutePath()));
             ITreeNode dirEntry = new IsoTreeNode(isoNode, file);
             isoNode.addNode(dirEntry);
         });
         monitor.subTask("Refreshing GUI...");
         Display.getDefault().asyncExec(new Thread(() -> {
-            IsoExplorerSashForm isoExplorer = GUIManager.INSTANCE.getMainWindow().getIsoExplorer();
-            isoExplorer.getIsoDirectoriesTree().setSelection(new StructuredSelection(isoNode), true);
-            isoExplorer.getIsoDirectoriesTree().expandToLevel(isoNode, 1);
+            IsoExplorerSashForm isoExplorer = mainWindow.getIsoExplorer();
+            TreeViewer isoDirectoriesTree = isoExplorer.getIsoDirectoriesTree();
+            IStructuredSelection isoStructuredSelection = new StructuredSelection(isoNode);
+            isoDirectoriesTree.setSelection(isoStructuredSelection, true);
+            isoDirectoriesTree.expandToLevel(isoNode, 1);
             isoExplorer.refresh();
-            GUIManager.INSTANCE.getMainWindow()
-                    .setStatus(isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage));
+            String isoInfoStatus = isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage);
+            mainWindow.setStatus(isoInfoStatus);
         }));
+        
         monitor.done();
     }
 
     @SuppressWarnings("unchecked")
     private void executeAddFiles(ITreeNode node) {
-        OSExplorerSashForm osExplorer = GUIManager.INSTANCE.getMainWindow().getOsExplorer();
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        OSExplorerSashForm osExplorer = mainWindow.getOsExplorer();
         IStructuredSelection selection = (IStructuredSelection) osExplorer.getTableSelection();
         files = selection.toList();
         isoNode = node;
@@ -134,25 +139,5 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
             log.error("Error executing AddFileAction", e);
             return;
         }
-    }
-
-    private int calculateFileQuantity() {
-        int q = 0;
-        for (File file : files) {
-            q += calculateFileQuantity(file);
-        }
-        return q;
-    }
-
-    private int calculateFileQuantity(File file) {
-        int i = 0;
-        if (file.isFile() || (file.listFiles() == null)) {
-            i++;
-        } else {
-            for (File temp : file.listFiles()) {
-                i += calculateFileQuantity(temp);
-            }
-        }
-        return i;
     }
 }

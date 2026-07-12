@@ -45,7 +45,7 @@ public class OSExplorer {
                 : File.listRoots());
     }
 
-    /**ct pathnames denoting the files in the directory denoted by this abstract pathname.
+    /**
      * Launches the default application associated with the specified file path.
      * This method utilizes the modern `Path` API, which is more efficient and
      * compatible with modern Java versions compared to the legacy `File` API. It is

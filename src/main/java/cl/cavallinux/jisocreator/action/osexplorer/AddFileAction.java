@@ -69,19 +69,14 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
             return;
         }
 
-        // Store the files for later processing in run(IProgressMonitor)
         this.files = droppedFiles;
-        
-        // Get the ISO explorer to determine target node
         IsoExplorerSashForm isoExplorer = GUIManager.INSTANCE.getMainWindow().getIsoExplorer();
         IStructuredSelection isoSelection = (IStructuredSelection) isoExplorer.getIsoDirectoriesTable().getSelection();
         
-        // If a specific node is selected in ISO tree, use it; otherwise use root
         if (!isoSelection.isEmpty()) {
             this.isoNode = (ITreeNode) isoSelection.getFirstElement();
             log.info("Target ISO node selected from table: {}", isoNode);
         } else {
-            // Get root node from ISO file system
             IsoFileSystem isoFileSystem = (IsoFileSystem) isoExplorer.getIsoDirectoriesTree().getInput();
             if (isoFileSystem != null) {
                 this.isoNode = isoFileSystem.getRoot();
@@ -91,10 +86,7 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
                 return;
             }
         }
-        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
-        mainWindow.setStatusLineActiveCancelButton(true);
         executeAction();
-        mainWindow.setStatusLineActiveCancelButton(true);
         
     }
 

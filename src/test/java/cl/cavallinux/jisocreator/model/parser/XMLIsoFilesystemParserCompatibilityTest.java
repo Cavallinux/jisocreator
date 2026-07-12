@@ -65,7 +65,7 @@ class XMLIsoFilesystemParserCompatibilityTest {
     }
 
     private static Path getLegacySampleXmlPath() {
-        String xml = Strings.CI.containsAny(System.getProperty("os.name"), "Windiws")
+        String xml = Strings.CI.containsAny(System.getProperty("os.name"), "Windows")
                 ? LEGACY_WIN32_SAMPLE_XML_CLASSPATH
                 : LEGACY_SAMPLE_XML_CLASSPATH;
         URL resource = XMLIsoFilesystemParserCompatibilityTest.class.getResource(xml);

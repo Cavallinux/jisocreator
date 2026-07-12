@@ -31,7 +31,6 @@ public class JISOCreatorDragSourceAdapter extends DragSourceAdapter {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void dragSetData(DragSourceEvent event) {
         log.info("Setting drag data for event data type: {}", event.dataType);
         boolean isSupported = ICompositeCreator.isDragAndDropTransferTypeSupported(event.dataType);
@@ -44,19 +43,14 @@ public class JISOCreatorDragSourceAdapter extends DragSourceAdapter {
 
         try {
             IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-            List<File> selectedFiles = selection.toList();
+            List<File> selectedFiles = selection.stream().filter(File.class::isInstance).map(File.class::cast).toList();
             log.info("Selected items for drag: {}", selectedFiles);
 
-            // Handle FileTransfer: convert files to absolute paths
             if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
-                String[] absolutePaths = selectedFiles.stream()
-                        .map(File::getAbsolutePath)
-                        .toArray(String[]::new);
+                String[] absolutePaths = selectedFiles.stream().map(File::getAbsolutePath).toArray(String[]::new);
                 log.info("Drag data set as FileTransfer with paths: {}", String.join(", ", absolutePaths));
                 event.data = absolutePaths;
-            }
-            // Handle LocalSelectionTransfer: already set in dragStart, but ensure consistency
-            else if (LocalSelectionTransfer.getTransfer().isSupportedType(event.dataType)) {
+            } else if (LocalSelectionTransfer.getTransfer().isSupportedType(event.dataType)) {
                 log.info("LocalSelectionTransfer data set (handled in dragStart)");
                 event.data = selection.toArray();
             }

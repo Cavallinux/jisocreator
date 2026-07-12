@@ -28,6 +28,13 @@ public class IsoTreeNode extends TreeNode {
         this.isoName = isRoot ? ROOT_ISO_NAME : setIsoName();
     }
 
+    public IsoTreeNode(ITreeNode parent, File file, String isoName, boolean isRoot) {
+        super(parent);
+        this.file = file;
+        this.isRoot = isRoot;
+        this.isoName = isRoot ? ROOT_ISO_NAME : (isoName == null ? setIsoName() : isoName);
+    }
+
     private String setIsoName() {
         String parentIsoShortName = this.parent.getIsoName().concat(getShortName());
         return this.file.isDirectory() ? parentIsoShortName.concat("/") : parentIsoShortName;

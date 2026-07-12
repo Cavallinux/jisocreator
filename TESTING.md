@@ -1,257 +1,166 @@
 # JisoCreator Unit Testing Guide
 
 ## Overview
-This project has been configured with a comprehensive unit testing framework using JUnit 5 and Mockito. The tests are located in the `src/test/java` directory and follow Maven's standard testing conventions.
+This project uses JUnit 5 and Mockito for unit tests. Tests are located under `src/test/java` and run with Maven Surefire.
 
 ## Testing Framework Setup
 
-### Dependencies Added
-- **JUnit 5 (Jupiter)**: Version 5.10.2 - Modern Java testing framework with powerful features
-- **Mockito**: Version 5.7.0 - Mocking library for creating test doubles
-- **Maven Surefire Plugin**: Version 3.2.5 - Maven test runner
+### Dependencies
+- **JUnit 5 (Jupiter)**: 5.10.2
+- **Mockito**: 5.7.0
+- **XMLUnit**: 2.11.0
+- **Maven Surefire Plugin**: 3.2.5
 
 ### Project Structure
 ```
 src/test/java/
-├── cl/
-│   └── cavallinux/
-│       └── jisocreator/
-│           ├── instances/
-│           │   └── CommandLineOptionsManagerTest.java
-│           ├── model/
-│           │   ├── cmdline/
-│           │   │   └── JISOCreatorCommandLineParserTest.java
-│           │   └── osexplorer/
-│           │       └── OSExplorerTest.java
-│           └── util/
-│               └── IOUtilsPathTest.java
+└── cl/cavallinux/jisocreator/
+    ├── action/
+    │   ├── decl/
+    │   │   └── JISOCreatorBaseActionTest.java
+    │   ├── jobs/
+    │   │   └── SaveISO9660ImageThreadTest.java
+    │   └── main/
+    │       └── MainActionTest.java
+    ├── gui/
+    │   └── i18n/
+    │       └── MessagesBundleTest.java
+    ├── instances/
+    │   ├── CommandLineOptionsManagerTest.java
+    │   ├── CommandLineParserManagerTest.java
+    │   ├── IOManagerTest.java
+    │   ├── JISOCreatorISOLevelOptionsTest.java
+    │   ├── JISOCreatorLanguageOptionsTest.java
+    │   └── OSAndIsoExplorerManagerTest.java
+    ├── model/
+    │   ├── cmdline/
+    │   │   └── JISOCreatorCommandLineParserTest.java
+    │   ├── comparators/
+    │   │   ├── ITreeNodeDirectoriesFirstComparatorTest.java
+    │   │   └── OSDirectoriesComparatorTest.java
+    │   ├── filters/
+    │   │   ├── HideHiddenFilesFilterTest.java
+    │   │   ├── ShowOnlyDirectoriesFilterTest.java
+    │   │   └── isoexplorer/
+    │   │       └── ShowOnlyIsoDirectoriesFilterTest.java
+    │   ├── isoexplorer/impl/
+    │   │   ├── IsoFileSystemTest.java
+    │   │   └── TreeNodeTest.java
+    │   ├── osexplorer/
+    │   │   └── OSExplorerTest.java
+    │   ├── parser/
+    │   │   ├── XMLIsoFilesystemParserCompatibilityTest.java
+    │   │   ├── decl/
+    │   │   │   └── IsoFilesystemParserTest.java
+    │   │   └── xml/
+    │   │       ├── XMLIsoFilesystemContractMapperTest.java
+    │   │       ├── XMLIsoFilesystemContractTest.java
+    │   │       └── XMLIsoFilesystemParserTest.java
+    │   └── providers/
+    │       ├── decl/
+    │       │   └── TableProviderAdapterTest.java
+    │       ├── isoexplorer/
+    │       │   ├── IsoTableProviderTest.java
+    │       │   └── IsoTreeContentProviderTest.java
+    │       └── osxplorer/
+    │           ├── OSTreeContentProviderTest.java
+    │           ├── OSTreeLabelProviderTest.java
+    │           └── OsTableProviderTest.java
+    └── util/
+        └── IOUtilsPathTest.java
 ```
-
-## Test Classes
-
-### 1. OSExplorerTest (13 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/model/osexplorer/OSExplorerTest.java`
-
-Tests the OSExplorer singleton class which manages file system operations:
-
-- **testGetName**: Verifies file name extraction
-- **testGetAbsolutePath**: Validates absolute path retrieval
-- **testLength**: Tests file size conversion to string
-- **testLastModified**: Checks date formatting of last modification time
-- **testGetFileTypeForDirectory**: Confirms directory type detection
-- **testGetFileTypeForFileWithoutExtension**: Tests file type for extensionless files
-- **testIsRootForSystemRoot**: Validates system root detection
-- **testIsNotRoot**: Ensures non-root files are properly identified
-- **testGetExtensionForDirectory**: Tests extension retrieval for directories
-- **testGetExtensionForFile**: Validates file extension with dot notation
-- **testGetExtensionForFileWithoutExtension**: Tests empty extension for files without extension
-- **testSetAndGetRoots**: Verifies root directory setter and getter
-- **testGetInstance**: Confirms singleton pattern implementation via `OSAndIsoExplorerManager`
-
-#### v0.1.2 Updates
-- **Refactored Singleton Access**: Tests now access `OSExplorer` through the centralized `OSAndIsoExplorerManager.INSTANCE.getOsExplorer()` instead of direct `OSExplorer.getInstance()` calls
-- **Improved Manager Pattern**: Demonstrates proper usage of the new centralized singleton manager pattern
-- **Singleton Verification**: The `testGetInstance()` method now validates that instances retrieved through the manager are properly singleton-managed
-
-### 2. IOUtilsPathTest (5 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/util/IOUtilsPathTest.java`
-
-Tests file path operations and configurations:
-
-- **testValidFilePath**: Validates handling of file paths
-- **testDirectoryCreation**: Tests directory creation operations
-- **testFileOperationsInConfigDir**: Verifies file operations in configuration directories
-- **testXMLFileExistence**: Validates XML file handling
-- **testFilePathConcatenation**: Tests string path concatenation
-
-### 3. CommandLineOptionsManagerTest (7 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/instances/CommandLineOptionsManagerTest.java`
-
-Tests the `CommandLineOptionsManager` enum that declares all CLI options (short/long names, argument requirements):
-
-- **testLoadOption**: Verifies the `-l`/`--load` option requires an `xmllayout` argument
-- **testHelpOption**: Verifies the `-h`/`--help` option takes no argument
-- **testVersionOption**: Verifies the `-v`/`--version` option takes no argument
-- **testLicenseOption**: Verifies the `-L`/`--license` option takes no argument
-- **testIsoInputOption**: Verifies the `-i`/`--input` option requires an `xmllayout` argument
-- **testIsoOutputOption**: Verifies the `-o`/`--output` option requires an `isoFile` argument
-- **testAllOptionsDeclared**: Confirms exactly six options are declared
-
-### 4. JISOCreatorCommandLineParserTest (19 tests)
-**Location**: `src/test/java/cl/cavallinux/jisocreator/model/cmdline/JISOCreatorCommandLineParserTest.java`
-
-Tests the `JISOCreatorCommandLineParser` (Apache Commons CLI based parser):
-
-- **testBuildOptions**: Confirms all six options are registered in the built `Options` instance
-- **testBuildHelpHeaderAndFooter**: Validates help header/footer text contain all documented usage examples
-- **testParseShortHelpOption / testParseLongHelpOption**: Parses `-h` / `--help`
-- **testParseShortVersionOption / testParseLongVersionOption**: Parses `-v` / `--version`
-- **testParseShortLicenseOption / testParseLongLicenseOption**: Parses `-L` / `--license`
-- **testParseLoadOptionWithArgument**: Parses `-l layout.xml` and validates the argument value
-- **testParseInputAndOutputOptions**: Parses `-i input.xml -o output.iso` together
-- **testParseWithNoArguments**: Confirms parsing an empty argument list succeeds with no options set
-- **testParseMutuallyExclusiveOptionsThrows**: Confirms combining `-h -v` (same `OptionGroup`) throws `ParseException`
-- **testParseLoadOptionMissingArgumentThrows**: Confirms `-l` without its required argument throws `ParseException`
-- **testParseUnrecognizedOptionThrows**: Confirms an unknown option throws `ParseException`
-- **testPrintVersionDoesNotThrow / testPrintHelpDoesNotThrow**: Confirms these output methods execute safely
-- **testHandleCommandLineWithValidPaths**: Confirms `handleCommandLine` succeeds with a readable input file and writable output file
-- **testHandleCommandLineWithNonExistentInputThrows**: Confirms a missing input file throws `ParseException`
-- **testHandleCommandLineWithNonExistentOutputThrows**: Confirms a missing output file throws `ParseException`
 
 ## Running Tests
 
-### Run All Tests
+### Run All Tests (Linux — default profile)
 ```bash
 mvn test
 ```
 
-### Run Specific Test Class
+### Run All Tests on Windows
+```bash
+mvn test -Pwindows
+```
+
+### Run a Specific Test Class
 ```bash
 mvn test -Dtest=OSExplorerTest
 ```
 
-### Run with Coverage
+### Run Clean + Tests
 ```bash
 mvn clean test
 ```
 
-### Test Results
-The Maven Surefire plugin automatically generates test reports in:
-- `target/surefire-reports/` - Raw test results
-- Console output during build
+### Test Reports
+Surefire writes reports to:
+- `target/surefire-reports/`
 
-## Test Configuration
-
-### Temporary Directory Support
-Tests utilize JUnit 5's `@TempDir` annotation which:
-- Automatically creates temporary directories for each test
-- Cleans up resources after test execution
-- Provides isolated test environments
-
-### Test Isolation
-- Each test is independent and can run in any order
-- Tests use temporary directories to avoid file system pollution
-- No external configuration files required for testing
-
-## Maven Configuration
-
-### Surefire Plugin Configuration
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>3.2.5</version>
-    <configuration>
-        <includes>
-            <include>**/*Test.java</include>
-            <include>**/*Tests.java</include>
-        </includes>
-    </configuration>
-</plugin>
-```
-
-Test files are discovered using the patterns:
-- `**/*Test.java`
-- `**/*Tests.java`
-
-## Adding New Tests
-
-### Create a New Test Class
-1. Create the test file in `src/test/java` following the package structure
-2. Name the class with `Test` suffix (e.g., `MyClassTest`)
-3. Use JUnit 5 annotations:
-   - `@DisplayName` - Human-readable test descriptions
-   - `@Test` - Mark test methods
-   - `@BeforeEach` - Setup before each test
-   - `@io.TempDir` - For temporary directory support
-
-### Example Test Structure
-```java
-@DisplayName("MyClass Tests")
-class MyClassTest {
-    
-    private MyClass instance;
-    
-    @BeforeEach
-    void setUp() {
-        instance = new MyClass();
-    }
-    
-    @Test
-    @DisplayName("Should perform operation correctly")
-    void testOperation() {
-        assertEquals("expected", instance.operation());
-    }
-}
-```
-
-## Current Test Statistics (as of v0.1.6)
-- **Total Tests**: 44
-- **Test Classes**: 4
+## Current Test Statistics (v0.2.0)
+- **Total Tests**: 113
+- **Test Classes**: 31
 - **All Tests Passing**: ✓
-
-The command-line interface (`CommandLineOptionsManager` and `JISOCreatorCommandLineParser`) introduced in v0.1.3 now has dedicated test coverage. i18n message bundle loading and ISO metadata (Volume/Publisher/Application ID) handling remain untested; see "Future Testing Enhancements" below.
 
 ### Test Statistics Summary
 ```
-OSExplorerTest.java:                      13 tests
-IOUtilsPathTest.java:                      5 tests
-CommandLineOptionsManagerTest.java:        7 tests
-JISOCreatorCommandLineParserTest.java:    19 tests
-─────────────────────────────────────────────────
-Total:                                    44 tests
+MainActionTest.java:                         2 tests
+JISOCreatorBaseActionTest.java:              4 tests
+SaveISO9660ImageThreadTest.java:             4 tests
+MessagesBundleTest.java:                     2 tests
+CommandLineOptionsManagerTest.java:          7 tests
+CommandLineParserManagerTest.java:           1 test
+IOManagerTest.java:                          2 tests
+JISOCreatorISOLevelOptionsTest.java:         2 tests
+JISOCreatorLanguageOptionsTest.java:         2 tests
+OSAndIsoExplorerManagerTest.java:            1 test
+JISOCreatorCommandLineParserTest.java:      19 tests
+ITreeNodeDirectoriesFirstComparatorTest.java: 2 tests
+OSDirectoriesComparatorTest.java:            5 tests
+HideHiddenFilesFilterTest.java:              2 tests
+ShowOnlyDirectoriesFilterTest.java:          3 tests
+ShowOnlyIsoDirectoriesFilterTest.java:       2 tests
+IsoFileSystemTest.java:                      4 tests
+TreeNodeTest.java:                           3 tests
+OSExplorerTest.java:                        13 tests
+XMLIsoFilesystemParserCompatibilityTest.java: 2 tests
+IsoFilesystemParserTest.java:                3 tests
+XMLIsoFilesystemContractMapperTest.java:     3 tests
+XMLIsoFilesystemContractTest.java:           2 tests
+XMLIsoFilesystemParserTest.java:             4 tests
+TableProviderAdapterTest.java:               2 tests
+IsoTableProviderTest.java:                   3 tests
+IsoTreeContentProviderTest.java:             2 tests
+OSTreeContentProviderTest.java:              3 tests
+OSTreeLabelProviderTest.java:                1 test
+OsTableProviderTest.java:                    3 tests
+IOUtilsPathTest.java:                        5 tests
+--------------------------------------------------------
+Total:                                     113 tests
 ```
 
-## Best Practices
+## Notes on SWT-Dependent Testing
+Some production classes depend on SWT/JFace runtime state (`Display`, images, widgets). Current suite prioritizes behavior that can be verified headless. UI-heavy integration tests are still pending.
 
-1. **Test Naming**: Use descriptive names that explain the test scenario
-2. **Test Isolation**: Each test should be independent and not rely on others
-3. **Use Assertions**: Prefer specific assertions (`assertEquals`, `assertTrue`) over boolean checks
-4. **Mock External Dependencies**: Use Mockito to mock SWT and GUI components
-5. **Temporary Resources**: Use `@TempDir` for file operations instead of hardcoded paths
+## Notes on Cross-Platform Testing
 
-## Notes on Testing SWT Components
+The test suite runs on both Linux and Windows. Some platform-specific considerations:
 
-Some classes depend on SWT (Standard Widget Toolkit) which requires an active Display. For now:
-- Tests focus on non-GUI logic
-- Model and utility classes are prioritized
-- Future integration with SWT testing frameworks can be added if needed
-
-## Version 0.1.2 Testing Updates
-
-### Architectural Changes in Tests
-As part of the v0.1.2 refactoring, the following testing improvements were made:
-
-1. **Centralized Singleton Manager Access**
-   - Tests now use the `OSAndIsoExplorerManager` enum to access singleton instances
-   - This ensures tests follow the same architectural pattern as the application code
-   - Better encapsulation and centralized management of singleton lifecycle
-
-2. **Manager Pattern Integration**
-   - All test setup now uses the centralized managers (`OSAndIsoExplorerManager`)
-   - Provides a single point of access for test fixtures
-   - Improves maintainability and consistency with application architecture
-
-### Example of Updated Test Pattern
-```java
-@BeforeEach
-void setUp() {
-    // Previous approach (deprecated in v0.1.2):
-    // osExplorer = OSExplorer.getInstance();
-    
-    // New approach (v0.1.2+):
-    osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
-}
-```
+- **Hidden files (`HideHiddenFilesFilter`)**: On Windows, `Files.isHidden()` only detects files with the DOS hidden attribute. The filter also checks for Unix-style hidden files (names starting with `.`) so that `HideHiddenFilesFilterTest` passes on both platforms.
+- **Path separators (`XMLIsoFilesystemContractMapper`)**: `XMLIsoFilesystemContractMapper` normalizes file paths to forward slashes (`/`) before writing to XML. Tests compare paths using the same normalization to guarantee equality on both Linux and Windows.
+- **XML fixtures**: Test fixture files under `src/test/resources/xml/` use Unix (LF) line endings to ensure consistent XMLUnit diff results across platforms.
 
 ## Future Testing Enhancements
+1. Add integration tests for GUI actions and dialogs with SWT harness.
+2. Add deeper negative/error-path tests for image loading fallbacks in SWT-bound components.
+3. Add broader action coverage (`ActionsManager` and remaining `action/*` classes).
+4. Add coverage reporting (JaCoCo) in CI.
 
-1. Add integration tests for ISO file operations
-2. Add API tests for file system operations
-3. Add tests for action classes (utilizing centralized `ActionsManager`)
-4. Add tests for provider implementations
-5. Add tests for new manager components (`GUIManager`, `ImageRegister`)
-6. Add tests for i18n message bundle loading (`INLSBundleMessages` and per-component message classes)
-7. Add tests for XML layout parsing/serialization (`model/parser`) and ISO metadata handling (Volume/Publisher/Application ID)
-8. Consider adding code coverage reporting with JaCoCo
-9. Add performance benchmarks for large file operations
+## Last Validation Run
+
+Latest local validation executed with:
+
+```bash
+mvn -q test
+```
+
+Result: **113 tests passing in 31 classes** (from `target/surefire-reports`).

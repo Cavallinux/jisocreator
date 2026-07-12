@@ -10,7 +10,7 @@ import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.model.parser.IsoFilesystemParser;
+import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,7 @@ public class LoadCommandLineISOLayoutAction extends JISOCreatorBaseAction {
     @Builder
     protected LoadCommandLineISOLayoutAction() {
         super();
-    }
+    } 
     
     public void run(String layoutFilePath) {
         log.info("Loading iso layout from file: {}", layoutFilePath);

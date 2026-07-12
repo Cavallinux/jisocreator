@@ -19,7 +19,7 @@ import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.model.parser.IsoFilesystemParser;
+import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
 import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.Builder;
 import lombok.Getter;

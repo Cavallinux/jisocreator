@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
@@ -28,6 +29,7 @@ import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
+import cl.cavallinux.jisocreator.model.dnd.JISOCreatorDragSourceAdapter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +61,10 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         fillTableColumnValues(osDirectoriesTable.getTable());
         addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.OSEXPLORER_INSTANCE.getDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.OSEXPLORER_INSTANCE, osDirectoriesTable, osDirectoriesTree);
-        osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots());
+        osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer());
+        DragSourceAdapter dragSourceAdapter = JISOCreatorDragSourceAdapter.builder().viewer(osDirectoriesTable).build();
+        osDirectoriesTable.addDragSupport(ICompositeCreator.COMPOSITE_DND_OPTIONS, ICompositeCreator.obtainDragAndDropTransferTypes(),
+                dragSourceAdapter);
     }
 
     @Override

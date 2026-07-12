@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.isoexplorer;
+package cl.cavallinux.jisocreator.model.providers.isoexplorer;
 
 import java.io.File;
 import java.nio.file.Path;

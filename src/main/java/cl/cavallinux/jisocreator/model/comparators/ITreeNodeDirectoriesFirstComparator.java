@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
@@ -27,6 +28,21 @@ public class ITreeNodeDirectoriesFirstComparator extends ViewerComparator {
     private int category(ITreeNode element) {
         File file = (File) element.getElement();
         Path path = file.toPath();
-        return Files.isDirectory(path) ? BigInteger.ZERO.intValue() : BigInteger.ONE.intValue();
+        BigInteger compareResult = Files.isDirectory(path) ? BigInteger.ZERO : BigInteger.ONE;
+        return compareResult.intValue();
+    }
+    
+    @Override
+    public int compare(Viewer viewer, Object e1, Object e2) {
+        int categoryDiff = category(e1) - category(e2);
+        return categoryDiff != 0 ? categoryDiff : compareFiles(e1, e2);
+    }
+
+    private int compareFiles(Object e1, Object e2) {
+        File file1 = (File) ((ITreeNode) e1).getElement();
+        Path path1 = file1.toPath();
+        File file2 = (File) ((ITreeNode) e2).getElement();
+        Path path2 = file2.toPath();
+        return path1.compareTo(path2);
     }
 }

@@ -1,13 +1,21 @@
 package cl.cavallinux.jisocreator.gui.decl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -39,6 +47,9 @@ import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
  * @version 0.0.3
  */
 public interface ICompositeCreator {
+    final int COMPOSITE_SWT_OPTIONS = SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
+            | SWT.MULTI;
+    final int COMPOSITE_DND_OPTIONS = DND.DROP_COPY | DND.DROP_MOVE;
 
     /**
      * Creates all UI components for this composite.
@@ -69,10 +80,11 @@ public interface ICompositeCreator {
      * </p>
      */
     void addListeners();
-    
+
     default void applyConstraints() {
 
     }
+
     /**
      * Fills the given table with predefined columns and tooltips.
      * <p>
@@ -97,9 +109,21 @@ public interface ICompositeCreator {
         });
         table.setHeaderVisible(true);
     }
-    
+
     default Map<String, String> obtainTableColumnsTextAndTooltips() {
         return LinkedHashMap.newLinkedHashMap(4);
+    }
+    
+    static Transfer[] obtainDragAndDropTransferTypes() {
+        List<Transfer> transferTypes = new ArrayList<>();
+        transferTypes.add(FileTransfer.getInstance());
+        transferTypes.add(LocalSelectionTransfer.getTransfer());
+        return transferTypes.toArray(Transfer[]::new);
+    }
+    
+    static boolean isDragAndDropTransferTypeSupported(TransferData transferType) {
+        return Arrays.stream(obtainDragAndDropTransferTypes())
+                .anyMatch(transfer -> transfer.isSupportedType(transferType));
     }
 
     default void addPopMenuToTable(TableViewer table, IMenuListener menuListener) {

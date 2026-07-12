@@ -5,18 +5,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 0.1.6
+## [Unreleased]
+
+No changes yet.
+
+## [0.2.0] - 2026-07-12
 
 ### Added
+- **Drag and drop OS->ISO workflow**: Added `JISOCreatorDragSourceAdapter` and `JISOCreatorViewerDropAdapter` to support dragging files from the OS explorer table and dropping them directly into the ISO explorer table.
+- **Programmatic add-files flow for drops**: `AddFileAction` now supports `run(List<File>)` so dropped files reuse the same add-to-layout pipeline and refresh/status updates used by the regular action flow.
+- **Installation guide**: Added top-level `INSTALL` document covering source build, zip-based installation for Linux/Windows, first-run setup, and runtime verification commands.
+- **XML compatibility fixtures**: Added legacy XML fixtures under `src/test/resources/xml/` (`c267b1a84ea9429088ce5530122e5c8a.xml` and `1560506077724c8e97f4d1664f851193.xml`) for parser compatibility and round-trip checks.
+
+### Changed
+- **Project version**: Updated `pom.xml` to release version `0.2.0` (from `0.1.6`).
+- **XML parser architecture cleanup**: Finalized package split into `model/parser/decl` and `model/parser/xml` (`IsoFilesystemParser`, `XMLIsoFilesystemParser`, `XMLIsoFilesystemContract`, `XMLIsoFilesystemContractMapper`) with Jackson XML + Woodstox as the default stack.
+- **Dependencies**: Consolidated XML stack to Jackson XML (`jackson-dataformat-xml`) + Woodstox (`woodstox-core`), added `xmlunit-core` for XML assertions, and updated Lombok to `1.18.46`.
+- **Provider package organization**: Flattened provider implementation packages from `model/providers/impl/*` to `model/providers/*` and removed obsolete tree adapter classes/tests (`TreeContentAdapter`, `TreeLabelAdapter`) while keeping `TableProviderAdapter`.
+- **OS explorer internals**: Refined comparators, filters, content/label/table providers, listeners, and `OSExplorer` traversal behavior to improve consistency between tree/table navigation and action enablement.
+- **Documentation synchronization**: Updated `README.md`, `TESTING.md`, and `INSTALL` to match current build profiles, CLI smoke workflows, test inventory, and runtime guidance.
+
+### Fixed
+- **Cross-platform hidden-file detection in `HideHiddenFilesFilter`**: Added fallback check for Unix-style hidden names (`.` prefix) so filtering behaves consistently on Linux and Windows.
+- **Cross-platform XML path normalization**: `XMLIsoFilesystemContractMapper` now normalizes serialized file paths to forward slashes (`/`) using `file.getPath().replace(File.separatorChar, '/')`, preserving layout round-trip compatibility across platforms.
+- **XML compatibility assertions**: Updated mapper/parser compatibility tests and normalized fixture line endings to avoid false negatives caused by platform-specific separators or CRLF/LF differences.
+
+## [0.1.6] - 2026-07-06
+
+### Added
+- **Expanded unit test suite (multi-phase implementation)**:
+  - Added coverage for action layer (`MainAction`, `JISOCreatorBaseAction`, `SaveISO9660ImageThread`)
+  - Added coverage for managers/enums (`IOManager`, `OSAndIsoExplorerManager`, CLI/language/ISO options managers)
+  - Added coverage for parser contracts and XML DTO/mapper layers
+  - Added coverage for providers/comparators/filters in OS/ISO explorers
+  - Added coverage for i18n message bundle resolution
+  - Test suite now totals **113 tests in 31 test classes**, all passing
 - **Unit tests for command line interface**: New test classes covering `CommandLineOptionsManager` (7 tests) and `JISOCreatorCommandLineParser` (19 tests) - option declarations, short/long option parsing, mutually exclusive options, missing/invalid arguments, help/version output, and `handleCommandLine` input/output path validation. Total test count now 44 (up from 18)
 - **License printing from CLI**: New `--license` / `-L` command line option prints the bundled GPLv3 license text (`ICommandLineParser#printLicense`, backed by `IOManager`/`IOUtils` loading `files/license.txt`)
 - **ISO filesystem status info**: Main window status bar now shows ISO filesystem information (volume/size) after loading or saving a layout, via `IsoFileSystem` and `MainWindow`
+- **XML parser compatibility regression test**: Added `XMLIsoFilesystemParserCompatibilityTest` (2 tests) plus legacy fixture `src/test/resources/xml/c267b1a84ea9429088ce5530122e5c8a.xml` to ensure deserialize/serialize compatibility against historical layouts
 
 ### Changed
+- **Documentation sync after testing phases**:
+  - Updated `README.md` testing section to reflect current scope and statistics
+  - Rebuilt `TESTING.md` to match real test inventory and counts
+  - Resolved stale/merged content in testing documentation and aligned statistics with CI/local runs
 - **Resource reorganization**: Images (`img/`), i18n bundles (`i18n/`) and default configuration (`conf/defaultconfig.properties`) moved out of `util/res` into `src/main/resources` top-level folders for clearer separation between code and resources
 - **ISO length/info calculation**: Refactored `IsoFileSystem` and `ShowIsoInformationAction`/`OpenIsoLayoutAction` to compute and print ISO size/info more accurately
 - `AddFileAction` and `IsoExplorerSashForm` updated to keep the status bar in sync with ISO filesystem changes
-- **Project documentation synchronization**: Updated README/TESTING to reflect current versioning (`0.1.6`), current GitHub Actions workflow path (`.github/workflows/maven.yml`), actual CI trigger scope, Maven profile matrix, and runtime log-path configuration (`-Dpath.logs`)
+- **Project documentation synchronization**: Updated README/TESTING to reflect current versioning (`0.2.0-SNAPSHOT`), current GitHub Actions workflow path (`.github/workflows/maven.yml`), actual CI trigger scope, Maven profile matrix, runtime log-path configuration (`-Dpath.logs`), and current parser/test architecture
+- **XML parser implementation migrated**: Refactored XML layout parser to Jackson XML + Woodstox (`model/parser/xml/XMLIsoFilesystemParser`) and moved parser contracts/interfaces into `model/parser/decl` + `model/parser/xml`
+- **Dependency updates**: Replaced XStream with Jackson XML stack, added XMLUnit for XML assertions, and updated Lombok to `1.18.46`
+- **Project version advanced**: `pom.xml` now targets `0.2.0-SNAPSHOT`
 
 ## [0.1.5] - 2026-06-26
 
@@ -308,7 +348,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com/) forma
 
 ## Version Links
 
-- [0.1.6](https://github.com/Cavallinux/jisocreator/compare/v0.1.5...HEAD) - Unreleased, in development
+- [Unreleased](https://github.com/Cavallinux/jisocreator/compare/v0.2.0...HEAD) - In development
+- [0.2.0](https://github.com/Cavallinux/jisocreator/compare/v0.1.6...v0.2.0) - Drag & drop workflow, parser/package cleanup, docs + test synchronization
+- [0.1.6](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.6) - Expanded unit testing and documentation synchronization
 - [0.1.5](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.5) - i18n support, ISO metadata (Volume/Publisher/Application ID)
 - [0.1.4](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.4) - Windows mkisofs update, XML layout fixes
 - [0.1.3](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.3) - Command line interface

@@ -4,7 +4,11 @@ A **MKISOFS Frontend** built with Eclipse technologies, providing a graphical us
 
 ## Overview
 
-JisoCreator is a Java-based desktop application that simplifies the process of creating and editing ISO images. It features dual file explorers for managing both the operating system file system and ISO image contents, a command-line interface for scripted usage, and multi-language (i18n) support.
+JisoCreator is a Java-based desktop application that simplifies the process of creating and editing ISO images. It features dual file explorers for managing both the operating system file system and ISO image contents, drag-and-drop transfer from OS explorer to ISO explorer, a command-line interface for scripted usage, and multi-language (i18n) support.
+
+## Installation
+
+For full installation instructions (requirements, build, package install, and first-run setup), see [INSTALL](INSTALL).
 
 ## Requirements
 
@@ -23,8 +27,9 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 - **Eclipse UI Workbench 3.138.0** - Workbench framework
 
 ### Utilities & Libraries
-- **Lombok 1.18.44** - Annotation processor for code generation (getters, setters, etc.)
-- **XStream 1.4.21** - XML serialization library for ISO layout and configuration management
+- **Lombok 1.18.46** - Annotation processor for code generation (getters, setters, etc.)
+- **Jackson XML 2.20.0** - XML serialization library for ISO layout and configuration management
+- **Woodstox 7.1.1** - StAX XML processor used by Jackson XML
 - **Apache Commons Lang3 3.20.0** - Utility functions for Java language operations
 - **Apache Commons CLI 1.11.0** - Command-line argument parsing
 - **JSVG 2.1.0** - SVG rendering support
@@ -42,11 +47,29 @@ JisoCreator is a Java-based desktop application that simplifies the process of c
 The project uses Maven profiles to select the SWT platform dependency:
 
 - `linux` (active by default): `gtk.linux.x86_64`
-- `windows`: `win32.win32.x86_64`
-- `linux-cmdlinemode`: Linux runtime plus CLI smoke execution (`-h`) through `exec-maven-plugin`
-- `windows-cmdlinemode`: Windows runtime plus CLI smoke execution (`-h`) through `exec-maven-plugin`
+- `windows`: `win32.win32.x86_64` (excludes the `gtk.linux.x86_64` SWT artifact)
+- `linux-cmdlinemode`: Linux runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
+- `windows-cmdlinemode`: Windows runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
 
-To activate `windows` profile add -Pwindows in maven command to be used.
+To activate a non-default profile, pass `-P<profile-id>` in the Maven command, e.g. `-Pwindows` or `-Plinux-cmdlinemode`. Only one platform profile (`linux`/`windows`) or its `-cmdlinemode` variant should be active at a time, since they select mutually exclusive SWT platform dependencies.
+
+#### Using the Profiles
+
+```bash
+# Default (linux) platform build
+mvn clean package
+
+# Windows platform build
+mvn clean package -Pwindows
+
+# Linux build + CLI smoke execution (runs the packaged jar with -h)
+mvn clean package exec:exec -Plinux-cmdlinemode
+
+# Windows build + CLI smoke execution (runs the packaged jar with -h)
+mvn clean package exec:exec -Pwindows-cmdlinemode
+```
+
+The `*-cmdlinemode` profiles reuse the same `exec-maven-plugin` configuration as the default build (native access flags, optional debug agent) but append `-h` to the executed command, making them convenient for a quick post-build sanity check of the CLI in CI or locally.
 
 ### Clean Build
 ```bash
@@ -72,13 +95,19 @@ mvn clean compile -DskipTests
 The project includes comprehensive unit tests using:
 - **JUnit 5 (Jupiter)**: Modern Java testing framework (v5.10.2)
 - **Mockito**: Mocking library for test doubles (v5.7.0)
+- **XMLUnit**: XML diff/assertion utilities for parser compatibility tests (v2.11.0)
 - **Maven Surefire Plugin**: Test execution plugin (v3.2.5)
 
 ### Running Tests
 
-#### Run All Tests
+#### Run All Tests (Linux — default profile)
 ```bash
 mvn test
+```
+
+#### Run All Tests on Windows
+```bash
+mvn test -Pwindows
 ```
 
 #### Run Specific Test Class
@@ -96,24 +125,28 @@ mvn clean package -DskipTests
 
 ```
 src/test/java/cl/cavallinux/jisocreator/
-├── instances/
-│   └── CommandLineOptionsManagerTest.java  # CLI option declarations (7 tests)
-├── model/
-│   ├── cmdline/
-│   │   └── JISOCreatorCommandLineParserTest.java  # CLI parsing behavior (19 tests)
-│   └── osexplorer/
-│       └── OSExplorerTest.java      # File system operations (13 tests)
-└── util/
-    └── IOUtilsPathTest.java         # File path utilities (5 tests)
+├── action/      # Action-layer tests (main/jobs/base actions)
+├── gui/         # i18n message bundle tests
+├── instances/   # Manager and enum singleton tests
+├── model/       # Parser, providers, comparators, filters, explorers
+└── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 44 tests total, all passing
+**Current Test Statistics**: 113 tests total across 31 test classes, all passing.
+
+Current coverage includes:
+- Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`)
+- Parser/contract/mapper tests (`IsoFilesystemParser`, `XMLIsoFilesystem*`)
+- Explorer/provider/comparator/filter tests (OS and ISO)
+- CLI/manager/i18n tests (`CommandLine*`, `IOManager`, `OSAndIsoExplorerManager`, message bundles)
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
 - **Singleton Pattern Testing**: Validates OSExplorer singleton implementation
 - **File System Operations**: Comprehensive testing of file and directory handling
 - **Path Manipulation**: Tests for file path concatenation and validation
+- **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison, including cross-platform path separator normalization (Windows backslash → Unix forward slash)
+- **Action and Workflow Validation**: Tests for command parsing branches and save-thread progress behavior
 
 For detailed testing information, see `TESTING.md`.
 
@@ -157,6 +190,26 @@ This command uses the exec-maven-plugin configured in pom.xml and includes:
 - Classpath configuration
 - Native access permissions (--enable-native-access=ALL-UNNAMED)
 - Debug port available on 5005 if needed
+
+### Using the Maven Execution Profiles
+
+The `-cmdlinemode` profiles bundle build + run into a single command, executing the packaged jar with `-h` as a CLI smoke test:
+
+```bash
+# Linux CLI smoke run
+mvn clean package exec:exec -Plinux-cmdlinemode
+
+# Windows CLI smoke run
+mvn clean package exec:exec -Pwindows-cmdlinemode
+```
+
+To run the GUI with the Windows SWT dependency instead of the default Linux one:
+
+```bash
+mvn clean package exec:exec -Pwindows
+```
+
+See [Maven Profiles](#maven-profiles) for the full list of available profiles.
 
 ### From Command Line (after packaging)
 ```bash
@@ -240,7 +293,7 @@ jisocreator/
 │   │   ├── filters/      # File filters
 │   │   ├── isoexplorer/  # ISO explorer models
 │   │   ├── osexplorer/   # OS explorer models
-│   │   ├── parser/       # XML layout parsing
+│   │   ├── parser/       # XML layout parsing (decl/ + xml/ implementations)
 │   │   └── providers/    # Data providers
 │   └── util/             # Utility classes
 ├── src/main/resources/   # Configuration and resources
@@ -249,16 +302,33 @@ jisocreator/
 │   ├── conf/             # Default configuration files
 │   ├── files/            # Bundled files (e.g. license.txt)
 │   └── log4j2.xml        # Logging configuration
+├── src/test/java/cl/cavallinux/jisocreator/  # Unit tests (SWT-free where possible)
+│   ├── action/           # Action-layer tests (main/jobs/base actions)
+│   │   ├── decl/         # JISOCreatorBaseAction tests
+│   │   ├── jobs/         # SaveISO9660ImageThread tests
+│   │   └── main/         # MainAction tests
+│   ├── gui/i18n/         # Message bundle (i18n) tests
+│   ├── instances/        # Manager and enum singleton tests (CLI parser/options, IOManager, explorer manager)
+│   ├── model/            # Parsers, providers, comparators, filters, explorer models
+│   │   ├── comparators/  # OS/ISO directories-first comparator tests
+│   │   ├── filters/      # Hidden files / directories-only filter tests
+│   │   ├── isoexplorer/  # IsoFileSystem / TreeNode tests
+│   │   ├── parser/       # decl (IsoFilesystemParser) + xml (Jackson-backed parser/contract) tests
+│   │   └── providers/    # decl adapters + package-scoped OS/ISO tree/table/label providers tests
+│   └── util/             # IO utility tests
+├── src/test/resources/   # Test fixtures (e.g. legacy XML layout for compatibility tests)
 ├── res/                  # Native launch scripts and bundled mkisofs binaries
 │   ├── linux/            # Linux launch script
 │   └── mkisofs/          # Windows mkisofs binary and launch script
 ├── pom.xml               # Maven configuration
+├── TESTING.md            # Detailed testing documentation and test inventory
 └── README.md             # This file
 ```
 
 ## Features
 
 - **Dual File Explorers**: Browse OS file system and ISO contents simultaneously
+- **Drag and Drop to ISO Layout**: Drag files from OS explorer and drop them into the ISO explorer table to add entries quickly
 - **ISO Management**: Create, edit, and explore ISO 9660 images
 - **ISO Metadata**: Configure Volume ID, Publisher ID and Application ID for generated images
 - **ISO Level Selection**: Choose the ISO 9660 conformance level (1-4) via preferences
@@ -311,9 +381,24 @@ UI text is externalized into per-component NLS message bundles under `src/main/r
 
 `CommandLineParserManager` wraps a `JISOCreatorCommandLineParser` (built on Apache Commons CLI) exposing `--load`, `--input`, `--output`, `--help`, `--version` and `--license` options, allowing the application to be launched in headless/scripted scenarios in addition to its GUI mode.
 
+### XML Parser Layer
+
+XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/decl`) and the `XMLIsoFilesystemParser` implementation (`model/parser/xml`) backed by Jackson XML. The mapper normalizes file path separators to forward slashes (`/`) before writing to XML, ensuring that layouts saved on Windows are byte-identical to those saved on Linux. Compatibility is validated with legacy XML fixtures under `src/test/resources/xml/`.
+
+### Testing Architecture
+
+The test suite (113 tests / 31 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+
+- **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
+- **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
+- **Cross-platform compatibility**: `HideHiddenFilesFilter` detects both DOS hidden-attribute files (Windows) and Unix-style dot-prefix hidden files. `XMLIsoFilesystemContractMapper` normalizes path separators to forward slashes so serialized XML is portable across platforms. Tests run cleanly on both Linux (`mvn test`) and Windows (`mvn test -Pwindows`).
+- **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`).
+- **XMLUnit-based compatibility checks**: legacy XML layout fixtures are diffed against round-tripped output to guarantee backward compatibility of the XML parser.
+
 ## Version
 
-Current version: **0.1.6**
+- Latest stable release: **0.2.0** (released 2026-07-12)
+- Next development line: **TBD (post-0.2.0)**
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

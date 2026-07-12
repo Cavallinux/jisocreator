@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,16 +18,22 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.2
  */
 @Slf4j
+@Builder
 public class HideHiddenFilesFilter extends ViewerFilter {
-    // TODO cast directly element to Path
     @Override
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
         try {
             File file = (File) arg2;
-            return !Files.isHidden(file.toPath());
+            // Check both OS-level hidden attribute (Windows DOS attribute) and
+            // Unix-style hidden files (names starting with '.') for cross-platform support
+            boolean isHidden = Files.isHidden(file.toPath()) || file.getName().startsWith(".");
+            return !isHidden;
         } catch (IOException e) {
-            log.error("Error selecting file: {}", e);
-            return false;
+            // Allow the element on IOException (e.g., access denied for system drives or root paths in Windows)
+            // This prevents system root drives from being filtered out due to permission issues
+            log.warn("Error checking if file is hidden for path: {}, allowing element to be displayed. Error: {}", 
+                    ((File) arg2).getAbsolutePath(), e.getMessage());
+            return true;
         }
     }
 }

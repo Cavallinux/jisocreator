@@ -14,9 +14,11 @@ import cl.cavallinux.jisocreator.action.osexplorer.OpenAction;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Builder
 public class OSExplorerSashFormDoubleClickListener implements IDoubleClickListener {
 
     @Override

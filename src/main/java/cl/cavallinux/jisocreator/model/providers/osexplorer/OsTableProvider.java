@@ -1,4 +1,4 @@
-package cl.cavallinux.jisocreator.model.providers.impl.osexplorer;
+package cl.cavallinux.jisocreator.model.providers.osexplorer;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import cl.cavallinux.jisocreator.model.providers.decl.TableProviderAdapter;
 import cl.cavallinux.jisocreator.util.ImageUtils;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -47,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.3
  */
 @Slf4j
+@Builder
 public class OsTableProvider extends TableProviderAdapter {
     private static final Object[] EMPTY = new Object[0];
 

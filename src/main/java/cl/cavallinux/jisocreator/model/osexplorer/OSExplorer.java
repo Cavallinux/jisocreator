@@ -2,14 +2,15 @@ package cl.cavallinux.jisocreator.model.osexplorer;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.text.DateFormat;
-import java.util.Date;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -25,35 +26,23 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 public class OSExplorer {
     private File[] roots;
-    private Path[] rootPaths;
     private static final String FOLDER_TYPE = "Folder";
     private static final String FILE_TYPE = "File";
     private static final int NO_EXTENSION_DOT = -1;
     private static final char EXTENSION_DOT_CHAR = '.';
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            .withZone(ZoneId.systemDefault());
 
-
-    private OSExplorer(File[] roots, Path[] rootsPath) {
-        log.info("OS: {}, Legacy FileSystem roots: {}, Java NIO FileSystems roots: {}", System.getProperty("os.name"),
-                roots, (Object[]) rootsPath);
+    private OSExplorer(File[] roots) {
+        log.info("OS: {}, FileSystem roots: {}", System.getProperty("os.name"), roots);
         this.setRoots(roots);
-        this.setRootPaths(rootsPath);
     }
-    
+
     @Builder
     public OSExplorer() {
-        this(loadLegacyOSRoots(), loadOSRoots());
-    }
-
-    @Deprecated(since = "0.2.0", forRemoval = true)
-    private static File[] loadLegacyOSRoots() {
-        return Strings.CI.containsAny(System.getProperty("os.name"), "Windows")
+       this(Strings.CI.containsAny(System.getProperty("os.name"), "Windows")
                 ? new File(System.getProperty("user.home")).listFiles()
-                : File.listRoots();
-    }
-
-    private static Path[] loadOSRoots() {
-        return StreamSupport.stream(FileSystems.getDefault().getRootDirectories().spliterator(), false)
-                .toArray(Path[]::new);
+                : File.listRoots());
     }
 
     /**
@@ -122,14 +111,17 @@ public class OSExplorer {
      * @return The last modified time of the file as a formatted string. If an error
      *         occurs while retrieving the last modified time, it returns "0".
      */
-    // TODO use java time api.
     public String lastModified(Path path) {
+        return FORMATTER.format(lastModifiedInstant(path));
+    }
+    
+    private Instant lastModifiedInstant(Path path) {
         try {
-            return DateFormat.getDateTimeInstance()
-                    .format(new Date(Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS).toMillis()));
+            FileTime lastModifiedTime = Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS);
+            return lastModifiedTime.toInstant();
         } catch (IOException e) {
-            log.error("Error retrieving last modified time for path: {}", path, e);
-            return DateFormat.getDateTimeInstance().format(new Date(path.toFile().lastModified()));
+            log.warn("Error retrieving last modified time for path: {}. Calculating via Java FILE Api", path, e);
+            return Instant.ofEpochMilli(path.toFile().lastModified());
         }
     }
 
@@ -154,7 +146,8 @@ public class OSExplorer {
      * @return true if the specified path is a root directory, false otherwise.
      */
     public boolean isRoot(Path path) {
-        return (Objects.nonNull(path.getRoot()) && path.getNameCount() == 0);
+        File file = path.toFile();
+        return Arrays.asList(getRoots()).stream().anyMatch(root -> root.compareTo(file) == 0);
     }
 
     /**
@@ -170,12 +163,12 @@ public class OSExplorer {
     public String getExtension(Path path) {
         return Files.isDirectory(path) ? FOLDER_TYPE : getExtension(path.getFileName().toString());
     }
-    
+
     private String getFileType2(Path path) {
         String extension = getExtension(path.getFileName().toString());
         return StringUtils.isBlank(extension) ? FILE_TYPE : getFileType(Program.findProgram(extension), extension);
     }
-    
+
     private String getFileType(Program program, String extension) {
         return Objects.nonNull(program) ? program.getName() : FILE_TYPE.concat(StringUtils.SPACE).concat(extension);
     }

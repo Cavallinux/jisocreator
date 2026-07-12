@@ -23,7 +23,7 @@ import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
-import cl.cavallinux.jisocreator.model.parser.IsoFilesystemParser;
+import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 

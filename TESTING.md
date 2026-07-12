@@ -8,6 +8,7 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 ### Dependencies
 - **JUnit 5 (Jupiter)**: 5.10.2
 - **Mockito**: 5.7.0
+- **XMLUnit**: 2.11.0
 - **Maven Surefire Plugin**: 3.2.5
 
 ### Project Structure
@@ -57,17 +58,14 @@ src/test/java/
     │   │       └── XMLIsoFilesystemParserTest.java
     │   └── providers/
     │       ├── decl/
-    │       │   ├── TableProviderAdapterTest.java
-    │       │   ├── TreeContentAdapterTest.java
-    │       │   └── TreeLabelAdapterTest.java
-    │       └── impl/
-    │           ├── isoexplorer/
-    │           │   ├── IsoTableProviderTest.java
-    │           │   └── IsoTreeContentProviderTest.java
-    │           └── osexplorer/
-    │               ├── OSTreeContentProviderTest.java
-    │               ├── OSTreeLabelProviderTest.java
-    │               └── OsTableProviderTest.java
+    │       │   └── TableProviderAdapterTest.java
+    │       ├── isoexplorer/
+    │       │   ├── IsoTableProviderTest.java
+    │       │   └── IsoTreeContentProviderTest.java
+    │       └── osxplorer/
+    │           ├── OSTreeContentProviderTest.java
+    │           ├── OSTreeLabelProviderTest.java
+    │           └── OsTableProviderTest.java
     └── util/
         └── IOUtilsPathTest.java
 ```
@@ -98,9 +96,9 @@ mvn clean test
 Surefire writes reports to:
 - `target/surefire-reports/`
 
-## Current Test Statistics (v0.2.0-SNAPSHOT)
+## Current Test Statistics (v0.2.0)
 - **Total Tests**: 113
-- **Test Classes**: 33
+- **Test Classes**: 31
 - **All Tests Passing**: ✓
 
 ### Test Statistics Summary
@@ -117,7 +115,7 @@ JISOCreatorLanguageOptionsTest.java:         2 tests
 OSAndIsoExplorerManagerTest.java:            1 test
 JISOCreatorCommandLineParserTest.java:      19 tests
 ITreeNodeDirectoriesFirstComparatorTest.java: 2 tests
-OSDirectoriesComparatorTest.java:            1 test
+OSDirectoriesComparatorTest.java:            5 tests
 HideHiddenFilesFilterTest.java:              2 tests
 ShowOnlyDirectoriesFilterTest.java:          3 tests
 ShowOnlyIsoDirectoriesFilterTest.java:       2 tests
@@ -130,8 +128,6 @@ XMLIsoFilesystemContractMapperTest.java:     3 tests
 XMLIsoFilesystemContractTest.java:           2 tests
 XMLIsoFilesystemParserTest.java:             4 tests
 TableProviderAdapterTest.java:               2 tests
-TreeContentAdapterTest.java:                 2 tests
-TreeLabelAdapterTest.java:                   2 tests
 IsoTableProviderTest.java:                   3 tests
 IsoTreeContentProviderTest.java:             2 tests
 OSTreeContentProviderTest.java:              3 tests
@@ -158,3 +154,13 @@ The test suite runs on both Linux and Windows. Some platform-specific considerat
 2. Add deeper negative/error-path tests for image loading fallbacks in SWT-bound components.
 3. Add broader action coverage (`ActionsManager` and remaining `action/*` classes).
 4. Add coverage reporting (JaCoCo) in CI.
+
+## Last Validation Run
+
+Latest local validation executed with:
+
+```bash
+mvn -q test
+```
+
+Result: **113 tests passing in 31 classes** (from `target/surefire-reports`).

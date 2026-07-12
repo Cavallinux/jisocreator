@@ -4,7 +4,7 @@ A **MKISOFS Frontend** built with Eclipse technologies, providing a graphical us
 
 ## Overview
 
-JisoCreator is a Java-based desktop application that simplifies the process of creating and editing ISO images. It features dual file explorers for managing both the operating system file system and ISO image contents, a command-line interface for scripted usage, and multi-language (i18n) support.
+JisoCreator is a Java-based desktop application that simplifies the process of creating and editing ISO images. It features dual file explorers for managing both the operating system file system and ISO image contents, drag-and-drop transfer from OS explorer to ISO explorer, a command-line interface for scripted usage, and multi-language (i18n) support.
 
 ## Installation
 
@@ -132,7 +132,7 @@ src/test/java/cl/cavallinux/jisocreator/
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 113 tests total across 33 test classes, all passing.
+**Current Test Statistics**: 113 tests total across 31 test classes, all passing.
 
 Current coverage includes:
 - Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`)
@@ -314,7 +314,7 @@ jisocreator/
 │   │   ├── filters/      # Hidden files / directories-only filter tests
 │   │   ├── isoexplorer/  # IsoFileSystem / TreeNode tests
 │   │   ├── parser/       # decl (IsoFilesystemParser) + xml (Jackson-backed parser/contract) tests
-│   │   └── providers/    # decl adapters + impl (OS/ISO tree/table/label providers) tests
+│   │   └── providers/    # decl adapters + package-scoped OS/ISO tree/table/label providers tests
 │   └── util/             # IO utility tests
 ├── src/test/resources/   # Test fixtures (e.g. legacy XML layout for compatibility tests)
 ├── res/                  # Native launch scripts and bundled mkisofs binaries
@@ -328,6 +328,7 @@ jisocreator/
 ## Features
 
 - **Dual File Explorers**: Browse OS file system and ISO contents simultaneously
+- **Drag and Drop to ISO Layout**: Drag files from OS explorer and drop them into the ISO explorer table to add entries quickly
 - **ISO Management**: Create, edit, and explore ISO 9660 images
 - **ISO Metadata**: Configure Volume ID, Publisher ID and Application ID for generated images
 - **ISO Level Selection**: Choose the ISO 9660 conformance level (1-4) via preferences
@@ -396,8 +397,8 @@ The test suite (113 tests / 33 classes, see [TESTING.md](TESTING.md)) favors SWT
 
 ## Version
 
-- Latest stable release: **0.1.6** (released 2026-07-06)
-- Current development version: **0.2.0-SNAPSHOT**
+- Latest stable release: **0.2.0** (released 2026-07-12)
+- Next development line: **TBD (post-0.2.0)**
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

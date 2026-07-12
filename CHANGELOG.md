@@ -5,15 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 0.2.0-SNAPSHOT
+## [Unreleased]
 
-### Fixed
-- **Cross-platform hidden-file detection in `HideHiddenFilesFilter`**: On Windows, `Files.isHidden()` only detects files with the DOS hidden attribute and ignores Unix-style hidden files (names starting with `.`). Added a secondary check `file.getName().startsWith(".")` so the filter works consistently on all platforms.
-- **Path separator normalization in `XMLIsoFilesystemContractMapper`**: When deserializing an XML layout on Windows, `File.getAbsolutePath()` returned backslash-separated paths, which broke XML round-trip compatibility (the re-serialized XML differed from the original). The mapper now normalizes path separators to forward slashes (`/`) using `file.getPath().replace(File.separatorChar, '/')`, making the serialized XML portable across Linux and Windows.
+No changes yet.
+
+## [0.2.0] - 2026-07-12
+
+### Added
+- **Drag and drop OS->ISO workflow**: Added `JISOCreatorDragSourceAdapter` and `JISOCreatorViewerDropAdapter` to support dragging files from the OS explorer table and dropping them directly into the ISO explorer table.
+- **Programmatic add-files flow for drops**: `AddFileAction` now supports `run(List<File>)` so dropped files reuse the same add-to-layout pipeline and refresh/status updates used by the regular action flow.
+- **Installation guide**: Added top-level `INSTALL` document covering source build, zip-based installation for Linux/Windows, first-run setup, and runtime verification commands.
+- **XML compatibility fixtures**: Added legacy XML fixtures under `src/test/resources/xml/` (`c267b1a84ea9429088ce5530122e5c8a.xml` and `1560506077724c8e97f4d1664f851193.xml`) for parser compatibility and round-trip checks.
 
 ### Changed
-- **`XMLIsoFilesystemContractMapperTest`**: Updated `shouldMapIsoEntryToXMLEntry` assertion to compare file paths using normalized forward-slash separators so the test passes on both Linux and Windows.
-- **XML test fixture `1560506077724c8e97f4d1664f851193.xml`**: Converted line endings from Windows CRLF to Unix LF for consistent cross-platform behaviour in the compatibility test suite.
+- **Project version**: Updated `pom.xml` to release version `0.2.0` (from `0.2.0-SNAPSHOT`).
+- **XML parser architecture cleanup**: Finalized package split into `model/parser/decl` and `model/parser/xml` (`IsoFilesystemParser`, `XMLIsoFilesystemParser`, `XMLIsoFilesystemContract`, `XMLIsoFilesystemContractMapper`) with Jackson XML + Woodstox as the default stack.
+- **Dependencies**: Consolidated XML stack to Jackson XML (`jackson-dataformat-xml`) + Woodstox (`woodstox-core`), added `xmlunit-core` for XML assertions, and updated Lombok to `1.18.46`.
+- **Provider package organization**: Flattened provider implementation packages from `model/providers/impl/*` to `model/providers/*` and removed obsolete tree adapter classes/tests (`TreeContentAdapter`, `TreeLabelAdapter`) while keeping `TableProviderAdapter`.
+- **OS explorer internals**: Refined comparators, filters, content/label/table providers, listeners, and `OSExplorer` traversal behavior to improve consistency between tree/table navigation and action enablement.
+- **Documentation synchronization**: Updated `README.md`, `TESTING.md`, and `INSTALL` to match current build profiles, CLI smoke workflows, test inventory, and runtime guidance.
+
+### Fixed
+- **Cross-platform hidden-file detection in `HideHiddenFilesFilter`**: Added fallback check for Unix-style hidden names (`.` prefix) so filtering behaves consistently on Linux and Windows.
+- **Cross-platform XML path normalization**: `XMLIsoFilesystemContractMapper` now normalizes serialized file paths to forward slashes (`/`) using `file.getPath().replace(File.separatorChar, '/')`, preserving layout round-trip compatibility across platforms.
+- **XML compatibility assertions**: Updated mapper/parser compatibility tests and normalized fixture line endings to avoid false negatives caused by platform-specific separators or CRLF/LF differences.
 
 ## [0.1.6] - 2026-07-06
 
@@ -333,7 +348,8 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com/) forma
 
 ## Version Links
 
-- [0.2.0-SNAPSHOT](https://github.com/Cavallinux/jisocreator/compare/v0.1.6...HEAD) - Unreleased, in development
+- [Unreleased](https://github.com/Cavallinux/jisocreator/compare/v0.2.0...HEAD) - In development
+- [0.2.0](https://github.com/Cavallinux/jisocreator/compare/v0.1.6...v0.2.0) - Drag & drop workflow, parser/package cleanup, docs + test synchronization
 - [0.1.6](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.6) - Expanded unit testing and documentation synchronization
 - [0.1.5](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.5) - i18n support, ISO metadata (Volume/Publisher/Application ID)
 - [0.1.4](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.4) - Windows mkisofs update, XML layout fixes

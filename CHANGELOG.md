@@ -18,7 +18,7 @@ No changes yet.
 - **XML compatibility fixtures**: Added legacy XML fixtures under `src/test/resources/xml/` (`c267b1a84ea9429088ce5530122e5c8a.xml` and `1560506077724c8e97f4d1664f851193.xml`) for parser compatibility and round-trip checks.
 
 ### Changed
-- **Project version**: Updated `pom.xml` to release version `0.2.0` (from `0.2.0-SNAPSHOT`).
+- **Project version**: Updated `pom.xml` to release version `0.2.0` (from `0.1.6`).
 - **XML parser architecture cleanup**: Finalized package split into `model/parser/decl` and `model/parser/xml` (`IsoFilesystemParser`, `XMLIsoFilesystemParser`, `XMLIsoFilesystemContract`, `XMLIsoFilesystemContractMapper`) with Jackson XML + Woodstox as the default stack.
 - **Dependencies**: Consolidated XML stack to Jackson XML (`jackson-dataformat-xml`) + Woodstox (`woodstox-core`), added `xmlunit-core` for XML assertions, and updated Lombok to `1.18.46`.
 - **Provider package organization**: Flattened provider implementation packages from `model/providers/impl/*` to `model/providers/*` and removed obsolete tree adapter classes/tests (`TreeContentAdapter`, `TreeLabelAdapter`) while keeping `TableProviderAdapter`.

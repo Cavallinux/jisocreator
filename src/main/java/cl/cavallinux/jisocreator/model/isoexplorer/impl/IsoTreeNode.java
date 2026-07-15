@@ -1,6 +1,8 @@
 package cl.cavallinux.jisocreator.model.isoexplorer.impl;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Objects;
 
 import org.eclipse.swt.graphics.Image;
 
@@ -70,18 +72,14 @@ public class IsoTreeNode extends TreeNode {
 
     @Override
     public void addNode(ITreeNode node) {
-        if (children.contains(node)) {
-            return;
-        } else {
+        if (!children.contains(node)) {
             children.add(node);
-            File[] childs = ((File) node.getElement()).listFiles();
-            if (childs == null) {
-                return;
-            } else {
-                for (File child : childs) {
+            File[] childs = node.getElement() instanceof File file ? file.listFiles() : null;
+            if (Objects.nonNull(childs)) {
+                Arrays.stream(childs).forEach(child -> {
                     ITreeNode newNode = new IsoTreeNode(node, child);
                     node.addNode(newNode);
-                }
+                });
             }
         }
     }

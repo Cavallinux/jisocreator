@@ -104,6 +104,15 @@ public interface ITreeNode {
     }
 
     /**
+     * Agrega el nodo como hijo directo sin recursar en sus hijos.
+     * Util para implementar recorridos recursivos con soporte de cancelacion.
+     *
+     * @param node Nodo a ser agregado.
+     */
+    default void addLeafNode(ITreeNode node) {
+    }
+
+    /**
      * Borra el nodo asociado.
      * 
      * @param node nodo a ser borrado

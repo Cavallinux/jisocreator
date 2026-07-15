@@ -37,7 +37,6 @@ public abstract class TreeNode implements ITreeNode {
 
     @Override
     public Object[] toArray() {
-        // TODO Auto-generated method stub
         return children.toArray();
     }
     

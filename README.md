@@ -125,19 +125,19 @@ mvn clean package -DskipTests
 
 ```
 src/test/java/cl/cavallinux/jisocreator/
-├── action/      # Action-layer tests (main/jobs/base actions)
+├── action/      # Action-layer tests (main/jobs/base/osexplorer actions)
 ├── gui/         # i18n message bundle tests
 ├── instances/   # Manager and enum singleton tests
 ├── model/       # Parser, providers, comparators, filters, explorers
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 113 tests total across 31 test classes, all passing.
+**Current Test Statistics**: 128 tests total across 33 test classes, all passing.
 
 Current coverage includes:
-- Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`)
+- Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
 - Parser/contract/mapper tests (`IsoFilesystemParser`, `XMLIsoFilesystem*`)
-- Explorer/provider/comparator/filter tests (OS and ISO)
+- Explorer/provider/comparator/filter tests (OS and ISO, including `IsoTreeNode`)
 - CLI/manager/i18n tests (`CommandLine*`, `IOManager`, `OSAndIsoExplorerManager`, message bundles)
 
 ### Test Features
@@ -303,16 +303,17 @@ jisocreator/
 │   ├── files/            # Bundled files (e.g. license.txt)
 │   └── log4j2.xml        # Logging configuration
 ├── src/test/java/cl/cavallinux/jisocreator/  # Unit tests (SWT-free where possible)
-│   ├── action/           # Action-layer tests (main/jobs/base actions)
+│   ├── action/           # Action-layer tests (main/jobs/base/osexplorer actions)
 │   │   ├── decl/         # JISOCreatorBaseAction tests
 │   │   ├── jobs/         # SaveISO9660ImageThread tests
-│   │   └── main/         # MainAction tests
+│   │   ├── main/         # MainAction tests
+│   │   └── osexplorer/   # AddFileAction recursive behavior tests
 │   ├── gui/i18n/         # Message bundle (i18n) tests
 │   ├── instances/        # Manager and enum singleton tests (CLI parser/options, IOManager, explorer manager)
 │   ├── model/            # Parsers, providers, comparators, filters, explorer models
 │   │   ├── comparators/  # OS/ISO directories-first comparator tests
 │   │   ├── filters/      # Hidden files / directories-only filter tests
-│   │   ├── isoexplorer/  # IsoFileSystem / TreeNode tests
+│   │   ├── isoexplorer/  # IsoFileSystem / IsoTreeNode / TreeNode tests
 │   │   ├── parser/       # decl (IsoFilesystemParser) + xml (Jackson-backed parser/contract) tests
 │   │   └── providers/    # decl adapters + package-scoped OS/ISO tree/table/label providers tests
 │   └── util/             # IO utility tests
@@ -387,12 +388,12 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ### Testing Architecture
 
-The test suite (113 tests / 31 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+The test suite (128 tests / 33 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
 - **Cross-platform compatibility**: `HideHiddenFilesFilter` detects both DOS hidden-attribute files (Windows) and Unix-style dot-prefix hidden files. `XMLIsoFilesystemContractMapper` normalizes path separators to forward slashes so serialized XML is portable across platforms. Tests run cleanly on both Linux (`mvn test`) and Windows (`mvn test -Pwindows`).
-- **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`).
+- **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`).
 - **XMLUnit-based compatibility checks**: legacy XML layout fixtures are diffed against round-tripped output to guarantee backward compatibility of the XML parser.
 
 ## Version

@@ -3,6 +3,11 @@
 ## Overview
 This project uses JUnit 5 and Mockito for unit tests. Tests are located under `src/test/java` and run with Maven Surefire.
 
+## Tests Added in `feature/v0.2.1`
+- `action/osexplorer/AddFileActionRecursiveTest.java` (7 tests)
+- `model/isoexplorer/impl/IsoTreeNodeTest.java` (8 tests)
+- `model/parser/XMLIsoFilesystemParserCompatibilityTest.java` (updated coverage)
+
 ## Testing Framework Setup
 
 ### Dependencies
@@ -20,6 +25,8 @@ src/test/java/
     │   │   └── JISOCreatorBaseActionTest.java
     │   ├── jobs/
     │   │   └── SaveISO9660ImageThreadTest.java
+    │   ├── osexplorer/
+    │   │   └── AddFileActionRecursiveTest.java
     │   └── main/
     │       └── MainActionTest.java
     ├── gui/
@@ -45,6 +52,7 @@ src/test/java/
     │   │       └── ShowOnlyIsoDirectoriesFilterTest.java
     │   ├── isoexplorer/impl/
     │   │   ├── IsoFileSystemTest.java
+    │   │   ├── IsoTreeNodeTest.java
     │   │   └── TreeNodeTest.java
     │   ├── osexplorer/
     │   │   └── OSExplorerTest.java
@@ -96,13 +104,14 @@ mvn clean test
 Surefire writes reports to:
 - `target/surefire-reports/`
 
-## Current Test Statistics (v0.2.0)
-- **Total Tests**: 113
-- **Test Classes**: 31
+## Current Test Statistics (v0.2.1)
+- **Total Tests**: 128
+- **Test Classes**: 33
 - **All Tests Passing**: ✓
 
 ### Test Statistics Summary
 ```
+AddFileActionRecursiveTest.java:              7 tests
 MainActionTest.java:                         2 tests
 JISOCreatorBaseActionTest.java:              4 tests
 SaveISO9660ImageThreadTest.java:             4 tests
@@ -120,6 +129,7 @@ HideHiddenFilesFilterTest.java:              2 tests
 ShowOnlyDirectoriesFilterTest.java:          3 tests
 ShowOnlyIsoDirectoriesFilterTest.java:       2 tests
 IsoFileSystemTest.java:                      4 tests
+IsoTreeNodeTest.java:                        8 tests
 TreeNodeTest.java:                           3 tests
 OSExplorerTest.java:                        13 tests
 XMLIsoFilesystemParserCompatibilityTest.java: 2 tests
@@ -135,7 +145,7 @@ OSTreeLabelProviderTest.java:                1 test
 OsTableProviderTest.java:                    3 tests
 IOUtilsPathTest.java:                        5 tests
 --------------------------------------------------------
-Total:                                     113 tests
+Total:                                     128 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -152,7 +162,7 @@ The test suite runs on both Linux and Windows. Some platform-specific considerat
 ## Future Testing Enhancements
 1. Add integration tests for GUI actions and dialogs with SWT harness.
 2. Add deeper negative/error-path tests for image loading fallbacks in SWT-bound components.
-3. Add broader action coverage (`ActionsManager` and remaining `action/*` classes).
+3. Add broader action coverage (`ActionsManager` and remaining `action/*` classes not yet covered).
 4. Add coverage reporting (JaCoCo) in CI.
 
 ## Last Validation Run
@@ -160,7 +170,7 @@ The test suite runs on both Linux and Windows. Some platform-specific considerat
 Latest local validation executed with:
 
 ```bash
-mvn -q test
+mvn -q test -Pwindows
 ```
 
-Result: **113 tests passing in 31 classes** (from `target/surefire-reports`).
+Result: **128 tests passing in 33 classes** (from `target/surefire-reports`).

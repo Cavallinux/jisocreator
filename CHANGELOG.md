@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-No changes yet.
+### Added
+- **Recursive add with cancellation coverage**: Added `AddFileActionRecursiveTest` (7 tests) to validate recursive add behavior, immediate and mid-recursion cancellation, empty directories, and progress monitor integration.
+- **`IsoTreeNode` behavior coverage**: Added `IsoTreeNodeTest` (8 tests) to validate `addNode` vs `addLeafNode`, duplicate prevention, and directory recursion semantics.
+
+### Changed
+- **Project version line**: Updated `pom.xml` from `0.2.0` to `0.2.1-SNAPSHOT` for the current development branch.
+- **Surefire runtime compatibility flags**: Added `-XX:+EnableDynamicAgentLoading -Xshare:off` in `maven-surefire-plugin` `argLine` to improve local/CI compatibility with test instrumentation on recent JDKs.
+- **`AddFileAction` workflow**: Refactored add flow to recursive processing with cooperative cancellation (`IProgressMonitor#isCanceled`), incremental progress updates, and GUI refresh in `finally` so partial additions are reflected even when the operation is interrupted.
+- **ISO tree API refinement**: Added `ITreeNode#addLeafNode(ITreeNode)` and implemented it in `IsoTreeNode` to support direct child insertion without implicit recursion; kept `addNode` for recursive directory expansion.
+- **Windows launcher behavior**: Updated `res/mkisofs/jisocreator.bat` to create `%LOCALAPPDATA%\jisocreator\logs`, set `-Dpath.logs`, and run via `javaw` in background mode.
+- **Spanish i18n cleanup**: Normalized multiple labels/tooltips in `src/main/resources/i18n/*/messages_es.properties` (accented characters and wording consistency in main actions, OS/ISO explorer, preferences, and show-ISO-info dialogs).
+- **Documentation synchronization for branch test scope**: Updated `README.md` and `TESTING.md` to reflect current suite inventory and counts (**128 tests in 33 classes**), including new coverage in `AddFileActionRecursiveTest` and `IsoTreeNodeTest`.
+
+### Fixed
+- **Cross-platform parser compatibility assertion**: Updated `XMLIsoFilesystemParserCompatibilityTest` to assert the expected fixture-specific `volumeID` on both Linux and Windows, avoiding platform-dependent false negatives.
 
 ## [0.2.0] - 2026-07-12
 

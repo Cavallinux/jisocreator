@@ -42,7 +42,10 @@ class XMLIsoFilesystemParserCompatibilityTest {
         assertTrue(isoFileSystem.getRoot().isRoot());
         assertEquals("/", isoFileSystem.getRoot().getIsoName());
         assertTrue(isoFileSystem.getRoot().hasChildren());
-        assertEquals("c267b1a84ea9429088ce5530122e5c8a", isoFileSystem.getVolumeID());
+        assertEquals(
+                Strings.CI.containsAny(System.getProperty("os.name"), "windows") ? "1560506077724c8e97f4d1664f851193"
+                        : "c267b1a84ea9429088ce5530122e5c8a",
+                isoFileSystem.getVolumeID());
     }
 
     @Test

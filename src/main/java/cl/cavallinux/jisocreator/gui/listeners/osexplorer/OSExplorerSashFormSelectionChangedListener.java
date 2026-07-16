@@ -24,7 +24,7 @@ public class OSExplorerSashFormSelectionChangedListener implements ISelectionCha
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
         Object eventSource = event.getSource();
-        log.info("Selection changed event received: {}",
+        log.debug("Selection changed event received: {}",
                 ToStringBuilder.reflectionToString(event, ToStringStyle.JSON_STYLE));
         File fileSelected = obtainFileViaSelectionChangedEvent(event);
         if (eventSource instanceof TreeViewer) {
@@ -52,7 +52,7 @@ public class OSExplorerSashFormSelectionChangedListener implements ISelectionCha
             OSExplorerActionsManager.OPENFILEACTION.getAction().setEnabled(false);
         } else {
             TableViewer viewer = (TableViewer) eventSource;
-            log.info("Event source is a tableviewer: {}",
+            log.debug("Event source is a tableviewer: {}",
                     ToStringBuilder.reflectionToString(viewer.getSelection(), ToStringStyle.JSON_STYLE));
             OSExplorerActionsManager.OPENFILEACTION.getAction().setEnabled(true);
         }

@@ -86,7 +86,7 @@ public class IOUtils {
     }
     
     public String loadFormattedLicenseFile() {
-        String loadedLicenseFile = loadFileContentFromClasspath(IOUtils.JISOCREATOR_LICENSE_FILENAME);
+        String loadedLicenseFile = loadFileContentFromClasspath(JISOCREATOR_LICENSE_FILENAME);
         try (InputStream stream = getClass().getResourceAsStream(JISOCREATOR_MANIFEST_FILE)) {
             Attributes manifestAttributes = new Manifest(stream).getMainAttributes();
             String maintainerAttribute = manifestAttributes.getValue("Maintainer");

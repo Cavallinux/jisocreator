@@ -12,8 +12,9 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
-import cl.cavallinux.jisocreator.action.main.MainAction;
 import cl.cavallinux.jisocreator.gui.i18n.CommandLineMessages;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
@@ -29,6 +30,13 @@ import lombok.Setter;
 @Setter
 @Builder
 public class JISOCreatorCommandLineParser implements ICommandLineParser {
+    private static final String APP_NAME = JISOCreatorCommandLineParser.class.getPackage().getSpecificationTitle();
+    private static final String APP_VERSION = JISOCreatorCommandLineParser.class.getPackage()
+            .getImplementationVersion();
+    private static final String JVM_VERSION = System.getProperty("java.version");
+    private static final String JVM_VENDOR = System.getProperty("java.specification.vendor");
+    private static final String OS_NAME = System.getProperty("os.name");
+    private static final String LOWERCASE_APPNAME = StringUtils.toRootLowerCase(APP_NAME);
     @Builder.Default
     private final Options options = buildOptions();
     @Builder.Default
@@ -37,6 +45,9 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
     private final String footer = buildHelpFooter();
     @Builder.Default
     private final CommandLineParser commandLineParser = DefaultParser.builder().get();
+    @Builder.Default
+    private final HelpFormatter helpFormatter = new JISOCreatorCommandLineHelpFormatter(
+            HelpFormatter.builder().setShowSince(false));
 
     public CommandLine parse(String... args) throws ParseException {
         return commandLineParser.parse(options, args);
@@ -45,19 +56,17 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
     @Override
     public void printVersion() {
         List<String> versionArguments = new ArrayList<String>();
-        Package mainPackage = MainAction.class.getPackage();
-        versionArguments.add(mainPackage.getSpecificationTitle());
-        versionArguments.add(mainPackage.getImplementationVersion());
-        versionArguments.add(System.getProperty("java.version"));
-        versionArguments.add(System.getProperty("java.specification.vendor"));
-        versionArguments.add(System.getProperty("os.name"));
+        versionArguments.add(APP_NAME);
+        versionArguments.add(APP_VERSION);
+        versionArguments.add(JVM_VERSION);
+        versionArguments.add(JVM_VENDOR);
+        versionArguments.add(OS_NAME);
         System.out.format(CommandLineMessages.commandLineVersionMessage, versionArguments.toArray());
     }
 
     @Override
     public void printHelp(String programName) throws IOException {
-        HelpFormatter formatter = HelpFormatter.builder().setShowSince(false).get();
-        formatter.printHelp(programName, header, options, footer, true);
+        helpFormatter.printHelp(programName, header, options, footer, true);
     }
 
     @Override
@@ -78,30 +87,13 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
     }
 
     protected static String buildHelpHeader() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("  ");
-        builder.append(JISOCreatorCommandLineParser.class.getPackage().getSpecificationTitle());
-        builder.append(" is a Java-based desktop application that simplifies");
-        builder.append("\n he process of creating and editing ISO images. It features dual file explorers");
-        builder.append("\n for managing both the operating system file system and ISO image contents.\n");
-        return builder.toString();
+        List<String> helpHeaderArguments = new ArrayList<String>();
+        helpHeaderArguments.add(APP_NAME);
+        return String.format(CommandLineMessages.commandLineAppDescriptionMessage, helpHeaderArguments.toArray());
     }
 
     protected static String buildHelpFooter() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\nExamples:"); 
-        builder.append("\njisocreator -v");
-        builder.append("\njisocreator --version");
-        builder.append("\njisocreator -h");
-        builder.append("\njisocreator --help");
-        builder.append("\njisocreator -i /path/to/xml -o image.iso");
-        builder.append("\njisocreator -l layout.xml");
-        builder.append("\njisocreator --load layout.xml");
-        builder.append("\njisocreator -L");
-        builder.append("\njisocreator --license");
-        builder.append("\njisocreator --input /path/to/xml --output image.iso");
-        builder.append("\njisocreator");
-        return builder.toString();
+        return Strings.CI.replace(CommandLineMessages.commandLineExampleUsageMessage, "%s", LOWERCASE_APPNAME);
     }
 
     protected static Options buildOptions() {
@@ -116,10 +108,9 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
         options.addOptionGroup(optionGroup);
         return options;
     }
-    
+
     @Override
     public void printLicense() {
         System.out.println(IOManager.INSTANCE.getIoUtils().loadFormattedLicenseFile());
     }
-    
 }

@@ -14,6 +14,7 @@ import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
+import cl.cavallinux.jisocreator.instances.MainActionsManager;
 import cl.cavallinux.jisocreator.model.cmdline.ICommandLineParser;
 import cl.cavallinux.jisocreator.util.IOUtils;
 import lombok.Builder;
@@ -62,7 +63,7 @@ public class MainAction extends JISOCreatorBaseAction {
      */
     public static void main(String[] args) throws IOException {
         configureLanguage();
-        MainAction mainAction = (MainAction) ActionsManager.MAINACTION.getAction();
+        MainAction mainAction = (MainAction) MainActionsManager.MAINACTION.getAction();
         try {
             mainAction.handleCommandLine(args);
         } catch (ParseException e) {

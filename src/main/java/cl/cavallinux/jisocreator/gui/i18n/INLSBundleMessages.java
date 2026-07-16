@@ -8,4 +8,5 @@ public interface INLSBundleMessages {
     final String SHOWISOINFO_BUNDLE_MESSAGE = "i18n.showisoinfodialog.messages";
     final String PREFERENCEDIALOG_BUNDLE_MESSAGE = "i18n.preferencedialog.messages";
     final String ABOUTDIALOG_BUNDLE_MESSAGE = "i18n.aboutdialog.messages";
+    final String COMMANDLINE_BUNDLE_MESSAGE = "i18n.commandline.messages";
 }

@@ -14,6 +14,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.help.HelpFormatter;
 
 import cl.cavallinux.jisocreator.action.main.MainAction;
+import cl.cavallinux.jisocreator.gui.i18n.CommandLineMessages;
 import cl.cavallinux.jisocreator.instances.CommandLineOptionsManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import lombok.Builder;
@@ -44,12 +45,13 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
     @Override
     public void printVersion() {
         List<String> versionArguments = new ArrayList<String>();
-        versionArguments.add(MainAction.class.getPackage().getSpecificationTitle());
-        versionArguments.add(MainAction.class.getPackage().getImplementationVersion());
+        Package mainPackage = MainAction.class.getPackage();
+        versionArguments.add(mainPackage.getSpecificationTitle());
+        versionArguments.add(mainPackage.getImplementationVersion());
         versionArguments.add(System.getProperty("java.version"));
         versionArguments.add(System.getProperty("java.specification.vendor"));
         versionArguments.add(System.getProperty("os.name"));
-        System.out.format("%s version %s\nJVM version: %s\nJVM vendor: %s\n OS host: %s\n", versionArguments.toArray());
+        System.out.format(CommandLineMessages.commandLineVersionMessage, versionArguments.toArray());
     }
 
     @Override

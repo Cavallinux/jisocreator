@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Project version line**: Updated `pom.xml` from `0.2.0` to `0.2.1-SNAPSHOT` for the current development branch.
+- **Documentation refresh (2026-07-17)**: Updated `README.md` with a documentation map and a Windows PowerShell quick-start block, and updated `INSTALL` with clearer Windows PowerShell equivalents plus optional `*-cmdlinemode` profile guidance.
 - **Surefire runtime compatibility flags**: Added `-XX:+EnableDynamicAgentLoading -Xshare:off` in `maven-surefire-plugin` `argLine` to improve local/CI compatibility with test instrumentation on recent JDKs.
 - **`AddFileAction` workflow**: Refactored add flow to recursive processing with cooperative cancellation (`IProgressMonitor#isCanceled`), incremental progress updates, and GUI refresh in `finally` so partial additions are reflected even when the operation is interrupted.
 - **ISO tree API refinement**: Added `ITreeNode#addLeafNode(ITreeNode)` and implemented it in `IsoTreeNode` to support direct child insertion without implicit recursion; kept `addNode` for recursive directory expansion.

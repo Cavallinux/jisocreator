@@ -1,8 +1,8 @@
 JisoCreator Installation Guide
 ==============================
 
-This document describes how to install and run JisoCreator from source or from
-the generated distribution package.
+This guide explains how to build, install, and run JisoCreator from source or
+from the generated distribution package.
 
 
 1) Requirements
@@ -27,6 +27,11 @@ From GitHub:
     git clone https://github.com/Cavallinux/jisocreator.git
     cd jisocreator
 
+Windows PowerShell equivalent:
+
+    git clone https://github.com/Cavallinux/jisocreator.git
+    Set-Location .\jisocreator
+
 
 3) Build the application
 ------------------------
@@ -38,6 +43,11 @@ Linux build (default profile):
 Windows build (from any OS, for packaging with Windows SWT artifacts):
 
     mvn clean package -Pwindows
+
+Optional CLI smoke build profiles:
+
+    mvn clean package exec:exec -Plinux-cmdlinemode
+    mvn clean package exec:exec -Pwindows-cmdlinemode
 
 Build output:
 - Main runnable jar: `target/jisocreator.jar`
@@ -80,11 +90,15 @@ After `mvn clean package`:
 
     java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
 
-With debug port (5005):
+With debug port (5005), Linux/macOS shell style:
 
     java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
          --enable-native-access=ALL-UNNAMED \
          -jar target/jisocreator.jar
+
+With debug port (5005), Windows PowerShell style:
+
+    java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar
 
 
 6) First-run configuration
@@ -112,6 +126,11 @@ Run:
 You can also validate CLI help:
 
     java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar --help
+
+If you built with the Windows profile and are testing from PowerShell:
+
+    java --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar --version
+    java --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar --help
 
 
 8) Optional: customize log directory

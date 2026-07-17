@@ -197,11 +197,11 @@ class JISOCreatorCommandLineParserTest {
     }
 
     @Test
-    @DisplayName("Should throw ParseException when the output file does not exist")
+    @DisplayName("Should throw ParseException when the output parent directory does not exist")
     void testHandleCommandLineWithNonExistentOutputThrows(@TempDir Path tempDir) throws IOException, ParseException {
         File inputFile = tempDir.resolve("input.xml").toFile();
         Files.write(inputFile.toPath(), "<root/>".getBytes());
-        File nonExistentOutput = tempDir.resolve("missing-output.iso").toFile();
+        File nonExistentOutput = tempDir.resolve("nonexistent-subdir").resolve("missing-output.iso").toFile();
 
         CommandLine cmd = parser.parse("-i", inputFile.getAbsolutePath(), "-o",
                 nonExistentOutput.getAbsolutePath());

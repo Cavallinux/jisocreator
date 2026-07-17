@@ -16,6 +16,24 @@ For full installation instructions (requirements, build, package install, and fi
 - **Maven**: 3.6 or higher
 - **Operating System**: Linux/Windows (x86_64 profiles available)
 
+## Documentation Map
+
+- [README.md](README.md): project overview, architecture, build/test/run commands
+- [INSTALL](INSTALL): installation from source and distribution zip (Linux/Windows)
+- [TESTING.md](TESTING.md): test inventory, platform notes, and validation guidance
+- [CHANGELOG.md](CHANGELOG.md): release history and in-progress changes
+
+## Quick Start (Windows PowerShell)
+
+```powershell
+git clone https://github.com/Cavallinux/jisocreator.git
+Set-Location .\jisocreator
+mvn clean package -Pwindows
+java --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar --help
+```
+
+If you prefer the packaged distribution, build first and then extract/run `target\jisocreator-<version>-win32.win32.x86_64.zip` as described in [INSTALL](INSTALL).
+
 ## Project Dependencies
 
 ### Core Frameworks

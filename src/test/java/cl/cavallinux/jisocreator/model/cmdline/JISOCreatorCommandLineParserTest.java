@@ -167,6 +167,12 @@ class JISOCreatorCommandLineParserTest {
     }
 
     @Test
+    @DisplayName("Should use JISOCreatorCommandLineHelpFormatter as the help formatter")
+    void testHelpFormatterIsJISOCreatorCommandLineHelpFormatter() {
+        assertTrue(parser.getHelpFormatter() instanceof JISOCreatorCommandLineHelpFormatter);
+    }
+
+    @Test
     @DisplayName("Should not throw when handling command line with valid readable input and writable output")
     void testHandleCommandLineWithValidPaths(@TempDir Path tempDir) throws IOException, ParseException {
         File inputFile = tempDir.resolve("input.xml").toFile();

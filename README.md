@@ -132,13 +132,13 @@ src/test/java/cl/cavallinux/jisocreator/
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 128 tests total across 33 test classes, all passing.
+**Current Test Statistics**: 147 tests total across 36 test classes, all passing.
 
 Current coverage includes:
 - Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
 - Parser/contract/mapper tests (`IsoFilesystemParser`, `XMLIsoFilesystem*`)
 - Explorer/provider/comparator/filter tests (OS and ISO, including `IsoTreeNode`)
-- CLI/manager/i18n tests (`CommandLine*`, `IOManager`, `OSAndIsoExplorerManager`, message bundles)
+- CLI/manager/i18n tests (`CommandLine*`, `MainActionsManager`, `IOManager`, `OSAndIsoExplorerManager`, message bundles including `CommandLineMessages`)
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
@@ -271,13 +271,15 @@ jisocreator/
 │   ├── gui/              # GUI components and windows
 │   │   ├── decl/         # GUI declarations
 │   │   ├── dialog/       # Dialog components
-│   │   ├── i18n/         # NLS message bundles (About, ISO/OS explorer, preferences, etc.)
+│   │   ├── i18n/         # NLS message bundles (About, ISO/OS explorer, preferences, CLI, etc.)
+│   │   │   └── CommandLineMessages.java   # i18n for all CLI-facing strings
 │   │   ├── listeners/    # Event listeners
 │   │   ├── preference/   # Preference pages (general, MKISOFS options)
 │   │   ├── sashfom/      # Sash form components
 │   │   └── window/       # Main window components
 │   ├── instances/        # Singleton managers
-│   │   ├── ActionsManager.java            # Centralized action management
+│   │   ├── ActionsManager.java            # Centralized action management (GUI actions)
+│   │   ├── MainActionsManager.java        # Headless-safe MainAction singleton
 │   │   ├── GUIManager.java                # GUI component management
 │   │   ├── ImageRegister.java             # Image resource registry
 │   │   ├── IOManager.java                 # I/O operations management
@@ -289,6 +291,8 @@ jisocreator/
 │   │   └── ...
 │   ├── model/            # Data models and providers
 │   │   ├── cmdline/      # Command-line parser implementation
+│   │   │   ├── JISOCreatorCommandLineParser.java      # CLI parser (i18n-aware, uses CommandLineMessages)
+│   │   │   └── JISOCreatorCommandLineHelpFormatter.java # Custom HelpFormatter with i18n table headers
 │   │   ├── comparators/  # Custom comparators
 │   │   ├── filters/      # File filters
 │   │   ├── isoexplorer/  # ISO explorer models
@@ -308,9 +312,10 @@ jisocreator/
 │   │   ├── jobs/         # SaveISO9660ImageThread tests
 │   │   ├── main/         # MainAction tests
 │   │   └── osexplorer/   # AddFileAction recursive behavior tests
-│   ├── gui/i18n/         # Message bundle (i18n) tests
-│   ├── instances/        # Manager and enum singleton tests (CLI parser/options, IOManager, explorer manager)
+│   ├── gui/i18n/         # Message bundle (i18n) tests (includes CommandLineMessagesTest)
+│   ├── instances/        # Manager and enum singleton tests (CLI parser/options, IOManager, MainActionsManager, explorer manager)
 │   ├── model/            # Parsers, providers, comparators, filters, explorer models
+│   │   ├── cmdline/      # JISOCreatorCommandLineParser + JISOCreatorCommandLineHelpFormatter tests
 │   │   ├── comparators/  # OS/ISO directories-first comparator tests
 │   │   ├── filters/      # Hidden files / directories-only filter tests
 │   │   ├── isoexplorer/  # IsoFileSystem / IsoTreeNode / TreeNode tests
@@ -343,7 +348,7 @@ jisocreator/
 
 ### Singleton Manager Pattern
 
-The application uses enum-based singleton managers for centralized component management (`ActionsManager`, `GUIManager`, `IsoExplorerActionsManager`, `OSExplorerActionsManager`, `OSAndIsoExplorerManager`, `ImageRegister`, `IOManager`, `CommandLineParserManager`, `PreferencesNodeManager`, among others):
+The application uses enum-based singleton managers for centralized component management (`ActionsManager`, `MainActionsManager`, `GUIManager`, `IsoExplorerActionsManager`, `OSExplorerActionsManager`, `OSAndIsoExplorerManager`, `ImageRegister`, `IOManager`, `CommandLineParserManager`, `PreferencesNodeManager`, among others):
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -376,11 +381,13 @@ The application uses enum-based singleton managers for centralized component man
 
 ### Internationalization (i18n)
 
-UI text is externalized into per-component NLS message bundles under `src/main/resources/i18n/` (e.g. `mainwindow`, `mainactions`, `osexplorer`, `isoexplorer`, `preferencedialog`, `aboutdialog`, `showisoinfodialog`), each with `messages_en.properties` and `messages_es.properties`. The active language is selectable from the General preferences page (`JISOCreatorLanguageOptions`) and applied at startup via `MainAction`.
+UI text is externalized into per-component NLS message bundles under `src/main/resources/i18n/` (e.g. `mainwindow`, `mainactions`, `osexplorer`, `isoexplorer`, `preferencedialog`, `aboutdialog`, `showisoinfodialog`, `commandline`), each with `messages_en.properties` and `messages_es.properties`. The active language is selectable from the General preferences page (`JISOCreatorLanguageOptions`) and applied at startup via `MainAction`.
+
+The `commandline` bundle (`CommandLineMessages`) covers all CLI-facing strings: version output format, application description, example usage, individual option descriptions, help table caption, column headers, and the syntax-line prefix. `CommandLineOptionsManager` reads option descriptions from this bundle so the help output respects the active locale.
 
 ### Command Line Interface
 
-`CommandLineParserManager` wraps a `JISOCreatorCommandLineParser` (built on Apache Commons CLI) exposing `--load`, `--input`, `--output`, `--help`, `--version` and `--license` options, allowing the application to be launched in headless/scripted scenarios in addition to its GUI mode.
+`CommandLineParserManager` wraps a `JISOCreatorCommandLineParser` (built on Apache Commons CLI) exposing `--load`, `--input`, `--output`, `--help`, `--version` and `--license` options, allowing the application to be launched in headless/scripted scenarios in addition to its GUI mode. The help table rendered by `--help` uses `JISOCreatorCommandLineHelpFormatter`, a custom `HelpFormatter` subclass that injects i18n column headers and table caption from `CommandLineMessages`.
 
 ### XML Parser Layer
 
@@ -388,7 +395,7 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ### Testing Architecture
 
-The test suite (128 tests / 33 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+The test suite (147 tests / 36 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
@@ -399,7 +406,7 @@ The test suite (128 tests / 33 classes, see [TESTING.md](TESTING.md)) favors SWT
 ## Version
 
 - Latest stable release: **0.2.0** (released 2026-07-12)
-- Next development line: **TBD (post-0.2.0)**
+- Current development: **0.2.1-SNAPSHOT** (`feature/v0.2.1`)
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

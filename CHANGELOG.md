@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Recursive add with cancellation coverage**: Added `AddFileActionRecursiveTest` (7 tests) to validate recursive add behavior, immediate and mid-recursion cancellation, empty directories, and progress monitor integration.
 - **`IsoTreeNode` behavior coverage**: Added `IsoTreeNodeTest` (8 tests) to validate `addNode` vs `addLeafNode`, duplicate prevention, and directory recursion semantics.
+- **`MainActionsManager` enum**: Extracted `MAINACTION` instantiation from `ActionsManager` into a dedicated `MainActionsManager` enum, allowing `MainAction` to be initialized without triggering GUI-bound singleton dependencies (e.g. `ImageRegister`). This makes `MainAction.main()` safe to call in non-graphical / headless environments.
+- **`CommandLineMessages` i18n class**: New NLS bundle class (`gui/i18n/CommandLineMessages`) backed by `i18n/commandline/messages_en.properties` and `messages_es.properties`, externalizing all CLI-facing strings: version format, app description, example usage, option descriptions, help table title, column headers, and the syntax-line prefix. Added `COMMANDLINE_BUNDLE_MESSAGE` constant to `INLSBundleMessages`.
+- **`JISOCreatorCommandLineHelpFormatter`**: New `HelpFormatter` subclass that overrides `getTableDefinition(Iterable<Option>)` to inject the i18n table caption and column headers from `CommandLineMessages`, and sets the syntax prefix via `setSyntaxPrefix`. Used by `JISOCreatorCommandLineParser` as its default formatter.
+- **CLI i18n unit tests**:
+  - `CommandLineMessagesTest` (5 tests) — validates all 13 static fields in `CommandLineMessages` are non-null, non-blank, and resolved (not in `!key!` error format), with dedicated checks for version, example usage, table column, and syntax-prefix messages.
+  - `MainActionsManagerTest` (6 tests) — verifies `MAINACTION` constant, non-null `MainAction` instance, enum singleton contract, empty initial `layoutFilePath`, and parser referential equality with `CommandLineParserManager`.
+  - `JISOCreatorCommandLineHelpFormatterTest` (6 tests) — verifies `getTableDefinition` overrides the caption and column headers with i18n messages, preserves parent column styles and rows, and that `printHelp` completes without throwing.
+- **Updated coverage for existing test classes**:
+  - `MessagesBundleTest` — extended to include `COMMANDLINE_BUNDLE_MESSAGE` in bundle-load and field-resolution checks.
+  - `JISOCreatorCommandLineParserTest` — added assertion that the default `helpFormatter` field is an instance of `JISOCreatorCommandLineHelpFormatter` (total: **20 tests**).
+  - `OSExplorerTest` — `testIsRootForSystemRoot` simplified: now asserts that every entry returned by `getRoots()` is identified as a root, since `OSExplorer` always uses `File.listRoots()`.
 
 ### Changed
 - **Project version line**: Updated `pom.xml` from `0.2.0` to `0.2.1-SNAPSHOT` for the current development branch.
@@ -18,10 +29,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ISO tree API refinement**: Added `ITreeNode#addLeafNode(ITreeNode)` and implemented it in `IsoTreeNode` to support direct child insertion without implicit recursion; kept `addNode` for recursive directory expansion.
 - **Windows launcher behavior**: Updated `res/mkisofs/jisocreator.bat` to create `%LOCALAPPDATA%\jisocreator\logs`, set `-Dpath.logs`, and run via `javaw` in background mode.
 - **Spanish i18n cleanup**: Normalized multiple labels/tooltips in `src/main/resources/i18n/*/messages_es.properties` (accented characters and wording consistency in main actions, OS/ISO explorer, preferences, and show-ISO-info dialogs).
+- **`CommandLineOptionsManager` option descriptions**: All six `Option` descriptors (load, help, version, license, input, output) are now sourced from `CommandLineMessages` instead of hardcoded English strings, enabling full i18n of the help output.
+- **`JISOCreatorCommandLineParser` refactoring**:
+  - Extracted `APP_NAME`, `APP_VERSION`, `JVM_VERSION`, `JVM_VENDOR`, `OS_NAME`, and `LOWERCASE_APPNAME` as static constants to avoid repeated reflective lookups.
+  - `printVersion()` now formats output using `CommandLineMessages.commandLineVersionMessage`.
+  - `buildHelpHeader()` delegates to `CommandLineMessages.commandLineAppDescriptionMessage`.
+  - `buildHelpFooter()` delegates to `CommandLineMessages.commandLineExampleUsageMessage` with `Strings.CI.replace` to substitute the app name.
+  - Default `helpFormatter` field changed from an inline `HelpFormatter` to `JISOCreatorCommandLineHelpFormatter`.
+- **`ActionsManager` enum**: `MAINACTION` constant removed; `MainAction` instantiation moved to the new `MainActionsManager`.
+- **`OSExplorer` root initialization**: Simplified constructor to always call `File.listRoots()`, removing the previous Windows/Linux conditional branch that used `user.home` file listing on Windows.
+- **`OSTreeContentProvider`**: Replaced `instanceof File` cast pattern with a Java 16+ pattern-matching `instanceof`, and changed empty-return from `new File[0]` to `List.of().toArray(File[]::new)`. Removed the special-case null check in `getElements`, delegating entirely to `getChildren`.
+- **`ShowOnlyDirectoriesFilter`**: Replaced `Files.isDirectory(path)` with `Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)` to correctly classify symbolic links. Removed `OSAndIsoExplorerManager.isRoot()` check—root directories are directories themselves and are now included through the regular directory predicate. Log level changed from `INFO` to `DEBUG`.
 - **Documentation synchronization for branch test scope**: Updated `README.md` and `TESTING.md` to reflect current suite inventory and counts (**128 tests in 33 classes**), including new coverage in `AddFileActionRecursiveTest` and `IsoTreeNodeTest`.
+- **Test suite growth**: After all branch changes, the test suite now comprises **147 tests across 36 test classes**.
 
 ### Fixed
 - **Cross-platform parser compatibility assertion**: Updated `XMLIsoFilesystemParserCompatibilityTest` to assert the expected fixture-specific `volumeID` on both Linux and Windows, avoiding platform-dependent false negatives.
+- **`ShowOnlyDirectoriesFilter` symlink handling**: Using `LinkOption.NOFOLLOW_LINKS` prevents symbolic links from being treated as directories on Linux, ensuring the tree viewer only shows actual directories.
+- **Selection event log noise**: Changed `log.info` → `log.debug` in `OSExplorerSashFormSelectionChangedListener` for selection-changed events, reducing log verbosity at the INFO level during normal UI interaction.
 
 ## [0.2.0] - 2026-07-12
 

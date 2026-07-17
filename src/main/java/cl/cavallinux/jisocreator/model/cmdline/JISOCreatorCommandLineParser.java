@@ -80,7 +80,7 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
         }
 
         File outputFileObj = new File(outputFile);
-        if (!outputFileObj.exists() || !outputFileObj.canWrite()) {
+        if (!outputFileObj.getParentFile().exists() || !outputFileObj.getParentFile().canWrite()) {
             throw new ParseException("Output directory doesn't exists or Read and write permissions denied: "
                     + outputFileObj.getAbsolutePath());
         }

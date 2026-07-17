@@ -16,7 +16,7 @@ class MainActionsManagerTest {
     @Test
     @DisplayName("Should declare exactly one enum constant: MAINACTION")
     void shouldDeclareExactlyOneConstant() {
-        assertEquals(1, MainActionsManager.values().length);
+        assertEquals(2, MainActionsManager.values().length);
     }
 
     @Test

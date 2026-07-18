@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import cl.cavallinux.jisocreator.action.main.LoadCommandLineISOLayoutAction;
 import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -41,6 +42,8 @@ public class MainWindow extends ApplicationWindow {
 
     private MainWindow(Shell parentShell) {
         super(parentShell);
+        Display display = Objects.nonNull(parentShell) ? parentShell.getDisplay() : Display.getDefault();
+        DarkThemeSupport.enableWindowsDarkMode(display);
         separator = new Separator();
         addMenuBar();
         addToolBar(SWT.RIGHT);
@@ -81,7 +84,15 @@ public class MainWindow extends ApplicationWindow {
         loadIsoLayout(isoFilePath);
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
+        applyDarkTheme(composite);
         return composite;
+    }
+
+    private void applyDarkTheme(Composite composite) {
+        DarkThemeSupport.applyToControlTree(composite);
+        Shell shell = composite.getShell();
+        DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
+        shell.getDisplay().asyncExec(() -> DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl()));
     }
 
     private void loadIsoLayout(String isoFilePath) {

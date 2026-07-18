@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ public class ADDFileToIsoLayoutDialog extends ElementTreeSelectionDialog {
         log.info("Creating dialog area");
         Control dialogArea = super.createDialogArea(parent);
         treeViewer.expandToLevel(1);
+        DarkThemeSupport.applyToControlTree(dialogArea);
         return dialogArea;
     }
     
@@ -43,6 +45,7 @@ public class ADDFileToIsoLayoutDialog extends ElementTreeSelectionDialog {
     protected void configureShell(Shell shell) {
         log.info("Configuring dialog shell");
         super.configureShell(shell);
+        DarkThemeSupport.enableWindowsDarkMode(shell.getDisplay());
         shell.setText("Add files to iso layout");
     }
     

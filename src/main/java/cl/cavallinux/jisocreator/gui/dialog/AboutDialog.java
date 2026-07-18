@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.i18n.AboutDialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.Builder;
@@ -35,12 +36,15 @@ public class AboutDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         log.info("Configuring about dialog shell");
         super.configureShell(newShell);
+        DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(AboutDialogMessages.aboutDialogWindowTitle);
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        return createAboutPanel(parent);
+        Control dialogArea = createAboutPanel(parent);
+        DarkThemeSupport.applyToControlTree(dialogArea);
+        return dialogArea;
     }
 
     private Control createAboutPanel(Composite parent) {

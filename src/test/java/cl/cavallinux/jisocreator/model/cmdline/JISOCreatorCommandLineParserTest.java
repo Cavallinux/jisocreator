@@ -28,13 +28,16 @@ class JISOCreatorCommandLineParserTest {
 
     @BeforeEach
     void setUp() {
-        parser = JISOCreatorCommandLineParser.builder().build();
+        JISOCreatorAttributes testAttributes = JISOCreatorAttributes.builder().appName("JISOCreator")
+                .appVersion("0.2.1-SNAPSHOT").jvmVersion("21").jvmVendor("Eclipse Adoptium")
+                .osName("Windows 11").build();
+        parser = JISOCreatorCommandLineParser.builder().attributes(testAttributes).build();
     }
 
     @Test
     @DisplayName("Should build options containing all six declared command line options")
     void testBuildOptions() {
-        Options options = JISOCreatorCommandLineParser.buildOptions();
+        Options options = parser.buildOptions();
 
         assertTrue(options.hasOption(CommandLineOptionsManager.LOAD.getOption().getOpt()));
         assertTrue(options.hasOption(CommandLineOptionsManager.HELP.getOption().getOpt()));
@@ -47,8 +50,8 @@ class JISOCreatorCommandLineParserTest {
     @Test
     @DisplayName("Should build a non-empty help header and footer")
     void testBuildHelpHeaderAndFooter() {
-        String header = JISOCreatorCommandLineParser.buildHelpHeader(null);
-        String footer = JISOCreatorCommandLineParser.buildHelpFooter();
+        String header = parser.buildHelpHeader(parser.getAttributes());
+        String footer = parser.buildHelpFooter(parser.getAttributes());
 
         assertFalse(header.isBlank());
         assertTrue(footer.contains("--help"));

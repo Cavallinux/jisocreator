@@ -31,12 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Windows launcher behavior**: Updated `res/mkisofs/jisocreator.bat` to create `%LOCALAPPDATA%\jisocreator\logs`, set `-Dpath.logs`, and run via `javaw` in background mode.
 - **Spanish i18n cleanup**: Normalized multiple labels/tooltips in `src/main/resources/i18n/*/messages_es.properties` (accented characters and wording consistency in main actions, OS/ISO explorer, preferences, and show-ISO-info dialogs).
 - **`CommandLineOptionsManager` option descriptions**: All six `Option` descriptors (load, help, version, license, input, output) are now sourced from `CommandLineMessages` instead of hardcoded English strings, enabling full i18n of the help output.
-- **`JISOCreatorCommandLineParser` refactoring**:
-  - Extracted `APP_NAME`, `APP_VERSION`, `JVM_VERSION`, `JVM_VENDOR`, `OS_NAME`, and `LOWERCASE_APPNAME` as static constants to avoid repeated reflective lookups.
-  - `printVersion()` now formats output using `CommandLineMessages.commandLineVersionMessage`.
-  - `buildHelpHeader()` delegates to `CommandLineMessages.commandLineAppDescriptionMessage`.
-  - `buildHelpFooter()` delegates to `CommandLineMessages.commandLineExampleUsageMessage` with `Strings.CI.replace` to substitute the app name.
-  - Default `helpFormatter` field changed from an inline `HelpFormatter` to `JISOCreatorCommandLineHelpFormatter`.
+- **`JISOCreatorCommandLineParser` refactoring (2026-07-17)**:
+  - Introduced `JISOCreatorAttributes` record to encapsulate app/JVM/OS metadata used by CLI version/help output.
+  - Moved shared CLI helpers (`buildOptions`, `buildHelpHeader`, `buildHelpFooter`) into `ICommandLineParser` default methods.
+  - `JISOCreatorCommandLineParser` now composes those helpers at runtime (`parse`/`printHelp`) and keeps `JISOCreatorCommandLineHelpFormatter` as default formatter.
+  - Parser tests were updated to call these helpers through parser instances and to provide deterministic test attributes.
 - **`ActionsManager` enum**: `MAINACTION` constant removed; `MainAction` instantiation moved to the new `MainActionsManager`.
 - **`OSExplorer` root initialization**: Simplified constructor to always call `File.listRoots()`, removing the previous Windows/Linux conditional branch that used `user.home` file listing on Windows.
 - **`OSTreeContentProvider`**: Replaced `instanceof File` cast pattern with a Java 16+ pattern-matching `instanceof`, and changed empty-return from `new File[0]` to `List.of().toArray(File[]::new)`. Removed the special-case null check in `getElements`, delegating entirely to `getChildren`.

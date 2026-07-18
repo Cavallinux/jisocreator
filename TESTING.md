@@ -13,7 +13,8 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 
 ### Updated test classes
 - `gui/i18n/MessagesBundleTest.java` — added `COMMANDLINE_BUNDLE_MESSAGE` to bundle-load and field-resolution checks
-- `model/cmdline/JISOCreatorCommandLineParserTest.java` — added `testHelpFormatterIsJISOCreatorCommandLineHelpFormatter` (now **20 tests**)
+- `model/cmdline/JISOCreatorCommandLineParserTest.java` — added `testHelpFormatterIsJISOCreatorCommandLineHelpFormatter` and adapted parser helper assertions to instance-based methods (now **20 tests**)
+- `model/cmdline/JISOCreatorCommandLineHelpFormatterTest.java` — adapted options setup to use a parser instance (`buildOptions()` is now a default interface method)
 - `model/osexplorer/OSExplorerTest.java` — simplified `testIsRootForSystemRoot` to assert all roots from `File.listRoots()` are identified as roots
 
 ## Testing Framework Setup

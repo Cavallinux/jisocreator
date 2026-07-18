@@ -273,7 +273,7 @@ jisocreator --load /path/to/layout.xml
 jisocreator --input /path/to/layout.xml --output /path/to/existing-output.iso
 ```
 
-> Note: in the current CLI validation, `--input` and `--output` are both checked as existing, accessible filesystem paths before ISO generation starts.
+> Note: in the current CLI validation, `--input` must point to an existing readable path, and `--output` is validated against an existing writable parent directory before ISO generation starts.
 
 ## Project Structure
 
@@ -309,6 +309,8 @@ jisocreator/
 │   │   └── ...
 │   ├── model/            # Data models and providers
 │   │   ├── cmdline/      # Command-line parser implementation
+│   │   │   ├── ICommandLineParser.java                # CLI contract + shared default helpers
+│   │   │   ├── JISOCreatorAttributes.java             # App/JVM/OS metadata record used by CLI output
 │   │   │   ├── JISOCreatorCommandLineParser.java      # CLI parser (i18n-aware, uses CommandLineMessages)
 │   │   │   └── JISOCreatorCommandLineHelpFormatter.java # Custom HelpFormatter with i18n table headers
 │   │   ├── comparators/  # Custom comparators

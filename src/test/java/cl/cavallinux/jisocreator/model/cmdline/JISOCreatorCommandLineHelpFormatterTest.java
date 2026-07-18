@@ -17,12 +17,14 @@ import cl.cavallinux.jisocreator.gui.i18n.CommandLineMessages;
 class JISOCreatorCommandLineHelpFormatterTest {
 
     private JISOCreatorCommandLineHelpFormatter formatter;
+    private JISOCreatorCommandLineParser parser;
     private Options options;
 
     @BeforeEach
     void setUp() {
         formatter = new JISOCreatorCommandLineHelpFormatter();
-        options = JISOCreatorCommandLineParser.buildOptions();
+        parser = JISOCreatorCommandLineParser.builder().build();
+        options = parser.buildOptions();
     }
 
     @Test

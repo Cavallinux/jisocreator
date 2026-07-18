@@ -85,6 +85,8 @@ public class MainWindow extends ApplicationWindow {
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         applyDarkTheme(composite);
+        // Apply theme to menu bar after it's fully initialized
+        Display.getCurrent().asyncExec(() -> applyDarkThemeToMenuBar());
         return composite;
     }
 
@@ -97,6 +99,13 @@ public class MainWindow extends ApplicationWindow {
             DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
             applyDarkThemeToStatusLine();
         });
+    }
+
+    private void applyDarkThemeToMenuBar() {
+        Shell shell = getShell();
+        if (Objects.nonNull(shell) && !shell.isDisposed()) {
+            DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
+        }
     }
 
     private void applyDarkThemeToStatusLine() {

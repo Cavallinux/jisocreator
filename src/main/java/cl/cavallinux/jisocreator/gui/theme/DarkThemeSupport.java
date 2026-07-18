@@ -75,10 +75,26 @@ public final class DarkThemeSupport {
         }
 
         Palette palette = getOrCreatePalette(shell);
-        applyMenuRecursively(shell.getMenuBar(), palette);
-        applyToolBar(toolBar, palette);
+        applyMenuBarStyling(shell, palette);
+        if (Objects.nonNull(toolBar) && !toolBar.isDisposed()) {
+            applyToolBar(toolBar, palette);
+        }
         shell.setBackground(palette.background);
         shell.setForeground(palette.foreground);
+    }
+
+    /**
+     * Applies dark theme styling to the menu bar. This method handles
+     * the menu bar styling which requires special consideration since
+     * SWT Menu objects may not support all color operations on all platforms.
+     */
+    private static void applyMenuBarStyling(Shell shell, Palette palette) {
+        Menu menuBar = shell.getMenuBar();
+        if (Objects.isNull(menuBar) || menuBar.isDisposed()) {
+            return;
+        }
+
+        applyMenuRecursively(menuBar, palette);
     }
 
     private static void applyControlRecursively(Control control, Palette palette) {
@@ -147,11 +163,23 @@ public final class DarkThemeSupport {
             return;
         }
 
+        // Apply background and foreground to the menu
         setOptionalColor(menu, "setBackground", palette.panelBackground);
         setOptionalColor(menu, "setForeground", palette.foreground);
 
+        // Apply styling to each menu item in the menu
         for (MenuItem menuItem : menu.getItems()) {
-            applyMenuRecursively(menuItem.getMenu(), palette);
+            if (!menuItem.isDisposed()) {
+                // Try to set colors for menu items
+                setOptionalColor(menuItem, "setBackground", palette.panelBackground);
+                setOptionalColor(menuItem, "setForeground", palette.foreground);
+
+                // Recursively apply to submenus
+                Menu submenu = menuItem.getMenu();
+                if (Objects.nonNull(submenu) && !submenu.isDisposed()) {
+                    applyMenuRecursively(submenu, palette);
+                }
+            }
         }
     }
 
@@ -238,11 +266,16 @@ public final class DarkThemeSupport {
     }
 
     private static void setOptionalColor(Object target, String methodName, Color color) {
+        if (Objects.isNull(target) || Objects.isNull(color) || color.isDisposed()) {
+            return;
+        }
+
         try {
             Method method = target.getClass().getMethod(methodName, Color.class);
             method.invoke(target, color);
         } catch (ReflectiveOperationException ignored) {
             // Compatibility fallback for SWT variants without this API.
+            // This is expected for some widgets/menus depending on platform and SWT version
         }
     }
 

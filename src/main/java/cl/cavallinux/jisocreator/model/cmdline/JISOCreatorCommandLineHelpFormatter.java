@@ -16,9 +16,9 @@ public class JISOCreatorCommandLineHelpFormatter extends HelpFormatter {
             CommandLineMessages.commandLineIsoOptionsTableOptionColumnMessage,
             CommandLineMessages.commandLineIsoOptionsTableDescriptionColumnMessage);
     private static final String DEFAULT_OPTIONS_TABLE_TITLE = CommandLineMessages.commandLineIsoOptionsTableTitleMessage;
-
-    protected JISOCreatorCommandLineHelpFormatter(Builder builder) {
-        super(builder);
+    
+    protected JISOCreatorCommandLineHelpFormatter() {
+        super(HelpFormatter.builder().setShowSince(false));
         setSyntaxPrefix(CommandLineMessages.commandLineIsoOptionsSyntaxHeaderMessage);
     }
 

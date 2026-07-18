@@ -21,7 +21,7 @@ class JISOCreatorCommandLineHelpFormatterTest {
 
     @BeforeEach
     void setUp() {
-        formatter = new JISOCreatorCommandLineHelpFormatter(HelpFormatter.builder().setShowSince(false));
+        formatter = new JISOCreatorCommandLineHelpFormatter();
         options = JISOCreatorCommandLineParser.buildOptions();
     }
 

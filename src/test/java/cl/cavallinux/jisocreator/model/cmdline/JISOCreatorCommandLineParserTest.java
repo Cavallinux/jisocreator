@@ -47,7 +47,7 @@ class JISOCreatorCommandLineParserTest {
     @Test
     @DisplayName("Should build a non-empty help header and footer")
     void testBuildHelpHeaderAndFooter() {
-        String header = JISOCreatorCommandLineParser.buildHelpHeader();
+        String header = JISOCreatorCommandLineParser.buildHelpHeader(null);
         String footer = JISOCreatorCommandLineParser.buildHelpFooter();
 
         assertFalse(header.isBlank());

@@ -6,11 +6,13 @@ import java.util.Objects;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -30,11 +32,16 @@ public final class DarkThemeSupport {
     private static final String SWT_WIN32_DARK_MODE_SHELL_TITLE =
             "org.eclipse.swt.internal.win32.useShellTitleColoring";
     private static final String DARK_PALETTE_KEY = "jisocreator.darktheme.palette";
+    private static final String CONTROL_STATE_KEY = "jisocreator.darktheme.controlstate";
 
     private static final int[] DARK_BG_RGB = { 30, 30, 30 };
     private static final int[] DARK_PANEL_RGB = { 37, 37, 38 };
     private static final int[] DARK_INPUT_RGB = { 45, 45, 48 };
+    private static final int[] DARK_INPUT_FOCUS_RGB = { 55, 55, 60 };
+    private static final int[] DARK_INPUT_FOCUS_BORDER_RGB = { 100, 150, 200 };
+    private static final int[] DARK_INPUT_DISABLED_RGB = { 35, 35, 35 };
     private static final int[] DARK_FG_RGB = { 240, 240, 240 };
+    private static final int[] DARK_FG_DISABLED_RGB = { 120, 120, 120 };
 
     private DarkThemeSupport() {
     }
@@ -98,9 +105,31 @@ public final class DarkThemeSupport {
             return;
         }
 
-        if (control instanceof Text || control instanceof Combo || control instanceof Spinner
-                || control instanceof Tree || control instanceof List) {
+        if (control instanceof Text text) {
+            text.setBackground(palette.inputBackground);
+            attachFocusListeners(text, palette);
+            attachDisabledListener(text, palette);
+            return;
+        }
+
+        if (control instanceof Combo combo) {
+            combo.setBackground(palette.inputBackground);
+            attachFocusListeners(combo, palette);
+            attachDisabledListener(combo, palette);
+            return;
+        }
+
+        if (control instanceof Spinner spinner) {
+            spinner.setBackground(palette.inputBackground);
+            attachFocusListeners(spinner, palette);
+            attachDisabledListener(spinner, palette);
+            return;
+        }
+
+        if (control instanceof Tree || control instanceof List) {
             control.setBackground(palette.inputBackground);
+            attachFocusListeners(control, palette);
+            attachDisabledListener(control, palette);
             return;
         }
 
@@ -133,6 +162,57 @@ public final class DarkThemeSupport {
 
         toolBar.setBackground(palette.panelBackground);
         toolBar.setForeground(palette.foreground);
+    }
+
+    private static void attachFocusListeners(Control control, Palette palette) {
+        if (Objects.isNull(control) || control.isDisposed()) {
+            return;
+        }
+
+        control.addListener(SWT.FocusIn, event -> {
+            if (!control.isDisposed() && control.getEnabled()) {
+                control.setBackground(palette.inputBackgroundFocus);
+            }
+        });
+
+        control.addListener(SWT.FocusOut, event -> {
+            if (!control.isDisposed() && control.getEnabled()) {
+                control.setBackground(palette.inputBackground);
+            }
+        });
+    }
+
+    private static void attachDisabledListener(Control control, Palette palette) {
+        if (Objects.isNull(control) || control.isDisposed()) {
+            return;
+        }
+
+        control.addListener(SWT.Modify, event -> {
+            if (control.isDisposed()) {
+                return;
+            }
+            updateControlStateStyle(control, palette);
+        });
+
+        // Initial state setup
+        updateControlStateStyle(control, palette);
+    }
+
+    private static void updateControlStateStyle(Control control, Palette palette) {
+        if (control.isDisposed()) {
+            return;
+        }
+
+        if (!control.getEnabled()) {
+            control.setBackground(palette.inputBackgroundDisabled);
+            control.setForeground(palette.foregroundDisabled);
+        } else if (control.isFocusControl()) {
+            control.setBackground(palette.inputBackgroundFocus);
+            control.setForeground(palette.foreground);
+        } else {
+            control.setBackground(palette.inputBackground);
+            control.setForeground(palette.foreground);
+        }
     }
 
     private static Palette getOrCreatePalette(Shell shell) {
@@ -170,25 +250,35 @@ public final class DarkThemeSupport {
         private final Color background;
         private final Color panelBackground;
         private final Color inputBackground;
+        private final Color inputBackgroundFocus;
+        private final Color inputBackgroundDisabled;
         private final Color foreground;
+        private final Color foregroundDisabled;
 
         private Palette(Display display) {
             background = new Color(display, DARK_BG_RGB[0], DARK_BG_RGB[1], DARK_BG_RGB[2]);
             panelBackground = new Color(display, DARK_PANEL_RGB[0], DARK_PANEL_RGB[1], DARK_PANEL_RGB[2]);
             inputBackground = new Color(display, DARK_INPUT_RGB[0], DARK_INPUT_RGB[1], DARK_INPUT_RGB[2]);
+            inputBackgroundFocus = new Color(display, DARK_INPUT_FOCUS_RGB[0], DARK_INPUT_FOCUS_RGB[1], DARK_INPUT_FOCUS_RGB[2]);
+            inputBackgroundDisabled = new Color(display, DARK_INPUT_DISABLED_RGB[0], DARK_INPUT_DISABLED_RGB[1], DARK_INPUT_DISABLED_RGB[2]);
             foreground = new Color(display, DARK_FG_RGB[0], DARK_FG_RGB[1], DARK_FG_RGB[2]);
+            foregroundDisabled = new Color(display, DARK_FG_DISABLED_RGB[0], DARK_FG_DISABLED_RGB[1], DARK_FG_DISABLED_RGB[2]);
         }
 
         private boolean isDisposed() {
             return background.isDisposed() || panelBackground.isDisposed() || inputBackground.isDisposed()
-                    || foreground.isDisposed();
+                    || inputBackgroundFocus.isDisposed() || inputBackgroundDisabled.isDisposed()
+                    || foreground.isDisposed() || foregroundDisabled.isDisposed();
         }
 
         private void dispose() {
             disposeColor(background);
             disposeColor(panelBackground);
             disposeColor(inputBackground);
+            disposeColor(inputBackgroundFocus);
+            disposeColor(inputBackgroundDisabled);
             disposeColor(foreground);
+            disposeColor(foregroundDisabled);
         }
 
         private void disposeColor(Color color) {

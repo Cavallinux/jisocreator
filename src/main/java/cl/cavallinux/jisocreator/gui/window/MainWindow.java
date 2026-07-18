@@ -92,7 +92,22 @@ public class MainWindow extends ApplicationWindow {
         DarkThemeSupport.applyToControlTree(composite);
         Shell shell = composite.getShell();
         DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
-        shell.getDisplay().asyncExec(() -> DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl()));
+        applyDarkThemeToStatusLine();
+        shell.getDisplay().asyncExec(() -> {
+            DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
+            applyDarkThemeToStatusLine();
+        });
+    }
+
+    private void applyDarkThemeToStatusLine() {
+        if (Objects.isNull(getStatusLineManager())) {
+            return;
+        }
+
+        Control statusLineControl = getStatusLineManager().getControl();
+        if (Objects.nonNull(statusLineControl)) {
+            DarkThemeSupport.applyToControlTree(statusLineControl);
+        }
     }
 
     private void loadIsoLayout(String isoFilePath) {

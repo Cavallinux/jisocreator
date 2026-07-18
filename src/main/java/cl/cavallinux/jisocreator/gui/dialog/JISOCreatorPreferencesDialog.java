@@ -45,6 +45,11 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
         getButton(IDialogConstants.OK_ID).setText(PreferenceDialogMessages.preferenceDialogOKButton);
         getButton(IDialogConstants.CANCEL_ID).setText(PreferenceDialogMessages.preferenceDialogCancelButton);
         DarkThemeSupport.applyToControlTree(parent);
+        parent.getDisplay().asyncExec(() -> {
+            if (!parent.isDisposed()) {
+                DarkThemeSupport.applyToControlTree(parent);
+            }
+        });
     }
     
     @Override

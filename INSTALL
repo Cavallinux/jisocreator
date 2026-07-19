@@ -1,8 +1,8 @@
 JisoCreator Installation Guide
 ==============================
 
-This document describes how to install and run JisoCreator from source or from
-the generated distribution package.
+This guide explains how to build, install, and run JisoCreator from source or
+from the generated distribution package.
 
 
 1) Requirements
@@ -27,6 +27,11 @@ From GitHub:
     git clone https://github.com/Cavallinux/jisocreator.git
     cd jisocreator
 
+Windows PowerShell equivalent:
+
+    git clone https://github.com/Cavallinux/jisocreator.git
+    Set-Location .\jisocreator
+
 
 3) Build the application
 ------------------------
@@ -39,11 +44,22 @@ Windows build (from any OS, for packaging with Windows SWT artifacts):
 
     mvn clean package -Pwindows
 
+macOS/Apple Silicon build (from any OS, for packaging with macOS SWT artifacts):
+
+    mvn clean package -Papplesilicon
+
+Optional CLI smoke build profiles:
+
+    mvn clean package exec:exec -Plinux-cmdlinemode
+    mvn clean package exec:exec -Pwindows-cmdlinemode
+    mvn clean package exec:exec -Papplesilicon-cmdlinemode
+
 Build output:
 - Main runnable jar: `target/jisocreator.jar`
 - Distribution zip:
   - Linux: `target/jisocreator-<version>-gtk.linux.x86_64.zip`
   - Windows: `target/jisocreator-<version>-win32.win32.x86_64.zip`
+  - macOS/Apple Silicon: `target/jisocreator-<version>-cocoa.macosx.aarch64.zip`
 
 
 4) Install from generated distribution zip (recommended)
@@ -70,7 +86,19 @@ Build output:
 3. Open a terminal in the extracted directory
 4. Run:
 
-       jisocreator.bat
+        jisocreator.bat
+
+4.3 macOS / Apple Silicon
+
+1. Build with `mvn clean package -Papplesilicon`
+2. Extract `target/jisocreator-<version>-cocoa.macosx.aarch64.zip`
+3. Make launcher executable:
+
+        chmod +x jisocreator.sh
+
+4. Run:
+
+        ./jisocreator.sh
 
 
 5) Run directly from build output (without zip install)
@@ -80,11 +108,15 @@ After `mvn clean package`:
 
     java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar
 
-With debug port (5005):
+With debug port (5005), Linux/macOS shell style:
 
     java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
          --enable-native-access=ALL-UNNAMED \
          -jar target/jisocreator.jar
+
+With debug port (5005), Windows PowerShell style:
+
+    java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar
 
 
 6) First-run configuration
@@ -112,6 +144,11 @@ Run:
 You can also validate CLI help:
 
     java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar --help
+
+If you built with the Windows profile and are testing from PowerShell:
+
+    java --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar --version
+    java --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar --help
 
 
 8) Optional: customize log directory

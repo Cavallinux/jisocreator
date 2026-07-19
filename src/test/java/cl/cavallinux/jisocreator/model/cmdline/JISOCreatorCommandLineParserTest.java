@@ -28,13 +28,16 @@ class JISOCreatorCommandLineParserTest {
 
     @BeforeEach
     void setUp() {
-        parser = JISOCreatorCommandLineParser.builder().build();
+        JISOCreatorAttributes testAttributes = JISOCreatorAttributes.builder().appName("JISOCreator")
+                .appVersion("0.2.1-SNAPSHOT").jvmVersion("21").jvmVendor("Eclipse Adoptium")
+                .osName("Windows 11").build();
+        parser = JISOCreatorCommandLineParser.builder().attributes(testAttributes).build();
     }
 
     @Test
     @DisplayName("Should build options containing all six declared command line options")
     void testBuildOptions() {
-        Options options = JISOCreatorCommandLineParser.buildOptions();
+        Options options = parser.buildOptions();
 
         assertTrue(options.hasOption(CommandLineOptionsManager.LOAD.getOption().getOpt()));
         assertTrue(options.hasOption(CommandLineOptionsManager.HELP.getOption().getOpt()));
@@ -47,8 +50,8 @@ class JISOCreatorCommandLineParserTest {
     @Test
     @DisplayName("Should build a non-empty help header and footer")
     void testBuildHelpHeaderAndFooter() {
-        String header = JISOCreatorCommandLineParser.buildHelpHeader();
-        String footer = JISOCreatorCommandLineParser.buildHelpFooter();
+        String header = parser.buildHelpHeader(parser.getAttributes());
+        String footer = parser.buildHelpFooter(parser.getAttributes());
 
         assertFalse(header.isBlank());
         assertTrue(footer.contains("--help"));
@@ -167,6 +170,12 @@ class JISOCreatorCommandLineParserTest {
     }
 
     @Test
+    @DisplayName("Should use JISOCreatorCommandLineHelpFormatter as the help formatter")
+    void testHelpFormatterIsJISOCreatorCommandLineHelpFormatter() {
+        assertTrue(parser.getHelpFormatter() instanceof JISOCreatorCommandLineHelpFormatter);
+    }
+
+    @Test
     @DisplayName("Should not throw when handling command line with valid readable input and writable output")
     void testHandleCommandLineWithValidPaths(@TempDir Path tempDir) throws IOException, ParseException {
         File inputFile = tempDir.resolve("input.xml").toFile();
@@ -191,11 +200,11 @@ class JISOCreatorCommandLineParserTest {
     }
 
     @Test
-    @DisplayName("Should throw ParseException when the output file does not exist")
+    @DisplayName("Should throw ParseException when the output parent directory does not exist")
     void testHandleCommandLineWithNonExistentOutputThrows(@TempDir Path tempDir) throws IOException, ParseException {
         File inputFile = tempDir.resolve("input.xml").toFile();
         Files.write(inputFile.toPath(), "<root/>".getBytes());
-        File nonExistentOutput = tempDir.resolve("missing-output.iso").toFile();
+        File nonExistentOutput = tempDir.resolve("nonexistent-subdir").resolve("missing-output.iso").toFile();
 
         CommandLine cmd = parser.parse("-i", inputFile.getAbsolutePath(), "-o",
                 nonExistentOutput.getAbsolutePath());

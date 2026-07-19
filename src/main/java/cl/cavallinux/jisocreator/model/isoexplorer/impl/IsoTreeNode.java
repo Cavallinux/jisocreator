@@ -1,11 +1,14 @@
 package cl.cavallinux.jisocreator.model.isoexplorer.impl;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Optional;
 
 import org.eclipse.swt.graphics.Image;
 
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Extension de la clase {@link TreeNode}, implementacion de un nodo del arbol
@@ -15,6 +18,7 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
  * @version 0.1.5
  * @since 0.0.2
  */
+@Slf4j
 public class IsoTreeNode extends TreeNode {
     private File file;
     private String isoName;
@@ -70,19 +74,22 @@ public class IsoTreeNode extends TreeNode {
 
     @Override
     public void addNode(ITreeNode node) {
-        if (children.contains(node)) {
-            return;
-        } else {
+        if (!children.contains(node)) {
             children.add(node);
-            File[] childs = ((File) node.getElement()).listFiles();
-            if (childs == null) {
-                return;
-            } else {
-                for (File child : childs) {
-                    ITreeNode newNode = new IsoTreeNode(node, child);
-                    node.addNode(newNode);
-                }
-            }
+            log.debug("Added node: {} to parent: {}", node.getIsoName(), this.getIsoName());
+            File[] childs = node.getElement() instanceof File file ? file.listFiles() : null;
+            Optional.ofNullable(childs).ifPresent(files -> Arrays.stream(files).forEach(child -> {
+                ITreeNode newNode = new IsoTreeNode(node, child);
+                node.addNode(newNode);
+            }));
+        }
+    }
+
+    @Override
+    public void addLeafNode(ITreeNode node) {
+        if (!children.contains(node)) {
+            children.add(node);
+            log.debug("Added leaf node: {} to parent: {}", node.getIsoName(), this.getIsoName());
         }
     }
 

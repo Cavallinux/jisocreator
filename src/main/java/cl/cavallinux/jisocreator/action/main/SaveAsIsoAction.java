@@ -41,6 +41,14 @@ public class SaveAsIsoAction extends JISOCreatorBaseAction implements IFileManag
         outputISOFile = StringUtils.EMPTY;
         commandLineMode = false;
     }
+    
+    @Builder
+    protected SaveAsIsoAction() {
+        super();
+        inputXMLLayoutFile = StringUtils.EMPTY;
+        outputISOFile = StringUtils.EMPTY;
+        commandLineMode = false;
+    }
 
     @Override
     public void run() {

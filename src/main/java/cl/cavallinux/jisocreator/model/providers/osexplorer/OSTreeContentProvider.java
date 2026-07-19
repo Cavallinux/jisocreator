@@ -15,21 +15,14 @@ public class OSTreeContentProvider implements ITreeContentProvider {
 
     @Override
     public Object[] getElements(Object arg0) {
-        log.info("Arg received in getElements: {}", arg0);
-        // When input is null (initial display), return filesystem roots
-        if (arg0 == null) {
-            return OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
-        }
         return getChildren(arg0);
     }
 
     @Override
     public Object[] getChildren(Object arg0) {
         log.info("Arg received in getChildren: {}", arg0);
-        if (arg0 instanceof File) {
-            File[] files = ((File) arg0).listFiles();
-            // Return empty array instead of null to prevent NullPointerException in tree viewers
-            return Objects.nonNull(files) ? files : new File[0];
+        if (arg0 instanceof File file) {
+            return file.listFiles();
         } else {
             return OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
         }

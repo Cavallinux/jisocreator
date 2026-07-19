@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,10 +24,7 @@ public class ShowOnlyDirectoriesFilter extends ViewerFilter {
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
         Path path = arg2 instanceof Path ? (Path) arg2 : ((File) arg2).toPath();
         boolean isDirectory = Files.isDirectory(path);
-        // Allow root directories (system drives like C:, D: in Windows, and / in Linux)
-        boolean isRoot = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(path);
-        boolean result = isDirectory || isRoot;
-        log.info("Path: {}, isDirectory: {}, isRoot: {}, allow: {}", path, isDirectory, isRoot, result);
-        return result;
+        log.debug("Path: {}, isDirectory: {} ", path, isDirectory);
+        return isDirectory;
     }
 }

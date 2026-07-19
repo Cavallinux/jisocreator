@@ -1,12 +1,10 @@
 package cl.cavallinux.jisocreator.instances;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 
 import cl.cavallinux.jisocreator.action.main.AboutAction;
 import cl.cavallinux.jisocreator.action.main.ExitApplicationAction;
 import cl.cavallinux.jisocreator.action.main.LoadCommandLineISOLayoutAction;
-import cl.cavallinux.jisocreator.action.main.MainAction;
 import cl.cavallinux.jisocreator.action.main.NewIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.OpenIsoLayoutAction;
 import cl.cavallinux.jisocreator.action.main.PreferencesAction;
@@ -19,8 +17,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ActionsManager {
-    MAINACTION(MainAction.builder()
-            .parser(CommandLineParserManager.INSTANCE.getParser()).layoutFilePath(StringUtils.EMPTY).build()),
     EXITACTION(ExitApplicationAction.builder().message(MainActionsMessages.exitActionName)
             .tooltip(MainActionsMessages.exitActionTooltip)
             .imageDescriptor(ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("exit.png")).build()),

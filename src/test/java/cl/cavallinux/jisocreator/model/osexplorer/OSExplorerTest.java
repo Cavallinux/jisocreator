@@ -101,26 +101,13 @@ class OSExplorerTest {
     @Test
     @DisplayName("Should identify if file is a root (system root)")
     void testIsRootForSystemRoot() {
-        // Test with actual system roots
-        // Note: Platform-specific test that adapts to both Linux and Windows profiles.
-        // On Linux with gtk platform: returns File.listRoots() (e.g., [/])
-        // On other platforms or in cross-compile scenarios: may return home directory contents
+        // OSExplorer is now always initialized with File.listRoots(), so all roots
+        // returned by getRoots() must be identifiable as roots via isRoot().
         File[] roots = osExplorer.getRoots();
-        if (roots.length > 0) {
-            boolean hasRootIdentified = false;
-            for (File root : roots) {
-                if (osExplorer.isRoot(root.toPath())) {
-                    hasRootIdentified = true;
-                    break;
-                }
-            }
-            // If no roots are identified as actual roots, verify that roots are at least valid
-            // This handles cross-compilation scenarios (e.g., windows profile on linux)
-            if (!hasRootIdentified) {
-                assertTrue(roots[0].exists(), "Loaded roots should exist even if not system roots");
-            } else {
-                assertTrue(true, "At least one root was properly identified");
-            }
+        assertTrue(roots.length > 0, "File.listRoots() should return at least one root");
+        for (File root : roots) {
+            assertTrue(osExplorer.isRoot(root.toPath()),
+                    () -> "Expected " + root + " to be identified as a root");
         }
     }
 

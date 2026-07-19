@@ -92,26 +92,61 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
         monitor.beginTask("Adding selected files", IProgressMonitor.UNKNOWN);
-        files.forEach(file -> {
-            monitor.subTask(String.format("Adding file: %s", file.getAbsolutePath()));
-            ITreeNode dirEntry = new IsoTreeNode(isoNode, file);
-            isoNode.addNode(dirEntry);
-        });
-        monitor.subTask("Refreshing GUI...");
-        Display.getDefault().asyncExec(new Thread(() -> {
+        for (File file : files) {
+            if (monitor.isCanceled()) {
+                log.info("AddFileAction cancelled by user before processing: {}", file.getName());
+                throw new InterruptedException("Operation cancelled by user");
+            }
+            addFileRecursively(isoNode, file, monitor);
+        }
+        monitor.done();
+    }
+
+    private void refreshGUI() {
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        Display.getDefault().asyncExec(() -> {
             IsoExplorerSashForm isoExplorer = mainWindow.getIsoExplorer();
             TreeViewer isoDirectoriesTree = isoExplorer.getIsoDirectoriesTree();
             IStructuredSelection isoStructuredSelection = new StructuredSelection(isoNode);
             isoDirectoriesTree.setSelection(isoStructuredSelection, true);
             isoDirectoriesTree.expandToLevel(isoNode, 1);
             isoExplorer.refresh();
-            String isoInfoStatus = isoExplorer.printISOFileSystemInfo(MainWindowMessages.isoFileSystemInfoStatusMessage);
+            mainWindow.setStatusLineActiveCancelButton(false);
+            String isoStatusMessage = MainWindowMessages.isoFileSystemInfoStatusMessage;
+            String isoInfoStatus = isoExplorer.printISOFileSystemInfo(isoStatusMessage);
             mainWindow.setStatus(isoInfoStatus);
-        }));
-        
-        monitor.done();
+        });
+    }
+
+    /**
+     * Agrega un archivo o directorio al nodo ISO de forma recursiva, comprobando
+     * en cada nivel si el usuario ha cancelado la operacion.
+     *
+     * @param parent  nodo ISO destino
+     * @param file    archivo o directorio a agregar
+     * @param monitor monitor de progreso con soporte de cancelacion
+     * @throws InterruptedException si el usuario cancela la operacion
+     */
+    private void addFileRecursively(ITreeNode parent, File file, IProgressMonitor monitor)
+            throws InterruptedException {
+        if (monitor.isCanceled()) {
+            log.info("AddFileAction cancelled by user at: {}", file.getAbsolutePath());
+            throw new InterruptedException("Operation cancelled by user");
+        }
+        monitor.subTask(String.format("Adding: %s", file.getAbsolutePath()));
+        IsoTreeNode node = new IsoTreeNode(parent, file);
+        parent.addLeafNode(node);
+        monitor.worked(1);
+
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    addFileRecursively(node, child, monitor);
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -126,10 +161,14 @@ public class AddFileAction extends JISOCreatorBaseAction implements IRunnableWit
     private void executeAction() {
         try {
             IProgressMonitor progressMonitor = GUIManager.INSTANCE.getMainWindow().getProgressMonitor();
+            GUIManager.INSTANCE.getMainWindow().setStatusLineActiveCancelButton(true);
             ModalContext.run(this, true, progressMonitor, Display.getCurrent());
-        } catch (InvocationTargetException | InterruptedException e) {
+        } catch (InvocationTargetException e) {
             log.error("Error executing AddFileAction", e);
-            return;
+        } catch (InterruptedException e) {
+            log.warn("AddFileAction was interrupted by user, refreshing gui with added files", e);
+        } finally {
+            refreshGUI();
         }
     }
 }

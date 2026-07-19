@@ -13,11 +13,11 @@ import lombok.Getter;
 public enum PreferencesNodeManager {
     MKISOFS_PREFERENCE_NODE(new PreferenceNode(MKISOFSPreferencePage.NODE_NAME,
             PreferenceDialogMessages.preferenceDialogIsoOptionsNodeName,
-            ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.png"),
+            ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.svg"),
             MKISOFSPreferencePage.class.getName())),
     GENERAL_PREFERENCE_NODE(new PreferenceNode(GeneralPreferencesPage.NODE_NAME,
             PreferenceDialogMessages.preferenceDialogGeneralOptionsNodeName,
-            ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.png"),
+            ImageRegister.INSTANCE.getImageUtils().loadImageDescriptor("iso.svg"),
             GeneralPreferencesPage.class.getName()));
 
     private PreferenceNode preferenceNode;

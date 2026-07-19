@@ -59,7 +59,7 @@ public class MainWindow extends ApplicationWindow {
         super.configureShell(shell);
         shell.setText(MainWindowMessages.windowTitle);
         shell.setSize(1024, 768);
-        shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
+        shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
         Monitor primary = determinateActiveMonitor();
         Rectangle bounds = primary.getBounds();

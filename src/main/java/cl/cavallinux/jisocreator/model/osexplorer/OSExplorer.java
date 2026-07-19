@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.eclipse.swt.program.Program;
 
 import lombok.Builder;
@@ -40,9 +39,7 @@ public class OSExplorer {
 
     @Builder
     public OSExplorer() {
-       this(Strings.CI.containsAny(System.getProperty("os.name"), "Windows")
-                ? new File(System.getProperty("user.home")).listFiles()
-                : File.listRoots());
+       this(File.listRoots());
     }
 
     /**

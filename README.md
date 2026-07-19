@@ -16,6 +16,24 @@ For full installation instructions (requirements, build, package install, and fi
 - **Maven**: 3.6 or higher
 - **Operating System**: Linux/Windows (x86_64 profiles available)
 
+## Documentation Map
+
+- [README.md](README.md): project overview, architecture, build/test/run commands
+- [INSTALL](INSTALL): installation from source and distribution zip (Linux/Windows)
+- [TESTING.md](TESTING.md): test inventory, platform notes, and validation guidance
+- [CHANGELOG.md](CHANGELOG.md): release history and in-progress changes
+
+## Quick Start (Windows PowerShell)
+
+```powershell
+git clone https://github.com/Cavallinux/jisocreator.git
+Set-Location .\jisocreator
+mvn clean package -Pwindows
+java --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar --help
+```
+
+If you prefer the packaged distribution, build first and then extract/run `target\jisocreator-<version>-win32.win32.x86_64.zip` as described in [INSTALL](INSTALL).
+
 ## Project Dependencies
 
 ### Core Frameworks
@@ -48,10 +66,12 @@ The project uses Maven profiles to select the SWT platform dependency:
 
 - `linux` (active by default): `gtk.linux.x86_64`
 - `windows`: `win32.win32.x86_64` (excludes the `gtk.linux.x86_64` SWT artifact)
+- `applesilicon`: `cocoa.macosx.aarch64` (macOS on Apple Silicon; excludes the `gtk.linux.x86_64` SWT artifact)
 - `linux-cmdlinemode`: Linux runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
 - `windows-cmdlinemode`: Windows runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
+- `applesilicon-cmdlinemode`: macOS/Apple Silicon runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
 
-To activate a non-default profile, pass `-P<profile-id>` in the Maven command, e.g. `-Pwindows` or `-Plinux-cmdlinemode`. Only one platform profile (`linux`/`windows`) or its `-cmdlinemode` variant should be active at a time, since they select mutually exclusive SWT platform dependencies.
+To activate a non-default profile, pass `-P<profile-id>` in the Maven command, e.g. `-Pwindows`, `-Papplesilicon` or `-Plinux-cmdlinemode`. Only one platform profile (`linux`/`windows`/`applesilicon`) or its `-cmdlinemode` variant should be active at a time, since they select mutually exclusive SWT platform dependencies.
 
 #### Using the Profiles
 
@@ -62,11 +82,17 @@ mvn clean package
 # Windows platform build
 mvn clean package -Pwindows
 
+# macOS (Apple Silicon) platform build
+mvn clean package -Papplesilicon
+
 # Linux build + CLI smoke execution (runs the packaged jar with -h)
 mvn clean package exec:exec -Plinux-cmdlinemode
 
 # Windows build + CLI smoke execution (runs the packaged jar with -h)
 mvn clean package exec:exec -Pwindows-cmdlinemode
+
+# macOS (Apple Silicon) build + CLI smoke execution (runs the packaged jar with -h)
+mvn clean package exec:exec -Papplesilicon-cmdlinemode
 ```
 
 The `*-cmdlinemode` profiles reuse the same `exec-maven-plugin` configuration as the default build (native access flags, optional debug agent) but append `-h` to the executed command, making them convenient for a quick post-build sanity check of the CLI in CI or locally.
@@ -125,25 +151,26 @@ mvn clean package -DskipTests
 
 ```
 src/test/java/cl/cavallinux/jisocreator/
-├── action/      # Action-layer tests (main/jobs/base actions)
+├── action/      # Action-layer tests (main/jobs/base/osexplorer actions)
 ├── gui/         # i18n message bundle tests
 ├── instances/   # Manager and enum singleton tests
 ├── model/       # Parser, providers, comparators, filters, explorers
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 113 tests total across 31 test classes, all passing.
+**Current Test Statistics**: 174 tests total across 40 test classes, all passing.
 
 Current coverage includes:
-- Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`)
+- Critical workflow tests (`MainAction`, `SaveAsIsoAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
 - Parser/contract/mapper tests (`IsoFilesystemParser`, `XMLIsoFilesystem*`)
-- Explorer/provider/comparator/filter tests (OS and ISO)
-- CLI/manager/i18n tests (`CommandLine*`, `IOManager`, `OSAndIsoExplorerManager`, message bundles)
+- Explorer/provider/comparator/filter tests (OS and ISO, including `IsoTreeNode`)
+- CLI/manager/i18n tests (`CommandLine*`, `ICommandLineParser`, `JISOCreatorAttributes`, `MainActionsManager`, `IOManager`, `OSAndIsoExplorerManager`, message bundles including `CommandLineMessages` and `AddToISODialogMessages`)
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
 - **Singleton Pattern Testing**: Validates OSExplorer singleton implementation
 - **File System Operations**: Comprehensive testing of file and directory handling
+- **OS tree provider contract validation**: Confirms `OSTreeContentProvider#getChildren(File)` mirrors `File#listFiles()` semantics (`null` for regular files, entries for directories)
 - **Path Manipulation**: Tests for file path concatenation and validation
 - **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison, including cross-platform path separator normalization (Windows backslash → Unix forward slash)
 - **Action and Workflow Validation**: Tests for command parsing branches and save-thread progress behavior
@@ -255,7 +282,7 @@ jisocreator --load /path/to/layout.xml
 jisocreator --input /path/to/layout.xml --output /path/to/existing-output.iso
 ```
 
-> Note: in the current CLI validation, `--input` and `--output` are both checked as existing, accessible filesystem paths before ISO generation starts.
+> Note: in the current CLI validation, `--input` must point to an existing readable path, and `--output` is validated against an existing writable parent directory before ISO generation starts.
 
 ## Project Structure
 
@@ -271,13 +298,16 @@ jisocreator/
 │   ├── gui/              # GUI components and windows
 │   │   ├── decl/         # GUI declarations
 │   │   ├── dialog/       # Dialog components
-│   │   ├── i18n/         # NLS message bundles (About, ISO/OS explorer, preferences, etc.)
+│   │   ├── i18n/         # NLS message bundles (About, ISO/OS explorer, preferences, CLI, etc.)
+│   │   │   ├── CommandLineMessages.java     # i18n for all CLI-facing strings
+│   │   │   └── AddToISODialogMessages.java  # i18n for the Add-to-ISO layout selection dialog
 │   │   ├── listeners/    # Event listeners
 │   │   ├── preference/   # Preference pages (general, MKISOFS options)
 │   │   ├── sashfom/      # Sash form components
 │   │   └── window/       # Main window components
 │   ├── instances/        # Singleton managers
-│   │   ├── ActionsManager.java            # Centralized action management
+│   │   ├── ActionsManager.java            # Centralized action management (GUI actions)
+│   │   ├── MainActionsManager.java        # Headless-safe MainAction + SaveAsIsoAction singletons
 │   │   ├── GUIManager.java                # GUI component management
 │   │   ├── ImageRegister.java             # Image resource registry
 │   │   ├── IOManager.java                 # I/O operations management
@@ -289,6 +319,10 @@ jisocreator/
 │   │   └── ...
 │   ├── model/            # Data models and providers
 │   │   ├── cmdline/      # Command-line parser implementation
+│   │   │   ├── ICommandLineParser.java                # CLI contract + shared static/default helpers (buildAttributes/buildOptions/buildHelpHeader/buildHelpFooter)
+│   │   │   ├── JISOCreatorAttributes.java             # App/JVM/OS metadata record used by CLI output
+│   │   │   ├── JISOCreatorCommandLineParser.java      # CLI parser (i18n-aware, uses CommandLineMessages)
+│   │   │   └── JISOCreatorCommandLineHelpFormatter.java # Custom HelpFormatter with i18n table headers
 │   │   ├── comparators/  # Custom comparators
 │   │   ├── filters/      # File filters
 │   │   ├── isoexplorer/  # ISO explorer models
@@ -303,16 +337,18 @@ jisocreator/
 │   ├── files/            # Bundled files (e.g. license.txt)
 │   └── log4j2.xml        # Logging configuration
 ├── src/test/java/cl/cavallinux/jisocreator/  # Unit tests (SWT-free where possible)
-│   ├── action/           # Action-layer tests (main/jobs/base actions)
+│   ├── action/           # Action-layer tests (main/jobs/base/osexplorer actions)
 │   │   ├── decl/         # JISOCreatorBaseAction tests
 │   │   ├── jobs/         # SaveISO9660ImageThread tests
-│   │   └── main/         # MainAction tests
-│   ├── gui/i18n/         # Message bundle (i18n) tests
-│   ├── instances/        # Manager and enum singleton tests (CLI parser/options, IOManager, explorer manager)
+│   │   ├── main/         # MainAction tests
+│   │   └── osexplorer/   # AddFileAction recursive behavior tests
+│   ├── gui/i18n/         # Message bundle (i18n) tests (includes CommandLineMessagesTest)
+│   ├── instances/        # Manager and enum singleton tests (CLI parser/options, IOManager, MainActionsManager, explorer manager)
 │   ├── model/            # Parsers, providers, comparators, filters, explorer models
+│   │   ├── cmdline/      # JISOCreatorCommandLineParser + JISOCreatorCommandLineHelpFormatter tests
 │   │   ├── comparators/  # OS/ISO directories-first comparator tests
 │   │   ├── filters/      # Hidden files / directories-only filter tests
-│   │   ├── isoexplorer/  # IsoFileSystem / TreeNode tests
+│   │   ├── isoexplorer/  # IsoFileSystem / IsoTreeNode / TreeNode tests
 │   │   ├── parser/       # decl (IsoFilesystemParser) + xml (Jackson-backed parser/contract) tests
 │   │   └── providers/    # decl adapters + package-scoped OS/ISO tree/table/label providers tests
 │   └── util/             # IO utility tests
@@ -342,7 +378,7 @@ jisocreator/
 
 ### Singleton Manager Pattern
 
-The application uses enum-based singleton managers for centralized component management (`ActionsManager`, `GUIManager`, `IsoExplorerActionsManager`, `OSExplorerActionsManager`, `OSAndIsoExplorerManager`, `ImageRegister`, `IOManager`, `CommandLineParserManager`, `PreferencesNodeManager`, among others):
+The application uses enum-based singleton managers for centralized component management (`ActionsManager`, `MainActionsManager`, `GUIManager`, `IsoExplorerActionsManager`, `OSExplorerActionsManager`, `OSAndIsoExplorerManager`, `ImageRegister`, `IOManager`, `CommandLineParserManager`, `PreferencesNodeManager`, among others):
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -375,11 +411,13 @@ The application uses enum-based singleton managers for centralized component man
 
 ### Internationalization (i18n)
 
-UI text is externalized into per-component NLS message bundles under `src/main/resources/i18n/` (e.g. `mainwindow`, `mainactions`, `osexplorer`, `isoexplorer`, `preferencedialog`, `aboutdialog`, `showisoinfodialog`), each with `messages_en.properties` and `messages_es.properties`. The active language is selectable from the General preferences page (`JISOCreatorLanguageOptions`) and applied at startup via `MainAction`.
+UI text is externalized into per-component NLS message bundles under `src/main/resources/i18n/` (e.g. `mainwindow`, `mainactions`, `osexplorer`, `isoexplorer`, `preferencedialog`, `aboutdialog`, `showisoinfodialog`, `commandline`), each with `messages_en.properties` and `messages_es.properties`. The active language is selectable from the General preferences page (`JISOCreatorLanguageOptions`) and applied at startup via `MainAction`.
+
+The `commandline` bundle (`CommandLineMessages`) covers all CLI-facing strings: version output format, application description, example usage, individual option descriptions, help table caption, column headers, and the syntax-line prefix. `CommandLineOptionsManager` reads option descriptions from this bundle so the help output respects the active locale.
 
 ### Command Line Interface
 
-`CommandLineParserManager` wraps a `JISOCreatorCommandLineParser` (built on Apache Commons CLI) exposing `--load`, `--input`, `--output`, `--help`, `--version` and `--license` options, allowing the application to be launched in headless/scripted scenarios in addition to its GUI mode.
+`CommandLineParserManager` wraps a `JISOCreatorCommandLineParser` (built on Apache Commons CLI) exposing `--load`, `--input`, `--output`, `--help`, `--version` and `--license` options, allowing the application to be launched in headless/scripted scenarios in addition to its GUI mode. The help table rendered by `--help` uses `JISOCreatorCommandLineHelpFormatter`, a custom `HelpFormatter` subclass that injects i18n column headers and table caption from `CommandLineMessages`.
 
 ### XML Parser Layer
 
@@ -387,18 +425,18 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ### Testing Architecture
 
-The test suite (113 tests / 31 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+The test suite (147 tests / 36 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
 - **Cross-platform compatibility**: `HideHiddenFilesFilter` detects both DOS hidden-attribute files (Windows) and Unix-style dot-prefix hidden files. `XMLIsoFilesystemContractMapper` normalizes path separators to forward slashes so serialized XML is portable across platforms. Tests run cleanly on both Linux (`mvn test`) and Windows (`mvn test -Pwindows`).
-- **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`).
+- **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`).
 - **XMLUnit-based compatibility checks**: legacy XML layout fixtures are diffed against round-tripped output to guarantee backward compatibility of the XML parser.
 
 ## Version
 
-- Latest stable release: **0.2.0** (released 2026-07-12)
-- Next development line: **TBD (post-0.2.0)**
+- Latest stable release: **0.2.1** (released 2026-07-19)
+- Development: **Unreleased** 
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

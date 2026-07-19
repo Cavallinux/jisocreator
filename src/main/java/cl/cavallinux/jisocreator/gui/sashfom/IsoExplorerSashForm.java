@@ -137,7 +137,7 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
 
     private void fillCoolbarAndToolbars() {
         isoTreeCLabel.setText(IsoExplorerMessages.isoExplorerSashFormTitle);
-        isoTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.png"));
+        isoTreeCLabel.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso.svg"));
         CoolBarManager coolbar = new CoolBarManager(isoTableCoolBar);
         ToolBarManager toolbar = new ToolBarManager(SWT.WRAP | SWT.FLAT);
         Arrays.stream(IsoExplorerActionsManager.values()).forEach(value -> {

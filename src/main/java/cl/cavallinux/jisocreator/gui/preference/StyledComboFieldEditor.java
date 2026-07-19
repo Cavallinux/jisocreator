@@ -1,7 +1,6 @@
 package cl.cavallinux.jisocreator.gui.preference;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.swt.SWT;

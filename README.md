@@ -66,10 +66,12 @@ The project uses Maven profiles to select the SWT platform dependency:
 
 - `linux` (active by default): `gtk.linux.x86_64`
 - `windows`: `win32.win32.x86_64` (excludes the `gtk.linux.x86_64` SWT artifact)
+- `applesilicon`: `cocoa.macosx.aarch64` (macOS on Apple Silicon; excludes the `gtk.linux.x86_64` SWT artifact)
 - `linux-cmdlinemode`: Linux runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
 - `windows-cmdlinemode`: Windows runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
+- `applesilicon-cmdlinemode`: macOS/Apple Silicon runtime plus a CLI smoke execution (`-h`) wired into the `exec-maven-plugin`
 
-To activate a non-default profile, pass `-P<profile-id>` in the Maven command, e.g. `-Pwindows` or `-Plinux-cmdlinemode`. Only one platform profile (`linux`/`windows`) or its `-cmdlinemode` variant should be active at a time, since they select mutually exclusive SWT platform dependencies.
+To activate a non-default profile, pass `-P<profile-id>` in the Maven command, e.g. `-Pwindows`, `-Papplesilicon` or `-Plinux-cmdlinemode`. Only one platform profile (`linux`/`windows`/`applesilicon`) or its `-cmdlinemode` variant should be active at a time, since they select mutually exclusive SWT platform dependencies.
 
 #### Using the Profiles
 
@@ -80,11 +82,17 @@ mvn clean package
 # Windows platform build
 mvn clean package -Pwindows
 
+# macOS (Apple Silicon) platform build
+mvn clean package -Papplesilicon
+
 # Linux build + CLI smoke execution (runs the packaged jar with -h)
 mvn clean package exec:exec -Plinux-cmdlinemode
 
 # Windows build + CLI smoke execution (runs the packaged jar with -h)
 mvn clean package exec:exec -Pwindows-cmdlinemode
+
+# macOS (Apple Silicon) build + CLI smoke execution (runs the packaged jar with -h)
+mvn clean package exec:exec -Papplesilicon-cmdlinemode
 ```
 
 The `*-cmdlinemode` profiles reuse the same `exec-maven-plugin` configuration as the default build (native access flags, optional debug agent) but append `-h` to the executed command, making them convenient for a quick post-build sanity check of the CLI in CI or locally.
@@ -150,13 +158,13 @@ src/test/java/cl/cavallinux/jisocreator/
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 147 tests total across 36 test classes, all passing.
+**Current Test Statistics**: 174 tests total across 40 test classes, all passing.
 
 Current coverage includes:
-- Critical workflow tests (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
+- Critical workflow tests (`MainAction`, `SaveAsIsoAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
 - Parser/contract/mapper tests (`IsoFilesystemParser`, `XMLIsoFilesystem*`)
 - Explorer/provider/comparator/filter tests (OS and ISO, including `IsoTreeNode`)
-- CLI/manager/i18n tests (`CommandLine*`, `MainActionsManager`, `IOManager`, `OSAndIsoExplorerManager`, message bundles including `CommandLineMessages`)
+- CLI/manager/i18n tests (`CommandLine*`, `ICommandLineParser`, `JISOCreatorAttributes`, `MainActionsManager`, `IOManager`, `OSAndIsoExplorerManager`, message bundles including `CommandLineMessages` and `AddToISODialogMessages`)
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
@@ -291,14 +299,15 @@ jisocreator/
 │   │   ├── decl/         # GUI declarations
 │   │   ├── dialog/       # Dialog components
 │   │   ├── i18n/         # NLS message bundles (About, ISO/OS explorer, preferences, CLI, etc.)
-│   │   │   └── CommandLineMessages.java   # i18n for all CLI-facing strings
+│   │   │   ├── CommandLineMessages.java     # i18n for all CLI-facing strings
+│   │   │   └── AddToISODialogMessages.java  # i18n for the Add-to-ISO layout selection dialog
 │   │   ├── listeners/    # Event listeners
 │   │   ├── preference/   # Preference pages (general, MKISOFS options)
 │   │   ├── sashfom/      # Sash form components
 │   │   └── window/       # Main window components
 │   ├── instances/        # Singleton managers
 │   │   ├── ActionsManager.java            # Centralized action management (GUI actions)
-│   │   ├── MainActionsManager.java        # Headless-safe MainAction singleton
+│   │   ├── MainActionsManager.java        # Headless-safe MainAction + SaveAsIsoAction singletons
 │   │   ├── GUIManager.java                # GUI component management
 │   │   ├── ImageRegister.java             # Image resource registry
 │   │   ├── IOManager.java                 # I/O operations management
@@ -310,7 +319,7 @@ jisocreator/
 │   │   └── ...
 │   ├── model/            # Data models and providers
 │   │   ├── cmdline/      # Command-line parser implementation
-│   │   │   ├── ICommandLineParser.java                # CLI contract + shared default helpers
+│   │   │   ├── ICommandLineParser.java                # CLI contract + shared static/default helpers (buildAttributes/buildOptions/buildHelpHeader/buildHelpFooter)
 │   │   │   ├── JISOCreatorAttributes.java             # App/JVM/OS metadata record used by CLI output
 │   │   │   ├── JISOCreatorCommandLineParser.java      # CLI parser (i18n-aware, uses CommandLineMessages)
 │   │   │   └── JISOCreatorCommandLineHelpFormatter.java # Custom HelpFormatter with i18n table headers
@@ -426,8 +435,8 @@ The test suite (147 tests / 36 classes, see [TESTING.md](TESTING.md)) favors SWT
 
 ## Version
 
-- Latest stable release: **0.2.0** (released 2026-07-12)
-- Current development: **0.2.1-SNAPSHOT** (`feature/v0.2.1`)
+- Latest stable release: **0.2.1** (released 2026-07-19)
+- Development: **Unreleased** 
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

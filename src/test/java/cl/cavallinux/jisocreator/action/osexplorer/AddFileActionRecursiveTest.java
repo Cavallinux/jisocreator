@@ -192,11 +192,71 @@ class AddFileActionRecursiveTest {
     }
 
     // -------------------------------------------------------------------------
+    // run(IProgressMonitor) - lista de archivos via reflection en campos privados
+    // -------------------------------------------------------------------------
+
+    @Test
+    @DisplayName("run(IProgressMonitor) should process all files in the list and call done()")
+    void runMonitorShouldProcessAllFilesAndCallDone(@TempDir Path tempDir) throws Exception {
+        File fileA = Files.createFile(tempDir.resolve("alpha.txt")).toFile();
+        File fileB = Files.createFile(tempDir.resolve("beta.txt")).toFile();
+
+        IsoTreeNode root = new IsoTreeNode();
+        when(monitor.isCanceled()).thenReturn(false);
+
+        // Inject private fields via reflection
+        setPrivateField(action, "files", java.util.List.of(fileA, fileB));
+        setPrivateField(action, "isoNode", root);
+
+        action.run(monitor);
+
+        assertEquals(2, root.getChildren().size(),
+                "Both files should have been added as leaf nodes");
+        verify(monitor).done();
+    }
+
+    @Test
+    @DisplayName("run(IProgressMonitor) should throw InterruptedException when cancelled before first file")
+    void runMonitorShouldThrowInterruptedExceptionWhenCancelledBeforeFirstFile(@TempDir Path tempDir)
+            throws Exception {
+        File file = Files.createFile(tempDir.resolve("skipped.dat")).toFile();
+
+        IsoTreeNode root = new IsoTreeNode();
+        when(monitor.isCanceled()).thenReturn(true);
+
+        setPrivateField(action, "files", java.util.List.of(file));
+        setPrivateField(action, "isoNode", root);
+
+        org.junit.jupiter.api.Assertions.assertThrows(InterruptedException.class,
+                () -> action.run(monitor));
+
+        assertEquals(0, root.getChildren().size(),
+                "No child must be added when cancelled immediately");
+    }
+
+    // -------------------------------------------------------------------------
+    // Builder
+    // -------------------------------------------------------------------------
+
+    @Test
+    @DisplayName("Builder should produce a non-null AddFileAction instance")
+    void builderShouldProduceNonNullInstance() {
+        AddFileAction built = AddFileAction.builder().build();
+        org.junit.jupiter.api.Assertions.assertNotNull(built);
+    }
+
+    // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
 
     private void invoke(ITreeNode parent, File file) throws Exception {
         addFileRecursively.invoke(action, parent, file, monitor);
+    }
+
+    private static void setPrivateField(Object target, String fieldName, Object value) throws Exception {
+        java.lang.reflect.Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(target, value);
     }
 
     private static void assertFalse(boolean condition, String message) {

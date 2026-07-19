@@ -7,47 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.2.1] - 2026-07-19
+
 ### Added
-- **Recursive add with cancellation coverage**: Added `AddFileActionRecursiveTest` (7 tests) to validate recursive add behavior, immediate and mid-recursion cancellation, empty directories, and progress monitor integration.
+- **Recursive add with cancellation coverage**: Added `AddFileActionRecursiveTest` (originally 7, now **10 tests**) to validate recursive add behavior, immediate and mid-recursion cancellation, empty directories, progress monitor integration, the full `run(IProgressMonitor)` happy/cancel paths, and `AddFileAction.builder()` instantiation.
 - **`IsoTreeNode` behavior coverage**: Added `IsoTreeNodeTest` (8 tests) to validate `addNode` vs `addLeafNode`, duplicate prevention, and directory recursion semantics.
-- **`MainActionsManager` enum**: Extracted `MAINACTION` instantiation from `ActionsManager` into a dedicated `MainActionsManager` enum, allowing `MainAction` to be initialized without triggering GUI-bound singleton dependencies (e.g. `ImageRegister`). This makes `MainAction.main()` safe to call in non-graphical / headless environments.
+- **Cancellable add-to-ISO workflow**: `AddFileAction` now processes dropped/selected files recursively (`addFileRecursively`) with cooperative cancellation via `IProgressMonitor#isCanceled`, per-node `ITreeNode#addLeafNode` insertion (no implicit recursion), incremental `monitor.worked(1)` reporting, and a `refreshGUI()` step run in `finally` so partial additions are reflected even when the user cancels mid-operation. The status line "cancel" button is toggled through `MainWindow#setStatusLineActiveCancelButton`.
+- **ISO tree API refinement**: Added `ITreeNode#addLeafNode(ITreeNode)` (default no-op) and implemented it in `IsoTreeNode` to support direct child insertion without implicit recursion; kept `addNode` for recursive directory expansion.
+- **`MainActionsManager` enum**: Extracted `MAINACTION` instantiation from `ActionsManager` into a dedicated `MainActionsManager` enum, allowing `MainAction` to be initialized without triggering GUI-bound singleton dependencies (e.g. `ImageRegister`). Later extended with a second constant, **`SAVEASISOACTION`**, wrapping a headless-safe `SaveAsIsoAction.builder().build()` instance so the CLI save-to-ISO workflow (`-i/-o`) no longer depends on `ActionsManager`/GUI singletons. This makes both `MainAction.main()` and CLI ISO saving safe to call in non-graphical / headless environments.
+- **`SaveAsIsoAction` headless builder**: Added a no-argument `@Builder protected SaveAsIsoAction()` constructor (in addition to the existing GUI-oriented `(message, tooltip, imageDescriptor)` one) so it can be instantiated by `MainActionsManager` without GUI-only parameters.
+- **`SaveAsIsoActionTest`** (new, 8 tests): validates default builder state (`inputXMLLayoutFile`/`outputISOFile` empty, `commandLineMode` false), setter round-trips, and instance independence between builder calls.
 - **`CommandLineMessages` i18n class**: New NLS bundle class (`gui/i18n/CommandLineMessages`) backed by `i18n/commandline/messages_en.properties` and `messages_es.properties`, externalizing all CLI-facing strings: version format, app description, example usage, option descriptions, help table title, column headers, and the syntax-line prefix. Added `COMMANDLINE_BUNDLE_MESSAGE` constant to `INLSBundleMessages`.
-- **`JISOCreatorCommandLineHelpFormatter`**: New `HelpFormatter` subclass that overrides `getTableDefinition(Iterable<Option>)` to inject the i18n table caption and column headers from `CommandLineMessages`, and sets the syntax prefix via `setSyntaxPrefix`. Used by `JISOCreatorCommandLineParser` as its default formatter.
-- **CLI i18n unit tests**:
-  - `CommandLineMessagesTest` (5 tests) — validates all 13 static fields in `CommandLineMessages` are non-null, non-blank, and resolved (not in `!key!` error format), with dedicated checks for version, example usage, table column, and syntax-prefix messages.
-  - `MainActionsManagerTest` (6 tests) — verifies `MAINACTION` constant, non-null `MainAction` instance, enum singleton contract, empty initial `layoutFilePath`, and parser referential equality with `CommandLineParserManager`.
+- **`JISOCreatorCommandLineHelpFormatter`**: New `HelpFormatter` subclass that overrides `getTableDefinition(Iterable<Option>)` to inject the i18n table caption and column headers from `CommandLineMessages`, and sets the syntax prefix via `setSyntaxPrefix`. Used by `JISOCreatorCommandLineParser` as its default formatter. Simplified to a no-arg protected constructor (`new JISOCreatorCommandLineHelpFormatter()`) internally delegating to `HelpFormatter.builder().setShowSince(false)`.
+- **`JISOCreatorAttributes` record**: New immutable record (`appName`, `appVersion`, `jvmVersion`, `jvmVendor`, `osName`) encapsulating CLI version/help metadata, with a Lombok `@Builder(toBuilder = true)`. Built via the new static helper `ICommandLineParser.buildAttributes()`.
+- **`JISOCreatorAttributesTest`** (new, 4 tests): validates builder field population, `toBuilder()` derived-copy semantics, value-based `equals`/`hashCode`, and that `ICommandLineParser.buildAttributes()` reflects live JVM/OS system properties.
+- **`ICommandLineParserTest`** (new, 9 tests): dedicated coverage for the interface's `static buildAttributes()` and the `default` helpers `buildHelpHeader`, `buildHelpFooter`, and `buildOptions` (moved here from `JISOCreatorCommandLineParser` in this same release).
+- **Add-to-ISO dialog i18n**: New `AddToISODialogMessages` NLS class (`gui/i18n/AddToISODialogMessages`) backed by `i18n/addtoisodialog/messages_en.properties` / `messages_es.properties`, externalizing `ADDFileToIsoLayoutDialog`'s window title, static info label and OK/Cancel button text. Added `ADDTOISODIALOG_BUNDLE_MESSAGE` constant to `INLSBundleMessages`. The dialog's OK/Cancel buttons are now relabeled in `createButtonsForButtonBar` instead of relying on JFace defaults.
+- **`AddToISODialogMessagesTest`** (new, 3 tests): validates static field resolution, non-blank window title/labels, and that the `addtoisodialog` bundle loads correctly for English and Spanish locales.
+- **Apple Silicon (macOS) packaging**: Added the `applesilicon` / `applesilicon-cmdlinemode` Maven profiles (`swt.platform=cocoa.macosx.aarch64`), a dedicated assembly descriptor (`src/assembly/assembly.cocoa.macosx.aarch64.xml`), and launch script `res/applesilicon/jisocreator.sh`, extending distribution support from Linux/Windows to macOS on Apple Silicon.
+- **CLI i18n unit tests** (carried over from earlier CLI i18n work):
+  - `CommandLineMessagesTest` (5 tests) — validates all static fields in `CommandLineMessages` are non-null, non-blank, and resolved (not in `!key!` error format), with dedicated checks for version, example usage, table column, and syntax-prefix messages.
+  - `MainActionsManagerTest` (6 tests) — verifies both `MainActionsManager` constants, non-null action instances, enum singleton contract, empty initial `layoutFilePath`, and parser referential equality with `CommandLineParserManager`.
   - `JISOCreatorCommandLineHelpFormatterTest` (6 tests) — verifies `getTableDefinition` overrides the caption and column headers with i18n messages, preserves parent column styles and rows, and that `printHelp` completes without throwing.
 - **Updated coverage for existing test classes**:
-  - `MessagesBundleTest` — extended to include `COMMANDLINE_BUNDLE_MESSAGE` in bundle-load and field-resolution checks.
-  - `JISOCreatorCommandLineParserTest` — added assertion that the default `helpFormatter` field is an instance of `JISOCreatorCommandLineHelpFormatter` (total: **20 tests**).
+  - `MessagesBundleTest` — extended to include `COMMANDLINE_BUNDLE_MESSAGE` **and `ADDTOISODIALOG_BUNDLE_MESSAGE`** in bundle-load and field-resolution checks.
+  - `JISOCreatorCommandLineParserTest` — added assertion that the default `helpFormatter` field is an instance of `JISOCreatorCommandLineHelpFormatter`, and adapted `buildOptions`/`buildHelpHeader`/`buildHelpFooter` calls to the instance-based `ICommandLineParser` default methods (total: **20 tests**).
   - `OSExplorerTest` — `testIsRootForSystemRoot` simplified: now asserts that every entry returned by `getRoots()` is identified as a root, since `OSExplorer` always uses `File.listRoots()`.
 
 ### Changed
-- **Project version line**: Updated `pom.xml` from `0.2.0` to `0.2.1-SNAPSHOT` for the current development branch.
+- **Project version**: `pom.xml` progressed from `0.2.0` → `0.2.1-SNAPSHOT` (start of branch) → **`0.2.1`** (release, end of branch).
 - **Documentation refresh (2026-07-17)**: Updated `README.md` with a documentation map and a Windows PowerShell quick-start block, and updated `INSTALL` with clearer Windows PowerShell equivalents plus optional `*-cmdlinemode` profile guidance.
 - **Surefire runtime compatibility flags**: Added `-XX:+EnableDynamicAgentLoading -Xshare:off` in `maven-surefire-plugin` `argLine` to improve local/CI compatibility with test instrumentation on recent JDKs.
 - **`AddFileAction` workflow**: Refactored add flow to recursive processing with cooperative cancellation (`IProgressMonitor#isCanceled`), incremental progress updates, and GUI refresh in `finally` so partial additions are reflected even when the operation is interrupted.
-- **ISO tree API refinement**: Added `ITreeNode#addLeafNode(ITreeNode)` and implemented it in `IsoTreeNode` to support direct child insertion without implicit recursion; kept `addNode` for recursive directory expansion.
-- **Windows launcher behavior**: Updated `res/mkisofs/jisocreator.bat` to create `%LOCALAPPDATA%\jisocreator\logs`, set `-Dpath.logs`, and run via `javaw` in background mode.
-- **Spanish i18n cleanup**: Normalized multiple labels/tooltips in `src/main/resources/i18n/*/messages_es.properties` (accented characters and wording consistency in main actions, OS/ISO explorer, preferences, and show-ISO-info dialogs).
+- **Windows launcher behavior**: Updated `res/mkisofs/jisocreator.bat` (three iterations) to create `%LOCALAPPDATA%\jisocreator\logs`, set `-Dpath.logs`, and run via `javaw` in background mode.
+- **Spanish i18n cleanup**: Normalized multiple labels/tooltips in `src/main/resources/i18n/*/messages_es.properties` (accented characters via `\uXXXX` escapes and wording consistency in main actions, OS/ISO explorer, preferences, and show-ISO-info dialogs), and fixed the `IsoTreeNode#addNode` null-safety when a node's underlying element is not a `File`.
 - **`CommandLineOptionsManager` option descriptions**: All six `Option` descriptors (load, help, version, license, input, output) are now sourced from `CommandLineMessages` instead of hardcoded English strings, enabling full i18n of the help output.
 - **`JISOCreatorCommandLineParser` refactoring (2026-07-17)**:
   - Introduced `JISOCreatorAttributes` record to encapsulate app/JVM/OS metadata used by CLI version/help output.
-  - Moved shared CLI helpers (`buildOptions`, `buildHelpHeader`, `buildHelpFooter`) into `ICommandLineParser` default methods.
+  - Moved shared CLI helpers (`buildOptions`, `buildHelpHeader`, `buildHelpFooter`) into `ICommandLineParser` default methods (`buildHelpHeader`/`buildHelpFooter` now take a `JISOCreatorAttributes` parameter instead of reading static fields).
   - `JISOCreatorCommandLineParser` now composes those helpers at runtime (`parse`/`printHelp`) and keeps `JISOCreatorCommandLineHelpFormatter` as default formatter.
   - Parser tests were updated to call these helpers through parser instances and to provide deterministic test attributes.
+- **`MainAction` / `SaveAsIsoAction` decoupling from `ActionsManager`**: `MainAction.handleCommandLine` now resolves `SaveAsIsoAction` through `MainActionsManager.SAVEASISOACTION` instead of `ActionsManager.SAVEASISOACTION`, removing a GUI-manager dependency from the headless CLI save-to-ISO path. `JISOCreatorCommandLineParser#handleCommandLine` now validates the **parent directory** of the requested output file (`outputFileObj.getParentFile()`) instead of the (not-yet-existing) output file itself.
 - **`ActionsManager` enum**: `MAINACTION` constant removed; `MainAction` instantiation moved to the new `MainActionsManager`.
 - **`OSExplorer` root initialization**: Simplified constructor to always call `File.listRoots()`, removing the previous Windows/Linux conditional branch that used `user.home` file listing on Windows.
-- **`OSTreeContentProvider` alignment with Java `File` API**: `getChildren(File)` now delegates directly to `File#listFiles()`. For regular files (non-directories), this means returning `null` instead of an empty array; root resolution for non-`File` input continues through `OSAndIsoExplorerManager`.
-- **`ShowOnlyDirectoriesFilter`**: Replaced `Files.isDirectory(path)` with `Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)` to correctly classify symbolic links. Removed `OSAndIsoExplorerManager.isRoot()` check—root directories are directories themselves and are now included through the regular directory predicate. Log level changed from `INFO` to `DEBUG`.
-- **Documentation synchronization for branch test scope**: Updated `README.md` and `TESTING.md` to reflect current suite inventory and counts (**128 tests in 33 classes**), including new coverage in `AddFileActionRecursiveTest` and `IsoTreeNodeTest`.
-- **Test suite growth**: After all branch changes, the test suite now comprises **147 tests across 36 test classes**.
+- **`OSTreeContentProvider` alignment with Java `File` API**: `getChildren(File)` now delegates directly to `File#listFiles()`, returning its result (including `null` for regular files) as-is instead of substituting an empty array; `getElements` no longer special-cases a `null` input. Root resolution for non-`File` input continues through `OSAndIsoExplorerManager`.
+- **`ShowOnlyDirectoriesFilter`**: Went through two iterations in this release — first replacing the plain `isRoot`-aware directory check with `Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)` (so symlinks are not treated as directories), then simplifying further to `Files.isDirectory(path)` once regular directory detection was confirmed sufficient. Log level changed from `INFO` to `DEBUG`.
+- **Application icon rebrand**: Refreshed `about.png`, `add.png`, `delete.png`, `exit.png`, `new.png`, `open.png`, `preferences.png`, `properties.png`, `refresh.png`, `run.png`, `saveas.png`, `up.png`, `x-cd-image.png`, `xml.png`, `drive.png` and `folder.png`. Removed the raster `iso.png`/`iso128.png`/`iso72.png`/`info.png`/`newfolder.png` assets in favor of new vector icons `iso.svg` (ISO root node icon, used by `ImageUtils#loadImage(ITreeNode)`/`(Path)`) and a new application icon pair `jisocreator.png` / `jisocreator.svg`, now referenced from `AboutDialog`, `IsoExplorerSashForm`, `MainWindow` and `PreferencesNodeManager`.
+- **Documentation synchronization for branch test scope**: Updated `README.md` and `TESTING.md` to reflect current suite inventory and counts, iterating from **128 tests / 33 classes** → **147 tests / 36 classes** → final release count **174 tests / 40 classes** (see [0.2.1] test additions above).
 
 ### Fixed
+- **Root executions bug**: Fixed `SaveAsIsoAction` resolution in `MainAction` (was looking up `ActionsManager.SAVEASISOACTION`, which no longer registers that action) and fixed `JISOCreatorCommandLineParser#handleCommandLine` incorrectly validating the not-yet-created output ISO file instead of its parent directory — both caused command-line `-i/-o` ISO generation to fail when run outside the GUI (e.g. as root/headless).
 - **Cross-platform parser compatibility assertion**: Updated `XMLIsoFilesystemParserCompatibilityTest` to assert the expected fixture-specific `volumeID` on both Linux and Windows, avoiding platform-dependent false negatives.
-- **`ShowOnlyDirectoriesFilter` symlink handling**: Using `LinkOption.NOFOLLOW_LINKS` prevents symbolic links from being treated as directories on Linux, ensuring the tree viewer only shows actual directories.
+- **`ShowOnlyDirectoriesFilter` symlink/root handling**: Removed the previous `OSAndIsoExplorerManager.isRoot()` fallback (root directories are already directories) and, in an intermediate iteration, used `LinkOption.NOFOLLOW_LINKS` to prevent symbolic links from being treated as directories on Linux, ensuring the tree viewer only shows actual directories.
 - **Selection event log noise**: Changed `log.info` → `log.debug` in `OSExplorerSashFormSelectionChangedListener` for selection-changed events, reducing log verbosity at the INFO level during normal UI interaction.
 - **`OSTreeContentProviderTest` expectation mismatch**: Updated `shouldHandleRegularFileInputWithNoChildren` to assert `null` for regular-file children, matching `File#listFiles()` behavior and preventing false negatives in local/CI test runs.
+- **Spanish text typos**: Fixed misspelled `Acerda de JISOCreator` → `Acerca de JISOCreator` and applied proper accent encoding across ISO explorer, main actions, OS explorer, preferences and show-ISO-info Spanish message bundles.
 
 ## [0.2.0] - 2026-07-12
 
@@ -388,7 +404,8 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com/) forma
 
 ## Version Links
 
-- [Unreleased](https://github.com/Cavallinux/jisocreator/compare/v0.2.0...HEAD) - In development
+- [Unreleased](https://github.com/Cavallinux/jisocreator/compare/v0.2.1...HEAD) - In development
+- [0.2.1](https://github.com/Cavallinux/jisocreator/compare/v0.2.0...v0.2.1) - Headless-safe CLI ISO saving, CLI/dialog i18n externalization, macOS Apple Silicon packaging, icon rebrand, expanded test suite (174 tests / 40 classes)
 - [0.2.0](https://github.com/Cavallinux/jisocreator/compare/v0.1.6...v0.2.0) - Drag & drop workflow, parser/package cleanup, docs + test synchronization
 - [0.1.6](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.6) - Expanded unit testing and documentation synchronization
 - [0.1.5](https://github.com/Cavallinux/jisocreator/releases/tag/v0.1.5) - i18n support, ISO metadata (Volume/Publisher/Application ID)

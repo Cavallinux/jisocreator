@@ -44,16 +44,22 @@ Windows build (from any OS, for packaging with Windows SWT artifacts):
 
     mvn clean package -Pwindows
 
+macOS/Apple Silicon build (from any OS, for packaging with macOS SWT artifacts):
+
+    mvn clean package -Papplesilicon
+
 Optional CLI smoke build profiles:
 
     mvn clean package exec:exec -Plinux-cmdlinemode
     mvn clean package exec:exec -Pwindows-cmdlinemode
+    mvn clean package exec:exec -Papplesilicon-cmdlinemode
 
 Build output:
 - Main runnable jar: `target/jisocreator.jar`
 - Distribution zip:
   - Linux: `target/jisocreator-<version>-gtk.linux.x86_64.zip`
   - Windows: `target/jisocreator-<version>-win32.win32.x86_64.zip`
+  - macOS/Apple Silicon: `target/jisocreator-<version>-cocoa.macosx.aarch64.zip`
 
 
 4) Install from generated distribution zip (recommended)
@@ -80,7 +86,19 @@ Build output:
 3. Open a terminal in the extracted directory
 4. Run:
 
-       jisocreator.bat
+        jisocreator.bat
+
+4.3 macOS / Apple Silicon
+
+1. Build with `mvn clean package -Papplesilicon`
+2. Extract `target/jisocreator-<version>-cocoa.macosx.aarch64.zip`
+3. Make launcher executable:
+
+        chmod +x jisocreator.sh
+
+4. Run:
+
+        ./jisocreator.sh
 
 
 5) Run directly from build output (without zip install)

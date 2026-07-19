@@ -23,7 +23,8 @@ class MessagesBundleTest {
             INLSBundleMessages.SHOWISOINFO_BUNDLE_MESSAGE,
             INLSBundleMessages.PREFERENCEDIALOG_BUNDLE_MESSAGE,
             INLSBundleMessages.ABOUTDIALOG_BUNDLE_MESSAGE,
-            INLSBundleMessages.COMMANDLINE_BUNDLE_MESSAGE);
+            INLSBundleMessages.COMMANDLINE_BUNDLE_MESSAGE,
+            INLSBundleMessages.ADDTOISODIALOG_BUNDLE_MESSAGE);
 
     @Test
     @DisplayName("Should load all message bundles for english and spanish locales")
@@ -49,7 +50,8 @@ class MessagesBundleTest {
                 ShowIsoInformationDialogMessages.class,
                 PreferenceDialogMessages.class,
                 AboutDialogMessages.class,
-                CommandLineMessages.class);
+                CommandLineMessages.class,
+                AddToISODialogMessages.class);
 
         for (Class<?> messageClass : messageClasses) {
             for (Field field : messageClass.getDeclaredFields()) {

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -55,10 +56,8 @@ class OSTreeContentProviderTest {
     void shouldHandleRegularFileInputWithNoChildren(@TempDir Path tempDir) throws IOException {
         Path file = Files.write(tempDir.resolve("plain.txt"), new byte[] { 1, 2 });
 
-        // getChildren returns empty array instead of null to prevent NullPointerException
         Object[] children = provider.getChildren(file.toFile());
-        assertNotNull(children, "getChildren should return empty array, not null");
-        assertEquals(0, children.length, "Regular file should have no children");
+        assertNull(children, "getChildren should return null for regular files");
         assertNotNull(provider.getParent(file.toFile()));
         assertFalse(provider.hasChildren(file.toFile()));
     }

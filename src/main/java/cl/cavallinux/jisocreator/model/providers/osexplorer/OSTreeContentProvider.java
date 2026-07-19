@@ -1,7 +1,6 @@
 package cl.cavallinux.jisocreator.model.providers.osexplorer;
 
 import java.io.File;
-import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -23,8 +22,7 @@ public class OSTreeContentProvider implements ITreeContentProvider {
     public Object[] getChildren(Object arg0) {
         log.info("Arg received in getChildren: {}", arg0);
         if (arg0 instanceof File file) {
-            File[] files = file.listFiles();
-            return Objects.nonNull(files) ? files : List.of().toArray(File[]::new);
+            return file.listFiles();
         } else {
             return OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
         }

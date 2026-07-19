@@ -162,6 +162,7 @@ Current coverage includes:
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
 - **Singleton Pattern Testing**: Validates OSExplorer singleton implementation
 - **File System Operations**: Comprehensive testing of file and directory handling
+- **OS tree provider contract validation**: Confirms `OSTreeContentProvider#getChildren(File)` mirrors `File#listFiles()` semantics (`null` for regular files, entries for directories)
 - **Path Manipulation**: Tests for file path concatenation and validation
 - **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison, including cross-platform path separator normalization (Windows backslash → Unix forward slash)
 - **Action and Workflow Validation**: Tests for command parsing branches and save-thread progress behavior

@@ -48,14 +48,14 @@ public class AboutDialog extends TitleAreaDialog {
         Composite composite = new Composite(parent, SWT.NONE);
         setTitle("JIsocreator");
         setMessage(formattedProgramVersion);
-        setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso72.png"));
+        setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
         TabFolder tabFolder = new TabFolder(composite, SWT.NONE);
         TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
         tabItem.setText(AboutDialogMessages.aboutDialogAboutTabText);
         Composite aboutComposite = new Composite(tabFolder, SWT.NONE);
         Label label = new Label(aboutComposite, SWT.NONE);
-        label.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("iso128.png"));
+        label.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.png"));
         Label textClabel = new Label(aboutComposite, SWT.NONE);
         textClabel.setText(AboutDialogMessages.aboutDialogAboutCompositeText);
 

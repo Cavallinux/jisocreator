@@ -22,7 +22,7 @@ public class ImageUtils {
     private static final String IMAGES_FOLDER_PREFIX = "img/";
     private static final String DRIVE_IMAGE_FILENAME = "drive.png";
     private static final String FOLDER_IMAGE_FILENAME = "folder.png";
-    private static final String ROOT_ISO_FILENAME = "iso.png";
+    private static final String ROOT_ISO_FILENAME = "iso.svg";
     private static final String GENERIC_FILENAME = "file.png";
 
     @Builder

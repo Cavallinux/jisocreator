@@ -5,12 +5,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.instances.JISOCreatorLanguageOptions;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +32,7 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
         layout.numColumns = 2;
         addField(new BooleanFieldEditor("general.exit.confirm",
                 PreferenceDialogMessages.preferenceDialogGeneralOptionsConfirmExitOption, parent));
-        addField(new ComboFieldEditor("jisocreator.language",
+        addField(new StyledComboFieldEditor("jisocreator.language",
                 PreferenceDialogMessages.preferenceDialogGeneralOptionsLanguageApp, buildLanguageOptionsArray(),
                 parent));
     }
@@ -43,6 +43,7 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
         super.createControl(parent);
         getDefaultsButton().setText(PreferenceDialogMessages.preferenceDialogGeneralOptionsRestoreButton);
         getApplyButton().setText(PreferenceDialogMessages.preferenceDialogGeneralOptionsApplyButton);
+        DarkThemeSupport.applyToControlTree(getControl());
     }
 
     private String[][] buildLanguageOptionsArray() {

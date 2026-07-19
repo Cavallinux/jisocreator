@@ -5,13 +5,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.instances.JISOCreatorISOLevelOptions;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +30,7 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
         super.createControl(parent);
         getApplyButton().setText(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeApplyButton);
         getDefaultsButton().setText(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeRestoreButton);
+        DarkThemeSupport.applyToControlTree(getControl());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
         Composite parent = getFieldEditorParent();
         GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns = 2;
-        FileFieldEditor mkisofsPathBrowser = new FileFieldEditor("mkisofs.path",
+        StyledFileFieldEditor mkisofsPathBrowser = new StyledFileFieldEditor("mkisofs.path",
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeMKISOFSPath, true, parent);
         mkisofsPathBrowser.setChangeButtonText(
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeMKISOFSPathBrowseButtonText);
@@ -50,7 +50,7 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeJolietExtension, parent));
         addField(new BooleanFieldEditor("mkisofs.symlinks.follow",
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeFollowSymlinks, parent));
-        addField(new ComboFieldEditor("mkisofs.iso.level",
+        addField(new StyledComboFieldEditor("mkisofs.iso.level",
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeIsoLevel, buildIsoLevelOptionsArray(), parent));
     }
 

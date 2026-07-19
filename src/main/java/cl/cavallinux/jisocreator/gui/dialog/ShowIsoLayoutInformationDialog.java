@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -16,6 +15,7 @@ import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.i18n.ShowIsoInformationDialogMessages;
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
 import lombok.Builder;
@@ -42,6 +42,7 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         log.info("Configuring show info layout shell");
         super.configureShell(newShell);
+        DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
     }
 
@@ -92,10 +93,13 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
         errorIndicator = new Label(container, SWT.NONE);
         errorIndicator.setText("");
-        errorIndicator.setForeground(new Color(parent.getDisplay(), 255, 0, 0));
+        errorIndicator.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
         GridData gdError = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
         gdError.verticalIndent = 8;
         errorIndicator.setLayoutData(gdError);
+
+        DarkThemeSupport.applyToControlTree(area);
+        errorIndicator.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
 
         return area;
     }

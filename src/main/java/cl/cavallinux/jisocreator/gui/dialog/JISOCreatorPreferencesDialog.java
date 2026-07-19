@@ -4,9 +4,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +28,15 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
     protected void configureShell(Shell newShell) {
         log.info("Configuring shell for JISOCreatorPreferencesDialog");
         super.configureShell(newShell);
+        DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(PreferenceDialogMessages.preferenceDialogWindowTitle);
+    }
+
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Control dialogArea = super.createDialogArea(parent);
+        DarkThemeSupport.applyToControlTree(dialogArea);
+        return dialogArea;
     }
 
     @Override
@@ -34,6 +44,12 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
         super.createButtonsForButtonBar(parent);
         getButton(IDialogConstants.OK_ID).setText(PreferenceDialogMessages.preferenceDialogOKButton);
         getButton(IDialogConstants.CANCEL_ID).setText(PreferenceDialogMessages.preferenceDialogCancelButton);
+        DarkThemeSupport.applyToControlTree(parent);
+        parent.getDisplay().asyncExec(() -> {
+            if (!parent.isDisposed()) {
+                DarkThemeSupport.applyToControlTree(parent);
+            }
+        });
     }
     
     @Override

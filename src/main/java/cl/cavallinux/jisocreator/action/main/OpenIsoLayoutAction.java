@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -18,6 +17,7 @@ import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.gui.theme.DarkJFaceDialogs;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.IOManager;
@@ -73,7 +73,7 @@ public class OpenIsoLayoutAction extends JISOCreatorBaseAction implements IRunna
             } else {
                 Display.getDefault().asyncExec(() -> {
                     monitor.setCanceled(true);
-                    MessageDialog.openError(GUIManager.INSTANCE.getMainWindow().getShell(), "JISOCREATOR",
+                    DarkJFaceDialogs.openError(GUIManager.INSTANCE.getMainWindow().getShell(), "JISOCREATOR",
                             "XML Selected is not loaded");
                 });
             }

@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import cl.cavallinux.jisocreator.action.main.LoadCommandLineISOLayoutAction;
 import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.instances.ActionsManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
@@ -41,6 +42,8 @@ public class MainWindow extends ApplicationWindow {
 
     private MainWindow(Shell parentShell) {
         super(parentShell);
+        Display display = Objects.nonNull(parentShell) ? parentShell.getDisplay() : Display.getDefault();
+        DarkThemeSupport.enableWindowsDarkMode(display);
         separator = new Separator();
         addMenuBar();
         addToolBar(SWT.RIGHT);
@@ -81,7 +84,39 @@ public class MainWindow extends ApplicationWindow {
         loadIsoLayout(isoFilePath);
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
+        applyDarkTheme(composite);
+        // Apply theme to menu bar after it's fully initialized
+        Display.getCurrent().asyncExec(() -> applyDarkThemeToMenuBar());
         return composite;
+    }
+
+    private void applyDarkTheme(Composite composite) {
+        DarkThemeSupport.applyToControlTree(composite);
+        Shell shell = composite.getShell();
+        DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
+        applyDarkThemeToStatusLine();
+        shell.getDisplay().asyncExec(() -> {
+            DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
+            applyDarkThemeToStatusLine();
+        });
+    }
+
+    private void applyDarkThemeToMenuBar() {
+        Shell shell = getShell();
+        if (Objects.nonNull(shell) && !shell.isDisposed()) {
+            DarkThemeSupport.applyToMainBars(shell, getToolBarManager().getControl());
+        }
+    }
+
+    private void applyDarkThemeToStatusLine() {
+        if (Objects.isNull(getStatusLineManager())) {
+            return;
+        }
+
+        Control statusLineControl = getStatusLineManager().getControl();
+        if (Objects.nonNull(statusLineControl)) {
+            DarkThemeSupport.applyToControlTree(statusLineControl);
+        }
     }
 
     private void loadIsoLayout(String isoFilePath) {

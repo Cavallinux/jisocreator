@@ -16,6 +16,7 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 - `model/cmdline/JISOCreatorCommandLineParserTest.java` — added `testHelpFormatterIsJISOCreatorCommandLineHelpFormatter` and adapted parser helper assertions to instance-based methods (now **20 tests**)
 - `model/cmdline/JISOCreatorCommandLineHelpFormatterTest.java` — adapted options setup to use a parser instance (`buildOptions()` is now a default interface method)
 - `model/osexplorer/OSExplorerTest.java` — simplified `testIsRootForSystemRoot` to assert all roots from `File.listRoots()` are identified as roots
+- `model/providers/osxplorer/OSTreeContentProviderTest.java` — aligned regular-file expectation with `File#listFiles()` semantics (`getChildren(file)` returns `null` for non-directory files)
 
 ## Testing Framework Setup
 
@@ -175,6 +176,7 @@ The test suite runs on both Linux and Windows. Some platform-specific considerat
 - **XML fixtures**: Test fixture files under `src/test/resources/xml/` use Unix (LF) line endings to ensure consistent XMLUnit diff results across platforms.
 - **File system roots (`OSExplorer`)**: `OSExplorer` now always initializes with `File.listRoots()` regardless of platform. `OSExplorerTest.testIsRootForSystemRoot` verifies all returned roots are recognized as roots via `isRoot()`.
 - **Symbolic links (`ShowOnlyDirectoriesFilter`)**: Uses `Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)` to classify entries, ensuring symlinks are not treated as real directories on Linux.
+- **OS tree provider children contract (`OSTreeContentProvider`)**: For directory inputs, `getChildren(File)` returns directory entries. For regular files, it returns `null` (native `File#listFiles()` behavior). `OSTreeContentProviderTest.shouldHandleRegularFileInputWithNoChildren` asserts this contract so behavior remains explicit and stable.
 
 ## Future Testing Enhancements
 1. Add integration tests for GUI actions and dialogs with SWT harness.

@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Parser tests were updated to call these helpers through parser instances and to provide deterministic test attributes.
 - **`ActionsManager` enum**: `MAINACTION` constant removed; `MainAction` instantiation moved to the new `MainActionsManager`.
 - **`OSExplorer` root initialization**: Simplified constructor to always call `File.listRoots()`, removing the previous Windows/Linux conditional branch that used `user.home` file listing on Windows.
-- **`OSTreeContentProvider`**: Replaced `instanceof File` cast pattern with a Java 16+ pattern-matching `instanceof`, and changed empty-return from `new File[0]` to `List.of().toArray(File[]::new)`. Removed the special-case null check in `getElements`, delegating entirely to `getChildren`.
+- **`OSTreeContentProvider` alignment with Java `File` API**: `getChildren(File)` now delegates directly to `File#listFiles()`. For regular files (non-directories), this means returning `null` instead of an empty array; root resolution for non-`File` input continues through `OSAndIsoExplorerManager`.
 - **`ShowOnlyDirectoriesFilter`**: Replaced `Files.isDirectory(path)` with `Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)` to correctly classify symbolic links. Removed `OSAndIsoExplorerManager.isRoot()` check—root directories are directories themselves and are now included through the regular directory predicate. Log level changed from `INFO` to `DEBUG`.
 - **Documentation synchronization for branch test scope**: Updated `README.md` and `TESTING.md` to reflect current suite inventory and counts (**128 tests in 33 classes**), including new coverage in `AddFileActionRecursiveTest` and `IsoTreeNodeTest`.
 - **Test suite growth**: After all branch changes, the test suite now comprises **147 tests across 36 test classes**.
@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Cross-platform parser compatibility assertion**: Updated `XMLIsoFilesystemParserCompatibilityTest` to assert the expected fixture-specific `volumeID` on both Linux and Windows, avoiding platform-dependent false negatives.
 - **`ShowOnlyDirectoriesFilter` symlink handling**: Using `LinkOption.NOFOLLOW_LINKS` prevents symbolic links from being treated as directories on Linux, ensuring the tree viewer only shows actual directories.
 - **Selection event log noise**: Changed `log.info` → `log.debug` in `OSExplorerSashFormSelectionChangedListener` for selection-changed events, reducing log verbosity at the INFO level during normal UI interaction.
+- **`OSTreeContentProviderTest` expectation mismatch**: Updated `shouldHandleRegularFileInputWithNoChildren` to assert `null` for regular-file children, matching `File#listFiles()` behavior and preventing false negatives in local/CI test runs.
 
 ## [0.2.0] - 2026-07-12
 

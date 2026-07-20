@@ -3,6 +3,10 @@
 ## Overview
 This project uses JUnit 5 and Mockito for unit tests. Tests are located under `src/test/java` and run with Maven Surefire.
 
+## Current branch status (`feature/v0.2.2`)
+- Latest branch commit initializes version `0.2.2-SNAPSHOT` in `pom.xml`.
+- No test additions/removals were introduced yet; current suite remains **174 tests in 40 classes**.
+
 ## Tests Added/Updated in `feature/v0.2.1` (released as v0.2.1)
 - `action/osexplorer/AddFileActionRecursiveTest.java` (**10 tests**, up from 7) — recursive add, cancellation, empty directories, progress monitor, full `run(IProgressMonitor)` happy/cancel paths, and builder instantiation
 - `action/main/SaveAsIsoActionTest.java` (**new, 8 tests**) — headless builder defaults (`inputXMLLayoutFile`/`outputISOFile` empty, `commandLineMode` false), setter round-trips, instance independence

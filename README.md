@@ -425,7 +425,7 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ### Testing Architecture
 
-The test suite (147 tests / 36 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+The test suite (174 tests / 40 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
@@ -436,7 +436,7 @@ The test suite (147 tests / 36 classes, see [TESTING.md](TESTING.md)) favors SWT
 ## Version
 
 - Latest stable release: **0.2.1** (released 2026-07-19)
-- Development: **Unreleased** 
+- Development branch baseline: **0.2.2-SNAPSHOT** (`feature/v0.2.2`, initialized 2026-07-19)
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

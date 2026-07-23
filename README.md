@@ -23,7 +23,22 @@ For full installation instructions (requirements, build, package install, and fi
 - [TESTING.md](TESTING.md): test inventory, platform notes, and validation guidance
 - [CHANGELOG.md](CHANGELOG.md): release history and in-progress changes
 
-## Quick Start (Windows PowerShell)
+## Quick Start
+
+Pick the section matching your platform. Each one clones the repo, builds with the matching Maven profile, and runs the packaged jar directly with `--help` as a smoke check.
+
+### Linux
+
+```bash
+git clone https://github.com/Cavallinux/jisocreator.git
+cd jisocreator
+mvn clean package
+java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar --help
+```
+
+`linux` is the default profile, so no `-P` flag is required. If you prefer the packaged distribution, build first and then extract/run `target/jisocreator-<version>-gtk.linux.x86_64.zip` as described in [INSTALL](INSTALL).
+
+### Windows (PowerShell)
 
 ```powershell
 git clone https://github.com/Cavallinux/jisocreator.git
@@ -33,6 +48,17 @@ java --enable-native-access=ALL-UNNAMED -jar .\target\jisocreator.jar --help
 ```
 
 If you prefer the packaged distribution, build first and then extract/run `target\jisocreator-<version>-win32.win32.x86_64.zip` as described in [INSTALL](INSTALL).
+
+### macOS (Apple Silicon)
+
+```bash
+git clone https://github.com/Cavallinux/jisocreator.git
+cd jisocreator
+mvn clean package -Papplesilicon
+java --enable-native-access=ALL-UNNAMED -jar target/jisocreator.jar --help
+```
+
+If you prefer the packaged distribution, build first and then extract/run `target/jisocreator-<version>-cocoa.macosx.aarch64.zip` as described in [INSTALL](INSTALL).
 
 ## Project Dependencies
 
@@ -151,20 +177,23 @@ mvn clean package -DskipTests
 
 ```
 src/test/java/cl/cavallinux/jisocreator/
-├── action/      # Action-layer tests (main/jobs/base/osexplorer actions)
+├── action/      # Action-layer tests (main/jobs/base/osexplorer/isoexplorer actions)
 ├── gui/         # i18n message bundle tests
 ├── instances/   # Manager and enum singleton tests
-├── model/       # Parser, providers, comparators, filters, explorers
+├── model/       # Parser, providers, comparators, filters, explorers, DnD adapters
+├── testsupport/ # Shared test helpers (e.g. SwtPlatformAssumptions)
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 174 tests total across 40 test classes, all passing.
+**Current Test Statistics**: 262 tests total across 62 test classes, all passing (`mvn -o clean test`: 262/262, 0 skipped; `mvn -o clean test -Pwindows`: 262/262, 5 skipped, 0 failures — see "Platform-mismatch note" below).
 
 Current coverage includes:
 - Critical workflow tests (`MainAction`, `SaveAsIsoAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
 - Parser/contract/mapper tests (`IsoFilesystemParser`, `XMLIsoFilesystem*`)
-- Explorer/provider/comparator/filter tests (OS and ISO, including `IsoTreeNode`)
-- CLI/manager/i18n tests (`CommandLine*`, `ICommandLineParser`, `JISOCreatorAttributes`, `MainActionsManager`, `IOManager`, `OSAndIsoExplorerManager`, message bundles including `CommandLineMessages` and `AddToISODialogMessages`)
+- Explorer/provider/comparator/filter tests (OS and ISO, including `IsoTreeNode`, `ITreeNode`)
+- CLI/manager/i18n tests (`CommandLine*`, `ICommandLineParser`, `JISOCreatorAttributes`, `MainActionsManager`, `IOManager`, `OSAndIsoExplorerManager`, `JFaceResourcesManager`, message bundles including `CommandLineMessages` and `AddToISODialogMessages`)
+- Main-menu, ISO-explorer, and OS-explorer action tests (`AboutAction`, `ExitApplicationAction`, `LoadCommandLineISOLayoutAction`, `NewIsoLayoutAction`, `OpenIsoLayoutAction`, `PreferencesAction`, `SaveAsXMLAction`, `DeleteIsoEntryAction`, `GoToIsoEntryParentAction`, `OpenIsoEntryAction`, `ShowIsoInformationAction`, `GoToParentAction`, `OpenAction`, `RefreshExplorerAction`, `ShowHiddenFilesAction`, `ToggleHiddenFilesOSExplorerThread`) — headless builder-state/type checks, since their `run()` methods are coupled to `GUIManager`/`Display`
+- Drag-and-drop and provider tests (`JISOCreatorDragSourceAdapter`, `JISOCreatorViewerDropAdapter`, `IsoTreeLabelProvider`)
 
 ### Test Features
 - **Temporary Directory Support**: Uses JUnit 5's `@TempDir` for isolated file operations
@@ -174,8 +203,12 @@ Current coverage includes:
 - **Path Manipulation**: Tests for file path concatenation and validation
 - **XML Compatibility Validation**: Legacy XML layout deserialization and round-trip contract comparison, including cross-platform path separator normalization (Windows backslash → Unix forward slash)
 - **Action and Workflow Validation**: Tests for command parsing branches and save-thread progress behavior
+- **Headless SWT event construction**: Real `DragSourceEvent`/`Viewer`/`StructuredViewer` subclasses and reflection-based construction (via Objenesis) avoid needing Mockito to mock concrete SWT/JFace classes (which is not supported by this toolchain) and avoid needing a live `Display`
 
-For detailed testing information, see `TESTING.md`.
+#### Platform-mismatch note (`-Pwindows`, `-Papplesilicon`, ...)
+A few tests exercise real SWT native APIs (`FileTransfer`/`LocalSelectionTransfer` registration) that are only safe when the active Maven platform profile's SWT native fragment matches the host OS. These are guarded by `cl.cavallinux.jisocreator.testsupport.SwtPlatformAssumptions.assumeNativePlatformMatches()`, which uses JUnit 5's `Assumptions.assumeTrue(...)` to **skip** (not fail or crash) the test on a platform mismatch. Without this guard, invoking a native SWT API on a mismatched profile triggers an internal, non-catchable `System.exit(1)` inside SWT's native loader that crashes the entire test JVM. See `TESTING.md` → "Note on running tests under non-default platform profiles" for the full technical explanation.
+
+For detailed testing information, including the full test gap analysis, per-group breakdown, and validation history, see `TESTING.md`.
 
 ## Continuous Integration
 

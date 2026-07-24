@@ -60,6 +60,7 @@ public class MainWindow extends ApplicationWindow {
     protected void configureShell(Shell shell) {
         log.info("Configuring shell");
         super.configureShell(shell);
+        Display.setAppName("jisocreator");
         shell.setText(MainWindowMessages.windowTitle);
         shell.setSize(1024, 768);
         shell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));

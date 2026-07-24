@@ -170,4 +170,15 @@ class OSExplorerTest {
 
         assertSame(instance1, instance2);
     }
+
+    @Test
+    @DisplayName("Should return the first file system root as the Unix OS root")
+    void testGetUnixOSRoot() {
+        File[] newRoots = new File[] { new File("/"), new File("/mnt") };
+        osExplorer.setRoots(newRoots);
+
+        File unixOSRoot = osExplorer.getUnixOSRoot();
+
+        assertEquals(newRoots[0], unixOSRoot);
+    }
 }

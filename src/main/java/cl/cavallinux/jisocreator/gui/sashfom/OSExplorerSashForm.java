@@ -140,6 +140,7 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         if (!Strings.CI.containsAny(SWT.getPlatform(), "win")) {
             ISelection osExplorerRootSelection = new StructuredSelection(osExplorer.getUnixOSRoot());
             osDirectoriesTree.setSelection(osExplorerRootSelection);
+            osDirectoriesTree.expandToLevel(osExplorer.getUnixOSRoot(), 1);
         }
     }
     

@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -28,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import cl.cavallinux.jisocreator.testsupport.SwtPlatformAssumptions;
+import cl.cavallinux.jisocreator.testsupport.TransferDataTestSupport;
 
 /**
  * Tests para {@link JISOCreatorDragSourceAdapter}.
@@ -119,7 +119,7 @@ class JISOCreatorDragSourceAdapterTest {
         JISOCreatorDragSourceAdapter adapter = JISOCreatorDragSourceAdapter.builder().viewer(viewer).build();
 
         DragSourceEvent event = newDragSourceEvent();
-        event.dataType = fileTransferTransferData();
+        event.dataType = TransferDataTestSupport.supportedTransferData(FileTransfer.getInstance());
 
         adapter.dragSetData(event);
 
@@ -134,22 +134,12 @@ class JISOCreatorDragSourceAdapterTest {
         JISOCreatorDragSourceAdapter adapter = JISOCreatorDragSourceAdapter.builder().viewer(viewer).build();
 
         DragSourceEvent event = newDragSourceEvent();
-        TransferData unsupported = new TransferData();
-        unsupported.type = Integer.MAX_VALUE;
+        TransferData unsupported = TransferDataTestSupport.unsupportedTransferData(FileTransfer.getInstance());
         event.dataType = unsupported;
 
         adapter.dragSetData(event);
 
         assertNull(event.data);
-    }
-
-    private static TransferData fileTransferTransferData() throws Exception {
-        Method getTypeIds = FileTransfer.class.getDeclaredMethod("getTypeIds");
-        getTypeIds.setAccessible(true);
-        int[] typeIds = (int[]) getTypeIds.invoke(FileTransfer.getInstance());
-        TransferData transferData = new TransferData();
-        transferData.type = typeIds[0];
-        return transferData;
     }
 
     /** Builds a real, usable {@link DragSourceEvent} without requiring an SWT {@code Display}. */

@@ -3,8 +3,6 @@ package cl.cavallinux.jisocreator.model.dnd;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.lang.reflect.Method;
-
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import cl.cavallinux.jisocreator.testsupport.SwtPlatformAssumptions;
+import cl.cavallinux.jisocreator.testsupport.TransferDataTestSupport;
 
 /**
  * Tests para {@link JISOCreatorViewerDropAdapter}.
@@ -53,25 +52,16 @@ class JISOCreatorViewerDropAdapterTest {
     @Test
     @DisplayName("validateDrop should accept a FileTransfer-compatible TransferData")
     void validateDropShouldAcceptFileTransferType() throws Exception {
-        TransferData transferData = new TransferData();
-        transferData.type = fileTransferTypeIds()[0];
+        TransferData transferData = TransferDataTestSupport.supportedTransferData(FileTransfer.getInstance());
 
         assertTrue(adapter.validateDrop(null, 0, transferData));
     }
 
     @Test
     @DisplayName("validateDrop should reject an unsupported TransferData type")
-    void validateDropShouldRejectUnsupportedType() {
-        TransferData transferData = new TransferData();
-        transferData.type = Integer.MAX_VALUE;
+    void validateDropShouldRejectUnsupportedType() throws Exception {
+        TransferData transferData = TransferDataTestSupport.unsupportedTransferData(FileTransfer.getInstance());
 
         assertFalse(adapter.validateDrop(null, 0, transferData));
-    }
-
-    /** Obtains FileTransfer's registered native type ids via reflection (the accessor is protected). */
-    private static int[] fileTransferTypeIds() throws Exception {
-        Method getTypeIds = FileTransfer.class.getDeclaredMethod("getTypeIds");
-        getTypeIds.setAccessible(true);
-        return (int[]) getTypeIds.invoke(FileTransfer.getInstance());
     }
 }

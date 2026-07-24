@@ -5,7 +5,14 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 
 ## Current branch status (`feature/v0.2.2`)
 - Latest branch commit initializes version `0.2.2-SNAPSHOT` in `pom.xml`.
-- Current suite: **262 tests in 62 classes** (see "Test Gap Analysis & Coverage Plan" below).
+- Current suite: **265 tests in 62 classes** (see "Test Gap Analysis & Coverage Plan" below).
+
+## Tests Updated in this pass (source changes: `MainAction`, `JISOCreatorAttributes`, `JISOCreatorCommandLineParser`)
+Three production classes were modified outside the Group 1–8 gap-analysis workflow (via direct edits to `MainAction.run()`, `JISOCreatorAttributes`, and `JISOCreatorCommandLineParser`), and their associated tests were updated to keep coverage current:
+- **`JISOCreatorAttributes`**: added `toString()` (formats `"<appName> version <appVersion>"`) and `toString(String baseString)` (substitutes `appName`/`appVersion`/`jvmVersion`/`jvmVendor`/`osName`, in that order, into an arbitrary `String.format` pattern — used by `printVersion()` below). `JISOCreatorAttributesTest.java` grew from 4 to **6 tests**, adding `shouldFormatDefaultToStringAsNameAndVersion` and `shouldFormatCustomToStringWithBaseString`.
+- **`JISOCreatorCommandLineParser.printVersion()`**: now delegates the argument list construction to `attributes.toString(CommandLineMessages.commandLineVersionMessage)` instead of building a `List.of(...)` inline — same runtime output, simpler call site. `JISOCreatorCommandLineParserTest.java` grew from 20 to **21 tests**, adding `testPrintVersionContainsAttributeValues`, which captures `System.out` while calling `printVersion()` and asserts the rendered text contains the configured `appName`/`appVersion`/`jvmVersion`/`jvmVendor`/`osName` values (validating the new `toString(baseString)` delegation end-to-end, not just "does not throw").
+- **`MainAction.run()`**: the GUI-mode log statement now logs `ICommandLineParser.buildAttributes()` (relying on the new `JISOCreatorAttributes.toString()`) instead of a static string. No test change was required: `MainActionTest`'s `TestableMainAction` overrides `run()` entirely (to avoid touching `GUIManager`/`Display`), so the log-line content is outside what that test exercises; this remains consistent with the project's convention of never asserting on log output for GUI-coupled `run()` methods.
+- Validated per this session's standing rule: `mvn -o clean test` (default `linux` profile) → **265/265, 0 skipped**; `mvn -o clean test -Pwindows` (mismatched profile on this Linux host) → **265/265, 5 skipped, 0 failures, no JVM crash**.
 
 ## Tests Added in this pass (Gap Analysis — Group 7: `util/ImageUtils`)
 No new test files were added for this group either. A dedicated investigation of `util/ImageUtils.java` determined that **every single method requires a live, real `Display`**, so there is no pure-logic subset left to isolate — even the ones that look like plain path/name resolution:
@@ -32,7 +39,7 @@ For the other 6 classes originally targeted by this group, no new test files wer
 Because the "poisoning" happens the instant any of these enum types is loaded by the JVM (not just when a particular method is called), there is **no safe subset of pure/mockable logic** to isolate — unlike Groups 1–5, where the GUI-coupled `run()` methods could simply be skipped while the builder/constructor/pure-logic parts remained testable. Here the class itself, at `<clinit>` time, is the GUI-coupled part. Attempting to reference any of these 6 types — even behind a `SwtPlatformAssumptions.assumeNativePlatformMatches()` guard — would still construct a full, real `Display`/menu/icon tree as an unavoidable side effect, which is integration-test territory, not unit-test territory.
 
 **Conclusion for Group 6**: these 6 classes are deferred to the future headless-SWT-harness (Xvfb) work item already tracked as Group 8 in the "Test Gap Analysis & Coverage Plan" below, where they can be exercised as part of true GUI integration tests with a real (headless) `Display`, rather than forced into unit tests that would violate the project's existing convention of not unit-testing `Display`-bound code paths. `JFaceResourcesManager` was the one exception in this group and is now fully covered (see above).
-- Validated per this session's standing rule: `mvn -o clean test` (default `linux` profile) → **262/262, 0 skipped**; `mvn -o clean test -Pwindows` (mismatched profile on this Linux host) → **262/262, 5 skipped, 0 failures, no JVM crash** — `JFaceResourcesManagerTest` never touches a native SWT API, so it runs identically (and is never skipped) under both profiles.
+- Validated per this session's standing rule: `mvn -o clean test` (default `linux` profile) → **265/265, 0 skipped**; `mvn -o clean test -Pwindows` (mismatched profile on this Linux host) → **265/265, 5 skipped, 0 failures, no JVM crash** — `JFaceResourcesManagerTest` never touches a native SWT API, so it runs identically (and is never skipped) under both profiles.
 
 ## Tests Added in this pass (Gap Analysis — Group 5: OS explorer actions & jobs)
 - `action/osexplorer/GoToParentActionTest.java` (**new, 4 tests**), `OpenActionTest.java` (**new, 5 tests**), `RefreshExplorerActionTest.java` (**new, 4 tests**), `ShowHiddenFilesActionTest.java` (**new, 4 tests**) — builder state (message/tooltip/imageDescriptor), the initial `enabled` flag (`false` for `GoToParentAction`/`OpenAction`; left at the JFace `Action` default of `true` for `RefreshExplorerAction`/`ShowHiddenFilesAction`, since neither constructor calls `setEnabled(false)`), the `AS_CHECK_BOX` style used by `ShowHiddenFilesAction` (via `getStyle()`), the Lombok `@Getter`/`@Setter` round-trip on `OpenAction.file`, and `instanceof` checks against `JISOCreatorBaseAction`. No `run()` is invoked: all are coupled to `GUIManager.INSTANCE`/`OSAndIsoExplorerManager.INSTANCE`/`Display.getCurrent()`, and `OpenAction.run()`'s file branch additionally calls the native `Program.launch` (via `OSExplorer.launch`), same exclusion rationale as `OpenIsoEntryAction` in Group 4.
@@ -238,9 +245,9 @@ Surefire writes reports to:
 - `target/surefire-reports/`
 
 ## Current Test Statistics (`feature/v0.2.2`)
-- **Total Tests**: 262
+- **Total Tests**: 265
 - **Test Classes**: 62
-- **All Tests Passing**: ✓ (`mvn -o clean test`: 258/258, 0 skipped; `mvn -o clean test -Pwindows`: 258/258, 5 skipped, 0 failures)
+- **All Tests Passing**: ✓ (`mvn -o clean test`: 265/265, 0 skipped; `mvn -o clean test -Pwindows`: 265/265, 5 skipped, 0 failures)
 
 ### Test Statistics Summary
 ```
@@ -277,9 +284,9 @@ JISOCreatorLanguageOptionsTest.java:            2 tests
 MainActionsManagerTest.java:                    6 tests
 OSAndIsoExplorerManagerTest.java:               1 test
 ICommandLineParserTest.java:                    9 tests
-JISOCreatorAttributesTest.java:                 4 tests
+JISOCreatorAttributesTest.java:                 6 tests
 JISOCreatorCommandLineHelpFormatterTest.java:   6 tests
-JISOCreatorCommandLineParserTest.java:         20 tests
+JISOCreatorCommandLineParserTest.java:         21 tests
 ITreeNodeDirectoriesFirstComparatorTest.java:   2 tests
 OSDirectoriesComparatorTest.java:               5 tests
 JISOCreatorDragSourceAdapterTest.java:           3 tests
@@ -307,7 +314,7 @@ OsTableProviderTest.java:                       3 tests
 IOUtilsPathTest.java:                           5 tests
 IOUtilsTest.java:                               6 tests
 ----------------------------------------------------------
-Total:                                        262 tests
+Total:                                        265 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -342,5 +349,5 @@ mvn -o clean test -Pwindows
 ```
 
 Results:
-- Default (`linux`) profile: **262 tests passing in 62 classes, 0 skipped** (from `target/surefire-reports`).
-- `windows` profile (mismatched native platform on this Linux host): **262 tests, 5 skipped, 0 failures, no JVM crash** — the 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, gated by `SwtPlatformAssumptions.assumeNativePlatformMatches()`. Group 6's new test (`JFaceResourcesManagerTest`) never touches a native SWT API and therefore runs identically under both profiles.
+- Default (`linux`) profile: **265 tests passing in 62 classes, 0 skipped** (from `target/surefire-reports`).
+- `windows` profile (mismatched native platform on this Linux host): **265 tests, 5 skipped, 0 failures, no JVM crash** — the 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, gated by `SwtPlatformAssumptions.assumeNativePlatformMatches()`. Group 6's new test (`JFaceResourcesManagerTest`) never touches a native SWT API and therefore runs identically under both profiles.

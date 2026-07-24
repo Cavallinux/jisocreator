@@ -80,6 +80,7 @@ public class MainWindow extends ApplicationWindow {
         isoExplorer = new IsoExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         osExplorer = new OSExplorerSashForm(mainPanel, SWT.HORIZONTAL);
         loadIsoLayout(isoFilePath);
+        osExplorer.setInitialSelection();
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         return composite;

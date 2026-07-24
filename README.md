@@ -185,7 +185,7 @@ src/test/java/cl/cavallinux/jisocreator/
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 262 tests total across 62 test classes, all passing (`mvn -o clean test`: 262/262, 0 skipped; `mvn -o clean test -Pwindows`: 262/262, 5 skipped, 0 failures — see "Platform-mismatch note" below).
+**Current Test Statistics**: 265 tests total across 62 test classes, all passing (`mvn -o clean test`: 265/265, 0 skipped; `mvn -o clean test -Pwindows`: 265/265, 5 skipped, 0 failures — see "Platform-mismatch note" below).
 
 Current coverage includes:
 - Critical workflow tests (`MainAction`, `SaveAsIsoAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)

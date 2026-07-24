@@ -164,6 +164,27 @@ class JISOCreatorCommandLineParserTest {
     }
 
     @Test
+    @DisplayName("Should print version information containing app name, version, JVM and OS attributes")
+    void testPrintVersionContainsAttributeValues() {
+        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+        java.io.PrintStream originalOut = System.out;
+        System.setOut(new java.io.PrintStream(buffer));
+        try {
+            parser.printVersion();
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        String output = buffer.toString();
+
+        assertTrue(output.contains("JISOCreator"));
+        assertTrue(output.contains("0.2.1-SNAPSHOT"));
+        assertTrue(output.contains("21"));
+        assertTrue(output.contains("Eclipse Adoptium"));
+        assertTrue(output.contains("Windows 11"));
+    }
+
+    @Test
     @DisplayName("Should print help information without throwing")
     void testPrintHelpDoesNotThrow() throws IOException {
         assertDoesNotThrow(() -> parser.printHelp("jisocreator"));

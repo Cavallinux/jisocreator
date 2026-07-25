@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-25
+
 ### Added
 - **Test Gap Analysis (Groups 1–7)**: full architecture-driven audit of all 92 production classes vs. existing tests, identifying 48 classes without dedicated test coverage, grouped by architectural layer/priority (see `TESTING.md` → "Test Gap Analysis & Coverage Plan"). Implemented Groups 1–5 in full, and investigated/documented Groups 6–7 (partially implemented where safe). Suite grew from **222 → 262 tests** (**52 → 62 classes**) across this work.
   - **Group 1 (model logic without SWT)**: `IOUtilsTest` (6 tests), `ITreeNodeTest` (13 tests, covering all 13 `default` methods of `ITreeNode`).
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Test updates for the OS explorer initial selection**: `OSExplorerTest` grew from 13 to **14 tests**, adding `testGetUnixOSRoot` for the new pure `getUnixOSRoot()` method. `OSExplorerSashForm#setInitialSelection()` and the `MainWindow` call site were **not** unit-tested — both require real, `Display`-bound `Tree`/`Composite` controls, consistent with this project's existing convention of deferring full GUI-composite coverage to a future headless-SWT (Xvfb) harness (Group 8). Suite grew to **266 tests / 62 classes**, verified passing under both `mvn -o clean test` (266/266, 0 skipped) and `mvn -o clean test -Pwindows` (266/266, 5 skipped, 0 failures).
 - **`OSExplorerSashForm#setInitialSelection()`**: follow-up change also calls `osDirectoriesTree.expandToLevel(osExplorer.getUnixOSRoot(), 1)` after selecting the Unix root, so the tree node is expanded one level. Same untested status as the rest of the method (real `Display`-bound `Tree`).
 - **`GoToParentAction#run()`**: fixed the post-navigation `setEnabled(...)` logic — now disables the action once the newly selected parent directory is itself a filesystem root (`!osExplorer.isRoot(parent.toPath())`), instead of the previous (backwards) check against the pre-navigation file; also removed a redundant cast on `osExplorer.getTreeSelection()`. No test changes required: `run()` remains untestable headlessly (coupled to `GUIManager.INSTANCE.getMainWindow()`), and `GoToParentActionTest` already only covers builder state — verified suite still passes 266/266 (both profiles).
+- **End of `feature/v0.2.2` development (2026-07-25)**: `pom.xml` project version finalized from `0.2.2-SNAPSHOT` to **`0.2.2`**, closing out this branch's test-coverage initiative (Groups 1–7 of the gap-analysis plan) and the OS-explorer initial-selection feature.
 
 ## [0.2.1] - 2026-07-19
 

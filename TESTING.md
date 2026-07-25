@@ -4,7 +4,7 @@
 This project uses JUnit 5 and Mockito for unit tests. Tests are located under `src/test/java` and run with Maven Surefire.
 
 ## Current branch status (`feature/v0.2.2`)
-- Latest branch commit initializes version `0.2.2-SNAPSHOT` in `pom.xml`.
+- Branch finalized: `pom.xml` version is now **`0.2.2`** (released, no longer `-SNAPSHOT`).
 - Current suite: **266 tests in 62 classes** (see "Test Gap Analysis & Coverage Plan" below).
 
 ## Tests Updated in this pass (source change: `GoToParentAction.run()` enabled-state fix)

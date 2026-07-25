@@ -3,9 +3,19 @@
 ## Overview
 This project uses JUnit 5 and Mockito for unit tests. Tests are located under `src/test/java` and run with Maven Surefire.
 
-## Current branch status (`feature/v0.2.2`)
-- Branch finalized: `pom.xml` version is now **`0.2.2`** (released, no longer `-SNAPSHOT`).
-- Current suite: **266 tests in 62 classes** (see "Test Gap Analysis & Coverage Plan" below).
+## Current branch status (`feature/v0.2.3`)
+- Branch in progress: `pom.xml` version is **`0.2.3-SNAPSHOT`**.
+- Current suite: **272 tests in 62 classes** (see "Test Gap Analysis & Coverage Plan" below).
+
+## Tests Updated in this pass (source changes: OS file-system explorer performance optimization)
+Directory loading in the local OS file-system explorer was optimized to reduce redundant filesystem/native-lookup calls for folders containing many files/subfolders. No architecture changes were made to the `IStructuredContentProvider`/`ITreeContentProvider` contracts; only internal implementation details were optimized.
+- **`OSExplorer#findProgram(String)`** (new public method): wraps `Program.findProgram(extension)` — an OS-level file-association/MIME lookup — behind a `ConcurrentHashMap<String, Optional<Program>>` cache keyed by extension, since a given extension always resolves to the same program for the lifetime of the running application. `getFileType2(Path)` now calls this cached method instead of `Program.findProgram(extension)` directly, and `ImageUtils#loadImage(Path)` was updated to go through the same cache (previously it called `Program.findProgram(extension)` independently, duplicating the exact lookup already performed by `getFileType`). This halves the number of native lookups per non-directory file per render pass and eliminates repeats across files sharing the same extension.
+  - `OSExplorerTest.java` grew from 14 to **16 tests**, adding `testFindProgramCachesResultsPerExtension` (asserts two calls with the same extension return the *same* `Program` instance, proving the second call is served from the cache rather than triggering another native lookup) and `testGetFileTypeForFileWithExtensionUsesCachedProgram` (end-to-end check that `getFileType(Path)` still resolves a non-blank type for an extension file). Both are guarded by `SwtPlatformAssumptions.assumeNativePlatformMatches()`, since `Program.findProgram` is backed by the platform-specific native SWT fragment.
+- **`OSTreeContentProvider#hasChildren(Object)`**: previously called `File#listFiles()` — the same full-directory-read already performed by `getChildren(Object)` — purely to check `files.length > 0`. Now uses `Files.newDirectoryStream(Path)` and returns as soon as `iterator().hasNext()` finds a single entry, avoiding a full directory scan (`readdir`) just to decide whether a tree node should show an expand arrow. This is the single biggest win for folders containing thousands of entries.
+  - `OSTreeContentProviderTest.java` grew from 3 to **5 tests**, adding `shouldReportNoChildrenForEmptyDirectory` and `shouldReportChildrenPresentWithSingleEntry` to explicitly cover the new short-circuit logic's boundary cases. The existing `shouldHandleRegularFileInputWithNoChildren` test continues to pass, since `Files.newDirectoryStream` on a regular file throws `NotDirectoryException`, which is caught and treated as "no children" (same externally observable behavior as before).
+- **`OSDirectoriesComparator`**: overrides `sort(Viewer, Object[])` to populate a per-sort `IdentityHashMap<Object, Integer>` cache of each element's computed category (directory vs. file) before delegating to `super.sort(...)`. `category(Object)` now consults this cache when present, falling back to a direct `Files.isDirectory(Path)` check otherwise (e.g. when `category()`/`compare()` are called directly, outside of a `sort()` invocation, as some existing tests do). This reduces the number of `Files.isDirectory` filesystem checks from O(n log n) — one for nearly every comparison performed by the underlying `Arrays.sort` — down to O(n), one per element, for large directory listings. The class's `@Builder` annotation was moved from the class level to an explicit no-arg constructor, since Lombok would otherwise have generated an all-args constructor requiring the new cache field.
+  - `OSDirectoriesComparatorTest.java` grew from 5 to **7 tests**, adding `shouldSortMixedListingWithDirectoriesFirst` (sorts 10 mixed files/directories and asserts all directories precede all files in the result) and `shouldComputeCategoryCorrectlyWithoutSortCall` (asserts `category()` still returns correct results when called directly, without an active per-sort cache).
+- Validated per this session's standing rule: `mvn -o clean test` (default `linux` profile) → **272/272, 0 skipped**; `mvn -o clean test -Pwindows` (mismatched profile on this Linux host) → **272/272, 7 skipped, 0 failures, no JVM crash** (the 2 new native-`Program`-dependent `OSExplorerTest` cases join the existing 5 skips).
 
 ## Tests Updated in this pass (source change: `GoToParentAction.run()` enabled-state fix)
 `GoToParentAction.run()` was updated to fix its post-navigation `setEnabled(...)` logic: it previously called `setEnabled(osExplorer.isRoot(file.toPath()))` (enabling the action once the *pre-navigation* file was itself a root — effectively backwards), and now calls `setEnabled(!osExplorerInstance.isRoot(parent.toPath()))` (disabling the action once the *newly selected parent* is a filesystem root, since there is no further parent to navigate to). A redundant `(IStructuredSelection)` cast on `osExplorer.getTreeSelection()` (already declared to return `IStructuredSelection`) was also removed.
@@ -255,10 +265,10 @@ mvn clean test
 Surefire writes reports to:
 - `target/surefire-reports/`
 
-## Current Test Statistics (`feature/v0.2.2`)
-- **Total Tests**: 266
+## Current Test Statistics (`feature/v0.2.3`)
+- **Total Tests**: 272
 - **Test Classes**: 62
-- **All Tests Passing**: ✓ (`mvn -o clean test`: 266/266, 0 skipped; `mvn -o clean test -Pwindows`: 266/266, 5 skipped, 0 failures)
+- **All Tests Passing**: ✓ (`mvn -o clean test`: 272/272, 0 skipped; `mvn -o clean test -Pwindows`: 272/272, 7 skipped, 0 failures)
 
 ### Test Statistics Summary
 ```
@@ -299,7 +309,7 @@ JISOCreatorAttributesTest.java:                 6 tests
 JISOCreatorCommandLineHelpFormatterTest.java:   6 tests
 JISOCreatorCommandLineParserTest.java:         21 tests
 ITreeNodeDirectoriesFirstComparatorTest.java:   2 tests
-OSDirectoriesComparatorTest.java:               5 tests
+OSDirectoriesComparatorTest.java:                7 tests  ← updated
 JISOCreatorDragSourceAdapterTest.java:           3 tests
 JISOCreatorViewerDropAdapterTest.java:           2 tests
 HideHiddenFilesFilterTest.java:                 2 tests
@@ -309,7 +319,7 @@ ITreeNodeTest.java:                            13 tests
 IsoFileSystemTest.java:                         4 tests
 IsoTreeNodeTest.java:                           8 tests
 TreeNodeTest.java:                              3 tests
-OSExplorerTest.java:                           14 tests
+OSExplorerTest.java:                           16 tests  ← updated
 XMLIsoFilesystemParserCompatibilityTest.java:   2 tests
 IsoFilesystemParserTest.java:                   3 tests
 XMLIsoFilesystemContractMapperTest.java:        3 tests
@@ -319,13 +329,13 @@ TableProviderAdapterTest.java:                  2 tests
 IsoTableProviderTest.java:                      3 tests
 IsoTreeContentProviderTest.java:                2 tests
 IsoTreeLabelProviderTest.java:                  2 tests
-OSTreeContentProviderTest.java:                 3 tests
+OSTreeContentProviderTest.java:                 5 tests  ← updated
 OSTreeLabelProviderTest.java:                   1 test
 OsTableProviderTest.java:                       3 tests
 IOUtilsPathTest.java:                           5 tests
 IOUtilsTest.java:                               6 tests
 ----------------------------------------------------------
-Total:                                        266 tests
+Total:                                        272 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -360,5 +370,5 @@ mvn -o clean test -Pwindows
 ```
 
 Results:
-- Default (`linux`) profile: **266 tests passing in 62 classes, 0 skipped** (from `target/surefire-reports`).
-- `windows` profile (mismatched native platform on this Linux host): **266 tests, 5 skipped, 0 failures, no JVM crash** — the 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, gated by `SwtPlatformAssumptions.assumeNativePlatformMatches()`. Group 6's new test (`JFaceResourcesManagerTest`) never touches a native SWT API and therefore runs identically under both profiles.
+- Default (`linux`) profile: **272 tests passing in 62 classes, 0 skipped** (from `target/surefire-reports`).
+- `windows` profile (mismatched native platform on this Linux host): **272 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 new native-`Program`-dependent skips added in `OSExplorerTest` for the `findProgram` caching optimization, all gated by `SwtPlatformAssumptions.assumeNativePlatformMatches()`. `JFaceResourcesManagerTest` never touches a native SWT API and therefore runs identically under both profiles.

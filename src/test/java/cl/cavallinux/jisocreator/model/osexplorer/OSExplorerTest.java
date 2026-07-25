@@ -11,12 +11,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.eclipse.swt.program.Program;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
+import cl.cavallinux.jisocreator.testsupport.SwtPlatformAssumptions;
 
 @DisplayName("OSExplorer Tests")
 class OSExplorerTest {
@@ -180,5 +182,32 @@ class OSExplorerTest {
         File unixOSRoot = osExplorer.getUnixOSRoot();
 
         assertEquals(newRoots[0], unixOSRoot);
+    }
+
+    @Test
+    @DisplayName("Should cache findProgram results per extension, avoiding repeated native lookups")
+    void testFindProgramCachesResultsPerExtension() {
+        SwtPlatformAssumptions.assumeNativePlatformMatches();
+
+        Program first = osExplorer.findProgram(".txt");
+        Program second = osExplorer.findProgram(".txt");
+
+        // A cache hit must return the exact same instance stored from the first
+        // (real) native lookup, rather than triggering Program.findProgram again.
+        assertSame(first, second);
+    }
+
+    @Test
+    @DisplayName("Should return the file type resolved via the cached findProgram lookup")
+    void testGetFileTypeForFileWithExtensionUsesCachedProgram(@TempDir Path tempDir) throws IOException {
+        SwtPlatformAssumptions.assumeNativePlatformMatches();
+
+        Path testPath = tempDir.resolve("document.txt");
+        Files.createFile(testPath);
+
+        String fileType = osExplorer.getFileType(testPath);
+
+        assertNotNull(fileType);
+        assertFalse(fileType.isBlank());
     }
 }

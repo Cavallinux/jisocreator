@@ -11,6 +11,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.program.Program;
@@ -31,6 +34,15 @@ public class OSExplorer {
     private static final char EXTENSION_DOT_CHAR = '.';
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             .withZone(ZoneId.systemDefault());
+
+    /**
+     * Caches the result of {@link Program#findProgram(String)} keyed by file
+     * extension. This native OS-level lookup (file association / MIME query) is
+     * expensive and its result is stable for the lifetime of the application, so
+     * repeated lookups for files sharing the same extension are served from this
+     * cache instead of hitting the OS again for every file.
+     */
+    private static final ConcurrentMap<String, Optional<Program>> PROGRAM_CACHE = new ConcurrentHashMap<>();
 
     private OSExplorer(File[] roots) {
         log.info("OS: {}, FileSystem roots: {}", System.getProperty("os.name"), roots);
@@ -167,7 +179,22 @@ public class OSExplorer {
 
     private String getFileType2(Path path) {
         String extension = getExtension(path.getFileName().toString());
-        return StringUtils.isBlank(extension) ? FILE_TYPE : getFileType(Program.findProgram(extension), extension);
+        return StringUtils.isBlank(extension) ? FILE_TYPE : getFileType(findProgram(extension), extension);
+    }
+
+    /**
+     * Resolves the {@link Program} associated with the specified file extension,
+     * caching the result. This method delegates to {@link Program#findProgram(String)},
+     * a potentially expensive OS-level lookup (e.g. MIME/file-association queries),
+     * but avoids repeating that lookup for extensions already resolved during the
+     * current application session.
+     *
+     * @param extension the file extension to resolve (including the leading dot)
+     * @return the associated {@link Program}, or {@code null} if none is registered
+     */
+    public Program findProgram(String extension) {
+        return PROGRAM_CACHE.computeIfAbsent(extension, ext -> Optional.ofNullable(Program.findProgram(ext)))
+                .orElse(null);
     }
 
     private String getFileType(Program program, String extension) {

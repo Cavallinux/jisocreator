@@ -4,6 +4,8 @@ import java.io.File;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -17,16 +19,49 @@ import lombok.Builder;
  * @version 0.0.2
  * @since 0.0.2
  */
-@Builder
 public class OSDirectoriesComparator extends ViewerComparator {
+
+    /**
+     * Per-sort cache of computed categories, keyed by element identity. {@link
+     * ViewerComparator#sort(Viewer, Object[])} performs an O(n log n) sort whose
+     * comparisons each call {@link #category(Object)} twice, which would otherwise
+     * repeat the underlying {@link Files#isDirectory(Path)} filesystem check for
+     * the same element multiple times. Populating this cache once per {@link
+     * #sort(Viewer, Object[])} invocation reduces the number of filesystem checks
+     * from O(n log n) to O(n) for large directory listings. It is safe without
+     * synchronization because JFace viewer sorting always happens on the single
+     * SWT UI thread.
+     */
+    private Map<Object, Integer> categoryCache;
+
+    @Builder
+    public OSDirectoriesComparator() {
+        super();
+    }
+
+    @Override
+    public void sort(Viewer viewer, Object[] elements) {
+        categoryCache = new IdentityHashMap<>();
+        try {
+            super.sort(viewer, elements);
+        } finally {
+            categoryCache = null;
+        }
+    }
+
     @Override
     public int category(Object element) {
+        return categoryCache != null ? categoryCache.computeIfAbsent(element, this::computeCategory)
+                : computeCategory(element);
+    }
+
+    private int computeCategory(Object element) {
         File file = (File) element;
         Path path = file.toPath();
         BigInteger categoryResponse = Files.isDirectory(path) ? BigInteger.ZERO : BigInteger.ONE;
         return categoryResponse.intValue();
     }
-    
+
     @Override
     public int compare(Viewer viewer, Object e1, Object e2) {
         int categoryDiff = category(e1) - category(e2);

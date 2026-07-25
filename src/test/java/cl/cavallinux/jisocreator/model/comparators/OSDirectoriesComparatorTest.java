@@ -1,11 +1,14 @@
 package cl.cavallinux.jisocreator.model.comparators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,5 +70,51 @@ class OSDirectoriesComparatorTest {
         int result = comparator.compare(null, fileA.toFile(), fileB.toFile());
 
         assertTrue(result < 0, "File 'a' should come before file 'b'");
+    }
+
+    @Test
+    @DisplayName("Should place all directories before files when sorting a mixed listing")
+    void shouldSortMixedListingWithDirectoriesFirst(@TempDir Path tempDir) throws IOException {
+        Path[] elements = new Path[10];
+        for (int i = 0; i < 5; i++) {
+            elements[i] = Files.write(tempDir.resolve("file_" + i + ".txt"), new byte[] { 1 });
+        }
+        for (int i = 5; i < 10; i++) {
+            elements[i] = Files.createDirectory(tempDir.resolve("folder_" + i));
+        }
+
+        Object[] files = java.util.Arrays.stream(elements).map(Path::toFile).toArray();
+        comparator.sort(null, files);
+
+        boolean sawFileAfterDirectorySwitch = false;
+        boolean directorySeen = false;
+        for (Object element : files) {
+            boolean isDirectory = ((File) element).isDirectory();
+            if (!isDirectory) {
+                directorySeen = true;
+            } else if (directorySeen) {
+                sawFileAfterDirectorySwitch = true;
+            }
+        }
+        assertFalse(sawFileAfterDirectorySwitch, "No directory should appear after a file in the sorted result");
+
+        for (int i = 0; i < 5; i++) {
+            assertTrue(((File) files[i]).isDirectory(), "First half of sorted elements should be directories");
+        }
+        for (int i = 5; i < 10; i++) {
+            assertFalse(((File) files[i]).isDirectory(), "Second half of sorted elements should be files");
+        }
+    }
+
+    @Test
+    @DisplayName("Should still compute correct categories outside of a sort() call")
+    void shouldComputeCategoryCorrectlyWithoutSortCall(@TempDir Path tempDir) throws IOException {
+        Path directory = Files.createDirectory(tempDir.resolve("standalone-folder"));
+        Path file = Files.write(tempDir.resolve("standalone-file.txt"), new byte[] { 1 });
+
+        // category()/compare() may be invoked directly (as in the tests above),
+        // outside of a sort() call, in which case no per-sort cache is active.
+        assertEquals(0, comparator.category(directory.toFile()));
+        assertEquals(1, comparator.category(file.toFile()));
     }
 }

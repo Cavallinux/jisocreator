@@ -41,6 +41,10 @@ public class OSExplorer {
     public OSExplorer() {
        this(File.listRoots());
     }
+    
+    public File getUnixOSRoot() {
+        return roots[0];
+    }
 
     /**
      * Launches the default application associated with the specified file path.

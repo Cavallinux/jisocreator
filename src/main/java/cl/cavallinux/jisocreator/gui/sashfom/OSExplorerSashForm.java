@@ -5,13 +5,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.Strings;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -30,6 +33,7 @@ import cl.cavallinux.jisocreator.instances.JFaceResourcesManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.instances.OSExplorerActionsManager;
 import cl.cavallinux.jisocreator.model.dnd.JISOCreatorDragSourceAdapter;
+import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -61,10 +65,11 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         fillTableColumnValues(osDirectoriesTable.getTable());
         addPopMenuToTable(osDirectoriesTable, JFaceResourcesManager.OSEXPLORER_INSTANCE.getDirectoriesMenuListener());
         addJFaceResourcesToControls(JFaceResourcesManager.OSEXPLORER_INSTANCE, osDirectoriesTable, osDirectoriesTree);
-        osDirectoriesTree.setInput(OSAndIsoExplorerManager.INSTANCE.getOsExplorer());
+        OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+        osDirectoriesTree.setInput(osExplorer);
         DragSourceAdapter dragSourceAdapter = JISOCreatorDragSourceAdapter.builder().viewer(osDirectoriesTable).build();
-        osDirectoriesTable.addDragSupport(ICompositeCreator.COMPOSITE_DND_OPTIONS, ICompositeCreator.obtainDragAndDropTransferTypes(),
-                dragSourceAdapter);
+        osDirectoriesTable.addDragSupport(ICompositeCreator.COMPOSITE_DND_OPTIONS,
+                ICompositeCreator.obtainDragAndDropTransferTypes(), dragSourceAdapter);
     }
 
     @Override
@@ -128,6 +133,15 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
         osTableText.pack();
         coolItem.setSize(osTableText.getSize());
         coolItem.setControl(osTableText);
+    }
+    
+    public void setInitialSelection() {
+        OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+        if (!Strings.CI.containsAny(SWT.getPlatform(), "win")) {
+            ISelection osExplorerRootSelection = new StructuredSelection(osExplorer.getUnixOSRoot());
+            osDirectoriesTree.setSelection(osExplorerRootSelection);
+            osDirectoriesTree.expandToLevel(osExplorer.getUnixOSRoot(), 1);
+        }
     }
     
     @Override

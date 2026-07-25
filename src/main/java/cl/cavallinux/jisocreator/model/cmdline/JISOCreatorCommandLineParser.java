@@ -2,7 +2,6 @@ package cl.cavallinux.jisocreator.model.cmdline;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -33,15 +32,12 @@ public class JISOCreatorCommandLineParser implements ICommandLineParser {
     private final HelpFormatter helpFormatter = new JISOCreatorCommandLineHelpFormatter();
 
     public CommandLine parse(String... args) throws ParseException {
-        Options options = buildOptions();
-        return commandLineParser.parse(options, args);
+        return commandLineParser.parse(buildOptions(), args);
     }
 
     @Override
     public void printVersion() {
-        List<String> versionArguments = List.of(attributes.appName(), attributes.appVersion(), attributes.jvmVersion(),
-                attributes.jvmVendor(), attributes.osName());
-        System.out.format(CommandLineMessages.commandLineVersionMessage, versionArguments.toArray());
+        System.out.format(attributes.toString(CommandLineMessages.commandLineVersionMessage));
     }
 
     @Override

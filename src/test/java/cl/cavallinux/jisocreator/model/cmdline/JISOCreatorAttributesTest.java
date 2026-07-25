@@ -69,4 +69,34 @@ class JISOCreatorAttributesTest {
         assertEquals(System.getProperty("java.specification.vendor"), attributes.jvmVendor());
         assertEquals(System.getProperty("os.name"), attributes.osName());
     }
+
+    @Test
+    @DisplayName("Should format default toString as \"appName version appVersion\"")
+    void shouldFormatDefaultToStringAsNameAndVersion() {
+        JISOCreatorAttributes attributes = JISOCreatorAttributes.builder()
+                .appName("JISOCreator")
+                .appVersion("0.2.2-SNAPSHOT")
+                .jvmVersion("21")
+                .jvmVendor("Eclipse Adoptium")
+                .osName("Linux")
+                .build();
+
+        assertEquals("JISOCreator version 0.2.2-SNAPSHOT", attributes.toString());
+    }
+
+    @Test
+    @DisplayName("Should format toString(baseString) substituting appName/appVersion/jvmVersion/jvmVendor/osName in order")
+    void shouldFormatCustomToStringWithBaseString() {
+        JISOCreatorAttributes attributes = JISOCreatorAttributes.builder()
+                .appName("JISOCreator")
+                .appVersion("0.2.2-SNAPSHOT")
+                .jvmVersion("21")
+                .jvmVendor("Eclipse Adoptium")
+                .osName("Linux")
+                .build();
+
+        String formatted = attributes.toString("%s|%s|%s|%s|%s");
+
+        assertEquals("JISOCreator|0.2.2-SNAPSHOT|21|Eclipse Adoptium|Linux", formatted);
+    }
 }

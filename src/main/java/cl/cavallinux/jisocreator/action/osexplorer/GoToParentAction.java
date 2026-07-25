@@ -11,6 +11,7 @@ import cl.cavallinux.jisocreator.gui.sashfom.OSExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
+import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,11 +28,12 @@ public class GoToParentAction extends JISOCreatorBaseAction {
         log.info("Running go to parent action");
         MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
         OSExplorerSashForm osExplorer = mainWindow.getOsExplorer();
-        IStructuredSelection selection = (IStructuredSelection) osExplorer.getTreeSelection();
+        IStructuredSelection selection = osExplorer.getTreeSelection();
         File file = (File) selection.getFirstElement();
         File parent = file.getParentFile();
         selection = new StructuredSelection(parent);
         osExplorer.setTreeSelection(selection);
-        setEnabled(OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(file.toPath()));
+        OSExplorer osExplorerInstance = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+        setEnabled(!osExplorerInstance.isRoot(parent.toPath()));
     }
 }

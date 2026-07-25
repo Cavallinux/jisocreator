@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cl.cavallinux</groupId>
 	<artifactId>jisocreator</artifactId>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<name>JisoCreator</name>
 	<description>MKISOFS Frontend</description>
 
@@ -238,6 +238,7 @@
 		<jsvg.version>2.1.0</jsvg.version>
 		<lombok.version>1.18.46</lombok.version>
 		<xmlunit.version>2.11.0</xmlunit.version>
+		<objenesis.version>3.3</objenesis.version>
 		<org.eclipse.ui.workbench.version>3.138.0</org.eclipse.ui.workbench.version>
 		<org.eclipse.osgi.version>3.24.100</org.eclipse.osgi.version>
 		<org.eclipse.equinox.common>3.20.300</org.eclipse.equinox.common>
@@ -476,6 +477,12 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.objenesis</groupId>
+			<artifactId>objenesis</artifactId>
+			<version>${objenesis.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

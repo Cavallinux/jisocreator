@@ -238,6 +238,15 @@ mvn -B compile package --file pom.xml
 mvn clean compile test
 ```
 
+### Automated Releases
+
+The project uses a dedicated release workflow, configured in `.github/workflows/release.yml`:
+
+- **Trigger**: every push to `master` that modifies `pom.xml` (plus a manual `workflow_dispatch` for re-runs).
+- **Version gate**: reads `<version>` from `pom.xml` via `mvn help:evaluate`. The workflow is a no-op if the version is a `-SNAPSHOT`, or if a `v<version>` tag already exists (idempotent against duplicate/re-triggered runs).
+- **Cross-platform packaging**: builds and packages the distributable zip for all three platform profiles — default (`linux`), `-Pwindows` and `-Papplesilicon` — all on `ubuntu-latest` runners, since producing each zip only requires downloading that platform's SWT dependency jar, not a native OS/toolchain.
+- **Tag + GitHub Release**: creates the `v<version>` tag against the exact commit pushed to `master`, then publishes a GitHub Release with the three platform zips attached and release notes generated from the matching `## [<version>]` section of [CHANGELOG.md](CHANGELOG.md).
+
 ## Running the Application
 
 ### From Maven

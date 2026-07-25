@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Automated release workflow** (`.github/workflows/release.yml`): on every push to `master` that touches `pom.xml`, reads the project version and — provided it is not a `-SNAPSHOT` and no `v<version>` tag exists yet — builds and packages the distributable zip for all three platform profiles (default `linux`, `-Pwindows`, `-Papplesilicon`, all built on `ubuntu-latest` since packaging only requires the platform-specific SWT dependency jar, not a native toolchain), creates the `v<version>` tag against the released commit, and publishes a GitHub Release with the three zips attached and release notes sourced from the matching `CHANGELOG.md` section. Also exposes a `workflow_dispatch` trigger for manual re-runs.
+
 ## [0.2.2] - 2026-07-25
 
 ### Added

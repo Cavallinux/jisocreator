@@ -1,0 +1,161 @@
+# Automated release workflow.
+#
+# Trigger: every push to `master` that touches `pom.xml`.
+# Behaviour:
+#   1. Reads <version> from pom.xml.
+#   2. Skips entirely if the version is a -SNAPSHOT, or if a `v<version>` tag
+#      already exists (idempotent — re-running/duplicate pushes are no-ops).
+#   3. Builds and packages the distributable zip for each supported platform
+#      profile: default (linux), windows and applesilicon. All three are
+#      built on ubuntu-latest since the SWT platform fragments are plain
+#      Maven dependencies — no native/cross OS toolchain is required to
+#      *package* them, only to *run* them.
+#   4. Creates the `v<version>` tag against the exact commit that was pushed
+#      to master, then publishes a GitHub Release for that tag with the three
+#      platform zips attached, using the matching section of CHANGELOG.md as
+#      the release notes body.
+name: Release
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'pom.xml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      should_release: ${{ steps.decide.outputs.should_release }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Read project version from pom.xml
+        id: version
+        run: |
+          VERSION=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          echo "Project version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Decide whether a release is due
+        id: decide
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            echo "Version $VERSION is a SNAPSHOT; nothing to release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists; skipping duplicate release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Version $VERSION is releasable."
+          echo "should_release=true" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: check-version
+    if: needs.check-version.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux
+            profile-flag: ''
+            platform: gtk.linux.x86_64
+          - name: windows
+            profile-flag: '-Pwindows'
+            platform: win32.win32.x86_64
+          - name: applesilicon
+            profile-flag: '-Papplesilicon'
+            platform: cocoa.macosx.aarch64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and package (${{ matrix.name }})
+        run: mvn -B clean package ${{ matrix.profile-flag }} --file pom.xml
+
+      - name: Upload distribution artifact (${{ matrix.name }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: jisocreator-${{ matrix.platform }}
+          path: target/jisocreator-*-${{ matrix.platform }}.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    needs: [ check-version, build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Download all distribution artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Extract CHANGELOG section for this version
+        env:
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: |
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { flag=1; next }
+            flag && /^## \[/ { flag=0 }
+            flag { print }
+          ' CHANGELOG.md > release-notes.md
+
+          if [ ! -s release-notes.md ]; then
+            echo "_No matching CHANGELOG.md section found for version $VERSION._" > release-notes.md
+          fi
+
+      - name: Create and push tag v${{ needs.check-version.outputs.version }}
+        env:
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v$VERSION" "${{ github.sha }}"
+          git push origin "v$VERSION"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.check-version.outputs.version }}
+          name: JisoCreator v${{ needs.check-version.outputs.version }}
+          body_path: release-notes.md
+          files: dist/**/*.zip

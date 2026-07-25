@@ -185,7 +185,7 @@ src/test/java/cl/cavallinux/jisocreator/
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 262 tests total across 62 test classes, all passing (`mvn -o clean test`: 262/262, 0 skipped; `mvn -o clean test -Pwindows`: 262/262, 5 skipped, 0 failures — see "Platform-mismatch note" below).
+**Current Test Statistics**: 266 tests total across 62 test classes, all passing (`mvn -o clean test`: 266/266, 0 skipped; `mvn -o clean test -Pwindows`: 266/266, 5 skipped, 0 failures — see "Platform-mismatch note" below).
 
 Current coverage includes:
 - Critical workflow tests (`MainAction`, `SaveAsIsoAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
@@ -458,7 +458,7 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ### Testing Architecture
 
-The test suite (174 tests / 40 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+The test suite (266 tests / 62 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
@@ -468,8 +468,8 @@ The test suite (174 tests / 40 classes, see [TESTING.md](TESTING.md)) favors SWT
 
 ## Version
 
-- Latest stable release: **0.2.1** (released 2026-07-19)
-- Development branch baseline: **0.2.2-SNAPSHOT** (`feature/v0.2.2`, initialized 2026-07-19)
+- Latest stable release: **0.2.2** (released 2026-07-25)
+- Previous release: **0.2.1** (released 2026-07-19)
 
 For a complete history of changes across all releases, see [CHANGELOG.md](CHANGELOG.md).
 

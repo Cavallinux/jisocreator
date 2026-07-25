@@ -48,7 +48,7 @@ public class MainAction extends JISOCreatorBaseAction {
 
     @Override
     public void run() {
-        log.info("Executing app in GUI mode");
+        log.info("{} in GUI mode", ICommandLineParser.buildAttributes());
         MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
         mainWindow.setBlockOnOpen(true);
         int exitCode = StringUtils.isNotBlank(layoutFilePath) ? mainWindow.open(layoutFilePath) : mainWindow.open();

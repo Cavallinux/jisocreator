@@ -8,10 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFilePermissions;
 
 import org.eclipse.swt.program.Program;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -316,11 +320,62 @@ class OSExplorerTest {
         assertTrue(osExplorer.isDirectory(symlinkToDirectory));
     }
 
+    @Test
+    @DisplayName("Should treat a root as accessible when its attributes can be read successfully")
+    void testIsAccessibleRootReturnsTrueForReadableDirectory(@TempDir Path tempDir) {
+        assertTrue(osExplorer.isAccessibleRoot(tempDir));
+    }
+
+    @Test
+    @DisplayName("Should treat a root as unavailable when it does not exist (e.g. removable drive not ready)")
+    void testIsAccessibleRootReturnsFalseForNonExistentPath(@TempDir Path tempDir) {
+        Path missingPath = tempDir.resolve("does-not-exist");
+
+        assertFalse(osExplorer.isAccessibleRoot(missingPath));
+    }
+
+    @Test
+    @DisplayName("Should still treat a root as accessible when reading its attributes throws AccessDeniedException")
+    void testIsAccessibleRootReturnsTrueWhenAccessIsDenied(@TempDir Path tempDir) throws IOException {
+        Path restrictedParent = Files.createDirectory(tempDir.resolve("restricted-parent"));
+        Path blockedRoot = Files.createDirectory(restrictedParent.resolve("blocked-root"));
+
+        try {
+            // Removing execute/search permission on the parent directory prevents any
+            // attribute lookup on blockedRoot from succeeding, reproducing the same
+            // AccessDeniedException a Windows fixed disk blocked by Controlled Folder
+            // Access (or a locked BitLocker volume/restrictive ACLs) would raise.
+            Files.setPosixFilePermissions(restrictedParent, PosixFilePermissions.fromString("rw-rw-rw-"));
+
+            boolean accessDeniedReproduced;
+            try {
+                Files.readAttributes(blockedRoot, BasicFileAttributes.class);
+                accessDeniedReproduced = false;
+            } catch (AccessDeniedException e) {
+                accessDeniedReproduced = true;
+            } catch (IOException e) {
+                accessDeniedReproduced = false;
+            }
+            Assumptions.assumeTrue(accessDeniedReproduced,
+                    "Could not reproduce an AccessDeniedException in this environment (e.g. running as root, "
+                            + "where POSIX permission checks are bypassed)");
+
+            // Regression test: isAccessibleRoot must still return true for a root whose
+            // attributes cannot be read due to an access restriction, since the root
+            // itself is a perfectly valid directory that should remain visible to the
+            // user rather than being silently hidden, unlike Files.isDirectory(Path)
+            // which cannot distinguish this case from a genuinely unavailable path.
+            assertTrue(osExplorer.isAccessibleRoot(blockedRoot));
+        } finally {
+            Files.setPosixFilePermissions(restrictedParent, PosixFilePermissions.fromString("rwxrwxrwx"));
+        }
+    }
+
     private static void createSymbolicLinkOrAssumeUnsupported(Path link, Path target) throws IOException {
         try {
             Files.createSymbolicLink(link, target);
         } catch (UnsupportedOperationException | IOException e) {
-            org.junit.jupiter.api.Assumptions.assumeTrue(false,
+            Assumptions.assumeTrue(false,
                     "Symbolic links are not supported in this environment: " + e.getMessage());
         }
     }}

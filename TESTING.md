@@ -3,9 +3,15 @@
 ## Overview
 This project uses JUnit 5 and Mockito for unit tests. Tests are located under `src/test/java` and run with Maven Surefire.
 
-## Current branch status (`feature/v0.2.3`)
+## Current branch status (`feature/v0.2.3-windowsrootfiles`, branched from `feature/v0.2.3`)
 - Branch in progress: `pom.xml` version is **`0.2.3-SNAPSHOT`**.
-- Current suite: **282 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+- Current suite: **286 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+
+## Tests Updated in this pass (bugfix: Windows fixed-disk root drives missing from the OS explorer tree)
+Root-cause analysis (documented in `README.md`'s "Known Issues" section) found that `ShowOnlyDirectoriesFilter` (the `TreeViewer` filter for the OS explorer) called `OSExplorer#isDirectory(Path)` for every element, including filesystem roots from `File.listRoots()`, with no root-aware special case — unlike its sibling `ShowOnlyIsoDirectoriesFilter`, which already short-circuits root nodes (`node.isRoot() ? true : isDirectory(node)`). Since `Files.isDirectory(Path)` (NIO.2) returns `false` both when a path genuinely isn't a directory and when any I/O error occurs reading its attributes, a fixed disk blocked by an OS-level restriction (Windows Defender's "Controlled folder access", a locked BitLocker volume, restrictive NTFS ACLs) was silently filtered out of the tree, while removable media mounted afterward — typically not subject to the same restriction — showed up correctly.
+- **`OSExplorer#isAccessibleRoot(Path)`** (new): reads a root path's attributes directly via `Files.readAttributes(Path, BasicFileAttributes.class)` instead of the exception-swallowing `Files.isDirectory(Path)`, and reacts differently depending on *why* the read failed: a successful read returns `BasicFileAttributes#isDirectory()` as before; an `AccessDeniedException` is treated as "still a directory, just access-restricted" and returns `true` (logging a warning to help diagnose AV/Defender blocking); any other `IOException` (e.g. a removable/optical drive with no media, reported as not ready) returns `false`, preserving the existing behavior of hiding roots that truly aren't browsable.
+- **`ShowOnlyDirectoriesFilter#select(Viewer, Object, Object)`**: now applies the same root short-circuit pattern already used by `ShowOnlyIsoDirectoriesFilter` — `osExplorer.isRoot(path) ? osExplorer.isAccessibleRoot(path) : osExplorer.isDirectory(path)` — so a root blocked by an access restriction is still shown, while regular (non-root) entries keep using the existing `isDirectory(Path)` check unchanged.
+- **Test updates for the above**: `OSExplorerTest` grew by 3 tests (`testIsAccessibleRootReturnsTrueForReadableDirectory`, `testIsAccessibleRootReturnsFalseForNonExistentPath`, `testIsAccessibleRootReturnsTrueWhenAccessIsDenied` — the last reproduces a real `AccessDeniedException` on Linux by revoking execute/search permission on a temp directory's parent via `Files.setPosixFilePermissions`, gracefully skipping via `Assumptions.assumeTrue` if the environment can't reproduce it, e.g. running as root); `ShowOnlyDirectoriesFilterTest` grew by 1 test (`shouldSelectRootWhenAccessIsDenied`, the end-to-end regression test proving the filter itself no longer hides an access-denied root, using the same permission-revocation technique plus a temporary `OSExplorer#setRoots(File[])` swap restored in a `finally` block). Suite grew to **286 tests / 63 classes**, verified passing under both `mvn -o clean test` (286/286, 0 skipped) and `mvn -o clean test -Pwindows` (286/286, 7 skipped, 0 failures — skip count unchanged, the new tests are not native-SWT-dependent).
 
 ## Tests Updated in this pass (source change: LRU multi-directory attributes cache)
 Previously, `OSExplorer#warmAttributesCache(Path)` cleared the entire `attributesCache` before repopulating it for the newly loaded directory, so only the single most recently loaded directory ever benefited from cached attributes. Navigating back to a parent directory or between sibling folders always re-triggered a full filesystem scan, even if that directory had just been visited moments earlier.
@@ -306,10 +312,10 @@ mvn clean test
 Surefire writes reports to:
 - `target/surefire-reports/`
 
-## Current Test Statistics (`feature/v0.2.3`)
-- **Total Tests**: 282
+## Current Test Statistics (`feature/v0.2.3-windowsrootfiles`)
+- **Total Tests**: 286
 - **Test Classes**: 63
-- **All Tests Passing**: ✓ (`mvn -o clean test`: 282/282, 0 skipped; `mvn -o clean test -Pwindows`: 282/282, 7 skipped, 0 failures)
+- **All Tests Passing**: ✓ (`mvn -o clean test`: 286/286, 0 skipped; `mvn -o clean test -Pwindows`: 286/286, 7 skipped, 0 failures)
 
 ### Test Statistics Summary
 ```
@@ -355,13 +361,13 @@ OSDirectoriesComparatorTest.java:                7 tests  ← updated
 JISOCreatorDragSourceAdapterTest.java:           3 tests
 JISOCreatorViewerDropAdapterTest.java:           2 tests
 HideHiddenFilesFilterTest.java:                 2 tests
-ShowOnlyDirectoriesFilterTest.java:              4 tests
+ShowOnlyDirectoriesFilterTest.java:              5 tests  ← updated
 ShowOnlyIsoDirectoriesFilterTest.java:           2 tests
 ITreeNodeTest.java:                            13 tests
 IsoFileSystemTest.java:                         4 tests
 IsoTreeNodeTest.java:                           8 tests
 TreeNodeTest.java:                              3 tests
-OSExplorerTest.java:                           22 tests  ← updated
+OSExplorerTest.java:                           25 tests  ← updated
 XMLIsoFilesystemParserCompatibilityTest.java:   2 tests
 IsoFilesystemParserTest.java:                   3 tests
 XMLIsoFilesystemContractMapperTest.java:        3 tests
@@ -377,7 +383,7 @@ OsTableProviderTest.java:                       3 tests
 IOUtilsPathTest.java:                           5 tests
 IOUtilsTest.java:                               6 tests
 ----------------------------------------------------------
-Total:                                        282 tests
+Total:                                        286 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -414,5 +420,5 @@ mvn -o clean test -Pwindows
 ```
 
 Results:
-- Default (`linux`) profile: **282 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
-- `windows` profile (mismatched native platform on this Linux host): **282 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged — none of the new symlink or LRU-cache regression tests are native-SWT-dependent, so they are never skipped).
+- Default (`linux`) profile: **286 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
+- `windows` profile (mismatched native platform on this Linux host): **286 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged — none of the new symlink, LRU-cache, or Windows root-visibility regression tests are native-SWT-dependent, so they are never skipped).

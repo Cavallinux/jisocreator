@@ -185,7 +185,7 @@ src/test/java/cl/cavallinux/jisocreator/
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 282 tests total across 63 test classes, all passing (`mvn -o clean test`: 282/282, 0 skipped; `mvn -o clean test -Pwindows`: 282/282, 7 skipped, 0 failures — see "Platform-mismatch note" below).
+**Current Test Statistics**: 286 tests total across 63 test classes, all passing (`mvn -o clean test`: 286/286, 0 skipped; `mvn -o clean test -Pwindows`: 286/286, 7 skipped, 0 failures — see "Platform-mismatch note" below).
 
 Current coverage includes:
 - Critical workflow tests (`MainAction`, `SaveAsIsoAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
@@ -467,7 +467,7 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ### Testing Architecture
 
-The test suite (282 tests / 63 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+The test suite (286 tests / 63 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.
@@ -477,7 +477,7 @@ The test suite (282 tests / 63 classes, see [TESTING.md](TESTING.md)) favors SWT
 
 ## Known Issues
 
-### Windows: fixed-disk root drives missing from the OS explorer tree, while removable/USB drives show correctly (`feature/v0.2.3`)
+### Windows: fixed-disk root drives missing from the OS explorer tree, while removable/USB drives show correctly (fix implemented on `feature/v0.2.3-windowsrootfiles`, pending exhaustive testing before merging into `feature/v0.2.3`)
 
 **Symptom**: on Windows 10/11, launching JISOCreator sometimes shows an OS explorer tree with fixed/internal disk roots (e.g. `C:\`, `D:\`) missing entirely, while plugging in an external HDD or USB pendrive makes that drive's root appear correctly.
 
@@ -485,10 +485,10 @@ The test suite (282 tests / 63 classes, see [TESTING.md](TESTING.md)) favors SWT
 
 This is an architectural inconsistency: the sibling ISO-explorer filter, `ShowOnlyIsoDirectoriesFilter`, already guards against exactly this by short-circuiting root nodes (`node.isRoot() ? true : isDirectory(node)`), while `ShowOnlyDirectoriesFilter` (OS explorer) never received the same treatment.
 
-**Correction plan** (being implemented and tested on `feature/v0.2.3-windowsrootfiles` before merging into `feature/v0.2.3`):
-1. Add root-aware attribute resolution to `OSExplorer` that distinguishes an `AccessDeniedException` (path exists and is very likely a directory, just access-restricted — should still be shown, with a logged warning to help diagnose AV/Defender blocking) from other I/O errors such as a not-ready/no-media removable drive (should remain hidden, preserving today's behavior for empty optical drives).
-2. Update `ShowOnlyDirectoriesFilter#select()` to apply the same root short-circuit pattern already used by `ShowOnlyIsoDirectoriesFilter`, using the new root-aware check instead of a plain `isDirectory(path)` for root elements.
-3. Add regression tests covering both the access-denied-but-still-a-directory case and the genuinely-not-ready case, reproducible cross-platform (e.g. via `Files.setPosixFilePermissions` on Linux, gracefully skipped via `Assumptions.assumeTrue` where unsupported, following the same convention already used for the symlink regression tests).
+**Correction plan** — **implemented** on `feature/v0.2.3-windowsrootfiles`, pending exhaustive manual testing on real Windows 10/11 hardware before merging back into `feature/v0.2.3`:
+1. ✅ Added `OSExplorer#isAccessibleRoot(Path)`, a root-aware attribute check that reads a root's `BasicFileAttributes` directly and distinguishes an `AccessDeniedException` (path exists and is very likely a directory, just access-restricted — treated as a directory, shown anyway, with a logged warning to help diagnose AV/Defender blocking) from any other `IOException` such as a not-ready/no-media removable drive (treated as unavailable, remains hidden, preserving today's behavior for empty optical drives).
+2. ✅ Updated `ShowOnlyDirectoriesFilter#select()` to apply the same root short-circuit pattern already used by `ShowOnlyIsoDirectoriesFilter` — `isRoot(path) ? isAccessibleRoot(path) : isDirectory(path)` — so only root elements get the new access-aware treatment; non-root entries are unaffected.
+3. ✅ Added regression tests covering both the access-denied-but-still-a-directory case and the genuinely-not-ready case: 3 new tests in `OSExplorerTest` for `isAccessibleRoot` itself, plus 1 end-to-end test in `ShowOnlyDirectoriesFilterTest` (`shouldSelectRootWhenAccessIsDenied`). Reproduced cross-platform on Linux via `Files.setPosixFilePermissions` (revoking execute/search permission on a temp directory's parent to trigger a real `AccessDeniedException`), gracefully skipped via `Assumptions.assumeTrue` where unsupported (e.g. running as root) — same convention already used for the symlink regression tests. Suite grew from 282 to **286 tests**, verified passing under both `mvn -o clean test` (286/286, 0 skipped) and `mvn -o clean test -Pwindows` (286/286, 7 skipped, 0 failures).
 4. Document the residual OS-level consideration: even after this fix makes the root node visible, deeper content listing inside that drive may still fail if Windows' Controlled Folder Access remains active; users experiencing persistent access issues should allow JISOCreator through Windows Security → Virus & threat protection → Ransomware protection → Controlled folder access.
 
 ## Version

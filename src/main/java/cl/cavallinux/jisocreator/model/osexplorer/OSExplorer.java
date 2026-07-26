@@ -2,6 +2,7 @@ package cl.cavallinux.jisocreator.model.osexplorer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -278,7 +279,7 @@ public class OSExplorer {
     }
 
     /**
-     * Checks if the specified path is a root directory. This method utilizes the
+     * Checks whether the specified path is a root directory. This method utilizes the
      * modern `Path` API, which is more efficient and compatible with modern Java
      * versions compared to the legacy `File` API.
      * 
@@ -288,6 +289,50 @@ public class OSExplorer {
     public boolean isRoot(Path path) {
         File file = path.toFile();
         return Arrays.asList(getRoots()).stream().anyMatch(root -> root.compareTo(file) == 0);
+    }
+
+    /**
+     * Determines whether a filesystem root (as returned by {@link #getRoots()})
+     * should be treated as a browsable directory, distinguishing a genuine
+     * access restriction from a root that truly isn't ready/available.
+     * <p>
+     * Unlike {@link Files#isDirectory(Path, java.nio.file.LinkOption...)}, which
+     * returns {@code false} both when a path genuinely isn't a directory <i>and</i>
+     * when any I/O error occurs while reading its attributes, this method reads
+     * the root's attributes directly and reacts differently depending on
+     * <em>why</em> the read failed:
+     * </p>
+     * <ul>
+     * <li>Attributes read successfully: returns {@link BasicFileAttributes#isDirectory()}
+     * (the normal case for a mounted, accessible drive).</li>
+     * <li>{@link AccessDeniedException}: the root still exists and is almost
+     * certainly a real directory, just currently access-restricted (e.g. Windows
+     * Defender's "Controlled folder access" blocking an unrecognized application
+     * from a fixed/internal drive, a locked BitLocker volume, or restrictive NTFS
+     * ACLs on a system-reserved partition). Returns {@code true} so the root is
+     * still shown to the user, and logs a warning to help diagnose the
+     * restriction.</li>
+     * <li>Any other {@link IOException} (e.g. a removable/optical drive with no
+     * media inserted, reported as "not ready"): returns {@code false}, preserving
+     * the existing behavior of hiding roots that truly aren't browsable.</li>
+     * </ul>
+     *
+     * @param rootPath the root path to check (typically an element of {@link #getRoots()})
+     * @return true if the root should be treated as a browsable directory, false otherwise
+     */
+    public boolean isAccessibleRoot(Path rootPath) {
+        try {
+            return Files.readAttributes(rootPath, BasicFileAttributes.class).isDirectory();
+        } catch (AccessDeniedException e) {
+            log.warn("Access denied while reading attributes for root path: {}. Treating it as an accessible "
+                    + "directory anyway (e.g. Windows Defender's Controlled folder access, a locked BitLocker "
+                    + "volume, or restrictive NTFS ACLs may be blocking this application).", rootPath, e);
+            return true;
+        } catch (IOException e) {
+            log.warn("Error reading attributes for root path: {}. Treating it as unavailable/not ready.", rootPath,
+                    e);
+            return false;
+        }
     }
 
     /**

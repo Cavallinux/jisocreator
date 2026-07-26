@@ -5,7 +5,15 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 
 ## Current branch status (`feature/v0.2.3`)
 - Branch in progress: `pom.xml` version is **`0.2.3-SNAPSHOT`**.
-- Current suite: **278 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+- Current suite: **279 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+
+## Tests Updated in this pass (source change: busy-cursor feedback for background directory loading)
+Building on the background-loading mechanism above, `LoadOSDirectoryContentsThread` now switches the `Shell` owning the OS directories table to the platform's `SWT.CURSOR_WAIT` busy cursor (a shared, non-disposable system cursor obtained via `Display#getSystemCursor(int)`) as soon as it is constructed — i.e. synchronously, on the UI thread, right before `.start()` — and restores the default cursor once the winning (still-latest) request finishes applying its result to the table. This gives the user immediate visual feedback that a directory is loading, instead of a silently unresponsive UI while the background scan runs.
+- **`LoadOSDirectoryContentsThread#showBusyCursor()`** (new private method, called from the constructor): sets the busy cursor via the `Control`/`Shell` obtained from the `TableViewer`; a safe no-op when `tableViewer` is `null` or its control is already disposed (e.g. when the thread is only used to exercise `isStillLatestRequest()` in tests).
+- **`LoadOSDirectoryContentsThread#restoreDefaultCursor()`** (new private method, called from `applyToTableViewer()` right after `setInput(...)`): resets the cursor back to `null` (the `Shell`'s default), guarded by the same `isStillLatestRequest()` check as `setInput(...)` itself — a superseded request never touches the cursor, leaving that responsibility to whichever request is actually the latest one, so the cursor always ends up correctly cleared exactly once.
+- **`run()`** was also hardened with a `try`/`catch (RuntimeException)` around the `warmAttributesCache(...)` call, so that even if pre-fetching fails, execution still falls through to the `isStillLatestRequest()`/`asyncExec(...)` path that restores the cursor — preventing the UI from getting stuck showing a wait cursor indefinitely if the background scan throws.
+- `LoadOSDirectoryContentsThreadTest.java` grew from 3 to **4 tests**, adding `busyCursorMethodsShouldBeNoOpsWithoutTableViewer` (invokes both private methods via reflection with a `null` `tableViewer` and asserts neither throws). The actual cursor-changing behavior itself requires a live `Shell`/`Display` to verify and is therefore **not unit-tested**, consistent with the established convention for all `Display`-bound GUI behavior in this project (see Group 7/8 exclusions).
+- Validated per this session's standing rule: `mvn -o clean test` (default `linux` profile) → **279/279, 0 skipped**; `mvn -o clean test -Pwindows` (mismatched profile on this Linux host) → **279/279, 7 skipped, 0 failures, no JVM crash** (skip count unchanged — no new native/`Display`-dependent test cases were added).
 
 ## Tests Updated in this pass (source changes: OS file-system explorer background-loading optimization)
 Building on the previous quick-win optimizations, directory loading in the local OS file-system explorer was further optimized by moving the expensive filesystem scan off the SWT UI thread. No architecture changes were made to the `IStructuredContentProvider`/`ITreeContentProvider`/`TableProviderAdapter` contracts (the higher-risk `ILazyContentProvider` migration alternative, which would have required reimplementing filtering/sorting manually and risked affecting the shared `IsoTableProvider`, was evaluated and rejected in favor of this lower-risk approach); only internal implementation details were optimized.
@@ -278,9 +286,9 @@ Surefire writes reports to:
 - `target/surefire-reports/`
 
 ## Current Test Statistics (`feature/v0.2.3`)
-- **Total Tests**: 278
+- **Total Tests**: 279
 - **Test Classes**: 63
-- **All Tests Passing**: ✓ (`mvn -o clean test`: 278/278, 0 skipped; `mvn -o clean test -Pwindows`: 278/278, 7 skipped, 0 failures)
+- **All Tests Passing**: ✓ (`mvn -o clean test`: 279/279, 0 skipped; `mvn -o clean test -Pwindows`: 279/279, 7 skipped, 0 failures)
 
 ### Test Statistics Summary
 ```
@@ -305,7 +313,7 @@ ShowIsoInformationActionTest.java:               4 tests
 JISOCreatorBaseActionTest.java:                 4 tests
 SaveISO9660ImageThreadTest.java:                4 tests
 ToggleHiddenFilesOSExplorerThreadTest.java:      2 tests
-LoadOSDirectoryContentsThreadTest.java:          3 tests  ← new
+LoadOSDirectoryContentsThreadTest.java:          4 tests  ← new
 AddToISODialogMessagesTest.java:                3 tests
 CommandLineMessagesTest.java:                   5 tests
 MessagesBundleTest.java:                        2 tests
@@ -348,7 +356,7 @@ OsTableProviderTest.java:                       3 tests
 IOUtilsPathTest.java:                           5 tests
 IOUtilsTest.java:                               6 tests
 ----------------------------------------------------------
-Total:                                        278 tests
+Total:                                        279 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -383,5 +391,5 @@ mvn -o clean test -Pwindows
 ```
 
 Results:
-- Default (`linux`) profile: **278 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
-- `windows` profile (mismatched native platform on this Linux host): **278 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged from the previous pass — the new background-loading tests added in this round require no native SWT calls). `JFaceResourcesManagerTest` never touches a native SWT API and therefore runs identically under both profiles.
+- Default (`linux`) profile: **279 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
+- `windows` profile (mismatched native platform on this Linux host): **279 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged — neither the background-loading tests nor the new busy-cursor no-op test require native SWT calls).

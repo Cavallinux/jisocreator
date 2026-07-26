@@ -4,7 +4,10 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
@@ -36,6 +39,16 @@ import lombok.extern.slf4j.Slf4j;
  * background load finishes, the stale result is discarded: only the most
  * recently requested directory is applied to the table.
  * </p>
+ * <p>
+ * While the background scan is in progress, the {@code Shell} owning the
+ * table displays the platform's {@link SWT#CURSOR_WAIT} busy cursor (a shared
+ * system cursor, requiring no disposal by client code), so the user gets
+ * immediate visual feedback that the directory is loading instead of a
+ * silently unresponsive UI. The cursor is restored to its default as soon as
+ * the winning (still-latest) request finishes applying its result — if a
+ * request is superseded, it simply skips restoring the cursor, leaving that
+ * responsibility to whichever request is the latest one.
+ * </p>
  * 
  * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
  * @version 0.2.3
@@ -55,13 +68,21 @@ public class LoadOSDirectoryContentsThread extends Thread {
         this.directory = directory;
         this.tableViewer = tableViewer;
         LATEST_REQUESTED_DIRECTORY.set(directory);
+        showBusyCursor();
     }
 
     @Override
     public void run() {
         log.info("Pre-fetching file metadata in background for directory: {}", directory);
-        OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
-        osExplorer.warmAttributesCache(directory.toPath());
+        try {
+            OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+            osExplorer.warmAttributesCache(directory.toPath());
+        } catch (RuntimeException e) {
+            // Still fall through to restore the busy cursor (via applyToTableViewer
+            // below) even if pre-fetching failed, so the UI never gets stuck showing
+            // a wait cursor indefinitely.
+            log.warn("Error pre-fetching file metadata for directory: {}", directory, e);
+        }
         if (!isStillLatestRequest()) {
             log.debug("Discarding stale directory-load result for {}: a newer selection superseded it", directory);
             return;
@@ -75,7 +96,45 @@ public class LoadOSDirectoryContentsThread extends Thread {
     private void applyToTableViewer() {
         if (!tableViewer.getControl().isDisposed() && isStillLatestRequest()) {
             tableViewer.setInput(directory);
+            restoreDefaultCursor();
         }
+    }
+
+    /**
+     * Switches the cursor of the {@code Shell} owning {@link #tableViewer} to the
+     * platform's busy/wait cursor, providing immediate feedback that a directory
+     * is loading. A no-op when {@link #tableViewer} is {@code null} or already
+     * disposed (e.g. when this thread is only used to exercise its pure
+     * {@link #isStillLatestRequest()} logic in tests, without a real control).
+     */
+    private void showBusyCursor() {
+        Control control = obtainControlIfUsable();
+        if (control == null) {
+            return;
+        }
+        Shell shell = control.getShell();
+        shell.setCursor(shell.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
+    }
+
+    /**
+     * Restores the default cursor on the {@code Shell} owning {@link #tableViewer},
+     * undoing {@link #showBusyCursor()} once the directory contents have been
+     * applied to the table.
+     */
+    private void restoreDefaultCursor() {
+        Control control = obtainControlIfUsable();
+        if (control == null) {
+            return;
+        }
+        control.getShell().setCursor(null);
+    }
+
+    private Control obtainControlIfUsable() {
+        if (tableViewer == null) {
+            return null;
+        }
+        Control control = tableViewer.getControl();
+        return (control == null || control.isDisposed()) ? null : control;
     }
 
     /**

@@ -475,6 +475,22 @@ The test suite (282 tests / 63 classes, see [TESTING.md](TESTING.md)) favors SWT
 - **Layered coverage**: parser/contract mappers → tree/table/label providers and adapters → comparators/filters → CLI managers/enums/i18n → critical workflows (`MainAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`).
 - **XMLUnit-based compatibility checks**: legacy XML layout fixtures are diffed against round-tripped output to guarantee backward compatibility of the XML parser.
 
+## Known Issues
+
+### Windows: fixed-disk root drives missing from the OS explorer tree, while removable/USB drives show correctly (`feature/v0.2.3`)
+
+**Symptom**: on Windows 10/11, launching JISOCreator sometimes shows an OS explorer tree with fixed/internal disk roots (e.g. `C:\`, `D:\`) missing entirely, while plugging in an external HDD or USB pendrive makes that drive's root appear correctly.
+
+**Root cause analysis**: `ShowOnlyDirectoriesFilter` (applied only to the OS explorer's `TreeViewer`, see `ICompositeCreator#addJFaceResourcesToControls`) calls `OSExplorer#isDirectory(Path)` for every element, including filesystem roots sourced from `File.listRoots()`, with no special case for root paths. `OSExplorer#isDirectory` falls back to `Files.isDirectory(Path)`, which by NIO.2 design returns `false` both when a path genuinely isn't a directory **and** when any I/O error occurs while reading its attributes (permission denied, locked volume, etc.) — it cannot distinguish the two cases. On Windows 10/11, Windows Defender's "Controlled folder access" (Ransomware protection) — increasingly enabled by default — commonly blocks unrecognized/unsigned applications from enumerating protected folders on **local/fixed** drives, while typically not restricting removable media mounted afterward the same way; BitLocker-locked volumes or restrictive NTFS ACLs on system-reserved partitions can produce the same effect. Any of these causes `Files.isDirectory(rootPath)` to return `false` for an otherwise perfectly valid fixed disk, so `ShowOnlyDirectoriesFilter` silently filters it out of the tree.
+
+This is an architectural inconsistency: the sibling ISO-explorer filter, `ShowOnlyIsoDirectoriesFilter`, already guards against exactly this by short-circuiting root nodes (`node.isRoot() ? true : isDirectory(node)`), while `ShowOnlyDirectoriesFilter` (OS explorer) never received the same treatment.
+
+**Correction plan** (being implemented and tested on `feature/v0.2.3-windowsrootfiles` before merging into `feature/v0.2.3`):
+1. Add root-aware attribute resolution to `OSExplorer` that distinguishes an `AccessDeniedException` (path exists and is very likely a directory, just access-restricted — should still be shown, with a logged warning to help diagnose AV/Defender blocking) from other I/O errors such as a not-ready/no-media removable drive (should remain hidden, preserving today's behavior for empty optical drives).
+2. Update `ShowOnlyDirectoriesFilter#select()` to apply the same root short-circuit pattern already used by `ShowOnlyIsoDirectoriesFilter`, using the new root-aware check instead of a plain `isDirectory(path)` for root elements.
+3. Add regression tests covering both the access-denied-but-still-a-directory case and the genuinely-not-ready case, reproducible cross-platform (e.g. via `Files.setPosixFilePermissions` on Linux, gracefully skipped via `Assumptions.assumeTrue` where unsupported, following the same convention already used for the symlink regression tests).
+4. Document the residual OS-level consideration: even after this fix makes the root node visible, deeper content listing inside that drive may still fail if Windows' Controlled Folder Access remains active; users experiencing persistent access issues should allow JISOCreator through Windows Security → Virus & threat protection → Ransomware protection → Controlled folder access.
+
 ## Version
 
 - Latest stable release: **0.2.2** (released 2026-07-25)

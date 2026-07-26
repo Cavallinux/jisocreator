@@ -52,7 +52,7 @@ public class OSExplorer {
      * stat calls ({@code Files.isDirectory}, {@code Files.size},
      * {@code Files.getLastModifiedTime}) into a single {@code stat(2)}-style
      * call per file. Populated in bulk by {@link #warmAttributesCache(Path)},
-     * typically from a background thread (see {@code LoadOSDirectoryContentsThread}),
+     * typically from a background thread (see {@code LoadOSDirectoryContentsTask}),
      * so that the subsequent UI-thread rendering of a directory listing reads
      * already-resolved metadata instead of hitting the filesystem again.
      */
@@ -192,7 +192,7 @@ public class OSExplorer {
      * the specified directory, consolidating the separate {@code isDirectory}/
      * {@code size}/{@code lastModifiedTime} stat calls each entry would otherwise
      * require into a single stat call per entry. Intended to be invoked from a
-     * background thread (see {@code LoadOSDirectoryContentsThread}) before the
+     * background thread (see {@code LoadOSDirectoryContentsTask}) before the
      * directory is displayed, so that the subsequent UI-thread rendering reads
      * already-resolved metadata instead of hitting the filesystem again.
      * <p>

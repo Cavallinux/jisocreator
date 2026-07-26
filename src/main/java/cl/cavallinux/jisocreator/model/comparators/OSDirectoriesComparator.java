@@ -58,7 +58,7 @@ public class OSDirectoriesComparator extends ViewerComparator {
         File file = (File) element;
         Path path = file.toPath();
         // Delegates to OSExplorer#isDirectory, which consults the attribute cache
-        // populated by warmAttributesCache(Path) (see LoadOSDirectoryContentsThread)
+        // populated by warmAttributesCache(Path) (see LoadOSDirectoryContentsTask)
         // instead of always issuing a fresh Files.isDirectory(Path) stat call.
         boolean isDirectory = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isDirectory(path);
         BigInteger categoryResponse = isDirectory ? BigInteger.ZERO : BigInteger.ONE;

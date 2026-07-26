@@ -10,7 +10,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import cl.cavallinux.jisocreator.action.jobs.LoadOSDirectoryContentsThread;
+import cl.cavallinux.jisocreator.action.jobs.LoadOSDirectoryContentsTask;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
@@ -60,10 +60,11 @@ public class OSExplorerSashFormSelectionChangedListener implements ISelectionCha
      * Populates the OS directories table with the contents of the given directory.
      * <p>
      * The directory scan and file-metadata pre-fetch is performed off the SWT UI
-     * thread by {@link LoadOSDirectoryContentsThread}, which then marshals the
-     * actual {@code TableViewer#setInput(Object)} call back onto the UI thread
-     * once the metadata is already warmed, keeping the UI responsive while
-     * navigating directories with a large number of entries.
+     * thread by {@link LoadOSDirectoryContentsTask}, submitted to a shared
+     * single-thread executor, which then marshals the actual
+     * {@code TableViewer#setInput(Object)} call back onto the UI thread once the
+     * metadata is already warmed, keeping the UI responsive while navigating
+     * directories with a large number of entries.
      * </p>
      * 
      * @param mainWindow the main window whose OS explorer table should be updated
@@ -71,7 +72,7 @@ public class OSExplorerSashFormSelectionChangedListener implements ISelectionCha
      */
     private void loadDirectoryContents(MainWindow mainWindow, File directory) {
         TableViewer osDirectoriesTable = mainWindow.getOsExplorer().getOsDirectoriesTable();
-        LoadOSDirectoryContentsThread.builder().directory(directory).tableViewer(osDirectoriesTable).build().start();
+        LoadOSDirectoryContentsTask.builder().directory(directory).tableViewer(osDirectoriesTable).build().submit();
     }
 
     private File obtainFileViaSelectionChangedEvent(SelectionChangedEvent event) {

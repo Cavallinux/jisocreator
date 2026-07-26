@@ -12,16 +12,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Tests para {@link LoadOSDirectoryContentsThread}.
+ * Tests para {@link LoadOSDirectoryContentsTask}.
  *
- * <p>{@code run()} depende de {@code OSAndIsoExplorerManager.INSTANCE.getOsExplorer()}
+ * <p>{@code submit()}/{@code run()} dependen de un {@code ExecutorService}
+ * compartido en segundo plano, de {@code OSAndIsoExplorerManager.INSTANCE.getOsExplorer()}
  * y de {@code Display.getDefault()}/{@code TableViewer#setInput(Object)}, por lo
- * que no es invocable de forma headless — el mismo tipo de exclusion aplicada a
- * otros hilos del proyecto (ver {@code ToggleHiddenFilesOSExplorerThreadTest}).
- * El metodo package-private {@code isStillLatestRequest()} es, en cambio, logica
- * pura basada en un {@code AtomicReference} estatico actualizado en el
- * constructor, y se cubre construyendo instancias via el builder sin invocar
- * {@code start()}/{@code run()}.
+ * que no son invocables de forma headless sin riesgo de dejar recursos GUI
+ * compartidos (el {@code Display} singleton) en un estado inconsistente entre
+ * tests — el mismo tipo de exclusion aplicada a otros hilos/tareas del proyecto
+ * (ver {@code ToggleHiddenFilesOSExplorerThreadTest}). El metodo package-private
+ * {@code isStillLatestRequest()} es, en cambio, logica pura basada en un
+ * {@code AtomicReference} estatico actualizado en el constructor, y se cubre
+ * construyendo instancias via el builder sin invocar {@code submit()}/{@code run()}.
  *
  * <p>Los metodos privados {@code showBusyCursor()}/{@code restoreDefaultCursor()}
  * (feedback visual de cursor ocupado durante la carga en background) requieren un
@@ -32,29 +34,29 @@ import org.junit.jupiter.api.io.TempDir;
  * {@code null} (como ocurre en el resto de los tests de esta clase, que no
  * disponen de un {@code TableViewer} real), invocandolos por reflexion.
  */
-@DisplayName("LoadOSDirectoryContentsThread tests")
-class LoadOSDirectoryContentsThreadTest {
+@DisplayName("LoadOSDirectoryContentsTask tests")
+class LoadOSDirectoryContentsTaskTest {
 
     @Test
-    @DisplayName("Builder should produce a Thread instance")
-    void builderShouldProduceThreadInstance(@TempDir File tempDir) {
-        LoadOSDirectoryContentsThread thread = LoadOSDirectoryContentsThread.builder()
+    @DisplayName("Builder should produce a Runnable instance")
+    void builderShouldProduceRunnableInstance(@TempDir File tempDir) {
+        LoadOSDirectoryContentsTask task = LoadOSDirectoryContentsTask.builder()
                 .directory(tempDir)
                 .tableViewer(null)
                 .build();
 
-        assertTrue(thread instanceof Thread);
+        assertTrue(task instanceof Runnable);
     }
 
     @Test
-    @DisplayName("isStillLatestRequest should return true for the most recently built thread")
-    void isStillLatestRequestShouldReturnTrueForMostRecentlyBuiltThread(@TempDir File tempDir) {
-        LoadOSDirectoryContentsThread thread = LoadOSDirectoryContentsThread.builder()
+    @DisplayName("isStillLatestRequest should return true for the most recently built task")
+    void isStillLatestRequestShouldReturnTrueForMostRecentlyBuiltTask(@TempDir File tempDir) {
+        LoadOSDirectoryContentsTask task = LoadOSDirectoryContentsTask.builder()
                 .directory(tempDir)
                 .tableViewer(null)
                 .build();
 
-        assertTrue(thread.isStillLatestRequest());
+        assertTrue(task.isStillLatestRequest());
     }
 
     @Test
@@ -65,11 +67,11 @@ class LoadOSDirectoryContentsThreadTest {
         firstDirectory.mkdir();
         secondDirectory.mkdir();
 
-        LoadOSDirectoryContentsThread firstRequest = LoadOSDirectoryContentsThread.builder()
+        LoadOSDirectoryContentsTask firstRequest = LoadOSDirectoryContentsTask.builder()
                 .directory(firstDirectory)
                 .tableViewer(null)
                 .build();
-        LoadOSDirectoryContentsThread secondRequest = LoadOSDirectoryContentsThread.builder()
+        LoadOSDirectoryContentsTask secondRequest = LoadOSDirectoryContentsTask.builder()
                 .directory(secondDirectory)
                 .tableViewer(null)
                 .build();
@@ -81,18 +83,18 @@ class LoadOSDirectoryContentsThreadTest {
     @Test
     @DisplayName("showBusyCursor/restoreDefaultCursor should be safe no-ops without a real TableViewer")
     void busyCursorMethodsShouldBeNoOpsWithoutTableViewer(@TempDir File tempDir) throws Exception {
-        LoadOSDirectoryContentsThread thread = LoadOSDirectoryContentsThread.builder()
+        LoadOSDirectoryContentsTask task = LoadOSDirectoryContentsTask.builder()
                 .directory(tempDir)
                 .tableViewer(null)
                 .build();
 
-        assertDoesNotThrow(() -> invokePrivateNoArgMethod(thread, "showBusyCursor"));
-        assertDoesNotThrow(() -> invokePrivateNoArgMethod(thread, "restoreDefaultCursor"));
+        assertDoesNotThrow(() -> invokePrivateNoArgMethod(task, "showBusyCursor"));
+        assertDoesNotThrow(() -> invokePrivateNoArgMethod(task, "restoreDefaultCursor"));
     }
 
-    private static void invokePrivateNoArgMethod(LoadOSDirectoryContentsThread target, String methodName)
+    private static void invokePrivateNoArgMethod(LoadOSDirectoryContentsTask target, String methodName)
             throws Exception {
-        Method method = LoadOSDirectoryContentsThread.class.getDeclaredMethod(methodName);
+        Method method = LoadOSDirectoryContentsTask.class.getDeclaredMethod(methodName);
         method.setAccessible(true);
         method.invoke(target);
     }

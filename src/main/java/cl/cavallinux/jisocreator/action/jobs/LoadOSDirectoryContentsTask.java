@@ -1,6 +1,9 @@
 package cl.cavallinux.jisocreator.action.jobs;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.jface.viewers.TableViewer;
@@ -14,7 +17,7 @@ import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Background thread that pre-fetches file metadata for a directory selected in
+ * Background task that pre-fetches file metadata for a directory selected in
  * the OS file-system explorer before it is displayed in the table.
  * <p>
  * Populating the OS directories table (via {@link TableViewer#setInput(Object)})
@@ -25,29 +28,37 @@ import lombok.extern.slf4j.Slf4j;
  * thread and makes the application feel unresponsive.
  * </p>
  * <p>
- * This thread instead performs the expensive filesystem scan
+ * This task instead performs the expensive filesystem scan
  * ({@link OSExplorer#warmAttributesCache(java.nio.file.Path)}, a plain
- * {@code java.nio} operation with no SWT/native dependency) off the UI thread,
- * and only marshals the actual {@code setInput(...)} call back onto the UI
- * thread (via {@link Display#asyncExec(Runnable)}, as required by SWT's
- * single-threaded widget access rule) once the metadata is already warmed in
- * {@link OSExplorer}'s attribute cache — making that call much cheaper than an
- * unprepared synchronous load.
+ * {@code java.nio} operation with no SWT/native dependency) off the UI thread on
+ * a shared single-thread {@link ExecutorService}, and only marshals the actual
+ * {@code setInput(...)} call back onto the UI thread (via
+ * {@link Display#asyncExec(Runnable)}, as required by SWT's single-threaded
+ * widget access rule) once the metadata is already warmed in {@link OSExplorer}'s
+ * attribute cache — making that call much cheaper than an unprepared synchronous
+ * load.
  * </p>
  * <p>
- * If the user navigates to a different directory before a previously started
- * background load finishes, the stale result is discarded: only the most
- * recently requested directory is applied to the table.
+ * If the user navigates to a different directory before a previously submitted
+ * task finishes, its stale result is discarded: only the most recently
+ * requested directory is applied to the table. In addition, {@link #submit()}
+ * cancels the previously submitted {@link Future} before enqueueing the new
+ * one: since the shared executor is single-threaded, a still-queued (not yet
+ * started) task is removed from the queue entirely and never runs, so rapid
+ * directory navigation does not accumulate wasted background scans. A task
+ * that has already started running when superseded is left to finish on its
+ * own — {@code cancel(false)} does not interrupt it — but its result is still
+ * discarded via the same "still latest" check.
  * </p>
  * <p>
- * While the background scan is in progress, the {@code Shell} owning the
- * table displays the platform's {@link SWT#CURSOR_WAIT} busy cursor (a shared
- * system cursor, requiring no disposal by client code), so the user gets
- * immediate visual feedback that the directory is loading instead of a
- * silently unresponsive UI. The cursor is restored to its default as soon as
- * the winning (still-latest) request finishes applying its result — if a
- * request is superseded, it simply skips restoring the cursor, leaving that
- * responsibility to whichever request is the latest one.
+ * While a task is pending or running, the {@code Shell} owning the table
+ * displays the platform's {@link SWT#CURSOR_WAIT} busy cursor (a shared system
+ * cursor, requiring no disposal by client code), so the user gets immediate
+ * visual feedback that the directory is loading instead of a silently
+ * unresponsive UI. The cursor is restored to its default as soon as the
+ * winning (still-latest) request finishes applying its result — a superseded
+ * task simply skips restoring the cursor, leaving that responsibility to
+ * whichever request is the latest one.
  * </p>
  * 
  * @author Paolo Mezzano Barahona (pmezzano@gmail.com)
@@ -55,20 +66,46 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.2.3
  */
 @Slf4j
-public class LoadOSDirectoryContentsThread extends Thread {
+public class LoadOSDirectoryContentsTask implements Runnable {
+
+    /**
+     * Single-thread executor shared by every {@link LoadOSDirectoryContentsTask}:
+     * directory loads only ever need to happen one at a time (only one directory
+     * listing is visible in the OS explorer table at a time), so a single
+     * background thread is reused across selections instead of spawning a new
+     * {@code Thread} per navigation.
+     */
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "cl.cavallinux.jisocreator.osexplorer.load.directory.thread");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     private static final AtomicReference<File> LATEST_REQUESTED_DIRECTORY = new AtomicReference<>();
+    private static final AtomicReference<Future<?>> PENDING_TASK = new AtomicReference<>();
 
     private final File directory;
     private final TableViewer tableViewer;
 
     @lombok.Builder
-    private LoadOSDirectoryContentsThread(File directory, TableViewer tableViewer) {
-        super("cl.cavallinux.jisocreator.osexplorer.load.directory.thread");
+    private LoadOSDirectoryContentsTask(File directory, TableViewer tableViewer) {
         this.directory = directory;
         this.tableViewer = tableViewer;
         LATEST_REQUESTED_DIRECTORY.set(directory);
+    }
+
+    /**
+     * Shows the busy cursor immediately, cancels any previously submitted task
+     * that has not started running yet (discarding it from the executor's queue
+     * before it wastes any work), and submits this task to the shared
+     * single-thread executor.
+     */
+    public void submit() {
         showBusyCursor();
+        Future<?> previousTask = PENDING_TASK.getAndSet(EXECUTOR.submit(this));
+        if (previousTask != null) {
+            previousTask.cancel(false);
+        }
     }
 
     @Override
@@ -104,7 +141,7 @@ public class LoadOSDirectoryContentsThread extends Thread {
      * Switches the cursor of the {@code Shell} owning {@link #tableViewer} to the
      * platform's busy/wait cursor, providing immediate feedback that a directory
      * is loading. A no-op when {@link #tableViewer} is {@code null} or already
-     * disposed (e.g. when this thread is only used to exercise its pure
+     * disposed (e.g. when this task is only used to exercise its pure
      * {@link #isStillLatestRequest()} logic in tests, without a real control).
      */
     private void showBusyCursor() {
@@ -138,11 +175,11 @@ public class LoadOSDirectoryContentsThread extends Thread {
     }
 
     /**
-     * Checks whether the directory this thread was created for is still the most
-     * recently requested one, i.e. whether no other {@link LoadOSDirectoryContentsThread}
-     * has been created for a different directory since this one started.
+     * Checks whether the directory this task was created for is still the most
+     * recently requested one, i.e. whether no other {@link LoadOSDirectoryContentsTask}
+     * has been created for a different directory since this one was submitted.
      * 
-     * @return true if this thread's result should still be applied, false if it
+     * @return true if this task's result should still be applied, false if it
      *         has been superseded by a more recent directory selection
      */
     boolean isStillLatestRequest() {

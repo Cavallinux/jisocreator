@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -152,7 +151,7 @@ public class OSExplorer {
             return cached.lastModifiedTime().toInstant();
         }
         try {
-            FileTime lastModifiedTime = Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS);
+            FileTime lastModifiedTime = Files.getLastModifiedTime(path);
             return lastModifiedTime.toInstant();
         } catch (IOException e) {
             log.warn("Error retrieving last modified time for path: {}. Calculating via Java FILE Api", path, e);

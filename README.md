@@ -185,7 +185,7 @@ src/test/java/cl/cavallinux/jisocreator/
 └── util/        # IO utility tests
 ```
 
-**Current Test Statistics**: 279 tests total across 63 test classes, all passing (`mvn -o clean test`: 279/279, 0 skipped; `mvn -o clean test -Pwindows`: 279/279, 7 skipped, 0 failures — see "Platform-mismatch note" below).
+**Current Test Statistics**: 281 tests total across 63 test classes, all passing (`mvn -o clean test`: 281/281, 0 skipped; `mvn -o clean test -Pwindows`: 281/281, 7 skipped, 0 failures — see "Platform-mismatch note" below).
 
 Current coverage includes:
 - Critical workflow tests (`MainAction`, `SaveAsIsoAction`, `SaveISO9660ImageThread`, `JISOCreatorBaseAction`, `AddFileActionRecursive`)
@@ -467,7 +467,7 @@ XML layout parsing is implemented through `IsoFilesystemParser` (`model/parser/d
 
 ### Testing Architecture
 
-The test suite (279 tests / 63 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
+The test suite (281 tests / 63 classes, see [TESTING.md](TESTING.md)) favors SWT-independent coverage so most tests run headlessly without a display:
 
 - **Stub/record-based fakes over mocks**: Domain interfaces like `ITreeNode` are exercised with local `record`/anonymous implementations rather than Mockito mocks, keeping tests fast and free of native/SWT dependencies.
 - **Real objects for CLI parsing**: `MainAction` and CLI-related tests build real `JISOCreatorCommandLineParser` instances instead of mocking Apache Commons CLI's `CommandLine`, working around a known incompatibility between Mockito's inline mock maker (ByteBuddy) and newer JDKs.

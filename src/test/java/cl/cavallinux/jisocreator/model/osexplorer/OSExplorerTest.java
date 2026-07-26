@@ -258,4 +258,41 @@ class OSExplorerTest {
         // a stale cached value.
         assertFalse(osExplorer.isDirectory(firstDirFile));
     }
-}
+
+    @Test
+    @DisplayName("Should follow symbolic links to directories when warming the attributes cache")
+    void testWarmAttributesCacheFollowsSymbolicLinksToDirectories(@TempDir Path tempDir) throws IOException {
+        Path realDirectory = Files.createDirectory(tempDir.resolve("real-dir"));
+        Path symlinkToDirectory = tempDir.resolve("link-to-dir");
+        createSymbolicLinkOrAssumeUnsupported(symlinkToDirectory, realDirectory);
+
+        osExplorer.warmAttributesCache(tempDir);
+
+        // Regression test: warmAttributesCache used to read attributes with
+        // LinkOption.NOFOLLOW_LINKS, which reports a symbolic link itself as
+        // never being a directory (even when it points to one), causing
+        // directories reached via a symlink to incorrectly render as files in
+        // the OS explorer. Attributes must now be resolved by following links,
+        // matching isDirectory()'s uncached fallback (plain Files.isDirectory).
+        assertTrue(osExplorer.isDirectory(symlinkToDirectory));
+    }
+
+    @Test
+    @DisplayName("Should follow symbolic links to directories when isDirectory falls back to an uncached check")
+    void testIsDirectoryFollowsSymbolicLinksToDirectoriesWithoutWarmedCache(@TempDir Path tempDir)
+            throws IOException {
+        Path realDirectory = Files.createDirectory(tempDir.resolve("real-dir"));
+        Path symlinkToDirectory = tempDir.resolve("link-to-dir");
+        createSymbolicLinkOrAssumeUnsupported(symlinkToDirectory, realDirectory);
+
+        assertTrue(osExplorer.isDirectory(symlinkToDirectory));
+    }
+
+    private static void createSymbolicLinkOrAssumeUnsupported(Path link, Path target) throws IOException {
+        try {
+            Files.createSymbolicLink(link, target);
+        } catch (UnsupportedOperationException | IOException e) {
+            org.junit.jupiter.api.Assumptions.assumeTrue(false,
+                    "Symbolic links are not supported in this environment: " + e.getMessage());
+        }
+    }}

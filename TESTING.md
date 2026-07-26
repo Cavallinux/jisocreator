@@ -5,7 +5,14 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 
 ## Current branch status (`feature/v0.2.3`)
 - Branch in progress: `pom.xml` version is **`0.2.3-SNAPSHOT`**.
-- Current suite: **279 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+- Current suite: **281 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+
+## Tests Updated in this pass (bugfix: symbolic-linked directories rendered as files after the attributes-cache optimization)
+A regression was found in `OSExplorer#warmAttributesCache(Path)` (introduced by the background-loading optimization above): it read each entry's attributes with `Files.readAttributes(entry, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS)`. `NOFOLLOW_LINKS` reports a *symbolic link itself* as never being a directory, even when it points to one, so directories reached via a symlink in the OS explorer started incorrectly rendering as plain files (wrong icon, no expand arrow, filtered out by `ShowOnlyDirectoriesFilter` in the tree) once their attributes were pre-fetched and cached.
+- **`OSExplorer#warmAttributesCache(Path)`**: now calls `Files.readAttributes(entry, BasicFileAttributes.class)` (no `LinkOption`), following symbolic links — matching the default (link-following) behavior of `Files.isDirectory(Path)`, `Files.size(Path)`, and `Files.getLastModifiedTime(Path)`, which is what every uncached fallback in this class already used.
+- **`OSExplorer#lastModifiedInstant(Path)`**'s uncached fallback was also changed from `Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS)` to `Files.getLastModifiedTime(path)`, for the same reason: it was the one remaining place still using `NOFOLLOW_LINKS`, which would have reintroduced the same class of symlink inconsistency (a stale/uncached last-modified read disagreeing with the now link-following cached/`isDirectory`/`length` behavior) had it been left as-is. The now-unused `java.nio.file.LinkOption` import was removed.
+- `OSExplorerTest.java` grew from 19 to **21 tests**, adding `testWarmAttributesCacheFollowsSymbolicLinksToDirectories` (creates a real directory and a symlink pointing to it, warms the cache on the parent, and asserts `isDirectory(symlink)` is `true` — the exact regression scenario) and `testIsDirectoryFollowsSymbolicLinksToDirectoriesWithoutWarmedCache` (same assertion via the uncached fallback path, without calling `warmAttributesCache` first). Both use a shared `createSymbolicLinkOrAssumeUnsupported(...)` helper that calls `Assumptions.assumeTrue(false, ...)` to cleanly skip (not fail) on filesystems/platforms where symlink creation isn't permitted (e.g. some restricted Windows configurations without the "Create symbolic links" privilege) — on this Linux sandbox, both tests run (not skipped) under both Maven profiles, since symlink creation has no native-SWT dependency.
+- Validated per this session's standing rule: `mvn -o clean test` (default `linux` profile) → **281/281, 0 skipped**; `mvn -o clean test -Pwindows` (mismatched profile on this Linux host) → **281/281, 7 skipped, 0 failures, no JVM crash** (skip count unchanged — the new symlink tests are not native-SWT-dependent and therefore never skipped here).
 
 ## Tests Updated in this pass (source change: shared single-thread executor for background directory loading, renamed to `LoadOSDirectoryContentsTask`)
 Building on the busy-cursor feedback above, the background directory-loading mechanism was refactored to avoid accumulating background `Thread`s when the user navigates quickly between directories: `LoadOSDirectoryContentsThread` (a `Thread` subclass, one instance `.start()`'d per selection) was renamed to **`LoadOSDirectoryContentsTask`**, now a plain `Runnable` submitted to a shared single-thread `ExecutorService` (`Executors.newSingleThreadExecutor(...)`, using a daemon thread factory named identically to the previous `Thread`'s name).
@@ -293,9 +300,9 @@ Surefire writes reports to:
 - `target/surefire-reports/`
 
 ## Current Test Statistics (`feature/v0.2.3`)
-- **Total Tests**: 279
+- **Total Tests**: 281
 - **Test Classes**: 63
-- **All Tests Passing**: ✓ (`mvn -o clean test`: 279/279, 0 skipped; `mvn -o clean test -Pwindows`: 279/279, 7 skipped, 0 failures)
+- **All Tests Passing**: ✓ (`mvn -o clean test`: 281/281, 0 skipped; `mvn -o clean test -Pwindows`: 281/281, 7 skipped, 0 failures)
 
 ### Test Statistics Summary
 ```
@@ -347,7 +354,7 @@ ITreeNodeTest.java:                            13 tests
 IsoFileSystemTest.java:                         4 tests
 IsoTreeNodeTest.java:                           8 tests
 TreeNodeTest.java:                              3 tests
-OSExplorerTest.java:                           19 tests  ← updated
+OSExplorerTest.java:                           21 tests  ← updated
 XMLIsoFilesystemParserCompatibilityTest.java:   2 tests
 IsoFilesystemParserTest.java:                   3 tests
 XMLIsoFilesystemContractMapperTest.java:        3 tests
@@ -363,7 +370,7 @@ OsTableProviderTest.java:                       3 tests
 IOUtilsPathTest.java:                           5 tests
 IOUtilsTest.java:                               6 tests
 ----------------------------------------------------------
-Total:                                        279 tests
+Total:                                        281 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -398,5 +405,5 @@ mvn -o clean test -Pwindows
 ```
 
 Results:
-- Default (`linux`) profile: **279 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
-- `windows` profile (mismatched native platform on this Linux host): **279 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged — neither the background-loading tests nor the new busy-cursor no-op test require native SWT calls).
+- Default (`linux`) profile: **281 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
+- `windows` profile (mismatched native platform on this Linux host): **281 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged — the 2 new symlink regression tests are not native-SWT-dependent and are never skipped).

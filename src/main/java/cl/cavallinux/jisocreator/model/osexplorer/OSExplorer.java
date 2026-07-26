@@ -208,8 +208,7 @@ public class OSExplorer {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path entry : stream) {
                 try {
-                    attributesCache.put(entry,
-                            Files.readAttributes(entry, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS));
+                    attributesCache.put(entry, Files.readAttributes(entry, BasicFileAttributes.class));
                 } catch (IOException e) {
                     log.warn("Error pre-fetching attributes for path: {}", entry, e);
                 }

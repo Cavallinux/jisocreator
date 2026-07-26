@@ -401,6 +401,7 @@ The test suite runs on both Linux and Windows. Some platform-specific considerat
 3. Add deeper negative/error-path tests for image loading fallbacks in SWT-bound components (`ImageUtils`, `ImageRegister`).
 4. Add broader action coverage (`ActionsManager` and remaining `action/*` classes not yet covered, e.g. full `AddFileAction.run()` GUI dialog flow).
 5. Add coverage reporting (JaCoCo) in CI.
+6. **Deferred to v0.3.0 — `ILazyContentProvider` migration for the OS explorer**: the last remaining step of the OS file-system explorer performance optimizations (busy-cursor, single-thread executor, symlink fix, and LRU multi-directory attributes cache are all delivered as of this pass). Would migrate `OsTableProvider`/the OS directories `TableViewer` from a plain `IStructuredContentProvider` to `ILazyContentProvider` (virtual scrolling: `setUseHashlookup(true)` + the `updateElement(int)` contract), loading only the currently visible rows on demand instead of the whole directory listing at once — the highest-impact remaining optimization for folders with thousands of entries. Deliberately postponed: it is an architecture change with meaningfully higher risk (can affect row ordering/selection-restoration behavior) than the increments already shipped, and needs extensive manual + automated testing before merging. Tracked for the `v0.3.0` release, out of scope for the current `feature/v0.2.3` branch.
 
 ## Last Validation Run
 

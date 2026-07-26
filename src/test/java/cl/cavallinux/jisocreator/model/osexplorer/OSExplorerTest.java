@@ -241,22 +241,50 @@ class OSExplorerTest {
     }
 
     @Test
-    @DisplayName("Should discard previously cached entries when warming a different directory")
-    void testWarmAttributesCacheClearsPreviousEntries(@TempDir Path tempDir) throws IOException {
+    @DisplayName("Should keep multiple recently warmed directories cached (LRU) instead of discarding previous ones")
+    void testWarmAttributesCacheKeepsMultipleRecentDirectoriesCached(@TempDir Path tempDir) throws IOException {
         Path firstDir = Files.createDirectory(tempDir.resolve("first-dir"));
         Path firstDirFile = Files.write(firstDir.resolve("first-file.txt"), new byte[] { 1 });
         Path secondDir = Files.createDirectory(tempDir.resolve("second-dir"));
-        Files.write(secondDir.resolve("second-file.txt"), new byte[] { 1, 2 });
+        Path secondDirFile = Files.write(secondDir.resolve("second-file.txt"), new byte[] { 1, 2 });
 
         osExplorer.warmAttributesCache(firstDir);
         osExplorer.warmAttributesCache(secondDir);
         Files.delete(firstDirFile);
 
-        // firstDirFile's cached attributes were discarded when secondDir was
-        // warmed, so isDirectory() must fall back to a fresh (now-failing)
-        // filesystem check for the now-deleted path, returning false rather than
-        // a stale cached value.
+        // Both directories fit well within MAX_CACHED_DIRECTORIES, so warming
+        // secondDir must NOT evict firstDir's cached entries: isDirectory() for
+        // the now-deleted firstDirFile must still be served from the (still
+        // present) cache instead of falling back to a failing filesystem check.
         assertFalse(osExplorer.isDirectory(firstDirFile));
+        assertEquals(Long.toString(1), osExplorer.length(firstDirFile));
+        assertEquals(Long.toString(Files.size(secondDirFile)), osExplorer.length(secondDirFile));
+    }
+
+    @Test
+    @DisplayName("Should evict the least-recently-warmed directory once the LRU capacity is exceeded")
+    void testWarmAttributesCacheEvictsLeastRecentlyWarmedDirectoryBeyondCapacity(@TempDir Path tempDir)
+            throws IOException {
+        Path leastRecentDir = Files.createDirectory(tempDir.resolve("dir-0"));
+        Path leastRecentDirFile = Files.write(leastRecentDir.resolve("file.txt"), new byte[] { 1 });
+        osExplorer.warmAttributesCache(leastRecentDir);
+
+        // Warm MAX_CACHED_DIRECTORIES (5) additional, distinct directories so the
+        // very first one (leastRecentDir) is pushed out of the LRU cache.
+        for (int i = 1; i <= 5; i++) {
+            Path directory = Files.createDirectory(tempDir.resolve("dir-" + i));
+            Files.write(directory.resolve("file.txt"), new byte[] { 1 });
+            osExplorer.warmAttributesCache(directory);
+        }
+
+        Files.delete(leastRecentDirFile);
+
+        // leastRecentDir's cached entries were evicted once the LRU capacity was
+        // exceeded, so length() must fall back to a fresh (now-failing)
+        // filesystem check for the now-deleted path (java.io.File#length()
+        // returns 0 for a non-existent file), rather than the stale cached size
+        // of 1 byte that a still-present cache entry would have returned.
+        assertEquals(Long.toString(0), osExplorer.length(leastRecentDirFile));
     }
 
     @Test

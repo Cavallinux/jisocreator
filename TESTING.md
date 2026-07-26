@@ -5,7 +5,14 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 
 ## Current branch status (`feature/v0.2.3`)
 - Branch in progress: `pom.xml` version is **`0.2.3-SNAPSHOT`**.
-- Current suite: **281 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+- Current suite: **282 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+
+## Tests Updated in this pass (source change: LRU multi-directory attributes cache)
+Previously, `OSExplorer#warmAttributesCache(Path)` cleared the entire `attributesCache` before repopulating it for the newly loaded directory, so only the single most recently loaded directory ever benefited from cached attributes. Navigating back to a parent directory or between sibling folders always re-triggered a full filesystem scan, even if that directory had just been visited moments earlier.
+- **`OSExplorer#attributesCache`**: changed from a flat `ConcurrentMap<Path, BasicFileAttributes>` (one entry per file, cleared wholesale on every warm) to a `Map<Path, Map<Path, BasicFileAttributes>>` keyed by directory, holding up to **`MAX_CACHED_DIRECTORIES` (5)** directories' worth of entries at once. The outer map is a `Collections.synchronizedMap`-wrapped `LinkedHashMap` in access order with `removeEldestEntry` overridden to evict the least-recently-warmed directory once the limit is exceeded; each per-directory inner map remains a `ConcurrentHashMap`.
+- **`OSExplorer#warmAttributesCache(Path)`**: no longer clears the whole cache — it builds a fresh entries map for the given directory and stores it under that directory's key (replacing/refreshing it and marking it most-recently-used if it was already cached), leaving other cached directories untouched.
+- **`OSExplorer#cachedAttributes(Path)`** (new, private): shared lookup helper used by `isDirectory`, `length`, and `lastModifiedInstant` — resolves a path's parent directory, then looks up the path within that directory's cached entries map (or returns `null` if the parent was never warmed or has since been evicted).
+- **Test updates for the above**: `OSExplorerTest`'s `testWarmAttributesCacheClearsPreviousEntries` (which asserted the old "always discard everything else" behavior) was replaced with `testWarmAttributesCacheKeepsMultipleRecentDirectoriesCached` (warms two directories, deletes a file from the first, and asserts `length()` still returns its *cached* size — proving the first directory's entries were **not** discarded when the second was warmed) and `testWarmAttributesCacheEvictsLeastRecentlyWarmedDirectoryBeyondCapacity` (warms 6 distinct directories in sequence — one more than `MAX_CACHED_DIRECTORIES` — deletes a file from the very first one, and asserts `length()` now falls back to the uncached value, proving that directory's entries **were** evicted once the LRU capacity was exceeded). Suite grew to **282 tests / 63 classes**, verified passing under both `mvn -o clean test` (282/282, 0 skipped) and `mvn -o clean test -Pwindows` (282/282, 7 skipped, 0 failures — skip count unchanged, no new native/`Display`-dependent tests were introduced).
 
 ## Tests Updated in this pass (bugfix: symbolic-linked directories rendered as files after the attributes-cache optimization)
 A regression was found in `OSExplorer#warmAttributesCache(Path)` (introduced by the background-loading optimization above): it read each entry's attributes with `Files.readAttributes(entry, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS)`. `NOFOLLOW_LINKS` reports a *symbolic link itself* as never being a directory, even when it points to one, so directories reached via a symlink in the OS explorer started incorrectly rendering as plain files (wrong icon, no expand arrow, filtered out by `ShowOnlyDirectoriesFilter` in the tree) once their attributes were pre-fetched and cached.
@@ -300,9 +307,9 @@ Surefire writes reports to:
 - `target/surefire-reports/`
 
 ## Current Test Statistics (`feature/v0.2.3`)
-- **Total Tests**: 281
+- **Total Tests**: 282
 - **Test Classes**: 63
-- **All Tests Passing**: ✓ (`mvn -o clean test`: 281/281, 0 skipped; `mvn -o clean test -Pwindows`: 281/281, 7 skipped, 0 failures)
+- **All Tests Passing**: ✓ (`mvn -o clean test`: 282/282, 0 skipped; `mvn -o clean test -Pwindows`: 282/282, 7 skipped, 0 failures)
 
 ### Test Statistics Summary
 ```
@@ -354,7 +361,7 @@ ITreeNodeTest.java:                            13 tests
 IsoFileSystemTest.java:                         4 tests
 IsoTreeNodeTest.java:                           8 tests
 TreeNodeTest.java:                              3 tests
-OSExplorerTest.java:                           21 tests  ← updated
+OSExplorerTest.java:                           22 tests  ← updated
 XMLIsoFilesystemParserCompatibilityTest.java:   2 tests
 IsoFilesystemParserTest.java:                   3 tests
 XMLIsoFilesystemContractMapperTest.java:        3 tests
@@ -370,7 +377,7 @@ OsTableProviderTest.java:                       3 tests
 IOUtilsPathTest.java:                           5 tests
 IOUtilsTest.java:                               6 tests
 ----------------------------------------------------------
-Total:                                        281 tests
+Total:                                        282 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -405,5 +412,5 @@ mvn -o clean test -Pwindows
 ```
 
 Results:
-- Default (`linux`) profile: **281 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
-- `windows` profile (mismatched native platform on this Linux host): **281 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged — the 2 new symlink regression tests are not native-SWT-dependent and are never skipped).
+- Default (`linux`) profile: **282 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
+- `windows` profile (mismatched native platform on this Linux host): **282 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged — none of the new symlink or LRU-cache regression tests are native-SWT-dependent, so they are never skipped).

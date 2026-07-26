@@ -2,9 +2,11 @@ package cl.cavallinux.jisocreator.model.osexplorer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -43,6 +45,18 @@ public class OSExplorer {
      * cache instead of hitting the OS again for every file.
      */
     private static final ConcurrentMap<String, Optional<Program>> PROGRAM_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * Caches a single {@link BasicFileAttributes} lookup per {@link Path},
+     * consolidating what would otherwise be up to three independent filesystem
+     * stat calls ({@code Files.isDirectory}, {@code Files.size},
+     * {@code Files.getLastModifiedTime}) into a single {@code stat(2)}-style
+     * call per file. Populated in bulk by {@link #warmAttributesCache(Path)},
+     * typically from a background thread (see {@code LoadOSDirectoryContentsThread}),
+     * so that the subsequent UI-thread rendering of a directory listing reads
+     * already-resolved metadata instead of hitting the filesystem again.
+     */
+    private final ConcurrentMap<Path, BasicFileAttributes> attributesCache = new ConcurrentHashMap<>();
 
     private OSExplorer(File[] roots) {
         log.info("OS: {}, FileSystem roots: {}", System.getProperty("os.name"), roots);
@@ -107,6 +121,10 @@ public class OSExplorer {
      * @return The size of the file in bytes as a string.
      */
     public String length(Path path) {
+        BasicFileAttributes cached = attributesCache.get(path);
+        if (cached != null) {
+            return Long.toString(cached.size());
+        }
         try {
             return Long.toString(Files.size(path));
         } catch (IOException e) {
@@ -129,6 +147,10 @@ public class OSExplorer {
     }
     
     private Instant lastModifiedInstant(Path path) {
+        BasicFileAttributes cached = attributesCache.get(path);
+        if (cached != null) {
+            return cached.lastModifiedTime().toInstant();
+        }
         try {
             FileTime lastModifiedTime = Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS);
             return lastModifiedTime.toInstant();
@@ -147,7 +169,54 @@ public class OSExplorer {
      * @return The file type as a string.
      */
     public String getFileType(Path path) {
-        return Files.isDirectory(path) ? FOLDER_TYPE : getFileType2(path);
+        return isDirectory(path) ? FOLDER_TYPE : getFileType2(path);
+    }
+
+    /**
+     * Checks whether the specified file path is a directory. This method utilizes
+     * the {@link #attributesCache} (populated in bulk by
+     * {@link #warmAttributesCache(Path)}) when available, avoiding a redundant
+     * {@code Files.isDirectory(Path)} filesystem call for paths whose attributes
+     * were already resolved, and falls back to a direct check otherwise.
+     * 
+     * @param path The path to be checked.
+     * @return true if the specified path is a directory, false otherwise.
+     */
+    public boolean isDirectory(Path path) {
+        BasicFileAttributes cached = attributesCache.get(path);
+        return cached != null ? cached.isDirectory() : Files.isDirectory(path);
+    }
+
+    /**
+     * Pre-fetches and caches {@link BasicFileAttributes} for every direct entry of
+     * the specified directory, consolidating the separate {@code isDirectory}/
+     * {@code size}/{@code lastModifiedTime} stat calls each entry would otherwise
+     * require into a single stat call per entry. Intended to be invoked from a
+     * background thread (see {@code LoadOSDirectoryContentsThread}) before the
+     * directory is displayed, so that the subsequent UI-thread rendering reads
+     * already-resolved metadata instead of hitting the filesystem again.
+     * <p>
+     * The cache is cleared before repopulating, since only one directory listing
+     * is typically visible at a time; any previously cached entries for other
+     * directories are discarded to bound memory usage.
+     * </p>
+     * 
+     * @param directory the directory whose entries' attributes should be pre-fetched
+     */
+    public void warmAttributesCache(Path directory) {
+        attributesCache.clear();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            for (Path entry : stream) {
+                try {
+                    attributesCache.put(entry,
+                            Files.readAttributes(entry, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS));
+                } catch (IOException e) {
+                    log.warn("Error pre-fetching attributes for path: {}", entry, e);
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Error warming attributes cache for directory: {}", directory, e);
+        }
     }
 
     /**
@@ -174,7 +243,7 @@ public class OSExplorer {
      *         empty string.
      */
     public String getExtension(Path path) {
-        return Files.isDirectory(path) ? FOLDER_TYPE : getExtension(path.getFileName().toString());
+        return isDirectory(path) ? FOLDER_TYPE : getExtension(path.getFileName().toString());
     }
 
     private String getFileType2(Path path) {

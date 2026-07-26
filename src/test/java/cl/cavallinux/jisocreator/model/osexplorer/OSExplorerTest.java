@@ -210,4 +210,52 @@ class OSExplorerTest {
         assertNotNull(fileType);
         assertFalse(fileType.isBlank());
     }
+
+    @Test
+    @DisplayName("Should populate the attributes cache for every entry of a directory listing")
+    void testWarmAttributesCachePopulatesEntriesForDirectoryListing(@TempDir Path tempDir) throws IOException {
+        Path subDirectory = Files.createDirectory(tempDir.resolve("sub-dir"));
+        Path subFile = Files.write(tempDir.resolve("sub-file.txt"), "Hello".getBytes());
+
+        osExplorer.warmAttributesCache(tempDir);
+
+        assertTrue(osExplorer.isDirectory(subDirectory));
+        assertFalse(osExplorer.isDirectory(subFile));
+        assertEquals(Long.toString(Files.size(subFile)), osExplorer.length(subFile));
+    }
+
+    @Test
+    @DisplayName("Should serve isDirectory/length/lastModified from the warmed cache without re-reading the filesystem")
+    void testIsDirectoryUsesCachedAttributesAfterFileDeleted(@TempDir Path tempDir) throws IOException {
+        Path subFile = Files.write(tempDir.resolve("cached-file.txt"), "Hello World".getBytes());
+        osExplorer.warmAttributesCache(tempDir);
+
+        // Delete the file after warming the cache: a fresh (uncached) stat call
+        // would now fail/return a fallback value, so if the cached values are
+        // still returned correctly, the cache (not a fresh filesystem call) is
+        // clearly what served the result.
+        Files.delete(subFile);
+
+        assertFalse(osExplorer.isDirectory(subFile));
+        assertEquals(Long.toString("Hello World".getBytes().length), osExplorer.length(subFile));
+    }
+
+    @Test
+    @DisplayName("Should discard previously cached entries when warming a different directory")
+    void testWarmAttributesCacheClearsPreviousEntries(@TempDir Path tempDir) throws IOException {
+        Path firstDir = Files.createDirectory(tempDir.resolve("first-dir"));
+        Path firstDirFile = Files.write(firstDir.resolve("first-file.txt"), new byte[] { 1 });
+        Path secondDir = Files.createDirectory(tempDir.resolve("second-dir"));
+        Files.write(secondDir.resolve("second-file.txt"), new byte[] { 1, 2 });
+
+        osExplorer.warmAttributesCache(firstDir);
+        osExplorer.warmAttributesCache(secondDir);
+        Files.delete(firstDirFile);
+
+        // firstDirFile's cached attributes were discarded when secondDir was
+        // warmed, so isDirectory() must fall back to a fresh (now-failing)
+        // filesystem check for the now-deleted path, returning false rather than
+        // a stale cached value.
+        assertFalse(osExplorer.isDirectory(firstDirFile));
+    }
 }

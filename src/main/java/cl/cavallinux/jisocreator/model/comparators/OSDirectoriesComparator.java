@@ -2,7 +2,6 @@ package cl.cavallinux.jisocreator.model.comparators;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.Map;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
+import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import lombok.Builder;
 
 /**
@@ -25,12 +25,11 @@ public class OSDirectoriesComparator extends ViewerComparator {
      * Per-sort cache of computed categories, keyed by element identity. {@link
      * ViewerComparator#sort(Viewer, Object[])} performs an O(n log n) sort whose
      * comparisons each call {@link #category(Object)} twice, which would otherwise
-     * repeat the underlying {@link Files#isDirectory(Path)} filesystem check for
-     * the same element multiple times. Populating this cache once per {@link
-     * #sort(Viewer, Object[])} invocation reduces the number of filesystem checks
-     * from O(n log n) to O(n) for large directory listings. It is safe without
-     * synchronization because JFace viewer sorting always happens on the single
-     * SWT UI thread.
+     * repeat the underlying directory check for the same element multiple times.
+     * Populating this cache once per {@link #sort(Viewer, Object[])} invocation
+     * reduces the number of filesystem checks from O(n log n) to O(n) for large
+     * directory listings. It is safe without synchronization because JFace viewer
+     * sorting always happens on the single SWT UI thread.
      */
     private Map<Object, Integer> categoryCache;
 
@@ -58,7 +57,11 @@ public class OSDirectoriesComparator extends ViewerComparator {
     private int computeCategory(Object element) {
         File file = (File) element;
         Path path = file.toPath();
-        BigInteger categoryResponse = Files.isDirectory(path) ? BigInteger.ZERO : BigInteger.ONE;
+        // Delegates to OSExplorer#isDirectory, which consults the attribute cache
+        // populated by warmAttributesCache(Path) (see LoadOSDirectoryContentsThread)
+        // instead of always issuing a fresh Files.isDirectory(Path) stat call.
+        boolean isDirectory = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isDirectory(path);
+        BigInteger categoryResponse = isDirectory ? BigInteger.ZERO : BigInteger.ONE;
         return categoryResponse.intValue();
     }
 

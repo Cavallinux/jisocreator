@@ -5,7 +5,19 @@ This project uses JUnit 5 and Mockito for unit tests. Tests are located under `s
 
 ## Current branch status (`feature/v0.2.3`)
 - Branch in progress: `pom.xml` version is **`0.2.3-SNAPSHOT`**.
-- Current suite: **272 tests in 62 classes** (see "Test Gap Analysis & Coverage Plan" below).
+- Current suite: **278 tests in 63 classes** (see "Test Gap Analysis & Coverage Plan" below).
+
+## Tests Updated in this pass (source changes: OS file-system explorer background-loading optimization)
+Building on the previous quick-win optimizations, directory loading in the local OS file-system explorer was further optimized by moving the expensive filesystem scan off the SWT UI thread. No architecture changes were made to the `IStructuredContentProvider`/`ITreeContentProvider`/`TableProviderAdapter` contracts (the higher-risk `ILazyContentProvider` migration alternative, which would have required reimplementing filtering/sorting manually and risked affecting the shared `IsoTableProvider`, was evaluated and rejected in favor of this lower-risk approach); only internal implementation details were optimized.
+- **`OSExplorer#attributesCache`** (new field, `ConcurrentMap<Path, BasicFileAttributes>`) and **`OSExplorer#warmAttributesCache(Path directory)`** (new public method): pre-fetches `BasicFileAttributes` for every direct entry of a directory via a single `Files.readAttributes(entry, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS)` call per entry, consolidating what were previously up to 3 separate stat calls (`Files.isDirectory`, `Files.size`, `Files.getLastModifiedTime`) into one. The cache is fully cleared and repopulated on every call, since only one directory listing is typically visible at a time.
+- **`OSExplorer#isDirectory(Path)`** (new public method): consults `attributesCache` first, falling back to a direct `Files.isDirectory(Path)` check when the path wasn't pre-fetched. `getFileType(Path)`, `length(Path)`, `lastModified(Path)`/`lastModifiedInstant(Path)`, and `getExtension(Path)` were refactored to read from the cache (via `attributesCache.get(path)` or the new `isDirectory()`) instead of issuing raw `Files.*` calls directly, while preserving identical fallback behavior when attributes aren't cached.
+- **`ShowOnlyDirectoriesFilter`**, **`OSDirectoriesComparator#computeCategory(Object)`**, and **`ImageUtils#loadImage(Path)`** were updated to call `OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isDirectory(path)` instead of `Files.isDirectory(path)` directly, so all three benefit from the pre-warmed attribute cache during a table/tree render pass.
+- **`LoadOSDirectoryContentsThread`** (new class, `action/jobs` package): a genuine background `Thread` (built via `@lombok.Builder`, following the precedent of `SaveISO9660ImageThread` being truly `.start()`'d for I/O-heavy work, as opposed to `ToggleHiddenFilesOSExplorerThread`'s "deferred UI-thread runnable via `asyncExec`" idiom) that calls `OSExplorer#warmAttributesCache(Path)` off the UI thread, then marshals the actual `TableViewer#setInput(Object)` call back onto the UI thread via `Display#asyncExec(Runnable)` once metadata is already warmed. A static `AtomicReference<File> LATEST_REQUESTED_DIRECTORY`, set at construction time, backs the package-private `isStillLatestRequest()` check (consulted both after the background scan completes and again right before `setInput()` executes) so that stale results are discarded if the user navigates to a different directory before a previous background load finishes.
+- **`OSExplorerSashFormSelectionChangedListener`**: both call sites that previously called `mainWindow.getOsExplorer().getOsDirectoriesTable().setInput(...)` synchronously now build and `.start()` a `LoadOSDirectoryContentsThread` instead (via a new private `loadDirectoryContents(MainWindow, File)` helper), while the cheap widget updates (`osTableText.setText(...)`, action enablement) remain synchronous as before — only the actual table population is deferred to the background thread.
+  - `OSExplorerTest.java` grew from 16 to **19 tests**, adding `testWarmAttributesCachePopulatesEntriesForDirectoryListing` (verifies `isDirectory`/`length` are correctly resolved for both a subdirectory and a file after warming), `testIsDirectoryUsesCachedAttributesAfterFileDeleted` (warms the cache, deletes the underlying file, then asserts `isDirectory`/`length` still return the cached — no longer independently verifiable via a fresh stat — values, proving the cache and not a live filesystem call served the result), and `testWarmAttributesCacheClearsPreviousEntries` (warms a first directory, then a second, deletes a file from the first directory, and asserts `isDirectory()` now falls back to a fresh — correctly negative — filesystem check rather than returning a stale cached value, proving the cache is cleared on every `warmAttributesCache` call).
+  - `LoadOSDirectoryContentsThreadTest.java` (new file, **3 tests**): following the `ToggleHiddenFilesOSExplorerThreadTest` convention of not invoking `run()` (which depends on `OSAndIsoExplorerManager`/`Display`/`TableViewer`, none available headlessly), covers only the package-private `isStillLatestRequest()` pure logic via reflection-free direct calls — `builderShouldProduceThreadInstance`, `isStillLatestRequestShouldReturnTrueForMostRecentlyBuiltThread`, and `isStillLatestRequestShouldReturnFalseWhenSupersededByNewerRequest` (builds two threads for different directories and asserts only the most recently built one still reports itself as current).
+  - `ShowOnlyDirectoriesFilterTest`, `OSDirectoriesComparatorTest`, and `ImageUtils`-dependent tests were re-run unchanged and continue to pass, confirming no behavioral regression from routing through `OSExplorer.isDirectory()`.
+- Validated per this session's standing rule: `mvn -o clean test` (default `linux` profile) → **278/278, 0 skipped**; `mvn -o clean test -Pwindows` (mismatched profile on this Linux host) → **278/278, 7 skipped, 0 failures, no JVM crash** (skip count unchanged from the previous pass — no new native/`Display`-dependent test cases were added in this round).
 
 ## Tests Updated in this pass (source changes: OS file-system explorer performance optimization)
 Directory loading in the local OS file-system explorer was optimized to reduce redundant filesystem/native-lookup calls for folders containing many files/subfolders. No architecture changes were made to the `IStructuredContentProvider`/`ITreeContentProvider` contracts; only internal implementation details were optimized.
@@ -266,9 +278,9 @@ Surefire writes reports to:
 - `target/surefire-reports/`
 
 ## Current Test Statistics (`feature/v0.2.3`)
-- **Total Tests**: 272
-- **Test Classes**: 62
-- **All Tests Passing**: ✓ (`mvn -o clean test`: 272/272, 0 skipped; `mvn -o clean test -Pwindows`: 272/272, 7 skipped, 0 failures)
+- **Total Tests**: 278
+- **Test Classes**: 63
+- **All Tests Passing**: ✓ (`mvn -o clean test`: 278/278, 0 skipped; `mvn -o clean test -Pwindows`: 278/278, 7 skipped, 0 failures)
 
 ### Test Statistics Summary
 ```
@@ -292,7 +304,8 @@ OpenIsoEntryActionTest.java:                     5 tests
 ShowIsoInformationActionTest.java:               4 tests
 JISOCreatorBaseActionTest.java:                 4 tests
 SaveISO9660ImageThreadTest.java:                4 tests
-ToggleHiddenFilesOSExplorerThreadTest.java:      2 tests  ← new
+ToggleHiddenFilesOSExplorerThreadTest.java:      2 tests
+LoadOSDirectoryContentsThreadTest.java:          3 tests  ← new
 AddToISODialogMessagesTest.java:                3 tests
 CommandLineMessagesTest.java:                   5 tests
 MessagesBundleTest.java:                        2 tests
@@ -319,7 +332,7 @@ ITreeNodeTest.java:                            13 tests
 IsoFileSystemTest.java:                         4 tests
 IsoTreeNodeTest.java:                           8 tests
 TreeNodeTest.java:                              3 tests
-OSExplorerTest.java:                           16 tests  ← updated
+OSExplorerTest.java:                           19 tests  ← updated
 XMLIsoFilesystemParserCompatibilityTest.java:   2 tests
 IsoFilesystemParserTest.java:                   3 tests
 XMLIsoFilesystemContractMapperTest.java:        3 tests
@@ -335,7 +348,7 @@ OsTableProviderTest.java:                       3 tests
 IOUtilsPathTest.java:                           5 tests
 IOUtilsTest.java:                               6 tests
 ----------------------------------------------------------
-Total:                                        272 tests
+Total:                                        278 tests
 ```
 
 ## Notes on SWT-Dependent Testing
@@ -370,5 +383,5 @@ mvn -o clean test -Pwindows
 ```
 
 Results:
-- Default (`linux`) profile: **272 tests passing in 62 classes, 0 skipped** (from `target/surefire-reports`).
-- `windows` profile (mismatched native platform on this Linux host): **272 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 new native-`Program`-dependent skips added in `OSExplorerTest` for the `findProgram` caching optimization, all gated by `SwtPlatformAssumptions.assumeNativePlatformMatches()`. `JFaceResourcesManagerTest` never touches a native SWT API and therefore runs identically under both profiles.
+- Default (`linux`) profile: **278 tests passing in 63 classes, 0 skipped** (from `target/surefire-reports`).
+- `windows` profile (mismatched native platform on this Linux host): **278 tests, 7 skipped, 0 failures, no JVM crash** — 5 skips are the native-`Transfer`-dependent tests in `JISOCreatorViewerDropAdapterTest`/`JISOCreatorDragSourceAdapterTest`, plus 2 native-`Program`-dependent skips in `OSExplorerTest` (unchanged from the previous pass — the new background-loading tests added in this round require no native SWT calls). `JFaceResourcesManagerTest` never touches a native SWT API and therefore runs identically under both profiles.

@@ -2,7 +2,6 @@ package cl.cavallinux.jisocreator.util;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -88,7 +87,7 @@ public class ImageUtils {
         OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
         if (osExplorer.isRoot(path)) {
             return loadImage(DRIVE_IMAGE_FILENAME);
-        } else if (Files.isDirectory(path)) {
+        } else if (osExplorer.isDirectory(path)) {
             return loadImage(FOLDER_IMAGE_FILENAME);
         } else {
             String extension = osExplorer.getExtension(path);

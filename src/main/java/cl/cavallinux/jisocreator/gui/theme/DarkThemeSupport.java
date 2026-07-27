@@ -24,13 +24,17 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 
+import cl.cavallinux.jisocreator.instances.IOManager;
+
 public final class DarkThemeSupport {
     private static final String SWT_WIN32_DARK_MODE_EXPLORER_THEME =
             "org.eclipse.swt.internal.win32.useDarkModeExplorerTheme";
     private static final String SWT_WIN32_DARK_MODE_SHELL_TITLE =
             "org.eclipse.swt.internal.win32.useShellTitleColoring";
     private static final String DARK_PALETTE_KEY = "jisocreator.darktheme.palette";
-    private static final String CONTROL_STATE_KEY = "jisocreator.darktheme.controlstate";
+    private static final String THEME_MODE_PREFERENCE_KEY = "jisocreator.theme.mode";
+    private static final String THEME_MODE_LIGHT = "LIGHT";
+    private static final String THEME_MODE_DARK = "DARK";
 
     private static final int[] DARK_BG_RGB = { 30, 30, 30 };
     private static final int[] DARK_PANEL_RGB = { 37, 37, 38 };
@@ -45,7 +49,7 @@ public final class DarkThemeSupport {
     }
 
     public static void enableWindowsDarkMode(Display display) {
-        if (Objects.isNull(display) || !isWin32()) {
+        if (Objects.isNull(display) || !isDarkModeActive()) {
             return;
         }
 
@@ -54,7 +58,7 @@ public final class DarkThemeSupport {
     }
 
     public static void applyToControlTree(Control control) {
-        if (Objects.isNull(control) || control.isDisposed() || !isWin32()) {
+        if (Objects.isNull(control) || control.isDisposed() || !isDarkModeActive()) {
             return;
         }
 
@@ -68,7 +72,7 @@ public final class DarkThemeSupport {
     }
 
     public static void applyToMainBars(Shell shell, ToolBar toolBar) {
-        if (Objects.isNull(shell) || shell.isDisposed() || !isWin32()) {
+        if (Objects.isNull(shell) || shell.isDisposed() || !isDarkModeActive()) {
             return;
         }
 
@@ -261,6 +265,27 @@ public final class DarkThemeSupport {
 
     private static boolean isWin32() {
         return "win32".equals(SWT.getPlatform());
+    }
+
+    /**
+     * Determina si el tema oscuro debe aplicarse efectivamente, combinando la
+     * plataforma nativa con la preferencia de usuario {@code jisocreator.theme.mode}
+     * (AUTO/LIGHT/DARK). En modo AUTO (o valor no reconocido/ausente), se consulta el
+     * tema real de Windows via {@link WindowsSystemThemeDetector}.
+     */
+    private static boolean isDarkModeActive() {
+        if (!isWin32()) {
+            return false;
+        }
+
+        String themeMode = IOManager.INSTANCE.getIoUtils().getStore().getString(THEME_MODE_PREFERENCE_KEY);
+        if (THEME_MODE_LIGHT.equals(themeMode)) {
+            return false;
+        }
+        if (THEME_MODE_DARK.equals(themeMode)) {
+            return true;
+        }
+        return WindowsSystemThemeDetector.isSystemDarkMode();
     }
 
     private static void setOptionalColor(Object target, String methodName, Color color) {

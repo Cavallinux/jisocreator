@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
 import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.instances.JISOCreatorLanguageOptions;
+import cl.cavallinux.jisocreator.instances.JISOCreatorThemeOptions;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,6 +36,8 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
         addField(new StyledComboFieldEditor("jisocreator.language",
                 PreferenceDialogMessages.preferenceDialogGeneralOptionsLanguageApp, buildLanguageOptionsArray(),
                 parent));
+        addField(new StyledComboFieldEditor("jisocreator.theme.mode",
+                PreferenceDialogMessages.preferenceDialogGeneralOptionsThemeMode, buildThemeOptionsArray(), parent));
     }
 
     @Override
@@ -52,6 +55,15 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
             languageOptionsMap.put(language.getLanguageText(), language.getLanguageLocale().toLanguageTag());
         });
         return languageOptionsMap.entrySet().stream().map(entry -> new String[] { entry.getKey(), entry.getValue() })
+                .toArray(String[][]::new);
+    }
+
+    private String[][] buildThemeOptionsArray() {
+        Map<String, String> themeOptionsMap = new LinkedHashMap<>();
+        Arrays.asList(JISOCreatorThemeOptions.values()).forEach(theme -> {
+            themeOptionsMap.put(theme.getThemeModeText(), theme.getThemeModeValue());
+        });
+        return themeOptionsMap.entrySet().stream().map(entry -> new String[] { entry.getKey(), entry.getValue() })
                 .toArray(String[][]::new);
     }
 }

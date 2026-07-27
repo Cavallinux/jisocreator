@@ -121,6 +121,7 @@ public class IOUtils {
             store.setValue("mkisofs.path", obtainMkisofsPath(SWT.getPlatform()));
             store.setValue("mkisofs.iso.level", defaultProperties.getProperty("mkisofs.iso.level"));
             store.setValue("jisocreator.language", defaultProperties.getProperty("jisocreator.language"));
+            store.setValue("jisocreator.theme.mode", defaultProperties.getProperty("jisocreator.theme.mode"));
             store.save();
         } catch (IOException e) {
             log.error("Error saving properties", e);

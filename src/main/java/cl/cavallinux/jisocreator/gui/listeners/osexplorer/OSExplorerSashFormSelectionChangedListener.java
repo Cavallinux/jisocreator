@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 
+import cl.cavallinux.jisocreator.action.jobs.LoadOSDirectoryContentsTask;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
@@ -32,13 +33,10 @@ public class OSExplorerSashFormSelectionChangedListener implements ISelectionCha
             if (fileSelected == null) {
                 OSExplorerActionsManager.ADDFILEACTION.getAction().setEnabled(false);
                 OSExplorerActionsManager.GOTOPARENTACTION.getAction().setEnabled(false);
-                mainWindow.getOsExplorer().getOsDirectoriesTable().setInput(new File(
-                        ((File) mainWindow.getOsExplorer().getOsDirectoriesTable().getInput())
-                                .getParent()));
-                mainWindow.getOsExplorer().getOsTableText().setText(new File(
-                        ((File) mainWindow.getOsExplorer().getOsDirectoriesTable().getInput())
-                                .getParent())
-                        .getAbsolutePath());
+                File parentDirectory = new File(
+                        ((File) mainWindow.getOsExplorer().getOsDirectoriesTable().getInput()).getParent());
+                mainWindow.getOsExplorer().getOsTableText().setText(parentDirectory.getAbsolutePath());
+                loadDirectoryContents(mainWindow, parentDirectory);
                 log.warn("SWT Library bug");
                 return;
             } else {
@@ -48,7 +46,7 @@ public class OSExplorerSashFormSelectionChangedListener implements ISelectionCha
                     .setEnabled(!OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(fileSelected.toPath()));
             mainWindow.getOsExplorer().getOsTableText()
                     .setText(fileSelected.getAbsolutePath());
-            mainWindow.getOsExplorer().getOsDirectoriesTable().setInput(fileSelected);
+            loadDirectoryContents(mainWindow, fileSelected);
             OSExplorerActionsManager.OPENFILEACTION.getAction().setEnabled(false);
         } else {
             TableViewer viewer = (TableViewer) eventSource;
@@ -56,6 +54,25 @@ public class OSExplorerSashFormSelectionChangedListener implements ISelectionCha
                     ToStringBuilder.reflectionToString(viewer.getSelection(), ToStringStyle.JSON_STYLE));
             OSExplorerActionsManager.OPENFILEACTION.getAction().setEnabled(true);
         }
+    }
+
+    /**
+     * Populates the OS directories table with the contents of the given directory.
+     * <p>
+     * The directory scan and file-metadata pre-fetch is performed off the SWT UI
+     * thread by {@link LoadOSDirectoryContentsTask}, submitted to a shared
+     * single-thread executor, which then marshals the actual
+     * {@code TableViewer#setInput(Object)} call back onto the UI thread once the
+     * metadata is already warmed, keeping the UI responsive while navigating
+     * directories with a large number of entries.
+     * </p>
+     * 
+     * @param mainWindow the main window whose OS explorer table should be updated
+     * @param directory  the directory whose contents should be displayed
+     */
+    private void loadDirectoryContents(MainWindow mainWindow, File directory) {
+        TableViewer osDirectoriesTable = mainWindow.getOsExplorer().getOsDirectoriesTable();
+        LoadOSDirectoryContentsTask.builder().directory(directory).tableViewer(osDirectoriesTable).build().submit();
     }
 
     private File obtainFileViaSelectionChangedEvent(SelectionChangedEvent event) {

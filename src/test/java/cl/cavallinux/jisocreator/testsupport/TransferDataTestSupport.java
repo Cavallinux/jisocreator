@@ -36,7 +36,10 @@ public final class TransferDataTestSupport {
      */
     public static TransferData unsupportedTransferData(Transfer transfer) throws ReflectiveOperationException {
         TransferData transferData = transfer.getSupportedTypes()[0];
-        transferData.type = Integer.MAX_VALUE;
+        // TransferData.type es 'long' en SWT GTK y 'int' en SWT Win32. Se usa reflexión
+        // para evitar un NoSuchFieldError al ejecutar el test con un runtime SWT distinto
+        // del que se usó para compilar (p.ej. compilar con linux y correr con -P windows).
+        setTypeField(transferData, Integer.MAX_VALUE);
         Object formatetc = readFieldIfPresent(transferData, "formatetc");
         if (formatetc != null) {
             Field cfFormat = formatetc.getClass().getDeclaredField("cfFormat");
@@ -44,6 +47,25 @@ public final class TransferDataTestSupport {
             cfFormat.setInt(formatetc, Integer.MAX_VALUE);
         }
         return transferData;
+    }
+
+    /**
+     * Sets the {@code type} field of {@code transferData} to {@code value} via reflection,
+     * handling the fact that the field is declared as {@code long} on GTK and {@code int} on Win32.
+     * If the field is absent on the current SWT platform, this is a no-op.
+     */
+    private static void setTypeField(TransferData transferData, int value) throws ReflectiveOperationException {
+        try {
+            Field typeField = TransferData.class.getDeclaredField("type");
+            typeField.setAccessible(true);
+            if (typeField.getType() == long.class) {
+                typeField.setLong(transferData, value);
+            } else {
+                typeField.setInt(transferData, value);
+            }
+        } catch (NoSuchFieldException notPresentOnThisPlatform) {
+            // campo 'type' no presente en este SWT platform; no hay nada que mutar
+        }
     }
 
     private static Object readFieldIfPresent(TransferData transferData, String fieldName)

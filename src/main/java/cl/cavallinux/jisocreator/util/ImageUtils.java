@@ -2,7 +2,6 @@ package cl.cavallinux.jisocreator.util;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -15,6 +14,7 @@ import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
+import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
 import lombok.Builder;
 
 public class ImageUtils {
@@ -84,14 +84,19 @@ public class ImageUtils {
     }
     
     public Image loadImage(Path path) {
-        if (OSAndIsoExplorerManager.INSTANCE.getOsExplorer().isRoot(path)) {
+        OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
+        if (osExplorer.isRoot(path)) {
             return loadImage(DRIVE_IMAGE_FILENAME);
-        } else if (Files.isDirectory(path)) {
+        } else if (osExplorer.isDirectory(path)) {
             return loadImage(FOLDER_IMAGE_FILENAME);
         } else {
-            String extension = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getExtension(path);
+            String extension = osExplorer.getExtension(path);
             if (StringUtils.isNotBlank(extension)) {
-                Program program = Program.findProgram(extension);
+                // Delegate to OSExplorer#findProgram, which caches the result of the
+                // expensive Program.findProgram(String) OS-level lookup per extension,
+                // avoiding duplicate native calls already performed elsewhere (e.g.
+                // OSExplorer#getFileType) for files sharing the same extension.
+                Program program = osExplorer.findProgram(extension);
                 return Objects.nonNull(program) ? loadImage(program) : loadImage(GENERIC_FILENAME);
             } else {
                 return loadImage(GENERIC_FILENAME);   

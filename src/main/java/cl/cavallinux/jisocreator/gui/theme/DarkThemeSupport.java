@@ -340,7 +340,7 @@ public final class DarkThemeSupport {
      * (AUTO/LIGHT/DARK). En modo AUTO (o valor no reconocido/ausente), se consulta el
      * tema real de Windows via {@link WindowsSystemThemeDetector}.
      */
-    private static boolean isDarkModeActive() {
+    public static boolean isDarkModeActive() {
         if (!isWin32()) {
             return false;
         }

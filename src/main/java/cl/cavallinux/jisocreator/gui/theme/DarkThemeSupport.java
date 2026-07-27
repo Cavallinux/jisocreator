@@ -31,6 +31,13 @@ public final class DarkThemeSupport {
             "org.eclipse.swt.internal.win32.useDarkModeExplorerTheme";
     private static final String SWT_WIN32_DARK_MODE_SHELL_TITLE =
             "org.eclipse.swt.internal.win32.useShellTitleColoring";
+    private static final String SWT_WIN32_MENUBAR_BACKGROUND_COLOR_KEY =
+            "org.eclipse.swt.internal.win32.menuBarBackgroundColor";
+    private static final String SWT_WIN32_MENUBAR_FOREGROUND_COLOR_KEY =
+            "org.eclipse.swt.internal.win32.menuBarForegroundColor";
+    private static final String SWT_WIN32_MENUBAR_BORDER_COLOR_KEY =
+            "org.eclipse.swt.internal.win32.menuBarBorderColor";
+    private static final String MENU_BAR_COLORS_APPLIED_KEY = "jisocreator.darktheme.menubarcolors";
     private static final String DARK_PALETTE_KEY = "jisocreator.darktheme.palette";
     private static final String THEME_MODE_PREFERENCE_KEY = "jisocreator.theme.mode";
     private static final String THEME_MODE_LIGHT = "LIGHT";
@@ -55,6 +62,7 @@ public final class DarkThemeSupport {
 
         display.setData(SWT_WIN32_DARK_MODE_EXPLORER_THEME, Boolean.TRUE);
         display.setData(SWT_WIN32_DARK_MODE_SHELL_TITLE, Boolean.TRUE);
+        applyMenuBarDisplayColors(display);
     }
 
     public static void applyToControlTree(Control control) {
@@ -83,6 +91,44 @@ public final class DarkThemeSupport {
         }
         shell.setBackground(palette.background);
         shell.setForeground(palette.foreground);
+    }
+
+    /**
+     * Aplica colores oscuros a la barra de menu NATIVA de nivel superior (SWT.BAR) usando
+     * las claves internas de {@code Display} expuestas por SWT 4.16+
+     * ({@code org.eclipse.swt.internal.win32.menuBar(Background|Foreground|Border)Color}).
+     *
+     * <p>A diferencia del resto del arbol de controles/menus emergentes (ver
+     * {@link #applyMenuRecursively}, donde {@code setBackground}/{@code setForeground} SI
+     * surten efecto dinamicamente), en Win32 el color de la barra de menu de nivel superior
+     * de un {@code Shell} solo se lee UNA VEZ, en el momento en que SWT construye el
+     * {@code Menu} nativo internamente ({@code Menu#initThemeColors()}). Por lo tanto estas
+     * claves DEBEN establecerse en el {@code Display} ANTES de que JFace cree la barra de
+     * menu (es decir, antes de {@code ApplicationWindow#addMenuBar()}), nunca despues —
+     * de ahi que se invoque aqui, dentro de {@link #enableWindowsDarkMode(Display)}, que ya
+     * se llama en el constructor de {@code MainWindow} antes de {@code addMenuBar()}.
+     * Llamar a esto una vez que la barra de menu ya fue creada (p.ej. desde
+     * {@link #applyToMainBars(Shell, ToolBar)}) no tiene ningun efecto visual.</p>
+     */
+    private static void applyMenuBarDisplayColors(Display display) {
+        if (Boolean.TRUE.equals(display.getData(MENU_BAR_COLORS_APPLIED_KEY))) {
+            return;
+        }
+
+        Color menuBarBackground = new Color(display, DARK_PANEL_RGB[0], DARK_PANEL_RGB[1], DARK_PANEL_RGB[2]);
+        Color menuBarForeground = new Color(display, DARK_FG_RGB[0], DARK_FG_RGB[1], DARK_FG_RGB[2]);
+        Color menuBarBorder = new Color(display, DARK_BG_RGB[0], DARK_BG_RGB[1], DARK_BG_RGB[2]);
+
+        display.setData(SWT_WIN32_MENUBAR_BACKGROUND_COLOR_KEY, menuBarBackground);
+        display.setData(SWT_WIN32_MENUBAR_FOREGROUND_COLOR_KEY, menuBarForeground);
+        display.setData(SWT_WIN32_MENUBAR_BORDER_COLOR_KEY, menuBarBorder);
+        display.setData(MENU_BAR_COLORS_APPLIED_KEY, Boolean.TRUE);
+
+        display.disposeExec(() -> {
+            menuBarBackground.dispose();
+            menuBarForeground.dispose();
+            menuBarBorder.dispose();
+        });
     }
 
     /**

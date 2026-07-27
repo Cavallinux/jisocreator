@@ -18,6 +18,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import cl.cavallinux.jisocreator.model.osexplorer.OSExplorer;
+import cl.cavallinux.jisocreator.testsupport.SwtPlatformAssumptions;
 
 @DisplayName("ShowOnlyDirectoriesFilter tests")
 class ShowOnlyDirectoriesFilterTest {
@@ -88,6 +89,9 @@ class ShowOnlyDirectoriesFilterTest {
         Path restrictedParent = Files.createDirectory(tempDir.resolve("restricted-parent"));
         Path blockedRoot = Files.createDirectory(restrictedParent.resolve("blocked-root"));
 
+        // POSIX permissions no están disponibles en Windows/NTFS; saltar en esos entornos.
+        SwtPlatformAssumptions.assumePosixPermissionsSupported(restrictedParent);
+
         try {
             // Removing execute/search permission on the parent directory reproduces
             // the same AccessDeniedException a Windows fixed disk blocked by
@@ -116,7 +120,11 @@ class ShowOnlyDirectoriesFilterTest {
             // filtered out as if it genuinely weren't a directory.
             assertTrue(filter.select(null, null, blockedRoot.toFile()));
         } finally {
-            Files.setPosixFilePermissions(restrictedParent, PosixFilePermissions.fromString("rwxrwxrwx"));
+            try {
+                Files.setPosixFilePermissions(restrictedParent, PosixFilePermissions.fromString("rwxrwxrwx"));
+            } catch (UnsupportedOperationException ignored) {
+                // POSIX permissions not supported; nothing to restore
+            }
             osExplorer.setRoots(originalRoots);
         }
     }

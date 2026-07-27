@@ -340,6 +340,9 @@ class OSExplorerTest {
         Path restrictedParent = Files.createDirectory(tempDir.resolve("restricted-parent"));
         Path blockedRoot = Files.createDirectory(restrictedParent.resolve("blocked-root"));
 
+        // POSIX permissions no están disponibles en Windows/NTFS; saltar en esos entornos.
+        SwtPlatformAssumptions.assumePosixPermissionsSupported(restrictedParent);
+
         try {
             // Removing execute/search permission on the parent directory prevents any
             // attribute lookup on blockedRoot from succeeding, reproducing the same
@@ -367,7 +370,11 @@ class OSExplorerTest {
             // which cannot distinguish this case from a genuinely unavailable path.
             assertTrue(osExplorer.isAccessibleRoot(blockedRoot));
         } finally {
-            Files.setPosixFilePermissions(restrictedParent, PosixFilePermissions.fromString("rwxrwxrwx"));
+            try {
+                Files.setPosixFilePermissions(restrictedParent, PosixFilePermissions.fromString("rwxrwxrwx"));
+            } catch (UnsupportedOperationException ignored) {
+                // POSIX permissions not supported; nothing to restore
+            }
         }
     }
 

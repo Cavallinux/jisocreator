@@ -1,5 +1,7 @@
 package cl.cavallinux.jisocreator.testsupport;
 
+import java.nio.file.Path;
+
 import org.eclipse.swt.SWT;
 import org.junit.jupiter.api.Assumptions;
 
@@ -54,5 +56,22 @@ public final class SwtPlatformAssumptions {
                                 + "('%s'). Esto ocurre al activar un profile Maven de otra plataforma (p.e. "
                                 + "-Pwindows sobre un host Unix); invocar la API nativa aqui haria colapsar la JVM.",
                         swtPlatform, osName));
+    }
+
+    /**
+     * Omite el test actual cuando el sistema de archivos subyacente al {@code path}
+     * indicado no soporta permisos POSIX (p.ej. NTFS en Windows).
+     *
+     * <p>Debe invocarse antes de cualquier llamada a
+     * {@link java.nio.file.Files#setPosixFilePermissions} para evitar un
+     * {@link UnsupportedOperationException} en sistemas no POSIX.
+     *
+     * @param path ruta cuyo sistema de archivos se comprobara
+     */
+    public static void assumePosixPermissionsSupported(Path path) {
+        Assumptions.assumeTrue(
+                path.getFileSystem().supportedFileAttributeViews().contains("posix"),
+                "Omitiendo test: el sistema de archivos no soporta permisos POSIX "
+                        + "(p.ej. NTFS en Windows).");
     }
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
@@ -173,6 +174,19 @@ public final class DarkThemeSupport {
             text.setBackground(palette.inputBackground);
             attachFocusListeners(text, palette);
             attachDisabledListener(text, palette);
+            return;
+        }
+
+        if (control instanceof CTabFolder cTabFolder) {
+            // CTabFolder is fully SWT owner-drawn (unlike the native win32 TabFolder,
+            // whose body/tab-strip theme background cannot be overridden - see
+            // TabFolder#findThemeControl(): "It is not possible to change the background
+            // of this control"), so it properly honors custom background/foreground and
+            // selected-tab colors, which is required to fully dark-theme tabbed dialogs.
+            cTabFolder.setBackground(palette.panelBackground);
+            cTabFolder.setForeground(palette.foreground);
+            cTabFolder.setSelectionBackground(palette.inputBackgroundFocus);
+            cTabFolder.setSelectionForeground(palette.foreground);
             return;
         }
 

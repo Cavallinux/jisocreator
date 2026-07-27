@@ -5,12 +5,12 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.i18n.AboutDialogMessages;
@@ -65,8 +65,8 @@ public class AboutDialog extends TitleAreaDialog {
         setMessage(formattedProgramVersion);
         setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
-        TabFolder tabFolder = new TabFolder(composite, SWT.NONE);
-        TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
+        CTabFolder tabFolder = new CTabFolder(composite, SWT.NONE);
+        CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
         tabItem.setText(AboutDialogMessages.aboutDialogAboutTabText);
         Composite aboutComposite = new Composite(tabFolder, SWT.NONE);
         Label label = new Label(aboutComposite, SWT.NONE);
@@ -79,7 +79,7 @@ public class AboutDialog extends TitleAreaDialog {
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(aboutComposite);
         tabItem.setControl(aboutComposite);
 
-        tabItem = new TabItem(tabFolder, SWT.NONE);
+        tabItem = new CTabItem(tabFolder, SWT.NONE);
         Text licenseText = new Text(tabFolder, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY | SWT.MULTI);
         licenseText.setText(IOManager.INSTANCE.getIoUtils().loadFormattedLicenseFile());
         tabItem.setText(AboutDialogMessages.aboutDialogLicenseTabText);

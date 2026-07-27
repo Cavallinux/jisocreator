@@ -6,7 +6,6 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
 import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import lombok.Builder;
@@ -37,6 +36,21 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
         Control dialogArea = super.createDialogArea(parent);
         DarkThemeSupport.applyToControlTree(dialogArea);
         return dialogArea;
+    }
+
+    @Override
+    protected Control createButtonBar(Composite parent) {
+        // PreferenceDialog extends TrayDialog, which wraps the button-bar area created
+        // by Dialog.createButtonBar(...) inside its OWN outer composite (see
+        // TrayDialog#createButtonBar: it creates a wrapper Composite, optionally adds a
+        // help control, then delegates to super.createButtonBar(wrapper)). The `parent`
+        // received by createButtonsForButtonBar(...) below is only that inner
+        // button-bar composite, so styling it alone leaves the TrayDialog wrapper
+        // unstyled. Applying the dark theme here, on the full Control returned by
+        // super.createButtonBar(...), covers the outer wrapper as well.
+        Control buttonBar = super.createButtonBar(parent);
+        DarkThemeSupport.applyToControlTree(buttonBar);
+        return buttonBar;
     }
 
     @Override

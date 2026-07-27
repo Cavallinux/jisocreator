@@ -1,5 +1,7 @@
 package cl.cavallinux.jisocreator.gui.dialog;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -12,7 +14,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import cl.cavallinux.jisocreator.gui.i18n.ShowIsoInformationDialogMessages;
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
 import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
@@ -44,6 +45,25 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
         super.configureShell(newShell);
         DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
+    }
+
+    @Override
+    protected Control createContents(Composite parent) {
+        Control contents = super.createContents(parent);
+        // TitleAreaDialog builds its title banner (icon/title/message) as a sibling of
+        // dialogArea/buttonBar inside createContents(), with its own explicit colors
+        // (JFaceColors.setColors(...)). Neither applyToControlTree(dialogArea) nor
+        // applyToControlTree(buttonBarComposite) reach it, so the full contents tree
+        // must be re-styled here once everything is built (same fix applied to
+        // AboutDialog, the only other TitleAreaDialog subclass in this codebase).
+        DarkThemeSupport.applyToControlTree(contents);
+        // applyToControlTree unconditionally resets every control's foreground to the
+        // dark palette color, which would undo the intentional red error-text color
+        // applied in createDialogArea() below - restore it here, after the fact.
+        if (Objects.nonNull(errorIndicator) && !errorIndicator.isDisposed()) {
+            errorIndicator.setForeground(contents.getDisplay().getSystemColor(SWT.COLOR_RED));
+        }
+        return contents;
     }
 
     @Override
@@ -110,6 +130,7 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
                 true);
         createButton(parent, IDialogConstants.CANCEL_ID, ShowIsoInformationDialogMessages.showIsoInfoDialogCancelText,
                 false);
+        DarkThemeSupport.applyToControlTree(parent);
     }
 
     @Override

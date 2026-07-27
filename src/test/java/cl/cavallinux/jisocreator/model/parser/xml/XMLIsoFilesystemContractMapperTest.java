@@ -44,7 +44,7 @@ class XMLIsoFilesystemContractMapperTest {
         assertEquals("entry", document.getRootEntry().getEntryClass());
         assertEquals(1, document.getRootEntry().getChildren().size());
         XMLIsoFilesystemContract.Entry childEntry = document.getRootEntry().getChildren().get(0);
-        // File paths are serialized with forward slashes for cross-platform XML compatibility
+        /** File paths are serialized with forward slashes for cross-platform XML compatibility */
         String expectedFilePath = filePath.toString().replace(File.separatorChar, '/');
         assertEquals(expectedFilePath, childEntry.getFile());
         assertEquals("/readme.txt", childEntry.getIsoName());

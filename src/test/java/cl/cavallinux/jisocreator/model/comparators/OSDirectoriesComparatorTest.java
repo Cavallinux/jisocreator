@@ -112,8 +112,10 @@ class OSDirectoriesComparatorTest {
         Path directory = Files.createDirectory(tempDir.resolve("standalone-folder"));
         Path file = Files.write(tempDir.resolve("standalone-file.txt"), new byte[] { 1 });
 
-        // category()/compare() may be invoked directly (as in the tests above),
-        // outside of a sort() call, in which case no per-sort cache is active.
+        /**
+         * category()/compare() may be invoked directly (as in the tests above),
+         * outside of a sort() call, in which case no per-sort cache is active.
+         */
         assertEquals(0, comparator.category(directory.toFile()));
         assertEquals(1, comparator.category(file.toFile()));
     }

@@ -31,18 +31,18 @@ public class StyledFileFieldEditor extends FileFieldEditor {
     }
 
     private void initializeStyledColors(Composite parent) {
-        // Focus state: lighter background for better visibility
+        /** Focus state: lighter background for better visibility */
         focusBackgroundColor = new Color(parent.getDisplay(), 55, 55, 60);
-        // Disabled state: darker background with reduced opacity effect
+        /** Disabled state: darker background with reduced opacity effect */
         disabledBackgroundColor = new Color(parent.getDisplay(), 35, 35, 35);
-        // Disabled text: dimmed foreground for visual indication
+        /** Disabled text: dimmed foreground for visual indication */
         disabledForegroundColor = new Color(parent.getDisplay(), 120, 120, 120);
     }
 
     private void applyStylesToTextControl() {
         Text textControl = getTextControlViaReflection();
         if (textControl != null && !textControl.isDisposed()) {
-            // Add focus listeners for enhanced visual feedback
+            /** Add focus listeners for enhanced visual feedback */
             textControl.addListener(SWT.FocusIn, event -> {
                 if (!textControl.isDisposed() && textControl.getEnabled()) {
                     textControl.setBackground(focusBackgroundColor);
@@ -51,17 +51,17 @@ public class StyledFileFieldEditor extends FileFieldEditor {
 
             textControl.addListener(SWT.FocusOut, event -> {
                 if (!textControl.isDisposed() && textControl.getEnabled()) {
-                    // Restore to normal input background
+                    /** Restore to normal input background */
                     textControl.setBackground(new Color(textControl.getDisplay(), 45, 45, 48));
                 }
             });
 
-            // Add state change listener for disabled state
+            /** Add state change listener for disabled state */
             textControl.addListener(SWT.Modify, event -> {
                 updateTextControlState(textControl);
             });
 
-            // Initial state setup
+            /** Initial state setup */
             updateTextControlState(textControl);
         }
     }
@@ -72,7 +72,7 @@ public class StyledFileFieldEditor extends FileFieldEditor {
             method.setAccessible(true);
             return (Text) method.invoke(this);
         } catch (Exception e) {
-            // Fallback - try with Composite parameter
+            /** Fallback - try with Composite parameter */
             return null;
         }
     }

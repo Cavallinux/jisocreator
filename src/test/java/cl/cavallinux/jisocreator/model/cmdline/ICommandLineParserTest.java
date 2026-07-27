@@ -39,9 +39,11 @@ class ICommandLineParserTest {
         parser = JISOCreatorCommandLineParser.builder().attributes(attrs).build();
     }
 
-    // -------------------------------------------------------------------------
-    // buildAttributes() — método static añadido en 7b9a42b
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * buildAttributes() — método static añadido en 7b9a42b
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("buildAttributes should return a non-null JISOCreatorAttributes")
@@ -54,16 +56,18 @@ class ICommandLineParserTest {
     @DisplayName("buildAttributes should capture current JVM system properties")
     void buildAttributesShouldCaptureCurrentJvmProperties() {
         JISOCreatorAttributes built = ICommandLineParser.buildAttributes();
-        // jvmVersion and osName must match the running JVM
+        /** jvmVersion and osName must match the running JVM */
         assertNotNull(built.jvmVersion());
         assertFalse(built.jvmVersion().isBlank());
         assertNotNull(built.osName());
         assertFalse(built.osName().isBlank());
     }
 
-    // -------------------------------------------------------------------------
-    // buildHelpHeader() — método default de ICommandLineParser
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * buildHelpHeader() — método default de ICommandLineParser
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("buildHelpHeader should return a non-blank string")
@@ -81,9 +85,11 @@ class ICommandLineParserTest {
                 "Header should contain the app name, but was: " + header);
     }
 
-    // -------------------------------------------------------------------------
-    // buildHelpFooter() — método default de ICommandLineParser
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * buildHelpFooter() — método default de ICommandLineParser
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("buildHelpFooter should return a non-blank string")
@@ -113,9 +119,11 @@ class ICommandLineParserTest {
                 "Footer examples should use lower-case app name, but was: " + footer);
     }
 
-    // -------------------------------------------------------------------------
-    // buildOptions() — método default de ICommandLineParser
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * buildOptions() — método default de ICommandLineParser
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("buildOptions should expose all six declared command line options")
@@ -134,7 +142,7 @@ class ICommandLineParserTest {
     @DisplayName("buildOptions should group mutually exclusive options: load/help/version/license")
     void buildOptionsShouldGroupMutuallyExclusiveOptions() {
         Options options = parser.buildOptions();
-        // Each option in the group must be flagged as belonging to a group
+        /** Each option in the group must be flagged as belonging to a group */
         assertTrue(options.getOptionGroup(CommandLineOptionsManager.HELP.getOption()) != null,
                 "HELP must belong to a mutual-exclusion group");
         assertTrue(options.getOptionGroup(CommandLineOptionsManager.VERSION.getOption()) != null,

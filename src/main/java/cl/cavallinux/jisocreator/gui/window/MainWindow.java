@@ -57,12 +57,14 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected boolean showTopSeperator() {
-        // ApplicationWindow's top separator is a native Label(SWT.SEPARATOR) that Win32
-        // paints via DrawEdge(EDGE_ETCHED), using the system 3D highlight/shadow colors
-        // directly - it ignores setBackground()/setForeground() entirely (same class of
-        // native-chrome limitation as TabFolder's themed body), so in dark mode it always
-        // renders as a bright etched line between the menu bar and the toolbar. Hiding it
-        // when dark mode is active is the only way to remove that artifact.
+        /**
+         * ApplicationWindow's top separator is a native Label(SWT.SEPARATOR) that Win32
+         * paints via DrawEdge(EDGE_ETCHED), using the system 3D highlight/shadow colors
+         * directly - it ignores setBackground()/setForeground() entirely (same class of
+         * native-chrome limitation as TabFolder's themed body), so in dark mode it always
+         * renders as a bright etched line between the menu bar and the toolbar. Hiding it
+         * when dark mode is active is the only way to remove that artifact.
+         */
         return !DarkThemeSupport.isDarkModeActive() && super.showTopSeperator();
     }
 
@@ -97,7 +99,7 @@ public class MainWindow extends ApplicationWindow {
         GridDataFactory.defaultsFor(mainPanel).grab(true, true).applyTo(mainPanel);
         GridLayoutFactory.swtDefaults().generateLayout(composite);
         applyDarkTheme(composite);
-        // Apply theme to menu bar after it's fully initialized
+        /** Apply theme to menu bar after it's fully initialized */
         Display.getCurrent().asyncExec(() -> applyDarkThemeToMenuBar());
         return composite;
     }

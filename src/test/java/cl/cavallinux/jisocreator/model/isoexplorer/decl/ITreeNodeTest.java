@@ -97,7 +97,7 @@ class ITreeNodeTest {
     @DisplayName("addNode should be a no-op by default")
     void addNodeShouldBeNoOpByDefault() {
         node.addNode(new BareTreeNode());
-        // No exception and no observable state change: children remain empty.
+        /** No exception and no observable state change: children remain empty. */
         assertTrue(node.getChildren().isEmpty());
     }
 

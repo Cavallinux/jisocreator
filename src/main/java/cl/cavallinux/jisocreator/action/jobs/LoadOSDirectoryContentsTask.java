@@ -115,9 +115,11 @@ public class LoadOSDirectoryContentsTask implements Runnable {
             OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
             osExplorer.warmAttributesCache(directory.toPath());
         } catch (RuntimeException e) {
-            // Still fall through to restore the busy cursor (via applyToTableViewer
-            // below) even if pre-fetching failed, so the UI never gets stuck showing
-            // a wait cursor indefinitely.
+            /**
+             * Still fall through to restore the busy cursor (via applyToTableViewer
+             * below) even if pre-fetching failed, so the UI never gets stuck showing
+             * a wait cursor indefinitely.
+             */
             log.warn("Error pre-fetching file metadata for directory: {}", directory, e);
         }
         if (!isStillLatestRequest()) {

@@ -51,16 +51,20 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
     @Override
     protected Control createContents(Composite parent) {
         Control contents = super.createContents(parent);
-        // TitleAreaDialog builds its title banner (icon/title/message) as a sibling of
-        // dialogArea/buttonBar inside createContents(), with its own explicit colors
-        // (JFaceColors.setColors(...)). Neither applyToControlTree(dialogArea) nor
-        // applyToControlTree(buttonBarComposite) reach it, so the full contents tree
-        // must be re-styled here once everything is built (same fix applied to
-        // AboutDialog, the only other TitleAreaDialog subclass in this codebase).
+        /**
+         * TitleAreaDialog builds its title banner (icon/title/message) as a sibling of
+         * dialogArea/buttonBar inside createContents(), with its own explicit colors
+         * (JFaceColors.setColors(...)). Neither applyToControlTree(dialogArea) nor
+         * applyToControlTree(buttonBarComposite) reach it, so the full contents tree
+         * must be re-styled here once everything is built (same fix applied to
+         * AboutDialog, the only other TitleAreaDialog subclass in this codebase).
+         */
         DarkThemeSupport.applyToControlTree(contents);
-        // applyToControlTree unconditionally resets every control's foreground to the
-        // dark palette color, which would undo the intentional red error-text color
-        // applied in createDialogArea() below - restore it here, after the fact.
+        /**
+         * applyToControlTree unconditionally resets every control's foreground to the
+         * dark palette color, which would undo the intentional red error-text color
+         * applied in createDialogArea() below - restore it here, after the fact.
+         */
         if (Objects.nonNull(errorIndicator) && !errorIndicator.isDisposed()) {
             errorIndicator.setForeground(contents.getDisplay().getSystemColor(SWT.COLOR_RED));
         }
@@ -74,11 +78,13 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
         setTitle(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
         setMessage(ShowIsoInformationDialogMessages.showIsoInfoDialogStaticInfo);
-        // TitleAreaDialog falls back to JFace's stock DLG_IMG_TITLE_BANNER image
-        // whenever no custom titleAreaImage is set - that stock banner graphic has a
-        // light background baked into the bitmap itself, so no amount of
-        // setBackground()/applyToControlTree() styling can dark-theme it. Using the
-        // app icon here (same pattern as AboutDialog) replaces that fixed light image.
+        /**
+         * TitleAreaDialog falls back to JFace's stock DLG_IMG_TITLE_BANNER image
+         * whenever no custom titleAreaImage is set - that stock banner graphic has a
+         * light background baked into the bitmap itself, so no amount of
+         * setBackground()/applyToControlTree() styling can dark-theme it. Using the
+         * app icon here (same pattern as AboutDialog) replaces that fixed light image.
+         */
         setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
         Composite container = new Composite(area, SWT.NONE);

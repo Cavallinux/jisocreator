@@ -65,10 +65,12 @@ public final class DarkThemeSupport {
 
         display.setData(SWT_WIN32_DARK_MODE_EXPLORER_THEME, Boolean.TRUE);
         display.setData(SWT_WIN32_DARK_MODE_SHELL_TITLE, Boolean.TRUE);
-        // Combo.createHandle() only calls AllowDarkModeForWindow/SetWindowTheme(CFD)
-        // on the native handle when display.comboUseDarkTheme is true at creation
-        // time - without this flag every Combo keeps its light dropdown arrow/list
-        // chrome no matter what setBackground()/setForeground() apply afterwards.
+        /**
+         * Combo.createHandle() only calls AllowDarkModeForWindow/SetWindowTheme(CFD)
+         * on the native handle when display.comboUseDarkTheme is true at creation
+         * time - without this flag every Combo keeps its light dropdown arrow/list
+         * chrome no matter what setBackground()/setForeground() apply afterwards.
+         */
         display.setData(SWT_WIN32_COMBO_USE_DARK_THEME, Boolean.TRUE);
         applyMenuBarDisplayColors(display);
     }
@@ -185,11 +187,13 @@ public final class DarkThemeSupport {
         }
 
         if (control instanceof CTabFolder cTabFolder) {
-            // CTabFolder is fully SWT owner-drawn (unlike the native win32 TabFolder,
-            // whose body/tab-strip theme background cannot be overridden - see
-            // TabFolder#findThemeControl(): "It is not possible to change the background
-            // of this control"), so it properly honors custom background/foreground and
-            // selected-tab colors, which is required to fully dark-theme tabbed dialogs.
+            /**
+             * CTabFolder is fully SWT owner-drawn (unlike the native win32 TabFolder,
+             * whose body/tab-strip theme background cannot be overridden - see
+             * TabFolder#findThemeControl(): "It is not possible to change the background
+             * of this control"), so it properly honors custom background/foreground and
+             * selected-tab colors, which is required to fully dark-theme tabbed dialogs.
+             */
             cTabFolder.setBackground(palette.panelBackground);
             cTabFolder.setForeground(palette.foreground);
             cTabFolder.setSelectionBackground(palette.inputBackgroundFocus);
@@ -232,18 +236,18 @@ public final class DarkThemeSupport {
             return;
         }
 
-        // Apply background and foreground to the menu
+        /** Apply background and foreground to the menu */
         setOptionalColor(menu, "setBackground", palette.panelBackground);
         setOptionalColor(menu, "setForeground", palette.foreground);
 
-        // Apply styling to each menu item in the menu
+        /** Apply styling to each menu item in the menu */
         for (MenuItem menuItem : menu.getItems()) {
             if (!menuItem.isDisposed()) {
-                // Try to set colors for menu items
+                /** Try to set colors for menu items */
                 setOptionalColor(menuItem, "setBackground", palette.panelBackground);
                 setOptionalColor(menuItem, "setForeground", palette.foreground);
 
-                // Recursively apply to submenus
+                /** Recursively apply to submenus */
                 Menu submenu = menuItem.getMenu();
                 if (Objects.nonNull(submenu) && !submenu.isDisposed()) {
                     applyMenuRecursively(submenu, palette);
@@ -291,7 +295,7 @@ public final class DarkThemeSupport {
             updateControlStateStyle(control, palette);
         });
 
-        // Initial state setup
+        /** Initial state setup */
         updateControlStateStyle(control, palette);
     }
 
@@ -364,8 +368,10 @@ public final class DarkThemeSupport {
             Method method = target.getClass().getMethod(methodName, Color.class);
             method.invoke(target, color);
         } catch (ReflectiveOperationException ignored) {
-            // Compatibility fallback for SWT variants without this API.
-            // This is expected for some widgets/menus depending on platform and SWT version
+            /**
+             * Compatibility fallback for SWT variants without this API.
+             * This is expected for some widgets/menus depending on platform and SWT version
+             */
         }
     }
 

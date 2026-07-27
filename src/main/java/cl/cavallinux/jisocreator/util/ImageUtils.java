@@ -73,7 +73,7 @@ public class ImageUtils {
             return loadImage(GENERIC_FILENAME);
         }
 
-        // Support both Path and File-backed nodes
+        /** Support both Path and File-backed nodes */
         if (element instanceof Path) {
             return loadImage((Path) element);
         } else if (element instanceof File) {
@@ -92,10 +92,12 @@ public class ImageUtils {
         } else {
             String extension = osExplorer.getExtension(path);
             if (StringUtils.isNotBlank(extension)) {
-                // Delegate to OSExplorer#findProgram, which caches the result of the
-                // expensive Program.findProgram(String) OS-level lookup per extension,
-                // avoiding duplicate native calls already performed elsewhere (e.g.
-                // OSExplorer#getFileType) for files sharing the same extension.
+                /**
+                 * Delegate to OSExplorer#findProgram, which caches the result of the
+                 * expensive Program.findProgram(String) OS-level lookup per extension,
+                 * avoiding duplicate native calls already performed elsewhere (e.g.
+                 * OSExplorer#getFileType) for files sharing the same extension.
+                 */
                 Program program = osExplorer.findProgram(extension);
                 return Objects.nonNull(program) ? loadImage(program) : loadImage(GENERIC_FILENAME);
             } else {

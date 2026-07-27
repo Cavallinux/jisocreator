@@ -36,9 +36,11 @@ public final class TransferDataTestSupport {
      */
     public static TransferData unsupportedTransferData(Transfer transfer) throws ReflectiveOperationException {
         TransferData transferData = transfer.getSupportedTypes()[0];
-        // TransferData.type es 'long' en SWT GTK y 'int' en SWT Win32. Se usa reflexión
-        // para evitar un NoSuchFieldError al ejecutar el test con un runtime SWT distinto
-        // del que se usó para compilar (p.ej. compilar con linux y correr con -P windows).
+        /**
+         * TransferData.type es 'long' en SWT GTK y 'int' en SWT Win32. Se usa reflexión
+         * para evitar un NoSuchFieldError al ejecutar el test con un runtime SWT distinto
+         * del que se usó para compilar (p.ej. compilar con linux y correr con -P windows).
+         */
         setTypeField(transferData, Integer.MAX_VALUE);
         Object formatetc = readFieldIfPresent(transferData, "formatetc");
         if (formatetc != null) {
@@ -64,7 +66,7 @@ public final class TransferDataTestSupport {
                 typeField.setInt(transferData, value);
             }
         } catch (NoSuchFieldException notPresentOnThisPlatform) {
-            // campo 'type' no presente en este SWT platform; no hay nada que mutar
+            /** campo 'type' no presente en este SWT platform; no hay nada que mutar */
         }
     }
 

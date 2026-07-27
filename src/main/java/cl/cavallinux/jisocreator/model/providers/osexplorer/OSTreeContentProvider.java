@@ -44,7 +44,7 @@ public class OSTreeContentProvider implements ITreeContentProvider {
         if (arg0 instanceof File file) {
             return directoryHasAnyEntry(file.toPath());
         } else {
-            // If arg0 is not a File (e.g., initial input is File[]), check if roots exist
+            /** If arg0 is not a File (e.g., initial input is File[]), check if roots exist */
             File[] roots = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
             return Objects.nonNull(roots) && roots.length > 0;
         }

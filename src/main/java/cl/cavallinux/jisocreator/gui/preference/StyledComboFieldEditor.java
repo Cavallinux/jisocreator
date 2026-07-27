@@ -24,18 +24,18 @@ public class StyledComboFieldEditor extends ComboFieldEditor {
     }
 
     private void initializeStyledColors(Composite parent) {
-        // Focus state: lighter background for better visibility
+        /** Focus state: lighter background for better visibility */
         focusBackgroundColor = new Color(parent.getDisplay(), 55, 55, 60);
-        // Disabled state: darker background with reduced opacity effect
+        /** Disabled state: darker background with reduced opacity effect */
         disabledBackgroundColor = new Color(parent.getDisplay(), 35, 35, 35);
-        // Disabled text: dimmed foreground for visual indication
+        /** Disabled text: dimmed foreground for visual indication */
         disabledForegroundColor = new Color(parent.getDisplay(), 120, 120, 120);
     }
 
     private void applyStylesToComboControl() {
         Combo comboControl = getComboBoxControlViaReflection();
         if (comboControl != null && !comboControl.isDisposed()) {
-            // Add focus listeners for enhanced visual feedback
+            /** Add focus listeners for enhanced visual feedback */
             comboControl.addListener(SWT.FocusIn, event -> {
                 if (!comboControl.isDisposed() && comboControl.getEnabled()) {
                     comboControl.setBackground(focusBackgroundColor);
@@ -44,22 +44,22 @@ public class StyledComboFieldEditor extends ComboFieldEditor {
 
             comboControl.addListener(SWT.FocusOut, event -> {
                 if (!comboControl.isDisposed() && comboControl.getEnabled()) {
-                    // Restore to normal input background
+                    /** Restore to normal input background */
                     comboControl.setBackground(new Color(comboControl.getDisplay(), 45, 45, 48));
                 }
             });
 
-            // Add state change listener for disabled state
+            /** Add state change listener for disabled state */
             comboControl.addListener(SWT.Modify, event -> {
                 updateComboControlState(comboControl);
             });
 
-            // Also listen for Selection events to catch dropdown selections
+            /** Also listen for Selection events to catch dropdown selections */
             comboControl.addListener(SWT.Selection, event -> {
                 updateComboControlState(comboControl);
             });
 
-            // Initial state setup
+            /** Initial state setup */
             updateComboControlState(comboControl);
         }
     }
@@ -70,7 +70,7 @@ public class StyledComboFieldEditor extends ComboFieldEditor {
             method.setAccessible(true);
             return (Combo) method.invoke(this);
         } catch (Exception e) {
-            // Fallback - try without any arguments
+            /** Fallback - try without any arguments */
             return null;
         }
     }

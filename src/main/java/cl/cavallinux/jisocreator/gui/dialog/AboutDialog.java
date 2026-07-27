@@ -35,10 +35,12 @@ public class AboutDialog extends TitleAreaDialog {
     @Override
     protected Control createContents(Composite parent) {
         Control contents = super.createContents(parent);
-        // TitleAreaDialog builds its title banner (icon/title/message) as a sibling of
-        // dialogArea inside createContents(), with its own explicit colors
-        // (JFaceColors.setColors(...)). applyToControlTree(dialogArea) never reaches it,
-        // so it must be styled here, on the full contents tree, once everything exists.
+        /**
+         * TitleAreaDialog builds its title banner (icon/title/message) as a sibling of
+         * dialogArea inside createContents(), with its own explicit colors
+         * (JFaceColors.setColors(...)). applyToControlTree(dialogArea) never reaches it,
+         * so it must be styled here, on the full contents tree, once everything exists.
+         */
         DarkThemeSupport.applyToControlTree(contents);
         return contents;
     }

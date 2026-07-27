@@ -32,6 +32,8 @@ public final class DarkThemeSupport {
             "org.eclipse.swt.internal.win32.useDarkModeExplorerTheme";
     private static final String SWT_WIN32_DARK_MODE_SHELL_TITLE =
             "org.eclipse.swt.internal.win32.useShellTitleColoring";
+    private static final String SWT_WIN32_COMBO_USE_DARK_THEME =
+            "org.eclipse.swt.internal.win32.Combo.useDarkTheme";
     private static final String SWT_WIN32_MENUBAR_BACKGROUND_COLOR_KEY =
             "org.eclipse.swt.internal.win32.menuBarBackgroundColor";
     private static final String SWT_WIN32_MENUBAR_FOREGROUND_COLOR_KEY =
@@ -63,6 +65,11 @@ public final class DarkThemeSupport {
 
         display.setData(SWT_WIN32_DARK_MODE_EXPLORER_THEME, Boolean.TRUE);
         display.setData(SWT_WIN32_DARK_MODE_SHELL_TITLE, Boolean.TRUE);
+        // Combo.createHandle() only calls AllowDarkModeForWindow/SetWindowTheme(CFD)
+        // on the native handle when display.comboUseDarkTheme is true at creation
+        // time - without this flag every Combo keeps its light dropdown arrow/list
+        // chrome no matter what setBackground()/setForeground() apply afterwards.
+        display.setData(SWT_WIN32_COMBO_USE_DARK_THEME, Boolean.TRUE);
         applyMenuBarDisplayColors(display);
     }
 

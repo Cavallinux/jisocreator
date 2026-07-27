@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Text;
 import cl.cavallinux.jisocreator.gui.i18n.ShowIsoInformationDialogMessages;
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
 import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
 import lombok.Builder;
@@ -73,6 +74,12 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
         setTitle(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
         setMessage(ShowIsoInformationDialogMessages.showIsoInfoDialogStaticInfo);
+        // TitleAreaDialog falls back to JFace's stock DLG_IMG_TITLE_BANNER image
+        // whenever no custom titleAreaImage is set - that stock banner graphic has a
+        // light background baked into the bitmap itself, so no amount of
+        // setBackground()/applyToControlTree() styling can dark-theme it. Using the
+        // app icon here (same pattern as AboutDialog) replaces that fixed light image.
+        setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
         Composite container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));

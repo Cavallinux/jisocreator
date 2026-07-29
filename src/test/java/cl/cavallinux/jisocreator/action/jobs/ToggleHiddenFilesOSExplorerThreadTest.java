@@ -103,6 +103,7 @@ class ToggleHiddenFilesOSExplorerThreadTest {
         public void reveal(Object element) {
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         protected void setSelectionToWidget(List list, boolean reveal) {
         }

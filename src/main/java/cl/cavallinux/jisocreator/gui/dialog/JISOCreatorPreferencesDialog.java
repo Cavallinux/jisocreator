@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
 import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +30,7 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
         super.configureShell(newShell);
         DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(PreferenceDialogMessages.preferenceDialogWindowTitle);
+        newShell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
     }
 
     @Override

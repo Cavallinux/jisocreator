@@ -46,6 +46,7 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
         super.configureShell(newShell);
         DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
+        newShell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
     }
 
     @Override

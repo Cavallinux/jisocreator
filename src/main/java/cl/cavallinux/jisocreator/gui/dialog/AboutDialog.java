@@ -1,5 +1,7 @@
 package cl.cavallinux.jisocreator.gui.dialog;
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -16,19 +18,18 @@ import org.eclipse.swt.widgets.Text;
 import cl.cavallinux.jisocreator.gui.i18n.AboutDialogMessages;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.model.cmdline.JISOCreatorAttributes;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AboutDialog extends TitleAreaDialog {
-    private String formattedProgramVersion;
+    private JISOCreatorAttributes attributes;
 
     @Builder
-    protected AboutDialog(Shell parentShell) {
+    protected AboutDialog(Shell parentShell, JISOCreatorAttributes attributes) {
         super(parentShell);
-        formattedProgramVersion = String.format(AboutDialogMessages.aboutDialogProgramVersion,
-                AboutDialog.class.getPackage().getImplementationVersion(), System.getProperty("os.name"),
-                System.getProperty("os.version"));
+        this.attributes = attributes;
     }
 
     @Override
@@ -36,6 +37,7 @@ public class AboutDialog extends TitleAreaDialog {
         log.info("Configuring about dialog shell");
         super.configureShell(newShell);
         newShell.setText(AboutDialogMessages.aboutDialogWindowTitle);
+        newShell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
     }
 
     @Override
@@ -47,7 +49,8 @@ public class AboutDialog extends TitleAreaDialog {
         log.info("Creating about panel");
         Composite composite = new Composite(parent, SWT.NONE);
         setTitle("JIsocreator");
-        setMessage(formattedProgramVersion);
+        setMessage(attributes.toString(AboutDialogMessages.aboutDialogProgramVersion,
+                List.of(attributes.appVersion(), attributes.osName(), attributes.osVersion())));
         setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
         TabFolder tabFolder = new TabFolder(composite, SWT.NONE);

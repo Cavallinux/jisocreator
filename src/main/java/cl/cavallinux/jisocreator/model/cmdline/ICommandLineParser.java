@@ -25,6 +25,7 @@ public interface ICommandLineParser {
                 .appVersion(commandLinePackage.getImplementationVersion())
                 .jvmVersion(System.getProperty("java.version"))
                 .jvmVendor(System.getProperty("java.specification.vendor")).osName(System.getProperty("os.name"))
+                .osVersion(System.getProperty("os.version"))
                 .build();
     }
 

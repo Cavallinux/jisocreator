@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 
 import cl.cavallinux.jisocreator.action.decl.IFileManagementAction;
 import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
+import cl.cavallinux.jisocreator.gui.i18n.MainActionsMessages;
 import cl.cavallinux.jisocreator.gui.i18n.MainWindowMessages;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
 import cl.cavallinux.jisocreator.gui.theme.DarkJFaceDialogs;
@@ -73,8 +74,9 @@ public class OpenIsoLayoutAction extends JISOCreatorBaseAction implements IRunna
             } else {
                 Display.getDefault().asyncExec(() -> {
                     monitor.setCanceled(true);
-                    DarkJFaceDialogs.openError(GUIManager.INSTANCE.getMainWindow().getShell(), "JISOCREATOR",
-                            "XML Selected is not loaded");
+                    DarkJFaceDialogs.openError(GUIManager.INSTANCE.getMainWindow().getShell(),
+                            MainActionsMessages.openIsoLayoutActionErrorDialogTitle,
+                            MainActionsMessages.openIsoLayoutActionErrorDialogMessage);
                 });
             }
 

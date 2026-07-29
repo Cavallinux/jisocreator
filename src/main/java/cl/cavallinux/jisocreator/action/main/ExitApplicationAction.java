@@ -7,6 +7,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 
 import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
+import cl.cavallinux.jisocreator.gui.i18n.QuestionWithToggleDialogMessages;
 import cl.cavallinux.jisocreator.gui.theme.DarkJFaceDialogs;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
@@ -45,14 +46,18 @@ public class ExitApplicationAction extends JISOCreatorBaseAction {
         MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
         Shell shell = mainWindow.getShell();
         IOUtils ioUtils = IOManager.INSTANCE.getIoUtils();
-        MessageDialogWithToggle dialog = DarkJFaceDialogs.openYesNoQuestionWithToggle(shell, "JISOCreator",
-                "Are you sure to exit?", "Ask always", ioUtils.getStore().getBoolean("general.exit.confirm"));
+        MessageDialogWithToggle dialog = DarkJFaceDialogs.openYesNoQuestionWithToggle(shell,
+                QuestionWithToggleDialogMessages.exitConfirmDialogTitle,
+                QuestionWithToggleDialogMessages.exitConfirmDialogMessage,
+                QuestionWithToggleDialogMessages.exitConfirmDialogToggleMessage,
+                ioUtils.getStore().getBoolean("general.exit.confirm"));
 
         ioUtils.getStore().setValue("general.exit.confirm", dialog.getToggleState());
         ioUtils.saveStore();
         switch (dialog.getReturnCode()) {
         case IDialogConstants.YES_ID:
             exit();
+            break;
         default:
             return;
         }

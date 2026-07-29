@@ -21,7 +21,6 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
     public GeneralPreferencesPage() {
         super(GRID);
         log.info("Initializing GeneralPreferencesPage");
-        setDescription(PreferenceDialogMessages.preferenceDialogGeneralOptionsNodeDescription);
     }
 
     @Override

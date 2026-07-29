@@ -52,7 +52,6 @@ public final class DarkThemeSupport {
     private static final int[] DARK_PANEL_RGB = { 37, 37, 38 };
     private static final int[] DARK_INPUT_RGB = { 45, 45, 48 };
     private static final int[] DARK_INPUT_FOCUS_RGB = { 55, 55, 60 };
-    private static final int[] DARK_INPUT_FOCUS_BORDER_RGB = { 100, 150, 200 };
     private static final int[] DARK_INPUT_DISABLED_RGB = { 35, 35, 35 };
     private static final int[] DARK_FG_RGB = { 240, 240, 240 };
     private static final int[] DARK_FG_DISABLED_RGB = { 120, 120, 120 };

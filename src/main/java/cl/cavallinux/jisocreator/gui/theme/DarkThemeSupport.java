@@ -34,6 +34,8 @@ public final class DarkThemeSupport {
             "org.eclipse.swt.internal.win32.useShellTitleColoring";
     private static final String SWT_WIN32_COMBO_USE_DARK_THEME =
             "org.eclipse.swt.internal.win32.Combo.useDarkTheme";
+    private static final String SWT_WIN32_USE_WS_BORDER_ALL =
+            "org.eclipse.swt.internal.win32.all.use_WS_BORDER";
     private static final String SWT_WIN32_MENUBAR_BACKGROUND_COLOR_KEY =
             "org.eclipse.swt.internal.win32.menuBarBackgroundColor";
     private static final String SWT_WIN32_MENUBAR_FOREGROUND_COLOR_KEY =
@@ -72,6 +74,17 @@ public final class DarkThemeSupport {
          * chrome no matter what setBackground()/setForeground() apply afterwards.
          */
         display.setData(SWT_WIN32_COMBO_USE_DARK_THEME, Boolean.TRUE);
+        /**
+         * SWT.BORDER on Win32 Text/List/Table/Canvas defaults to WS_EX_CLIENTEDGE,
+         * a UxTheme sunken-edge highlight that is always drawn in light colors and
+         * ignores setBackground()/setForeground() entirely - this is what makes
+         * every "boxed" control (path fields, the mkisofs FileFieldEditor text,
+         * etc.) keep a thin white/light ring around an otherwise correctly dark
+         * client area. Requesting the plain WS_BORDER flat edge instead removes
+         * that unthemeable highlight so the dark background reaches the control's
+         * true edge. Must be set before the affected controls are created.
+         */
+        display.setData(SWT_WIN32_USE_WS_BORDER_ALL, Boolean.TRUE);
         applyMenuBarDisplayColors(display);
     }
 

@@ -166,6 +166,29 @@
 					</exclusions>
 				</dependency>
 			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>${exec.maven.plugin}</version>
+						<configuration combine.self="override">
+							<executable>java</executable>
+							<arguments>
+								<argument>--add-opens</argument>
+								<argument>java.base/java.util=ALL-UNNAMED</argument>
+								<argument>${debug.jvm.args}</argument>
+								<argument>${jvm.nativeacess.arg}</argument>
+								<argument>${swt.win32.darkmode.explorer.arg}</argument>
+								<argument>${swt.win32.darkmode.titlebar.arg}</argument>
+								<argument>-jar</argument>
+								<argument>
+									${project.build.directory}/${project.artifactId}.jar</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<profile>
 			<id>windows-cmdlinemode</id>
@@ -250,6 +273,8 @@
 		<debug.port>5005</debug.port>
 		<debug.jvm.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${debug.port}</debug.jvm.args>
 		<jvm.nativeacess.arg>--enable-native-access=ALL-UNNAMED</jvm.nativeacess.arg>
+		<swt.win32.darkmode.explorer.arg>-Dorg.eclipse.swt.internal.win32.useDarkModeExplorerTheme=true</swt.win32.darkmode.explorer.arg>
+		<swt.win32.darkmode.titlebar.arg>-Dorg.eclipse.swt.internal.win32.useShellTitleColoring=true</swt.win32.darkmode.titlebar.arg>
 		<jisocreator.main.class>cl.cavallinux.jisocreator.action.main.MainAction</jisocreator.main.class>
 	</properties>
 

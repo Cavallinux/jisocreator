@@ -5,13 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.instances.JISOCreatorLanguageOptions;
+import cl.cavallinux.jisocreator.instances.JISOCreatorThemeOptions;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,9 +32,11 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
         layout.numColumns = 2;
         addField(new BooleanFieldEditor("general.exit.confirm",
                 PreferenceDialogMessages.preferenceDialogGeneralOptionsConfirmExitOption, parent));
-        addField(new ComboFieldEditor("jisocreator.language",
+        addField(new StyledComboFieldEditor("jisocreator.language",
                 PreferenceDialogMessages.preferenceDialogGeneralOptionsLanguageApp, buildLanguageOptionsArray(),
                 parent));
+        addField(new StyledComboFieldEditor("jisocreator.theme.mode",
+                PreferenceDialogMessages.preferenceDialogGeneralOptionsThemeMode, buildThemeOptionsArray(), parent));
     }
 
     @Override
@@ -42,6 +45,7 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
         super.createControl(parent);
         getDefaultsButton().setText(PreferenceDialogMessages.preferenceDialogGeneralOptionsRestoreButton);
         getApplyButton().setText(PreferenceDialogMessages.preferenceDialogGeneralOptionsApplyButton);
+        DarkThemeSupport.applyToControlTree(getControl());
     }
 
     private String[][] buildLanguageOptionsArray() {
@@ -50,6 +54,15 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
             languageOptionsMap.put(language.getLanguageText(), language.getLanguageLocale().toLanguageTag());
         });
         return languageOptionsMap.entrySet().stream().map(entry -> new String[] { entry.getKey(), entry.getValue() })
+                .toArray(String[][]::new);
+    }
+
+    private String[][] buildThemeOptionsArray() {
+        Map<String, String> themeOptionsMap = new LinkedHashMap<>();
+        Arrays.asList(JISOCreatorThemeOptions.values()).forEach(theme -> {
+            themeOptionsMap.put(theme.getThemeModeText(), theme.getThemeModeValue());
+        });
+        return themeOptionsMap.entrySet().stream().map(entry -> new String[] { entry.getKey(), entry.getValue() })
                 .toArray(String[][]::new);
     }
 }

@@ -26,6 +26,10 @@ public class PreferenceDialogMessages extends NLS implements INLSBundleMessages 
     public static String preferenceDialogGeneralOptionsLanguageESOption;
     public static String preferenceDialogGeneralOptionsApplyButton;
     public static String preferenceDialogGeneralOptionsRestoreButton;
+    public static String preferenceDialogGeneralOptionsThemeMode;
+    public static String preferenceDialogGeneralOptionsThemeAutoOption;
+    public static String preferenceDialogGeneralOptionsThemeLightOption;
+    public static String preferenceDialogGeneralOptionsThemeDarkOption;
 
     static {
         initializeMessages(PREFERENCEDIALOG_BUNDLE_MESSAGE, PreferenceDialogMessages.class);

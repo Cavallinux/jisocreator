@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 import cl.cavallinux.jisocreator.gui.i18n.AddToISODialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class ADDFileToIsoLayoutDialog extends ElementTreeSelectionDialog {
     protected void configureShell(Shell shell) {
         log.info("Configuring dialog shell");
         super.configureShell(shell);
+        DarkThemeSupport.enableWindowsDarkMode(shell.getDisplay());
         shell.setText(AddToISODialogMessages.addToIsoDialogWindowTitle);
     }
     

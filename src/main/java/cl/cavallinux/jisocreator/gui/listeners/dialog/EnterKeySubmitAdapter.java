@@ -23,7 +23,7 @@ public class EnterKeySubmitAdapter extends SelectionAdapter {
 
     @Override
     public void widgetDefaultSelected(SelectionEvent e) {
-        // widgetDefaultSelected se dispara automáticamente al pulsar Enter.
+        /** widgetDefaultSelected se dispara automáticamente al pulsar Enter. */
         if (submitAction != null) {
             submitAction.run();
         }

@@ -1,10 +1,11 @@
 package cl.cavallinux.jisocreator.gui.dialog;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -13,9 +14,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import cl.cavallinux.jisocreator.gui.i18n.ShowIsoInformationDialogMessages;
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
@@ -43,8 +44,32 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         log.info("Configuring show info layout shell");
         super.configureShell(newShell);
+        DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
         newShell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
+    }
+
+    @Override
+    protected Control createContents(Composite parent) {
+        Control contents = super.createContents(parent);
+        /**
+         * TitleAreaDialog builds its title banner (icon/title/message) as a sibling of
+         * dialogArea/buttonBar inside createContents(), with its own explicit colors
+         * (JFaceColors.setColors(...)). Neither applyToControlTree(dialogArea) nor
+         * applyToControlTree(buttonBarComposite) reach it, so the full contents tree
+         * must be re-styled here once everything is built (same fix applied to
+         * AboutDialog, the only other TitleAreaDialog subclass in this codebase).
+         */
+        DarkThemeSupport.applyToControlTree(contents);
+        /**
+         * applyToControlTree unconditionally resets every control's foreground to the
+         * dark palette color, which would undo the intentional red error-text color
+         * applied in createDialogArea() below - restore it here, after the fact.
+         */
+        if (Objects.nonNull(errorIndicator) && !errorIndicator.isDisposed()) {
+            errorIndicator.setForeground(contents.getDisplay().getSystemColor(SWT.COLOR_RED));
+        }
+        return contents;
     }
 
     @Override
@@ -54,6 +79,14 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
         setTitle(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
         setMessage(ShowIsoInformationDialogMessages.showIsoInfoDialogStaticInfo);
+        /**
+         * TitleAreaDialog falls back to JFace's stock DLG_IMG_TITLE_BANNER image
+         * whenever no custom titleAreaImage is set - that stock banner graphic has a
+         * light background baked into the bitmap itself, so no amount of
+         * setBackground()/applyToControlTree() styling can dark-theme it. Using the
+         * app icon here (same pattern as AboutDialog) replaces that fixed light image.
+         */
+        setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
         Composite container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -94,10 +127,13 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
 
         errorIndicator = new Label(container, SWT.NONE);
         errorIndicator.setText("");
-        errorIndicator.setForeground(new Color(parent.getDisplay(), 255, 0, 0));
+        errorIndicator.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
         GridData gdError = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
         gdError.verticalIndent = 8;
         errorIndicator.setLayoutData(gdError);
+
+        DarkThemeSupport.applyToControlTree(area);
+        errorIndicator.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
 
         return area;
     }
@@ -108,6 +144,7 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
                 true);
         createButton(parent, IDialogConstants.CANCEL_ID, ShowIsoInformationDialogMessages.showIsoInfoDialogCancelText,
                 false);
+        DarkThemeSupport.applyToControlTree(parent);
     }
 
     @Override

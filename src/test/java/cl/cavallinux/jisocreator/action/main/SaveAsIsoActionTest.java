@@ -26,13 +26,15 @@ class SaveAsIsoActionTest {
 
     @BeforeEach
     void setUp() {
-        // Utiliza el constructor protegido añadido en d68a1a5
+        /** Utiliza el constructor protegido añadido en d68a1a5 */
         action = SaveAsIsoAction.builder().build();
     }
 
-    // -------------------------------------------------------------------------
-    // Estado inicial — builder sin argumentos (commit d68a1a5)
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Estado inicial — builder sin argumentos (commit d68a1a5)
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Builder default should initialise inputXMLLayoutFile as empty string")
@@ -54,9 +56,11 @@ class SaveAsIsoActionTest {
         assertFalse(action.isCommandLineMode());
     }
 
-    // -------------------------------------------------------------------------
-    // Setters (usados en MainAction.handleCommandLine)
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Setters (usados en MainAction.handleCommandLine)
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("setInputXMLLayoutFile should store and expose the supplied path")
@@ -87,9 +91,11 @@ class SaveAsIsoActionTest {
         assertFalse(action.isCommandLineMode());
     }
 
-    // -------------------------------------------------------------------------
-    // Múltiples instancias independientes
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Múltiples instancias independientes
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Each builder call should produce an independent instance")

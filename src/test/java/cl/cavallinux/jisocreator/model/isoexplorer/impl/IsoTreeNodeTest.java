@@ -19,9 +19,11 @@ import cl.cavallinux.jisocreator.model.isoexplorer.decl.ITreeNode;
 @DisplayName("IsoTreeNode tests")
 class IsoTreeNodeTest {
 
-    // -------------------------------------------------------------------------
-    // addLeafNode — nodo simple (archivo)
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * addLeafNode — nodo simple (archivo)
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("addLeafNode should add a file node to parent children")
@@ -48,9 +50,11 @@ class IsoTreeNodeTest {
 
         root.addLeafNode(dirNode);
 
-        // The root should have exactly one child (the directory node)
-        // and the directory node itself should have NO children
-        // (because addLeafNode does not recurse)
+        /**
+         * The root should have exactly one child (the directory node)
+         * and the directory node itself should have NO children
+         * (because addLeafNode does not recurse)
+         */
         assertEquals(1, root.getChildren().size());
         assertFalse(dirNode.hasChildren(),
                 "addLeafNode must NOT auto-populate directory children");
@@ -64,7 +68,8 @@ class IsoTreeNodeTest {
         IsoTreeNode child = new IsoTreeNode(root, file);
 
         root.addLeafNode(child);
-        root.addLeafNode(child); // duplicate call
+        /** duplicate call */
+        root.addLeafNode(child);
 
         assertEquals(1, root.getChildren().size(),
                 "Duplicate node must not be added twice");
@@ -87,9 +92,11 @@ class IsoTreeNodeTest {
         assertSame(nodeB, root.getChildren().get(1));
     }
 
-    // -------------------------------------------------------------------------
-    // addNode — comportamiento original (con recursion automatica)
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * addNode — comportamiento original (con recursion automatica)
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("addNode should auto-recurse into directory children")
@@ -103,7 +110,7 @@ class IsoTreeNodeTest {
 
         root.addNode(dirNode);
 
-        // addNode must have auto-populated children of dirNode
+        /** addNode must have auto-populated children of dirNode */
         assertEquals(1, root.getChildren().size());
         assertTrue(dirNode.hasChildren(),
                 "addNode must auto-populate directory children");
@@ -123,9 +130,11 @@ class IsoTreeNodeTest {
         assertEquals(1, root.getChildren().size());
     }
 
-    // -------------------------------------------------------------------------
-    // Contraste entre addNode y addLeafNode para directorios
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Contraste entre addNode y addLeafNode para directorios
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("addLeafNode vs addNode: only addNode should populate directory children")
@@ -147,15 +156,17 @@ class IsoTreeNodeTest {
                 "addNode: directory node must have auto-populated children");
     }
 
-    // -------------------------------------------------------------------------
-    // ITreeNode default addLeafNode (interface)
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * ITreeNode default addLeafNode (interface)
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("ITreeNode default addLeafNode should be a no-op")
     void iTreeNodeDefaultAddLeafNodeShouldBeNoOp() {
         ITreeNode node = new ITreeNode() {};
-        // Must not throw and must produce no visible state change
+        /** Must not throw and must produce no visible state change */
         node.addLeafNode(new ITreeNode() {});
         assertFalse(node.hasChildren());
     }

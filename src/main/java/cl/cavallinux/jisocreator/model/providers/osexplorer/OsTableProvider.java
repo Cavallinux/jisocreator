@@ -121,7 +121,7 @@ public class OsTableProvider extends TableProviderAdapter {
      * @param columnIndex the zero-based column index
      * @return the file property as a string, or null if invalid column
      */
-    //TODO refactor to cast from File to Path in getElements and pass Path to getColumnText, to avoid repeated casting and allow better separation of concerns
+    /** TODO refactor to cast from File to Path in getElements and pass Path to getColumnText, to avoid repeated casting and allow better separation of concerns */
     @Override
     public String getColumnText(Object element, int columnIndex) {
         Path filePath = element instanceof Path ? (Path) element : ((File) element).toPath();

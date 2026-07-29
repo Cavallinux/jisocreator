@@ -54,6 +54,19 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
          */
         Control buttonBar = super.createButtonBar(parent);
         DarkThemeSupport.applyToControlTree(buttonBar);
+        /**
+         * PreferenceDialog#createDialogArea(parent) creates its bottom horizontal
+         * separator (Label(SWT.HORIZONTAL | SWT.SEPARATOR), placed right above the
+         * button bar) as a direct child of this same `parent`, NOT as a descendant of
+         * the Composite it returns from createDialogArea(). Dialog.createContents(...)
+         * calls createDialogArea(composite) and createButtonBar(composite) with that
+         * same shared `composite`, so that bottom separator is a SIBLING of both the
+         * dialog-area subtree and the button-bar subtree above - it is therefore
+         * missed entirely by applyToControlTree(dialogArea) and
+         * applyToControlTree(buttonBar) alone. Re-applying the theme to the shared
+         * `parent` here (after both subtrees already exist) reaches that separator too.
+         */
+        DarkThemeSupport.applyToControlTree(parent);
         return buttonBar;
     }
 

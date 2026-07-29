@@ -42,7 +42,10 @@ public final class DarkThemeSupport {
             "org.eclipse.swt.internal.win32.menuBarForegroundColor";
     private static final String SWT_WIN32_MENUBAR_BORDER_COLOR_KEY =
             "org.eclipse.swt.internal.win32.menuBarBorderColor";
+    private static final String SWT_WIN32_TABLE_HEADER_LINE_COLOR_KEY =
+            "org.eclipse.swt.internal.win32.Table.headerLineColor";
     private static final String MENU_BAR_COLORS_APPLIED_KEY = "jisocreator.darktheme.menubarcolors";
+    private static final String TABLE_HEADER_LINE_COLOR_APPLIED_KEY = "jisocreator.darktheme.tableheaderlinecolor";
     private static final String DARK_PALETTE_KEY = "jisocreator.darktheme.palette";
     private static final String THEME_MODE_PREFERENCE_KEY = "jisocreator.theme.mode";
     private static final String THEME_MODE_LIGHT = "LIGHT";
@@ -85,6 +88,7 @@ public final class DarkThemeSupport {
          */
         display.setData(SWT_WIN32_USE_WS_BORDER_ALL, Boolean.TRUE);
         applyMenuBarDisplayColors(display);
+        applyTableHeaderLineColor(display);
     }
 
     public static void applyToControlTree(Control control) {
@@ -154,6 +158,32 @@ public final class DarkThemeSupport {
     }
 
     /**
+     * Aplica un color oscuro a las lineas divisorias del header de {@code Table} en Win32.
+     *
+     * <p>Cuando el header de una {@code Table} se dibuja a si mismo con owner-draw
+     * (activado por {@code setHeaderBackground}/{@code setHeaderForeground}, ver
+     * {@code Table#customHeaderDrawing()}), SWT sigue pintando la linea divisoria entre
+     * columnas y la linea entre el header y la primera fila con
+     * {@code OS.GetSysColor(COLOR_3DFACE)} -un gris claro del sistema que ignora por
+     * completo el resto de la paleta oscura- salvo que se configure explicitamente la
+     * clave interna {@code org.eclipse.swt.internal.win32.Table.headerLineColor} en el
+     * {@code Display}. Sin esta clave, los headers de IsoExplorer/OSExplorer quedan con
+     * lineas blancas visibles entre columnas incluso con el resto del header ya oscuro.</p>
+     */
+    private static void applyTableHeaderLineColor(Display display) {
+        if (Boolean.TRUE.equals(display.getData(TABLE_HEADER_LINE_COLOR_APPLIED_KEY))) {
+            return;
+        }
+
+        Color tableHeaderLineColor = new Color(display, DARK_PANEL_RGB[0], DARK_PANEL_RGB[1], DARK_PANEL_RGB[2]);
+
+        display.setData(SWT_WIN32_TABLE_HEADER_LINE_COLOR_KEY, tableHeaderLineColor);
+        display.setData(TABLE_HEADER_LINE_COLOR_APPLIED_KEY, Boolean.TRUE);
+
+        display.disposeExec(tableHeaderLineColor::dispose);
+    }
+
+    /**
      * Applies dark theme styling to the menu bar. This method handles
      * the menu bar styling which requires special consideration since
      * SWT Menu objects may not support all color operations on all platforms.
@@ -195,6 +225,24 @@ public final class DarkThemeSupport {
             text.setBackground(palette.inputBackground);
             attachFocusListeners(text, palette);
             attachDisabledListener(text, palette);
+            return;
+        }
+
+        if (control instanceof Label label && (label.getStyle() & SWT.SEPARATOR) != 0) {
+            /**
+             * Label(SWT.SEPARATOR) on Win32 is SS_OWNERDRAW: Label#wmDrawChildSeparator()
+             * unconditionally paints the divider line with OS.DrawEdge(EDGE_ETCHED /
+             * EDGE_SUNKEN), which always uses the fixed system 3D-highlight/3D-shadow
+             * colors and completely ignores setBackground()/setForeground() - the exact
+             * same class of unthemeable native chrome already found in the menu-bar
+             * separator and the Table header divider lines. Unlike those two cases,
+             * there is no Display-level override key for a generic separator Label, so
+             * the only way to remove the light line is to hide the control; the space
+             * it still reserves in the layout then simply shows the parent's already
+             * dark background, which is visually indistinguishable from a borderless
+             * divider (the same outcome chosen for MainWindow#showTopSeperator()).
+             */
+            label.setVisible(false);
             return;
         }
 

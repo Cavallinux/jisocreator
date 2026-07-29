@@ -5,6 +5,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Shell;
 
+import cl.cavallinux.jisocreator.gui.dialog.QuestionWithToggleDialog;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
 
 public final class DarkJFaceDialogs {
@@ -19,7 +20,7 @@ public final class DarkJFaceDialogs {
 
     public static MessageDialogWithToggle openYesNoQuestionWithToggle(Shell parentShell, String title, String message,
             String toggleMessage, boolean toggleState) {
-        MessageDialogWithToggle dialog = new MessageDialogWithToggle(parentShell, title, null, message,
+        MessageDialogWithToggle dialog = new QuestionWithToggleDialog(parentShell, title, null, message,
                 MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0,
                 toggleMessage, toggleState);
         /**

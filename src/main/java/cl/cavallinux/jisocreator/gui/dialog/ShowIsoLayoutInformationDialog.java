@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.i18n.ShowIsoInformationDialogMessages;
 import cl.cavallinux.jisocreator.gui.listeners.dialog.EnterKeySubmitAdapter;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import cl.cavallinux.jisocreator.model.isoexplorer.impl.IsoFileSystem;
 import cl.cavallinux.jisocreator.model.parser.decl.IsoFilesystemParser;
 import lombok.Builder;
@@ -43,6 +44,7 @@ public class ShowIsoLayoutInformationDialog extends TitleAreaDialog {
         log.info("Configuring show info layout shell");
         super.configureShell(newShell);
         newShell.setText(ShowIsoInformationDialogMessages.showIsoInfoDialogWindowTitle);
+        newShell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
     }
 
     @Override

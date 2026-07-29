@@ -9,15 +9,20 @@ public record JISOCreatorAttributes(String appName,
         String appVersion, 
         String jvmVersion, 
         String jvmVendor, 
-        String osName) {
+        String osName,
+        String osVersion) {
     
     @Override
     public final String toString() {
-        return String.format("%s version %s", appName, appVersion);
+        return toString("%s version %s", List.of(appName(), appVersion()));
     }
     
     public final String toString(String baseString) {
         List<String> versionArguments = List.of(appName(), appVersion(), jvmVersion(), jvmVendor(), osName());
+        return toString(baseString, versionArguments);
+    }
+
+    public final String toString(String baseString, List<String> versionArguments) {
         return String.format(baseString, versionArguments.toArray());
     }
 }

@@ -22,7 +22,6 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
     public MKISOFSPreferencePage() {
         super(GRID);
         log.info("Initializing MKISOFSPreferencePage");
-        setDescription(PreferenceDialogMessages.preferenceDialogIsoOptionsNodeDescription);
     }
 
     @Override
@@ -43,6 +42,8 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeMKISOFSPath, true, parent);
         mkisofsPathBrowser.setChangeButtonText(
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeMKISOFSPathBrowseButtonText);
+        addField(new ComboFieldEditor("mkisofs.iso.level",
+                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeIsoLevel, buildIsoLevelOptionsArray(), parent));
         addField(mkisofsPathBrowser);
         addField(new BooleanFieldEditor("mkisofs.rockridge.use",
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeRockRidgeExtension, parent));
@@ -50,8 +51,6 @@ public class MKISOFSPreferencePage extends FieldEditorPreferencePage {
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeJolietExtension, parent));
         addField(new BooleanFieldEditor("mkisofs.symlinks.follow",
                 PreferenceDialogMessages.preferenceDialogIsoOptionsNodeFollowSymlinks, parent));
-        addField(new ComboFieldEditor("mkisofs.iso.level",
-                PreferenceDialogMessages.preferenceDialogIsoOptionsNodeIsoLevel, buildIsoLevelOptionsArray(), parent));
     }
 
     private String[][] buildIsoLevelOptionsArray() {

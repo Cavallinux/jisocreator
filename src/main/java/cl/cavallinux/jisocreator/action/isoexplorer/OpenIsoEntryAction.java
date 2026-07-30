@@ -3,6 +3,8 @@ package cl.cavallinux.jisocreator.action.isoexplorer;
 import java.io.File;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 
 import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.sashfom.IsoExplorerSashForm;
@@ -30,14 +32,17 @@ public class OpenIsoEntryAction extends JISOCreatorBaseAction{
 
     @Override
     public void run() {
-        File element = (File) node.getElement();
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        IsoExplorerSashForm isoExplorer = mainWindow.getIsoExplorer();
+        TableViewer isoDirectoriesTable = isoExplorer.getIsoDirectoriesTable();
+        IStructuredSelection selection = IStructuredSelection.class.cast(isoDirectoriesTable.getSelection());
+        setNode(ITreeNode.class.cast(selection.getFirstElement()));
+        File element = File.class.cast(node.getElement());
         if (element.isFile()) {
             OSExplorer osExplorer = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
             osExplorer.launch(element.toPath());
         } else {
-            MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
-            IsoExplorerSashForm isoSashFormInstance = mainWindow.getIsoExplorer();
-            isoSashFormInstance.refresh(node);
+            isoExplorer.refresh(node);
         }
     }
 }

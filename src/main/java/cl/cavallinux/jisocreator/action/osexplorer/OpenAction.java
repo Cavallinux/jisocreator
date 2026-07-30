@@ -3,8 +3,10 @@ package cl.cavallinux.jisocreator.action.osexplorer;
 import java.io.File;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
+import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
 import cl.cavallinux.jisocreator.instances.OSAndIsoExplorerManager;
 import lombok.Builder;
@@ -26,15 +28,15 @@ public class OpenAction extends JISOCreatorBaseAction {
 
     @Override
     public void run() {
+        MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
+        IStructuredSelection selection = mainWindow.getOsExplorer().getTableSelection();
+        setFile(File.class.cast(selection.getFirstElement()));
         if (file.isFile()) {
             log.info("Launching file: {}", file);
             OSAndIsoExplorerManager.INSTANCE.getOsExplorer().launch(file.toPath());
         } else {
             log.info("Setting file {} in tree viewer and triggering selection changed event", file);
-            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree()
-                    .setSelection(GUIManager.INSTANCE.getMainWindow().getOsExplorer().getTableSelection());
-            GUIManager.INSTANCE.getMainWindow().getOsExplorer().getOsDirectoriesTree().expandToLevel(file, 1);
-            GUIManager.INSTANCE.getMainWindow().getOsExplorer().refresh();
+            mainWindow.getOsExplorer().refresh(file);
         }
     }
 }

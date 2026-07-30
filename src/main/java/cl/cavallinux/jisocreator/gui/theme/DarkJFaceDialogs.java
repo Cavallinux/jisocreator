@@ -16,7 +16,7 @@ public final class DarkJFaceDialogs {
     }
 
     public static int openError(Shell parentShell, String title, String message) {
-        return openError(parentShell, title, message, null);
+        return openError(parentShell, title, message, ImageRegister.INSTANCE.getImageUtils().loadImage("error.svg"));
     }
 
     /**
@@ -61,7 +61,7 @@ public final class DarkJFaceDialogs {
     public static MessageDialogWithToggle openYesNoQuestionWithToggle(Shell parentShell, String title, String message,
             String toggleMessage, boolean toggleState, String yesButtonLabel, String noButtonLabel) {
         return openYesNoQuestionWithToggle(parentShell, title, message, toggleMessage, toggleState, yesButtonLabel,
-                noButtonLabel, null);
+                noButtonLabel, ImageRegister.INSTANCE.getImageUtils().loadImage("question.svg"));
     }
 
     /**

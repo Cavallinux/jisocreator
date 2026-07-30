@@ -1,5 +1,6 @@
 package cl.cavallinux.jisocreator.gui.sashfom;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -159,11 +160,11 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
     }
 
     public IStructuredSelection getTableSelection() {
-        return (IStructuredSelection) osDirectoriesTable.getSelection();
+        return IStructuredSelection.class.cast(osDirectoriesTable.getSelection());
     }
 
     public IStructuredSelection getTreeSelection() {
-        return (IStructuredSelection) osDirectoriesTree.getSelection();
+        return IStructuredSelection.class.cast(osDirectoriesTree.getSelection());
     }
     
     public void setTreeSelection(IStructuredSelection selection) {
@@ -172,6 +173,12 @@ public class OSExplorerSashForm extends SashForm implements ICompositeCreator {
 
     public void refresh() {
         osDirectoriesTree.refresh();
+        osDirectoriesTable.refresh();
+    }
+    
+    public void refresh(File file) {
+        osDirectoriesTree.setSelection(new StructuredSelection(file));
+        osDirectoriesTree.expandToLevel(file, 1);
         osDirectoriesTable.refresh();
     }
 }

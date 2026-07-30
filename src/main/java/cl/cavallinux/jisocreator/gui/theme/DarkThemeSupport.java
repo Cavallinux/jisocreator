@@ -3,6 +3,7 @@ package cl.cavallinux.jisocreator.gui.theme;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+import org.apache.commons.lang3.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.SashForm;
@@ -394,8 +395,8 @@ public final class DarkThemeSupport {
         return palette;
     }
 
-    private static boolean isWin32() {
-        return "win32".equals(SWT.getPlatform());
+    public static boolean isWin32() {
+        return Strings.CI.containsAny(SWT.getPlatform(), "win");
     }
 
     /**

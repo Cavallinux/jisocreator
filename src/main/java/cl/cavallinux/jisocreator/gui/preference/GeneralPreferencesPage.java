@@ -35,8 +35,11 @@ public class GeneralPreferencesPage extends FieldEditorPreferencePage {
         addField(new StyledComboFieldEditor("jisocreator.language",
                 PreferenceDialogMessages.preferenceDialogGeneralOptionsLanguageApp, buildLanguageOptionsArray(),
                 parent));
-        addField(new StyledComboFieldEditor("jisocreator.theme.mode",
-                PreferenceDialogMessages.preferenceDialogGeneralOptionsThemeMode, buildThemeOptionsArray(), parent));
+        if (DarkThemeSupport.isWin32()) {
+            addField(new StyledComboFieldEditor("jisocreator.theme.mode",
+                    PreferenceDialogMessages.preferenceDialogGeneralOptionsThemeMode, buildThemeOptionsArray(),
+                    parent));
+        }
     }
 
     @Override

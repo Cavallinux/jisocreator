@@ -30,11 +30,11 @@ public class JISOCreatorViewerDropAdapter extends ViewerDropAdapter {
         try {
             List<File> files = Collections.emptyList();
 
-            if (data instanceof String[]) {
-                String[] paths = (String[]) data;
+            if (data instanceof String[] paths) {
+                //String[] paths = (String[]) data;
                 files = Arrays.stream(paths).map(File::new).toList();
-            } else if (data instanceof IStructuredSelection) {
-                IStructuredSelection selection = (IStructuredSelection) data;
+            } else if (data instanceof IStructuredSelection selection) {
+                //IStructuredSelection selection = (IStructuredSelection) data;
                 files = selection.stream().filter(obj -> obj instanceof File).map(obj -> (File) obj).toList();
             }
 

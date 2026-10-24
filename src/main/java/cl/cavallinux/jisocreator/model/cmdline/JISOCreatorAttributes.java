@@ -1,5 +1,6 @@
 package cl.cavallinux.jisocreator.model.cmdline;
 
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.Builder;
@@ -7,18 +8,21 @@ import lombok.Builder;
 @Builder(toBuilder = true)
 public record JISOCreatorAttributes(String appName, 
         String appVersion, 
-        String jvmVersion, 
+        String jvmVersion,
+        String appVendor, 
         String jvmVendor, 
         String osName,
-        String osVersion) {
+        String osVersion,
+        int year) {
     
     @Override
     public final String toString() {
-        return toString("%s version %s", List.of(appName(), appVersion()));
+        return toString("%s version %s", Arrays.asList(appName(), appVersion()));
     }
     
     public final String toString(String baseString) {
-        List<String> versionArguments = List.of(appName(), appVersion(), jvmVersion(), jvmVendor(), osName());
+        List<String> versionArguments = Arrays.asList(appName(), appVersion(), jvmVersion(), jvmVendor(), osName(),
+                appVendor(), osVersion(), String.valueOf(year()));
         return toString(baseString, versionArguments);
     }
 

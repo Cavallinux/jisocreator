@@ -23,4 +23,21 @@ public abstract class JISOCreatorBaseAction extends Action {
         setToolTipText(tooltip);
         setImageDescriptor(imageDescriptor);
     }
+    
+    protected JISOCreatorBaseAction(String message, String tooltip, ImageDescriptor imageDescriptor, int style,
+            int accelerator) {
+        super(message, style);
+        setToolTipText(tooltip);
+        setImageDescriptor(imageDescriptor);
+        setAccelerator(accelerator);
+    }
+    
+    protected JISOCreatorBaseAction(String message, String tooltip, ImageDescriptor imageDescriptor, int style,
+            int accelerator, boolean enabled) {
+        super(message, style);
+        setToolTipText(tooltip);
+        setImageDescriptor(imageDescriptor);
+        setAccelerator(accelerator);
+        setEnabled(enabled);
+    }
 }

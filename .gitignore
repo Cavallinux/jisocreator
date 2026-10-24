@@ -67,3 +67,5 @@ nbactions.xml
 target/
 logs/
 docs/
+.idea/
+qodana*

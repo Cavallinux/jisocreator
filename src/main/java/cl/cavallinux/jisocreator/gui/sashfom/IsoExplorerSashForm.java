@@ -63,8 +63,8 @@ public class IsoExplorerSashForm extends SashForm implements ICompositeCreator {
                 isoDirectoriesTree);
         JISOCreatorViewerDropAdapter dropAdapter = JISOCreatorViewerDropAdapter.builder().viewer(isoDirectoriesTable)
                 .build();
-        isoDirectoriesTable.addDropSupport(ICompositeCreator.COMPOSITE_DND_OPTIONS, ICompositeCreator.obtainDragAndDropTransferTypes(),
-                dropAdapter);
+        isoDirectoriesTable.addDropSupport(ICompositeCreator.COMPOSITE_DND_OPTIONS,
+                ICompositeCreator.obtainDragAndDropTransferTypes(), dropAdapter);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.SWT;
 
 import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
@@ -24,6 +25,7 @@ public class OpenAction extends JISOCreatorBaseAction {
     private OpenAction(String message, String tooltip, ImageDescriptor imageDescriptor) {
         super(message, tooltip, imageDescriptor);
         setEnabled(false);
+        setAccelerator(SWT.CTRL | 'o');
     }
 
     @Override

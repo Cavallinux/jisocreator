@@ -6,6 +6,7 @@ import cl.cavallinux.jisocreator.action.decl.JISOCreatorBaseAction;
 import cl.cavallinux.jisocreator.gui.dialog.AboutDialog;
 import cl.cavallinux.jisocreator.gui.window.MainWindow;
 import cl.cavallinux.jisocreator.instances.GUIManager;
+import cl.cavallinux.jisocreator.model.cmdline.ICommandLineParser;
 import lombok.Builder;
 
 /**
@@ -21,7 +22,8 @@ public class AboutAction extends JISOCreatorBaseAction {
     @Override
     public void run() {
         MainWindow mainWindow = GUIManager.INSTANCE.getMainWindow();
-        AboutDialog dialog = AboutDialog.builder().parentShell(mainWindow.getShell()).build();
+        AboutDialog dialog = AboutDialog.builder().parentShell(mainWindow.getShell())
+                .attributes(ICommandLineParser.buildAttributes()).build();
         dialog.open();
         dialog.close();
     }

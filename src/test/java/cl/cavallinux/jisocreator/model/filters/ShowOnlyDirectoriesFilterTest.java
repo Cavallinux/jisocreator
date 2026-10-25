@@ -39,7 +39,7 @@ class ShowOnlyDirectoriesFilterTest {
     void shouldSelectFilesystemRoots() {
         File[] roots = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
         
-        // Find a root that is actually a directory
+        /** Find a root that is actually a directory */
         File rootDirectory = null;
         for (File root : roots) {
             if (Files.isDirectory(root.toPath())) {
@@ -48,7 +48,7 @@ class ShowOnlyDirectoriesFilterTest {
             }
         }
         
-        // Assert that at least one root directory exists and is selected
+        /** Assert that at least one root directory exists and is selected */
         if (rootDirectory != null) {
             assertTrue(filter.select(null, null, rootDirectory));
         }
@@ -59,7 +59,7 @@ class ShowOnlyDirectoriesFilterTest {
     void shouldNotSelectFileRoots() {
         File[] roots = OSAndIsoExplorerManager.INSTANCE.getOsExplorer().getRoots();
         
-        // Find a root that is a file (not a directory)
+        /** Find a root that is a file (not a directory) */
         File rootFile = null;
         for (File root : roots) {
             if (!Files.isDirectory(root.toPath())) {
@@ -68,7 +68,7 @@ class ShowOnlyDirectoriesFilterTest {
             }
         }
         
-        // Assert that file roots are not selected
+        /** Assert that file roots are not selected */
         if (rootFile != null) {
             assertFalse(filter.select(null, null, rootFile));
         }

@@ -1,57 +1,77 @@
 package cl.cavallinux.jisocreator.gui.dialog;
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import cl.cavallinux.jisocreator.gui.i18n.AboutDialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
 import cl.cavallinux.jisocreator.instances.IOManager;
 import cl.cavallinux.jisocreator.instances.ImageRegister;
+import cl.cavallinux.jisocreator.model.cmdline.JISOCreatorAttributes;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AboutDialog extends TitleAreaDialog {
-    private String formattedProgramVersion;
+    private JISOCreatorAttributes attributes;
 
     @Builder
-    protected AboutDialog(Shell parentShell) {
+    protected AboutDialog(Shell parentShell, JISOCreatorAttributes attributes) {
         super(parentShell);
-        formattedProgramVersion = String.format(AboutDialogMessages.aboutDialogProgramVersion,
-                AboutDialog.class.getPackage().getImplementationVersion(), System.getProperty("os.name"),
-                System.getProperty("os.version"));
+        this.attributes = attributes;
+    }
+
+    @Override
+    protected Control createContents(Composite parent) {
+        Control contents = super.createContents(parent);
+        /**
+         * TitleAreaDialog builds its title banner (icon/title/message) as a sibling of
+         * dialogArea inside createContents(), with its own explicit colors
+         * (JFaceColors.setColors(...)). applyToControlTree(dialogArea) never reaches it,
+         * so it must be styled here, on the full contents tree, once everything exists.
+         */
+        DarkThemeSupport.applyToControlTree(contents);
+        return contents;
     }
 
     @Override
     protected void configureShell(Shell newShell) {
         log.info("Configuring about dialog shell");
         super.configureShell(newShell);
+        DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(AboutDialogMessages.aboutDialogWindowTitle);
+        newShell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        return createAboutPanel(parent);
+        Control dialogArea = createAboutPanel(parent);
+        DarkThemeSupport.applyToControlTree(dialogArea);
+        return dialogArea;
     }
 
     private Control createAboutPanel(Composite parent) {
         log.info("Creating about panel");
         Composite composite = new Composite(parent, SWT.NONE);
         setTitle("JIsocreator");
-        setMessage(formattedProgramVersion);
+        setMessage(attributes.toString(AboutDialogMessages.aboutDialogProgramVersion,
+                List.of(attributes.appVersion(), attributes.osName(), attributes.osVersion())));
         setTitleImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
 
-        TabFolder tabFolder = new TabFolder(composite, SWT.NONE);
-        TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
+        CTabFolder tabFolder = new CTabFolder(composite, SWT.NONE);
+        CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
         tabItem.setText(AboutDialogMessages.aboutDialogAboutTabText);
         Composite aboutComposite = new Composite(tabFolder, SWT.NONE);
         Label label = new Label(aboutComposite, SWT.NONE);
@@ -64,7 +84,7 @@ public class AboutDialog extends TitleAreaDialog {
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(aboutComposite);
         tabItem.setControl(aboutComposite);
 
-        tabItem = new TabItem(tabFolder, SWT.NONE);
+        tabItem = new CTabItem(tabFolder, SWT.NONE);
         Text licenseText = new Text(tabFolder, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY | SWT.MULTI);
         licenseText.setText(IOManager.INSTANCE.getIoUtils().loadFormattedLicenseFile());
         tabItem.setText(AboutDialogMessages.aboutDialogLicenseTabText);
@@ -83,5 +103,6 @@ public class AboutDialog extends TitleAreaDialog {
     protected void createButtonsForButtonBar(Composite parent) {
         log.info("Creating buttons for about dialog");
         createButton(parent, IDialogConstants.OK_ID, AboutDialogMessages.aboutDialogOKButtonText, true);
+        DarkThemeSupport.applyToControlTree(parent);
     }
 }

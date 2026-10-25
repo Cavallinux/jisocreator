@@ -1,6 +1,7 @@
 package cl.cavallinux.jisocreator.model.cmdline;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,8 @@ public interface ICommandLineParser {
                 .appVersion(commandLinePackage.getImplementationVersion())
                 .jvmVersion(System.getProperty("java.version"))
                 .jvmVendor(System.getProperty("java.specification.vendor")).osName(System.getProperty("os.name"))
+                .osVersion(System.getProperty("os.version")).appVendor(commandLinePackage.getSpecificationVendor())
+                .year(LocalDate.now().getYear())
                 .build();
     }
 

@@ -7,7 +7,6 @@ public class PreferenceDialogMessages extends NLS implements INLSBundleMessages 
     public static String preferenceDialogOKButton;
     public static String preferenceDialogCancelButton;
     public static String preferenceDialogIsoOptionsNodeName;
-    public static String preferenceDialogIsoOptionsNodeDescription;
     public static String preferenceDialogIsoOptionsNodeMKISOFSPath;
     public static String preferenceDialogIsoOptionsNodeMKISOFSPathBrowseButtonText;
     public static String preferenceDialogIsoOptionsNodeRockRidgeExtension;
@@ -21,13 +20,16 @@ public class PreferenceDialogMessages extends NLS implements INLSBundleMessages 
     public static String preferenceDialogIsoOptionsNodeApplyButton;
     public static String preferenceDialogIsoOptionsNodeRestoreButton;
     public static String preferenceDialogGeneralOptionsNodeName;
-    public static String preferenceDialogGeneralOptionsNodeDescription;
     public static String preferenceDialogGeneralOptionsConfirmExitOption;
     public static String preferenceDialogGeneralOptionsLanguageApp;
     public static String preferenceDialogGeneralOptionsLanguageENOption;
     public static String preferenceDialogGeneralOptionsLanguageESOption;
     public static String preferenceDialogGeneralOptionsApplyButton;
     public static String preferenceDialogGeneralOptionsRestoreButton;
+    public static String preferenceDialogGeneralOptionsThemeMode;
+    public static String preferenceDialogGeneralOptionsThemeAutoOption;
+    public static String preferenceDialogGeneralOptionsThemeLightOption;
+    public static String preferenceDialogGeneralOptionsThemeDarkOption;
 
     static {
         initializeMessages(PREFERENCEDIALOG_BUNDLE_MESSAGE, PreferenceDialogMessages.class);

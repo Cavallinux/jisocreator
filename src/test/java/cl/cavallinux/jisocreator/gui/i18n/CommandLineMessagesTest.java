@@ -43,7 +43,7 @@ class CommandLineMessagesTest {
     void shouldResolveExampleUsageMessageWithExamples() {
         assertNotNull(CommandLineMessages.commandLineExampleUsageMessage);
         assertFalse(CommandLineMessages.commandLineExampleUsageMessage.isBlank());
-        // The example usage message should contain at least one command flag reference
+        /** The example usage message should contain at least one command flag reference */
         assertFalse(CommandLineMessages.commandLineExampleUsageMessage.isBlank());
     }
 

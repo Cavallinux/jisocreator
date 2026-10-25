@@ -10,4 +10,5 @@ public interface INLSBundleMessages {
     final String ABOUTDIALOG_BUNDLE_MESSAGE = "i18n.aboutdialog.messages";
     final String COMMANDLINE_BUNDLE_MESSAGE = "i18n.commandline.messages";
     final String ADDTOISODIALOG_BUNDLE_MESSAGE = "i18n.addtoisodialog.messages";
+    final String QUESTIONWITHTOGGLEDIALOG_BUNDLE_MESSAGE = "i18n.questionwithtoggledialog.messages";
 }

@@ -7,16 +7,15 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.Properties;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 
+import cl.cavallinux.jisocreator.model.cmdline.ICommandLineParser;
+import cl.cavallinux.jisocreator.model.cmdline.JISOCreatorAttributes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,6 @@ public class IOUtils {
     private final static String JISOCREATOR_DEFAULTCONFIG_FILENAME;
     public final static String JISOCREATOR_LICENSE_FILENAME;
     public final static String JISOCREATOR_CONFIG_FILENAME;
-    public final static String JISOCREATOR_MANIFEST_FILE;
     private final static String GTK_PLATFORM;
     private final static String WIN32_PLATFORM;
     private final static String WIN32_MKISOFS_BASE_PATH;
@@ -40,7 +38,6 @@ public class IOUtils {
         JISOCREATOR_CONFIG_DIR = System.getProperty("user.home").concat("/.config/jisocreator/");
         JISOCREATOR_DEFAULTCONFIG_FILENAME = "conf/defaultconfig.properties";
         JISOCREATOR_CONFIG_FILENAME = "jisocreator.properties";
-        JISOCREATOR_MANIFEST_FILE = "/META-INF/MANIFEST.MF";
         JISOCREATOR_LICENSE_FILENAME = "files/license.txt";
         GTK_PLATFORM = "gtk";
         WIN32_PLATFORM = "win32";
@@ -69,9 +66,9 @@ public class IOUtils {
 
     public String loadFileContentFromClasspath(String filePath) {
         try (
-            InputStream fileInputStream = ClassLoader.getSystemResourceAsStream(filePath);
+                InputStream fileInputStream = ClassLoader.getSystemResourceAsStream(filePath);
                 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
-            BufferedReader br = new BufferedReader(inputStreamReader)
+                BufferedReader br = new BufferedReader(inputStreamReader)
         ) {
             StringBuffer license = new StringBuffer();
             br.lines().forEach(line -> {
@@ -87,20 +84,11 @@ public class IOUtils {
     
     public String loadFormattedLicenseFile() {
         String loadedLicenseFile = loadFileContentFromClasspath(JISOCREATOR_LICENSE_FILENAME);
-        try (InputStream stream = getClass().getResourceAsStream(JISOCREATOR_MANIFEST_FILE)) {
-            Attributes manifestAttributes = new Manifest(stream).getMainAttributes();
-            String maintainerAttribute = manifestAttributes.getValue("Maintainer");
-            String programName = manifestAttributes.getValue("Implementation-Title");
-            String programVersion = manifestAttributes.getValue("Implementation-Version");
-            loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<program_name>", programName);
-            loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<program_version>", programVersion);
-            loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<maintainer>", maintainerAttribute);
-            loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<year>",
-                    String.valueOf(LocalDate.now().getYear()));
-        } catch (IOException | NullPointerException e) {
-            log.error("Error loading manifest file", e);
-        }
-
+        JISOCreatorAttributes attributes = ICommandLineParser.buildAttributes();
+        loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<program_name>", attributes.appName());
+        loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<program_version>", attributes.appVersion());
+        loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<maintainer>", attributes.appVendor());
+        loadedLicenseFile = Strings.CI.replace(loadedLicenseFile, "<year>", String.valueOf(attributes.year()));
         return loadedLicenseFile;
     }
 
@@ -121,6 +109,7 @@ public class IOUtils {
             store.setValue("mkisofs.path", obtainMkisofsPath(SWT.getPlatform()));
             store.setValue("mkisofs.iso.level", defaultProperties.getProperty("mkisofs.iso.level"));
             store.setValue("jisocreator.language", defaultProperties.getProperty("jisocreator.language"));
+            store.setValue("jisocreator.theme.mode", defaultProperties.getProperty("jisocreator.theme.mode"));
             store.save();
         } catch (IOException e) {
             log.error("Error saving properties", e);

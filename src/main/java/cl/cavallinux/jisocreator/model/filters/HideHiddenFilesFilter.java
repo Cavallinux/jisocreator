@@ -24,13 +24,17 @@ public class HideHiddenFilesFilter extends ViewerFilter {
     public boolean select(Viewer arg0, Object arg1, Object arg2) {
         try {
             File file = (File) arg2;
-            // Check both OS-level hidden attribute (Windows DOS attribute) and
-            // Unix-style hidden files (names starting with '.') for cross-platform support
+            /**
+             * Check both OS-level hidden attribute (Windows DOS attribute) and
+             * Unix-style hidden files (names starting with '.') for cross-platform support
+             */
             boolean isHidden = Files.isHidden(file.toPath()) || file.getName().startsWith(".");
             return !isHidden;
         } catch (IOException e) {
-            // Allow the element on IOException (e.g., access denied for system drives or root paths in Windows)
-            // This prevents system root drives from being filtered out due to permission issues
+            /**
+             * Allow the element on IOException (e.g., access denied for system drives or root paths in Windows)
+             * This prevents system root drives from being filtered out due to permission issues
+             */
             log.warn("Error checking if file is hidden for path: {}, allowing element to be displayed. Error: {}", 
                     ((File) arg2).getAbsolutePath(), e.getMessage());
             return true;

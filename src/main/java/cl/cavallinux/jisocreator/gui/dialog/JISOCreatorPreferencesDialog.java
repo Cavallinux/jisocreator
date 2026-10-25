@@ -4,9 +4,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
 import cl.cavallinux.jisocreator.gui.i18n.PreferenceDialogMessages;
+import cl.cavallinux.jisocreator.gui.theme.DarkThemeSupport;
+import cl.cavallinux.jisocreator.instances.ImageRegister;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +28,46 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
     protected void configureShell(Shell newShell) {
         log.info("Configuring shell for JISOCreatorPreferencesDialog");
         super.configureShell(newShell);
+        DarkThemeSupport.enableWindowsDarkMode(newShell.getDisplay());
         newShell.setText(PreferenceDialogMessages.preferenceDialogWindowTitle);
+        newShell.setImage(ImageRegister.INSTANCE.getImageUtils().loadImage("jisocreator.svg"));
+    }
+
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Control dialogArea = super.createDialogArea(parent);
+        DarkThemeSupport.applyToControlTree(dialogArea);
+        return dialogArea;
+    }
+
+    @Override
+    protected Control createButtonBar(Composite parent) {
+        /**
+         * PreferenceDialog extends TrayDialog, which wraps the button-bar area created
+         * by Dialog.createButtonBar(...) inside its OWN outer composite (see
+         * TrayDialog#createButtonBar: it creates a wrapper Composite, optionally adds a
+         * help control, then delegates to super.createButtonBar(wrapper)). The `parent`
+         * received by createButtonsForButtonBar(...) below is only that inner
+         * button-bar composite, so styling it alone leaves the TrayDialog wrapper
+         * unstyled. Applying the dark theme here, on the full Control returned by
+         * super.createButtonBar(...), covers the outer wrapper as well.
+         */
+        Control buttonBar = super.createButtonBar(parent);
+        DarkThemeSupport.applyToControlTree(buttonBar);
+        /**
+         * PreferenceDialog#createDialogArea(parent) creates its bottom horizontal
+         * separator (Label(SWT.HORIZONTAL | SWT.SEPARATOR), placed right above the
+         * button bar) as a direct child of this same `parent`, NOT as a descendant of
+         * the Composite it returns from createDialogArea(). Dialog.createContents(...)
+         * calls createDialogArea(composite) and createButtonBar(composite) with that
+         * same shared `composite`, so that bottom separator is a SIBLING of both the
+         * dialog-area subtree and the button-bar subtree above - it is therefore
+         * missed entirely by applyToControlTree(dialogArea) and
+         * applyToControlTree(buttonBar) alone. Re-applying the theme to the shared
+         * `parent` here (after both subtrees already exist) reaches that separator too.
+         */
+        DarkThemeSupport.applyToControlTree(parent);
+        return buttonBar;
     }
 
     @Override
@@ -34,6 +75,12 @@ public class JISOCreatorPreferencesDialog extends PreferenceDialog {
         super.createButtonsForButtonBar(parent);
         getButton(IDialogConstants.OK_ID).setText(PreferenceDialogMessages.preferenceDialogOKButton);
         getButton(IDialogConstants.CANCEL_ID).setText(PreferenceDialogMessages.preferenceDialogCancelButton);
+        DarkThemeSupport.applyToControlTree(parent);
+        parent.getDisplay().asyncExec(() -> {
+            if (!parent.isDisposed()) {
+                DarkThemeSupport.applyToControlTree(parent);
+            }
+        });
     }
     
     @Override

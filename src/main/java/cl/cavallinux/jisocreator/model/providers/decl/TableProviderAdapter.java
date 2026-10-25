@@ -55,7 +55,7 @@ public class TableProviderAdapter implements IStructuredContentProvider, ITableL
      */
     @Override
     public void dispose() {
-        // Subclasses can override to clean up resources
+        /** Subclasses can override to clean up resources */
     }
 
     /**
@@ -71,7 +71,7 @@ public class TableProviderAdapter implements IStructuredContentProvider, ITableL
      */
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // Subclasses can override to handle input changes
+        /** Subclasses can override to handle input changes */
     }
 
     /**
@@ -116,7 +116,7 @@ public class TableProviderAdapter implements IStructuredContentProvider, ITableL
      */
     @Override
     public void addListener(ILabelProviderListener listener) {
-        // Subclasses can override to track listeners
+        /** Subclasses can override to track listeners */
     }
 
     /**
@@ -144,7 +144,7 @@ public class TableProviderAdapter implements IStructuredContentProvider, ITableL
      */
     @Override
     public void removeListener(ILabelProviderListener listener) {
-        // Subclasses can override to stop tracking listeners
+        /** Subclasses can override to stop tracking listeners */
     }
 
 }

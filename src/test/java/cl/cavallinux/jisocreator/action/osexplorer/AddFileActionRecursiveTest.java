@@ -41,9 +41,11 @@ class AddFileActionRecursiveTest {
         addFileRecursively.setAccessible(true);
     }
 
-    // -------------------------------------------------------------------------
-    // Archivo simple — sin cancelacion
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Archivo simple — sin cancelacion
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Should add a single file node to parent and report worked")
@@ -73,9 +75,11 @@ class AddFileActionRecursiveTest {
         verify(monitor).subTask("Adding: " + file.getAbsolutePath());
     }
 
-    // -------------------------------------------------------------------------
-    // Cancelacion inmediata
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Cancelacion inmediata
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Should throw InterruptedException immediately when monitor is already cancelled")
@@ -94,9 +98,11 @@ class AddFileActionRecursiveTest {
         verify(monitor, never()).worked(1);
     }
 
-    // -------------------------------------------------------------------------
-    // Directorio con hijos — sin cancelacion
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Directorio con hijos — sin cancelacion
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Should recursively add all files inside a directory")
@@ -110,7 +116,7 @@ class AddFileActionRecursiveTest {
 
         invoke(root, subDir.toFile());
 
-        // Root should have the directory node
+        /** Root should have the directory node */
         assertEquals(1, root.getChildren().size());
         ITreeNode dirNode = root.getChildren().get(0);
         assertTrue(dirNode.hasChildren(),
@@ -138,9 +144,11 @@ class AddFileActionRecursiveTest {
                 "level2 must contain the deep file");
     }
 
-    // -------------------------------------------------------------------------
-    // Directorio vacio
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Directorio vacio
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Should add empty directory node without children")
@@ -156,9 +164,11 @@ class AddFileActionRecursiveTest {
                 "Empty directory node must have no children");
     }
 
-    // -------------------------------------------------------------------------
-    // Cancelacion a mitad de la recursion
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Cancelacion a mitad de la recursion
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Should stop recursion and throw InterruptedException when cancelled inside directory")
@@ -170,10 +180,12 @@ class AddFileActionRecursiveTest {
 
         IsoTreeNode root = new IsoTreeNode();
 
-        // Not cancelled for the directory itself, but cancelled on the first child
+        /** Not cancelled for the directory itself, but cancelled on the first child */
         when(monitor.isCanceled())
-                .thenReturn(false)  // directory node — not cancelled
-                .thenReturn(true);  // first child — cancelled
+                /** directory node — not cancelled */
+                .thenReturn(false)
+                /** first child — cancelled */
+                .thenReturn(true);
 
         InvocationTargetException ex = assertThrows(InvocationTargetException.class,
                 () -> invoke(root, subDir.toFile()));
@@ -181,19 +193,21 @@ class AddFileActionRecursiveTest {
         assertTrue(ex.getCause() instanceof InterruptedException,
                 "Cause must be InterruptedException when cancelled mid-recursion");
 
-        // Directory node was added to root before the cancellation inside recursion
+        /** Directory node was added to root before the cancellation inside recursion */
         assertEquals(1, root.getChildren().size(),
                 "The directory node itself must have been added before cancellation");
 
         ITreeNode dirNode = root.getChildren().get(0);
-        // Fewer than 3 children should have been added (stopped early)
+        /** Fewer than 3 children should have been added (stopped early) */
         assertTrue(dirNode.getChildren().size() < 3,
                 "Recursion must have stopped before all children were added");
     }
 
-    // -------------------------------------------------------------------------
-    // run(IProgressMonitor) - lista de archivos via reflection en campos privados
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * run(IProgressMonitor) - lista de archivos via reflection en campos privados
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("run(IProgressMonitor) should process all files in the list and call done()")
@@ -204,7 +218,7 @@ class AddFileActionRecursiveTest {
         IsoTreeNode root = new IsoTreeNode();
         when(monitor.isCanceled()).thenReturn(false);
 
-        // Inject private fields via reflection
+        /** Inject private fields via reflection */
         setPrivateField(action, "files", java.util.List.of(fileA, fileB));
         setPrivateField(action, "isoNode", root);
 
@@ -234,9 +248,11 @@ class AddFileActionRecursiveTest {
                 "No child must be added when cancelled immediately");
     }
 
-    // -------------------------------------------------------------------------
-    // Builder
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Builder
+     * -------------------------------------------------------------------------
+     */
 
     @Test
     @DisplayName("Builder should produce a non-null AddFileAction instance")
@@ -245,9 +261,11 @@ class AddFileActionRecursiveTest {
         org.junit.jupiter.api.Assertions.assertNotNull(built);
     }
 
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
+    /**
+     * -------------------------------------------------------------------------
+     * Helpers
+     * -------------------------------------------------------------------------
+     */
 
     private void invoke(ITreeNode parent, File file) throws Exception {
         addFileRecursively.invoke(action, parent, file, monitor);

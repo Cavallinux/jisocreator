@@ -61,4 +61,21 @@ class OSTreeContentProviderTest {
         assertNotNull(provider.getParent(file.toFile()));
         assertFalse(provider.hasChildren(file.toFile()));
     }
+
+    @Test
+    @DisplayName("Should report no children for an empty directory without reading a full listing")
+    void shouldReportNoChildrenForEmptyDirectory(@TempDir Path tempDir) throws IOException {
+        Path emptyDir = Files.createDirectory(tempDir.resolve("empty-dir"));
+
+        assertFalse(provider.hasChildren(emptyDir.toFile()));
+    }
+
+    @Test
+    @DisplayName("Should report children present as soon as a single entry exists")
+    void shouldReportChildrenPresentWithSingleEntry(@TempDir Path tempDir) throws IOException {
+        Path dirWithOneChild = Files.createDirectory(tempDir.resolve("one-child-dir"));
+        Files.write(dirWithOneChild.resolve("only-file.txt"), new byte[] { 1 });
+
+        assertTrue(provider.hasChildren(dirWithOneChild.toFile()));
+    }
 }

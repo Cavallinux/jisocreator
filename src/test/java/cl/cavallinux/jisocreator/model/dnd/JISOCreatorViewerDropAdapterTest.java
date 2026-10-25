@@ -44,7 +44,7 @@ class JISOCreatorViewerDropAdapterTest {
 
     @BeforeEach
     void setUp() {
-        // Los tests de esta clase ejercitan FileTransfer, respaldado por bibliotecas nativas de SWT.
+        /** Los tests de esta clase ejercitan FileTransfer, respaldado por bibliotecas nativas de SWT. */
         SwtPlatformAssumptions.assumeNativePlatformMatches();
         adapter = JISOCreatorViewerDropAdapter.builder().viewer(null).build();
     }

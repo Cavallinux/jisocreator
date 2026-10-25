@@ -19,7 +19,7 @@ public class OSTreeLabelProvider extends LabelProvider {
         return ImageRegister.INSTANCE.getImageUtils().loadImage(((File) element).toPath());
     }
 
-    //TODO cast directly element from File to Path
+    /** TODO cast directly element from File to Path */
     @Override
     public String getText(Object element) {
         OSExplorer instance = OSAndIsoExplorerManager.INSTANCE.getOsExplorer();
